@@ -1,23 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+  <!-- ======= About Section ======= -->
+  @include('contents.about')  
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+  <!-- ======= Why Us Section ======= -->
+  @include('contents.why_us')  
 
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  <!-- ======= Menu Section ======= -->
+  @include('contents.pricelist')  
+
+  <!-- ======= Booking Section ======= -->
+  @include('contents.calendar')  
+
+  <!-- ======= Gallery Section ======= -->
+  @include('contents.gallery') 
+
+  <!-- ======= Events Section ======= -->
+  @include('contents.locations')  
+
+  <!-- ======= Specials Section ======= -->
+  @include('contents.history') 
+
+  <!-- ======= Testimonials Section ======= -->
+  @include('contents.testimonials')
+ 
+  <!-- ======= About us Section ======= -->
+  @include('contents.about_us')  
+
+  <!-- ======= Contact Section ======= -->
+  @include('contents.contacts')  
+@endsection
+
+@section('scripts')
+
+  <!-- ======= Javascript Section ======= -->
+  @include('contents.calendar_js')  
+
 @endsection
