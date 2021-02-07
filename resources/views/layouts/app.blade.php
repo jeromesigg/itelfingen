@@ -6,12 +6,11 @@
   <body>
     <div id="app">
       
-      @guest
-      @else
-        @include('includes.header')
 
-        @include('includes.title') 
-      @endif
+      @include('includes.header')
+
+      @include('includes.title') 
+
         
 
       <main class="py-4">

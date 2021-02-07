@@ -18,6 +18,18 @@
                         {!! Form::text('subtitle', null, ['class' => 'form-control', 'required']) !!}
                     </div>
                     <div class="form-group">
+                        {!! Form::label('address', 'Adresse:') !!}
+                        {!! Form::textarea('address', null, ['class' => 'form-control', 'required', 'rows' =>3]) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('mail', 'E-Mail:') !!}
+                        {!! Form::text('mail', null, ['class' => 'form-control', 'required']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('phone', 'Telefon:') !!}
+                        {!! Form::text('phone', null, ['class' => 'form-control', 'required']) !!}
+                    </div>
+                    <div class="form-group">
                         {!! Form::label('main_photo_id', 'Photo:') !!}
                         {!! Form::file('main_photo_id', null, ['class' => 'form-control']) !!}
                     </div>

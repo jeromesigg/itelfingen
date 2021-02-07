@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class AddColorToEventStatus extends Migration
 {
@@ -16,7 +17,22 @@ class AddColorToEventStatus extends Migration
         Schema::table('event_statuses', function (Blueprint $table) {
             //
             $table->string('color');
-        });
+        });     
+        DB::table('event_statuses')
+        ->where('id', config('status.event_neu'))
+        ->update([
+            "color" => "P"
+        ]);  
+        DB::table('event_statuses')
+        ->where('id', config('status.event_bestaetigt'))
+        ->update([
+            "color" => "B"
+        ]);  
+        DB::table('event_statuses')
+        ->where('id', config('status.event_eigene'))
+        ->update([
+            "color" => "N"
+        ]);
     }
 
     /**

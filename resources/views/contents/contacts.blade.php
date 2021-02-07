@@ -8,8 +8,8 @@
     </div>
   
     <div data-aos="fade-up">
-      <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" allowfullscreen></iframe>
-    </div>
+      <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2422.4666550428083!2d8.472422258755596!3d47.11371962875789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566f883b183%3A0x806d2ed823fdf24b!2sItelfingen%201%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1612089698401!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
+    </div>                                                    
   
     <div class="container" data-aos="fade-up">
   
@@ -20,21 +20,19 @@
             <div class="address">
               <i class="icofont-google-map"></i>
               <h4>Hausadresse:</h4>
-              <p>Ferienhaus Itelfingen</p>
-              <p>Itelfingen 3</p>
-              <p>6344 Meierskappel</p>
+              <p>{!! nl2br($homepage->address) !!}</p>
             </div>
   
             <div class="email">
               <i class="icofont-envelope"></i>
               <h4>Email:</h4>
-              <p>François Bächler: verwalter (ät) itelfingen.ch</p>
+              <p>{{$homepage->mail}}</p>
             </div>
   
             <div class="phone">
               <i class="icofont-phone"></i>
               <h4>Tel. P (abends):</h4>
-              <p>+41 (0)44 767 10 47</p>
+              <p>{{$homepage->phone}}</p>
             </div>
   
           </div>

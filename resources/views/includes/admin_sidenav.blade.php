@@ -51,7 +51,20 @@
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
-                </li>             
+                </li>     
+           
+                <li>
+                    <a  href="{{route('pricelists.index')}}" ><i class="fas fa-money-check-alt"></i> Preisliste</a>
+                </li>  
+                <li>
+                    <a  href="{{route('testimonials.index')}}" ><i class="far fa-comment"></i> Bewertungen</a>
+                </li>  
+                <li>
+                    <a  href="{{route('people.index')}}" ><i class="fas fa-user-friends"></i>Personen</a>
+                </li> 
+                <li>
+                    <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i>Geschichte</a>
+                </li> 
             </ul>
         </div>
             

@@ -13,12 +13,15 @@
                 <thead>
                     <tr>
                         <th scope="col" width="10%">Name</th>
-                        <th scope="col" width="30%">Beschreibung</th>
-                        <th scope="col" width="12%">Bild Titel</th>
-                        <th scope="col" width="12%">Bild Oben</th>
-                        <th scope="col" width="12%">Bild Unten</th>
-                        <th scope="col" width="12%">Bild Login Gross</th>
-                        <th scope="col" width="12%">Bild Login Klein</th>
+                        <th scope="col" width="20%">Beschreibung</th>
+                        <th scope="col" width="15%">Adresse</th>
+                        <th scope="col" width="15%">E-Mail</th>
+                        <th scope="col" width="15%">Telefon</th>
+                        <th scope="col" width="5%">Bild Titel</th>
+                        <th scope="col" width="5%">Bild Oben</th>
+                        <th scope="col" width="5%">Bild Unten</th>
+                        <th scope="col" width="5%">Bild Login Gross</th>
+                        <th scope="col" width="5%">Bild Login Klein</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +30,9 @@
                         <tr>
                             <td><a href="{{route('homepages.edit', $homepage->id)}}">{{$homepage->title}}</a></td>
                             <td>{{$homepage->subtitle}}</td>
+                            <td>{{$homepage->address}}</td>
+                            <td>{{$homepage->phone}}</td>
+                            <td>{{$homepage->mail}}</td>
                             <td><img height="50" src="{{$homepage->main_photo ? $homepage->main_photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
                             <td><img height="50" src="{{$homepage->top_photo ? $homepage->top_photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
                             <td><img height="50" src="{{$homepage->bottom_photo ? $homepage->bottom_photo->file : 'http://placehold.it/50x50'}}" alt=""></td>

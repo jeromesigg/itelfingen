@@ -12,7 +12,7 @@ class Event extends Model
     'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment'
     ];
 
-    public function status(){
+    public function event_status(){
         return $this->belongsTo('App\EventStatus');
     }
 }

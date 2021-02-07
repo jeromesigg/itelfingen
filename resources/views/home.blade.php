@@ -11,7 +11,7 @@
   @include('contents.pricelist')  
 
   <!-- ======= Booking Section ======= -->
-  @include('contents.calendar')  
+  @include('contents.agenda')  
 
   <!-- ======= Gallery Section ======= -->
   @include('contents.gallery') 
@@ -35,6 +35,6 @@
 @section('scripts')
 
   <!-- ======= Javascript Section ======= -->
-  @include('contents.calendar_js')  
+  @include('contents.agenda_js')
 
 @endsection
