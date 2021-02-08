@@ -37,7 +37,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/testimonials', 'AdminTestimonialController');
     Route::resource('admin/people', 'AdminPersonController');
     Route::resource('admin/histories', 'AdminHistoryController');
-    Route::resource('admin/users', 'AdminUsersController');
+    Route::resource('admin/users', 'AdminUserController');
 
 
 });

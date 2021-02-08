@@ -4,7 +4,7 @@
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>Lagerhaus Itelfingen</title>
+<title>Ferienhaus Itelfingen</title>
 <meta content="" name="descriptison">
 <meta content="" name="keywords">
 

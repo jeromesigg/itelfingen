@@ -2,7 +2,7 @@
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-        <h1 class="logo mr-auto"><a href="{{ url('/') }}">Lagerhaus Itelfingen</a></h1>
+        <h1 class="logo mr-auto"><a href="{{ url('/') }}">Ferienhaus Itelfingen</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 

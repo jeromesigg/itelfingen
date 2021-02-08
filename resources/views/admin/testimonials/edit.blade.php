@@ -8,7 +8,7 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($testimonial, ['method' => 'PATCH', 'action'=>['AdminTestimonialController@update', $testimonial->id]]) !!}
+                    {!! Form::model($testimonial, ['method' => 'PATCH', 'action'=>['AdminTestimonialController@update', $testimonial->id], 'autocomplete' => 'off']) !!}
                     <div class="form-group">
                         {!! Form::label('name', 'Name:') !!}
                         {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}

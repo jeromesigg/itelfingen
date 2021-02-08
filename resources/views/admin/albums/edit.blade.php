@@ -9,7 +9,7 @@
             </header>
             <div class="row">
                 <div class="col-sm-6">
-                    {!! Form::model($album, ['method' => 'Patch', 'action'=>['AdminAlbumsController@update',$album->id]]) !!}
+                    {!! Form::model($album, ['method' => 'Patch', 'action'=>['AdminAlbumsController@update',$album->id], 'autocomplete' => 'off']) !!}
                         <div class="form-group">
                             {!! Form::label('name', 'Name:') !!}
                             {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}

@@ -16,10 +16,6 @@
                         {!! Form::text('title', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('shorttitle', 'Kurztitel:') !!}
-                        {!! Form::text('shorttitle', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
                         {!! Form::label('subtitle', 'Untertitel:') !!}
                         {!! Form::text('subtitle', null, ['class' => 'form-control']) !!}
                     </div>
@@ -42,9 +38,8 @@
                         <tr>
                             <th scope="col" width="10%">photo</th>
                             <th scope="col" width="10%">Titel</th>
-                            <th scope="col" width="20%">Kurztitel</th>
-                            <th scope="col" width="25%">Untertitel</th>
-                            <th scope="col" width="25%">Beschreibung</th>
+                            <th scope="col" width="15%">Untertitel</th>
+                            <th scope="col" width="55%">Beschreibung</th>
                             <th scope="col" width="5%">Archiv-Status</th>
                             <th scope="col" width="5%">Sort-Index</th>
                         </tr>
@@ -55,7 +50,6 @@
                             <tr>
                                 <td><img height="50" src="{{$history->photo ? $history->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
                                 <td><a href="{{route('histories.edit', $history->id)}}">{{$history->title}}</a></td>
-                                <td>{{$history->shorttitle}}</td>
                                 <td>{{$history->subtitle}}</td>
                                 <td>{{$history->description}}</td>
                                 <td>{{$history->archive_status['name']}}</td>

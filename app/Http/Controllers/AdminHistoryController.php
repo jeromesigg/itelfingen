@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Photo;
 use App\History;
 use App\ArchiveStatus;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class AdminHistoryController extends Controller
@@ -99,6 +100,8 @@ class AdminHistoryController extends Controller
             
             $input['photo_id'] = $photo->id;
         }
+        $input['shorttitle'] = Str::slug($input['title'],'_');
+
         History::whereId($id)->first()->update($input);
         return redirect('/admin/histories');
     }

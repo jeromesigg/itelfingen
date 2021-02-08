@@ -14,10 +14,6 @@
                         {!! Form::text('title', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('shorttitle', 'Kurztitel:') !!}
-                        {!! Form::text('shorttitle', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
                         {!! Form::label('subtitle', 'Untertitel:') !!}
                         {!! Form::text('subtitle', null, ['class' => 'form-control']) !!}
                     </div>

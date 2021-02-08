@@ -11,7 +11,7 @@
         @foreach ($people as $person)
           <div class="col-lg-4 col-md-6">
             <div class="member" data-aos="zoom-in" data-aos-delay="100">
-              <img src="{{$person->photo->file}}" class="img-fluid" alt="">
+              <img src="{{$person->photo ? $person->photo->file : 'http://placehold.it/250x450'}}" class="img-fluid" alt="">
               <div class="member-info">
                 <div class="member-info-content">
                   <h4>{{$person->name}}</h4>

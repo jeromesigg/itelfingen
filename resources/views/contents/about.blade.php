@@ -1,27 +1,22 @@
-<section id="about" class="about">
+<section id="about" class="about  section-bg">
     <div class="container" data-aos="fade-up">
   
       <div class="row">
         <div class="col-lg-6 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="100">
           <div class="about-img">
-            <img src="assets/img/about.jpg" alt="">
+            <img src="img/about.jpg" alt="">
           </div>
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
-          <h3>Kommen sie zu uns und erleben sie die Aussicht auf den Zugersee und die Ruhe in der Natur.</h3>
+          <h3>Ein Ort zum Entspannend und gleichzeitig neue Abenteuer zu erleben.</h3>
           <p class="font-italic">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-            magna aliqua.
           </p>
           <ul>
-            <li><i class="icofont-check-circled"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-            <li><i class="icofont-check-circled"></i> Duis aute irure dolor in reprehenderit in voluptate velit.</li>
-            <li><i class="icofont-check-circled"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</li>
+            <li><i class="icofont-check-circled"></i> Das Genossenschaftshaus liegt ca. 150 m oberhalb des Zugersees in der Nähe von Immensee und ist mit öffentlichen Verkehrsmitteln erreichbar. (Schiff, Bahn, Bus).</li>
+            <li><i class="icofont-check-circled"></i> Durch die ideale Lage sind Wanderungen inder Umgebung sowie Tagesausflüge in die Innerschweiz (Zug, Luzern,Arth-Goldau, Rigi, Vierwaldstättersee usw.) jederzeit möglich.</li>
+            <li><i class="icofont-check-circled"></i> Das Haus eignet sich für Ferien, Lager, Kurse, Familien, Kleingruppen und Tagesaufenthalter bis 20 Personen (18 Schlafplätze).</li>
           </ul>
           <p>
-            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum
           </p>
         </div>
       </div>

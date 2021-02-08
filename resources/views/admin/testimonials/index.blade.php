@@ -10,7 +10,7 @@
     
         <div class="row">
             <div class="col-sm-3">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminTestimonialController@store']) !!}
+                {!! Form::open(['method' => 'POST', 'action'=>'AdminTestimonialController@store', 'autocomplete' => 'off']) !!}
                     <div class="form-group">
                         {!! Form::label('name', 'Name:') !!}
                         {!! Form::text('name', null, ['class' => 'form-control']) !!}

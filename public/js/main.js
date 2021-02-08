@@ -6045,7 +6045,9 @@ animateIn:!1},e.prototype.swap=function(){if(1===this.core.settings.items&&a.sup
     autoplay: true,
     dots: true,
     loop: true,
-    items: 1
+    items: 1,
+    autoplayTimeout: 20000,
+    autoplayHoverPause:true
   });
 
   // Testimonials carousel (uses the Owl Carousel library)
@@ -6053,7 +6055,8 @@ animateIn:!1},e.prototype.swap=function(){if(1===this.core.settings.items&&a.sup
     autoplay: true,
     dots: true,
     loop: true,
-    autoplayTimeout: 6000,
+    autoplayTimeout: 10000,
+    autoplayHoverPause:true,
     responsive: {
       0: {
         items: 1

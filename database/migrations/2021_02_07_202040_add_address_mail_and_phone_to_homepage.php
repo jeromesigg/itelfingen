@@ -15,9 +15,9 @@ class AddAddressMailAndPhoneToHomepage extends Migration
     {
         Schema::table('homepages', function (Blueprint $table) {
             //
-            $table->text('address');
-            $table->string('phone');
-            $table->string('mail');
+            $table->text('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('mail')->nullable();
         });
     }
 

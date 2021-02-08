@@ -18,7 +18,8 @@ class AdminUserController extends Controller
     {
         //
         $users = User::paginate(10);
-        return view('admin.users.index', compact('users'));
+        $roles = Role::pluck('name','id')->all();
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     /**

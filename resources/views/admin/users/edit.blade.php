@@ -8,7 +8,7 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($user, ['method' => 'PATCH', 'action'=>['AdminUserController@update', $user->id], 'files' => true]) !!}
+                    {!! Form::model($user, ['method' => 'PATCH', 'action'=>['AdminUserController@update', $user->id], 'autocomplete' => 'off']) !!}
                     <div class="form-group">
                         {!! Form::label('username', 'Name:') !!}
                         {!! Form::text('username', null, ['class' => 'form-control']) !!}

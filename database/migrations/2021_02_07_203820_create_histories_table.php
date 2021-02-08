@@ -16,9 +16,9 @@ class CreateHistoriesTable extends Migration
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('shorttitle');
+            $table->string('shorttitle')->nullable();
             $table->string('title');
-            $table->string('subtitle');
+            $table->string('subtitle')->nullable();
             $table->text('description');
             $table->integer('sort-index');
             $table->bigInteger('archive_status_id')->index()->unsigned()->nullable();

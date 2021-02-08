@@ -98,7 +98,7 @@ class AdminHomepageController extends Controller
             $input['background_top_photo_id'] = $photo->id;
         }
         if($file = $request->file('background_bottom_photo_id')){
-            $name = 'event-bg.jpg';
+            $name = 'events-bg.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
             

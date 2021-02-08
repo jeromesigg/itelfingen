@@ -1,7 +1,5 @@
 @extends('layouts.admin')
 @section('content')
-
-    @include('includes.tinyeditor')
     <section>
         <div class="container-fluid">
             <header> 
@@ -23,8 +21,8 @@
                         {!! Form::select('album_id', [''=>'Wähle Album'] + $albums, null, ['class' => 'form-control', 'required']) !!}
                     </div>
                     <div class="form-group">
-                            {!! Form::label('photo_id', 'Photo:') !!}
-                            {!! Form::file('photo_id', null, ['class' => 'form-control', 'required']) !!}
+                        {!! Form::label('photo_id', 'Photo:') !!}
+                        {!! Form::file('photo_id', null, ['class' => 'form-control', 'required']) !!}
                     </div>
 
                     <div class="form-group">

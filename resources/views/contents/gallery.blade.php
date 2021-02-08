@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <div class="container-fluid portfolio-container" data-aos="fade-up" data-aos-delay="100">
+      {{-- <div class="container-fluid portfolio-container" data-aos="fade-up" data-aos-delay="100">
         <div class="row no-gutters">
         @foreach ($pictures as $picture)
         <div class="col-lg-3 col-md-4 portfolio-item filter-{{$picture->album->internal_name}}">
@@ -26,6 +26,17 @@
             </a>
           </div>
         </div>  
+        @endforeach
+      </div> --}}
+      <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
+        @foreach ($pictures as $picture)
+            <div class="col-lg-3 col-md-4 portfolio-item filter-{{$picture->album->internal_name}}">
+                <div class="gallery-item">
+                    <a href="{{$picture->photo->file}}" class="venobox" data-gall="gallery-item">
+                      <img src="{{$picture->photo->file}}" alt="" class="img-fluid">
+                    </a>
+                </div>
+            </div>   
         @endforeach
       </div>
     </div>

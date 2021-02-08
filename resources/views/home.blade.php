@@ -1,35 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-  <!-- ======= About Section ======= -->
-  @include('contents.about')  
 
-  <!-- ======= Why Us Section ======= -->
-  @include('contents.why_us')  
+@include('includes.header')
 
-  <!-- ======= Menu Section ======= -->
-  @include('contents.pricelist')  
+@include('includes.title') 
 
-  <!-- ======= Booking Section ======= -->
-  @include('contents.agenda')  
+  <div id="app">
+        
+      <main class="py-4">
+        <!-- ======= About Section ======= -->
+        @include('contents.about')  
 
-  <!-- ======= Gallery Section ======= -->
-  @include('contents.gallery') 
+        <!-- ======= Why Us Section ======= -->
+        @include('contents.why_us')  
 
-  <!-- ======= Events Section ======= -->
-  @include('contents.locations')  
+        <!-- ======= Menu Section ======= -->
+        @include('contents.pricelist')  
 
-  <!-- ======= Specials Section ======= -->
-  @include('contents.history') 
+        <!-- ======= Booking Section ======= -->
+        @include('contents.agenda')  
 
-  <!-- ======= Testimonials Section ======= -->
-  @include('contents.testimonials')
- 
-  <!-- ======= About us Section ======= -->
-  @include('contents.about_us')  
+        <!-- ======= Gallery Section ======= -->
+        @include('contents.gallery') 
 
-  <!-- ======= Contact Section ======= -->
-  @include('contents.contacts')  
+        <!-- ======= Events Section ======= -->
+        @include('contents.locations')  
+
+        <!-- ======= Specials Section ======= -->
+        @include('contents.history') 
+
+        <!-- ======= Testimonials Section ======= -->
+        @include('contents.testimonials')
+      
+        <!-- ======= About us Section ======= -->
+        @include('contents.about_us')  
+
+        <!-- ======= Contact Section ======= -->
+        @include('contents.contacts')  
+      </main>
+      <div id="preloader"></div>
+      <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
+    </div>
 @endsection
 
 @section('scripts')
