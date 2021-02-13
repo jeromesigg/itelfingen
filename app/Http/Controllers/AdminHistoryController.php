@@ -49,6 +49,7 @@ class AdminHistoryController extends Controller
             $photo = Photo::create(['file'=>$name]); 
             $input['photo_id'] = $photo->id;
         }
+        $input['shorttitle'] = Str::slug($input['title'],'_');
         $index = History::all()->count();
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');

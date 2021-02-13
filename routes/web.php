@@ -22,7 +22,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 //fullcalender
-Route::post('calendar/create','CalendarsController@create');
+Route::post('event/create','EventController@create');
+
+
+Route::post('/contacts', 'ContactController@store');
 
 Route::get('/document/convert-word-to-pdf', 'DocumentController@convertWordToPDF')->name('document.wordtopdf');
 
@@ -38,10 +41,20 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/people', 'AdminPersonController');
     Route::resource('admin/histories', 'AdminHistoryController');
     Route::resource('admin/users', 'AdminUserController');
+    Route::resource('admin/events', 'AdminEventController');
+    Route::resource('admin/contacts', 'AdminContactController');
 
 
 });
 
 Route::get('admin/run-migrations', function () {
     return Artisan::call('migrate', ["--force" => true ]);
+});
+
+Route::get('admin/run-deployment', function () {
+    echo 'config:cache <br>';
+    Artisan::call('config:cache');
+    echo 'view:cache <br>';
+    Artisan::call('view:cache');
+    return true;
 });

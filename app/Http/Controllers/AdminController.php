@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Event;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -17,6 +18,9 @@ class AdminController extends Controller
     }
     
     public function index(){
-        return view('admin/index');
+        $events_all = Event::orderby('start_date')->get();
+        $events_new = Event::where('event_status_id',config('status.event_neu'))->get();
+        
+        return view('admin/index', compact('events_all', 'events_new'));
     }
 }

@@ -14,7 +14,7 @@ return [
     'event_eigene' => 20,
     'event_storniert' => 50,
 
-    'contract_neu' => 5,
+    'contract_offen' => 5,
     'contract_versendet' => 10,
     'contract_zurück' => 20,
     'contract_storniert' => 50,

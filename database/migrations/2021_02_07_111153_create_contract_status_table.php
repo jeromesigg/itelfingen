@@ -21,8 +21,8 @@ class CreateContractStatusTable extends Migration
         });
         DB::table('contract_statuses')->insert( 
             array(
-                ['id' => config('status.contract_neu'),
-                'name' => 'Neu'],
+                ['id' => config('status.contract_offen'),
+                'name' => 'Offen'],
                 ['id' => config('status.contract_versendet'),
                 'name' => 'Versendet'],
                 ['id' => config('status.contract_zurück'),

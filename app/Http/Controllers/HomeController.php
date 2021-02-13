@@ -41,6 +41,7 @@ class HomeController extends Controller
         $histories = History::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
         $albums = Album::all();
         $events = Event::where('event_status_id','<',config('status.event_storniert'))->get();
+        $event_type = 'guest';
 
         
         $events_json = [];
@@ -64,9 +65,9 @@ class HomeController extends Controller
                 'start' => $start,
                 'end' => $end,
                 'state' => $event->event_status['color'],
-                'id' => 1
+                'id' => $event->id
             ];
         }
-        return view('home', compact('homepage', 'pictures', 'albums', 'events_json', 'pricelists', 'testimonials', 'people', 'histories'));
+        return view('home', compact('homepage', 'pictures', 'albums', 'events_json', 'pricelists', 'testimonials', 'people', 'histories', 'event_type'));
     }
 }

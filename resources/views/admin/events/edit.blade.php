@@ -1,0 +1,123 @@
+@extends('layouts.admin')
+@section('content')
+    <section>
+        <div class="container-fluid">
+            <header> 
+                <h1 class="h3 display">Buchung bearbeiten</h1>
+            </header>
+            <div class="row">
+                {!! Form::model($event, ['method' => 'PATCH', 'action'=>['AdminEventController@update', $event->id], 'files' => true]) !!}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {!! Form::label('start_date', 'Start:') !!}
+                                {!! Form::date('start_date', null, ['class' => 'form-control', 'required']) !!}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {!! Form::label('end_date', 'Ende:') !!}
+                                {!! Form::date('end_date', null, ['class' => 'form-control']) !!}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {!! Form::label('name', 'Name:') !!}
+                                {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {!! Form::label('firstname', 'Vorname:') !!}
+                                {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('groupname', 'Gruppe/Anlass:') !!}
+                            {!! Form::text('groupname', null, ['class' => 'form-control']) !!}
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                {!! Form::label('email', 'Email:') !!}
+                                {!! Form::email('email', null, ['class' => 'form-control']) !!}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {!! Form::label('telephone', 'Telefon:') !!}
+                                {!! Form::text('telephone', null, ['class' => 'form-control']) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('street', 'Strasse:') !!}
+                            {!! Form::text('street', null, ['class' => 'form-control']) !!}
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                {!! Form::label('plz', 'PLZ:') !!}
+                                {!! Form::text('plz', null, ['class' => 'form-control', 'required']) !!}
+                            </div>
+                            <div class="form-group col-md-9">
+                                {!! Form::label('city', 'Ortschaft:') !!}
+                                {!! Form::text('city', null, ['class' => 'form-control']) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('comment', 'Bemerkung:') !!}
+                            {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6" style="padding-left:30px">
+                        <div class="form-group">
+                                {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
+                                {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('event_statuses', 'Status:') !!}
+                            {!! Form::select('event_statuses', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                        </div>
+                        
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('contract', 'Vertrag:') !!}
+                            @if ($event->contract)
+                                <a href="{{ URL::to('contracts',$event->contract)  }}" target="_blank">{{ $event->contract}}</a>
+                            @endif
+                            <br>
+                            {!! Form::file('contract', null, ['class' => 'form-control']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('contract_signed', 'Vertrag unterzeichnet:') !!}
+                            @if ($event->contract_signed)
+                                <a href="{{ URL::to('contracts/signed',$event->contract_signed)  }}" target="_blank">{{ $event->contract_signed}}</a>
+                            @endif
+                            <br>
+                            {!! Form::file('contract_signed', null, ['class' => 'form-control']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('contract_statuses', 'Vertrag-Status:') !!}
+                            {!! Form::select('contract_statuses', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        {!! Form::submit('Buchung updaten', ['class' => 'btn btn-primary'])!!}
+                    </div>
+                    <div class="form-group col-md-3">
+                    </div>
+                    <div class="form-group col-md-3">
+                    </div>
+                    <div class="form-group col-md-3">
+                        {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
+                            <div class="form-group">
+                                {!! Form::submit('Buchung löschen', ['class' => 'btn btn-danger'])!!}
+                            </div>
+                        {!! Form::close()!!}
+                    </div>
+                </div>
+                {!! Form::close()!!}
+            </div>
+            <div class="row"> 
+                @include('includes.form_error')
+            </div>   
+        </div>
+    </section>
+@endsection

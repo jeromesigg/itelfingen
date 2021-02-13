@@ -19,7 +19,7 @@
         @include('contents.pricelist')  
 
         <!-- ======= Booking Section ======= -->
-        @include('contents.agenda')  
+        @include('contents.event')  
 
         <!-- ======= Gallery Section ======= -->
         @include('contents.gallery') 
@@ -47,6 +47,6 @@
 @section('scripts')
 
   <!-- ======= Javascript Section ======= -->
-  @include('contents.agenda_js')
+  @include('contents.event_js')
 
 @endsection

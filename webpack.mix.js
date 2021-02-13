@@ -24,6 +24,7 @@ mix.styles([
     'resources/css/libs/venobox.min.css',
     'resources/css/libs/aos.css',
     'resources/css/libs/style.css',
+    'resources/css/libs/events.css',
     'resources/css/libs/custom.css',
 ], 'public/css/main.css');
 mix.scripts([
@@ -49,6 +50,7 @@ mix.styles([
     'resources/css/admin/fontastic.css',
     'resources/css/admin/jquery.mCustomScrollbar.css',
     'resources/css/admin/style.default.premium.css',
+    'resources/css/libs/events.css',
 ], 'public/css/admin.css');
 mix.scripts([
  'resources/js/libs/jquery.min.js',

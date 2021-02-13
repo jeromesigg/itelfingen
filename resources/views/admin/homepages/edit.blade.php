@@ -23,30 +23,30 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('mail', 'E-Mail:') !!}
-                        {!! Form::text('mail', null, ['class' => 'form-control', 'required']) !!}
+                        {!! Form::text('mail', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('phone', 'Telefon:') !!}
-                        {!! Form::text('phone', null, ['class' => 'form-control', 'required']) !!}
+                        {!! Form::text('phone', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('main_photo_id', 'Photo:') !!}
+                        {!! Form::label('main_photo_id', 'Haupt-Photo:') !!}
                         {!! Form::file('main_photo_id', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('background_top_photo_id', 'Photo:') !!}
+                        {!! Form::label('background_top_photo_id', '1. Photo:') !!}
                         {!! Form::file('background_top_photo_id', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('background_bottom_photo_id', 'Photo:') !!}
+                        {!! Form::label('background_bottom_photo_id', 'Grosses Photo Umgebung:') !!}
                         {!! Form::file('background_bottom_photo_id', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('big_login_photo_id', 'Photo:') !!}
+                        {!! Form::label('big_login_photo_id', 'Grosses Photo Login:') !!}
                         {!! Form::file('big_login_photo_id', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('small_login_photo_id', 'Photo:') !!}
+                        {!! Form::label('small_login_photo_id', 'Kleines Photo Login:') !!}
                         {!! Form::file('small_login_photo_id', null, ['class' => 'form-control']) !!}
                     </div>
   

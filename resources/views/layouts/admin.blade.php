@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +12,6 @@
 
         <!-- Bootstrap Core CSS -->
         <link href="{{asset('css/admin.css')}}" rel="stylesheet">
-        {{-- <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script> --}}
 
         @yield('styles')
 
@@ -26,15 +23,18 @@
         @include('includes/admin_topnav')
 
         @yield('content')
-            <footer class="main-footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-6 text-right">
-                            <p>Design by Jerome, V0</a></p>
-                        </div>
-                    </div>
+        <footer class="main-footer">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-sm-6">
+                  <p>Jérôme &copy; 2021</p>
                 </div>
-            </footer>
+                <div class="col-sm-6 text-right">
+                  <p>Version 1.0.0</p>
+                </div>
+              </div>
+            </div>
+        </footer>
         </div>
         
 

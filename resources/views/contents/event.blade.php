@@ -6,10 +6,20 @@
             <h2>Buchungen</h2>
             <p>Buchen Sie gleich Ihren nächsten Aufenthalt bei uns</p>
         </div>
+        @if (session()->has('success_event'))
+            <div class="alert alert-dismissable alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>
+                    {!! session()->get('success_event') !!}
+                </strong>
+            </div>
+        @endif
   
         <div class="hk-reservation hk-reservation__step1">
             <div class="hk-reservation__container container-fluid">
-                {!! Form::open(['method' => 'POST', 'action'=>'CalendarsController@create', 'id' => 'calendarform']) !!}
+                {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform']) !!}
                     <br>
                     <div class="row">
                         <div class="col-lg-12 col-xl-8 hk-calendar">

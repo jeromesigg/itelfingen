@@ -1,6 +1,6 @@
 <script>
 window.onload = function() { 
-    Agenda.load(@json($events_json))
+    Agenda.load(@json($events_json), @json($event_type))
     };
 
 function addDays(date, days) {
@@ -53,7 +53,8 @@ Agenda = {
 	reserved: {},
 	matrix: [],
 	// initial calendar setup
-	load: function(records) {
+	load: function(records, mode) {
+		this.mode = mode;
 		for (var i = 0, date, end; i < records.length; ++i) {
 			date = new Date(records[i].start.y, records[i].start.m, records[i].start.d);
 			end = new Date(records[i].end.y, records[i].end.m, records[i].end.d);
@@ -132,33 +133,46 @@ Agenda = {
 	},
 	// after clicking a date in the calendar
 	select: function(i, j, k) {
-		if (this.end !== null) {
-			this.start = null;
-			this.end = null;
+		switch (this.mode) {
+			case 'guest':
+				if (this.end !== null) {
+					this.start = null;
+					this.end = null;
+				}
+					console.log(this.matrix)
+				if (this.start === null && (this.reserved[Date.parse(this.matrix[i][j][k].date)] || {}).rState);
+				else if (this.start === null)
+					this.start = this.matrix[i][j][k].date;
+				else {
+					this.end = this.matrix[i][j][k].date;
+					if (Date.parse(this.start) > Date.parse(this.end)) {
+						var tmp = this.end;
+						this.end = this.start;
+						this.start = tmp;
+					}
+				}
+				var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+				if (Date.parse(today) >= Date.parse(this.start) || Date.parse(today) >= Date.parse(this.end)) {
+					this.end = new Date(today);
+					this.start = new Date(today);
+					$('#reservation_error').show();
+					setTimeout(function() { $('#reservation_error').hide(); }, 5000);
+					$('#reservation_error_2').show();
+					setTimeout(function() { $('#reservation_error_2').hide(); }, 5000);
+				}
+					console.log(this.matrix)
+				this.apply();
+				break;
+			case 'admin':
+				if (this.reserved[Date.parse(this.matrix[i][j][k].date)]) {
+					// open from calendar page
+					var path = location.pathname.split('/');
+					if (path) {
+						location.href = '/admin/'+path[2]+ '/' + this.reserved[Date.parse(this.matrix[i][j][k].date)].id + '/edit';
+					}
+				}
+				break;
 		}
-			console.log(this.matrix)
-		if (this.start === null && (this.reserved[Date.parse(this.matrix[i][j][k].date)] || {}).rState);
-		else if (this.start === null)
-			this.start = this.matrix[i][j][k].date;
-		else {
-			this.end = this.matrix[i][j][k].date;
-			if (Date.parse(this.start) > Date.parse(this.end)) {
-				var tmp = this.end;
-				this.end = this.start;
-				this.start = tmp;
-			}
-		}
-		var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-		if (Date.parse(today) >= Date.parse(this.start) || Date.parse(today) >= Date.parse(this.end)) {
-			this.end = new Date(today);
-			this.start = new Date(today);
-			$('#reservation_error').show();
-			setTimeout(function() { $('#reservation_error').hide(); }, 5000);
-			$('#reservation_error_2').show();
-			setTimeout(function() { $('#reservation_error_2').hide(); }, 5000);
-		}
-			console.log(this.matrix)
-		this.apply();
 	},
 	// reset selection
 	clear: function() {
@@ -219,29 +233,26 @@ Agenda = {
 				}
 				for (; Date.parse(date) != Date.parse(end); date.setDate(date.getDate() + 1)){
 					console.log(date + ': ' + Date.parse(date));
-					// console.log(this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state);
 					if ((this.reserved[Date.parse(date)] || {}).rState)
 						break;
 					else if (this.index[Date.parse(date)])
 						this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state = 'SS';
-					// console.log(this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state);
 				}
 				if (this.index[Date.parse(date)] && !(this.reserved[Date.parse(date)] || {}).lState)
 					this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state
 						= 'S' + this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state.charAt(1);
 			}
-			// console.log(this.matrix)
-			// console.log(this.start + ' ' + this.end)
-			start_date = addDays(this.start, +1);
-			end_date = addDays(date, +1);
-			$("#start_date").val(start_date.toISOString().split('T')[0]);
-			$("#end_date").val(end_date.toISOString().split('T')[0]);
-		} else {
+			if (this.mode === 'guest') {
+				start_date = addDays(this.start, +1);
+				end_date = addDays(date, +1);
+				$("#start_date").val(start_date.toISOString().split('T')[0]);
+				$("#end_date").val(end_date.toISOString().split('T')[0]);
+			}
+		} else if (this.mode === 'guest') {
 			start_date = addDays(new Date(), +1);
 			end_date = addDays(new Date(), +1);
 			$("#start_date").val(start_date.toISOString().split('T')[0]);
 			$("#end_date").val(end_date.toISOString().split('T')[0]);
-
 		}
 		var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 		for (date in this.index) {
@@ -249,7 +260,7 @@ Agenda = {
 			if (this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].state == 'FF') {
 				this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].node.className += (this.index[date].k == 5 ? ' hk-agenda__day--sat' : '') + (this.index[date].k == 6 ? ' hk-agenda__day--sun' : '');
 			}
-			if (today > date) {
+			if (this.mode == 'guest' && today > date) {
 				this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].node.className += ' hk-agenda__day--past';
 			}
 			try {

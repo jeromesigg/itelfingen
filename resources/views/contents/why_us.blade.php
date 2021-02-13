@@ -22,7 +22,7 @@
           </div>
         </div>
         
-        <div class="col-lg-3">
+        <div class="col-lg-3 mt-4 mt-lg-0">
           <div class="box" data-aos="zoom-in" data-aos-delay="100">
             <span>OG</span>
             <ul>
