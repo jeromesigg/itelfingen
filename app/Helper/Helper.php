@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use Illuminate\Http\Response;
+use ReCaptcha\RequestMethod\Post;
 use Illuminate\Support\Facades\Storage;
 
 class Helper
@@ -20,5 +21,9 @@ class Helper
  
 		return (new Response($file, 200))
               ->header('Content-Type','application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    }
+
+    static function customRequestCaptcha(){
+        return new \ReCaptcha\RequestMethod\Post();
     }
 }

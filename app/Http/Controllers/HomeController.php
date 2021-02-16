@@ -68,6 +68,15 @@ class HomeController extends Controller
                 'id' => $event->id
             ];
         }
-        return view('home', compact('homepage', 'pictures', 'albums', 'events_json', 'pricelists', 'testimonials', 'people', 'histories', 'event_type'));
+        $contact_attributes = [
+            'data-theme' => 'light',
+            'data-callback' => 'enable_ContactBtn'
+        ];
+        $event_attributes = [
+            'data-theme' => 'light',
+            'data-callback' => 'enable_EventBtn'
+        ];
+        return view('home', compact('homepage', 'pictures', 'albums', 'events_json', 'pricelists', 'testimonials', 'people', 
+            'histories', 'event_type', 'event_attributes', 'contact_attributes'));
     }
 }

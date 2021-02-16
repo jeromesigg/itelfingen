@@ -16,6 +16,15 @@
                 </strong>
             </div>
         @endif
+        @if ($errors->event->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->event->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+        @endif
   
         <div class="hk-reservation hk-reservation__step1">
             <div class="hk-reservation__container container-fluid">
@@ -97,7 +106,7 @@
                             </div>
                             <br>
                             <div class="form-group">
-                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary'])!!}
+                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary', 'id' => 'EventSubmit1', 'disabled' => 'disabled'])!!}
                             </div>
                             <br>
                             <br>
@@ -164,7 +173,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary'])!!}
+                                {!! Form::captcha($event_attributes) !!}<br>
+                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary', 'id' => 'EventSubmit2', 'disabled' => 'disabled'])!!}
                             </div>
                         </div>
                     </div>

@@ -6,11 +6,29 @@
       <p>Kontaktieren Sie uns</p>
     </div>
   </div>
+  @if ($errors->contact->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->contact->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  @endif
+  @if (session()->has('success_contact'))
+      <div class="alert alert-dismissable alert-success">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>
+              {!! session()->get('success_contact') !!}
+          </strong>
+      </div>
+  @endif
 
   <div data-aos="fade-up">
-    <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2422.4666550428083!2d8.472422258755596!3d47.11371962875789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566f883b183%3A0x806d2ed823fdf24b!2sItelfingen%201%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1612089698401!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
-  </div>                                                    
-
+    <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
+  </div>                                           
   <div class="container" data-aos="fade-up">
 
     <div class="row mt-5">
@@ -61,7 +79,10 @@
             {!! Form::label('content', 'Nachricht:') !!}
             {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8]) !!}
           </div>
-          {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-primary'])!!}
+          <div class="form-group">
+            {!! Form::captcha($contact_attributes) !!}<br>
+            {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-primary',  'id' => 'ContactSubmit', 'disabled' => 'disabled'])!!}
+        </div>
         {!! Form::close()!!}
       </div>
     </div>

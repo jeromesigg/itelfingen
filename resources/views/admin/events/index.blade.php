@@ -29,8 +29,8 @@
                     @if($events)
                     @foreach ($events as $event)
                         <tr>
-                            <td>{{$event->start_date}}</td>
-                            <td>{{$event->end_date}}</td>
+                            <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} </td>
+                            <td> {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
                             <td><a href="{{route('events.edit', $event->id)}}">{{$event->name}}</a></td>
                             <td>{{$event->firstname}}</td>
                             <td>{{$event->email}}</td>

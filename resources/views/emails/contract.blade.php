@@ -10,4 +10,3 @@
     <p>Thank you</p>
 </body>
 </html>
-<a href="{{ route('document.wordtopdf') }}">Convert Word To PDF</a>

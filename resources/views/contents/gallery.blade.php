@@ -3,7 +3,7 @@
   <div class="container" data-aos="fade-up">
     <div class="section-title">
       <h2>Gallerie</h2>
-      <p>Ein paar Fotos des Lagerhauses</p>
+      <p>Ein paar Impressionen des Ferienhauses</p>
     </div>
 
   <div class="row" data-aos="fade-in">

@@ -19,16 +19,13 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
 
 //fullcalender
 Route::post('event/create','EventController@create');
 
 
 Route::post('/contacts', 'ContactController@store');
-
-Route::get('/document/convert-word-to-pdf', 'DocumentController@convertWordToPDF')->name('document.wordtopdf');
-
 
 Route::group(['middleware' => 'admin'], function(){
     Route::get('/admin','AdminController@index');
@@ -42,6 +39,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/histories', 'AdminHistoryController');
     Route::resource('admin/users', 'AdminUserController');
     Route::resource('admin/events', 'AdminEventController');
+    Route::get('admin/events/{event}/downloadcontract', 'AdminEventController@DownloadContract')->name('events.downloadcontract');
     Route::resource('admin/contacts', 'AdminContactController');
 
 

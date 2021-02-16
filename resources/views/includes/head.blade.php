@@ -5,7 +5,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <title>Ferienhaus Itelfingen</title>
-<meta content="" name="descriptison">
+<meta content="Ein Ort zum Entspannen und gleichzeitig neue Abenteuer zu erleben. Buchen Sie gleich heute Ihren nächsten Aufenthalt bei uns." name="description">
 <meta content="" name="keywords">
 
 <!-- Favicons -->
@@ -19,3 +19,4 @@
 
 <link href="{{asset('css/app.css')}}" rel="stylesheet">
 <link href="{{asset('css/main.css')}}" rel="stylesheet">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

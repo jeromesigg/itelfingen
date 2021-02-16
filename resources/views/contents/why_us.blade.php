@@ -3,7 +3,7 @@
   
       <div class="section-title">
         <h2>Über das Haus</h2>
-        <p>Was das Haus für sie zu bieten hat?</p>
+        <p>Was das Haus für Sie zu bieten hat?</p>
       </div>
   
       <div class="row">
@@ -15,8 +15,8 @@
               <li>Aufenthaltsraum mit Platz für 20 Personen (34m<sup>2</sup>)</li>
               <li>Küche</li>
               <li>1 Zimmer mit 2 Betten</li>
-              <li>Nesszellen mit Dusche und WC</li>
-              <li>Nesszellen mit Dusche </li>
+              <li>Nasszellen mit Dusche und WC</li>
+              <li>Nasszellen mit Dusche </li>
               <li>WC</li>
             </ul>
           </div>
@@ -39,7 +39,7 @@
           <div class="box" data-aos="zoom-in" data-aos-delay="200">
             <span>UG</span>
             <ul>
-              <li>Keller als Materiallager zu gebrauchen</li>
+              <li>Keller als Materiallager<li>
             </ul>
           </div>
         </div>
