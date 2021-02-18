@@ -1,34 +1,3 @@
-.gallery #portfolio-flters {
-    padding: 0;
-    margin: 0 auto 35px auto;
-    list-style: none;
-    text-align: center;
-    background: #ecf5f9;
-    border-radius: 50px;
-    padding: 2px 15px;
-  }
-  
-  .gallery #portfolio-flters li {
-    cursor: pointer;
-    display: inline-block;
-    padding: 10px 15px 8px 15px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-    text-transform: uppercase;
-    color: #2f4d5a;
-    margin-bottom: 5px;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .gallery #portfolio-flters li:hover, .gallery #portfolio-flters li.filter-active {
-    color: #67b0d1;
-  }
-  
-  .gallery #portfolio-flters li:last-child {
-    margin-right: 0;
-  }
-
   .fc-day-sun{ 
     color:#337ab7;  
     border-color: black;  
@@ -41,5 +10,4 @@
     background-color: #ffa58c; 
   }
 
-  
 

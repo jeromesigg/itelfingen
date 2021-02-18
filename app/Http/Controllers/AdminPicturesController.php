@@ -6,6 +6,7 @@ use App\Album;
 use App\Photo;
 use App\Picture;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class AdminPicturesController extends Controller
 {
@@ -45,11 +46,18 @@ class AdminPicturesController extends Controller
         $input = $request->all();
 
         if($file = $request->file('photo_id')){
-            $name = time() . $file->getClientOriginalName();
+            $name = time() . '_' .$file->getClientOriginalName();
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
             $input['photo_id'] = $photo->id;
+
+            if($input['cropped_photo_id']){ 
+                $name = time() . '_cropped_' .$file->getClientOriginalName();
+                Image::make($input['cropped_photo_id'])->save('images/'.$name);
+
+                $photo_cropped = Photo::create(['file'=>$name]);
+                $input['cropped_photo_id'] = $photo_cropped->id;
+            }
         }
 
         Picture::create($input);
@@ -100,6 +108,14 @@ class AdminPicturesController extends Controller
             $photo = Photo::create(['file'=>$name]);
             
             $input['photo_id'] = $photo->id;
+
+            if($input['cropped_photo_id']){ 
+                $name = time() . '_cropped_' .$file->getClientOriginalName();
+                Image::make($input['cropped_photo_id'])->save('images/'.$name);
+
+                $photo_cropped = Photo::create(['file'=>$name]);
+                $input['cropped_photo_id'] = $photo_cropped->id;
+            }
         }
         Picture::whereId($id)->first()->update($input);
         return redirect('/admin/pictures');

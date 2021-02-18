@@ -15,6 +15,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Photo</th>
+                        <th scope="col">Vorschau</th>
                         <th scope="col">Name</th>
                         <th scope="col">Album</th>
                     </tr>
@@ -24,6 +25,7 @@
                         @foreach ($pictures as $picture)
                             <tr>
                                 <td><img height="50" src="{{$picture->photo ? $picture->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
+                                <td><img height="50" src="{{$picture->cropped_photo ? $picture->cropped_photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
                                 <td><a href="{{route('pictures.edit', $picture->id)}}">{{$picture->name}}</a></td>
                                 <td>{{$picture->album['name']}}</td>
                             </tr>   

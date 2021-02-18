@@ -21,10 +21,12 @@ mix.styles([
     'resources/css/libs/boxicons.min.css',
     'resources/css/libs/animate.min.css',
     'resources/css/libs/owl.carousel.min.css',
-    'resources/css/libs/venobox.min.css',
     'resources/css/libs/aos.css',
     'resources/css/libs/style.css',
     'resources/css/libs/events.css',
+    'resources/css/libs/hero-slider-style.css',
+    'resources/css/libs/magnific-popup.css',
+    'resources/css/libs/gallery-style.css',
     'resources/css/libs/custom.css',
 ], 'public/css/main.css');
 mix.scripts([
@@ -37,8 +39,9 @@ mix.scripts([
     'resources/js/libs/validate.js',
     'resources/js/libs/owl.carousel.min.js',
     'resources/js/libs/isotope.pkgd.min.js',
-    'resources/js/libs/venobox.min.js',
     'resources/js/libs/aos.js',
+    'resources/js/libs/hero-slider-main.js',
+    'resources/js/libs/jquery.magnific-popup.min.js',
     'resources/js/libs/main.js',
     'resources/js/libs/custom.js',
  ], 'public/js/main.js');  
