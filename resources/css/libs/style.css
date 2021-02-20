@@ -877,23 +877,24 @@ section {
 }
 
 /*--------------------------------------------------------------
-# Why Us
+# Rooms
 --------------------------------------------------------------*/
-.why-us .box {
+.rooms .box {
   padding: 50px 30px;
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
   transition: all ease-in-out 0.3s;
   background: #1a1814;
+  border-radius: 1.25rem;
 }
 
-.why-us .box span {
+.rooms .box span {
   display: block;
   font-size: 28px;
   font-weight: 700;
   color: #cda45e;
 }
 
-.why-us .box h4 {
+.rooms .box h4 {
   font-size: 24px;
   font-weight: 600;
   padding: 0;
@@ -901,11 +902,43 @@ section {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.why-us .box ul {
+.rooms .box ul {
   color: #aaaaaa;
   font-size: 15px;
   margin: 0;
   padding: 0;
+}
+
+.rooms .owl-dot {
+  display: inline-block;
+  margin: 0 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ddd !important;
+}
+
+.rooms .owl-dot.active {
+  background-color: #cda45e !important;
+}
+
+
+.rooms .owl-nav, .rooms .owl-dots {
+  margin-top: 5px;
+  text-align: center;
+}
+
+.rooms .owl-dot {
+  display: inline-block;
+  margin: 0 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ddd !important;
+}
+
+.rooms .owl-dot.active {
+  background-color: #cda45e !important;
 }
 
 /*--------------------------------------------------------------
@@ -951,17 +984,17 @@ section {
 }
 
 /*--------------------------------------------------------------
-# Specials
+# History
 --------------------------------------------------------------*/
-.specials {
+.history {
   overflow: hidden;
 }
 
-.specials .nav-tabs {
+.history .nav-tabs {
   border: 0;
 }
 
-.specials .nav-link {
+.history .nav-link {
   border: 0;
   padding: 12px 15px;
   transition: 0.3s;
@@ -971,57 +1004,57 @@ section {
   font-size: 15px;
 }
 
-.specials .nav-link:hover {
+.history .nav-link:hover {
   color: #cda45e;
 }
 
-.specials .nav-link.active {
+.history .nav-link.active {
   color: #1a1814;
   background: #cda45e;
   border-color: #cda45e;
 }
 
-.specials .nav-link:hover {
+.history .nav-link:hover {
   border-color: #cda45e;
 }
 
-.specials .tab-pane.active {
+.history .tab-pane.active {
   -webkit-animation: fadeIn 0.5s ease-out;
   animation: fadeIn 0.5s ease-out;
 }
 
-.specials .details h3 {
+.history .details h3 {
   font-size: 26px;
   font-weight: 600;
   margin-bottom: 20px;
   color: #cda45e;
 }
 
-.specials .details p {
+.history .details p {
   color: #aaaaaa;
 }
 
-.specials .details p:last-child {
+.history .details p:last-child {
   margin-bottom: 0;
 }
 
 @media (max-width: 992px) {
-  .specials .nav-link {
+  .history .nav-link {
     border: 0;
     padding: 15px;
   }
 }
 
 /*--------------------------------------------------------------
-# Events
+# Locations
 --------------------------------------------------------------*/
-.events {
+.locations {
   background: url(../images/events-bg.jpg) center center no-repeat;
   background-size: cover;
   position: relative;
 }
 
-.events::before {
+.locations::before {
   content: '';
   background-color: rgba(0, 0, 0, 0.8);
   position: absolute;
@@ -1031,71 +1064,61 @@ section {
   bottom: 0;
 }
 
-.events .section-title h2 {
+.locations .section-title h2 {
   color: #fff;
 }
 
-.events .container {
+.locations .container {
   position: relative;
 }
 
 @media (min-width: 1024px) {
-  .events {
+  .locations {
     background-attachment: fixed;
   }
 }
 
-.events .events-carousel {
+.locations .locations-carousel {
   background: rgba(255, 255, 255, 0.08);
-  padding: 30px;
+  padding: 35px;
+  border-radius: 1.25rem;
 }
 
-.events .event-item {
+.locations .location-item {
   color: #fff;
 }
 
-.events .event-item h3 {
+.locations .location-item h3 {
   font-weight: 600;
   font-size: 26px;
   color: #cda45e;
 }
 
-.events .event-item .price {
-  font-size: 26px;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.events .event-item .price span {
-  border-bottom: 2px solid #cda45e;
-}
-
-.events .event-item ul {
+.locations .location-item ul {
   list-style: none;
   padding: 0;
 }
 
-.events .event-item ul li {
+.locations .location-item ul li {
   padding-bottom: 10px;
 }
 
-.events .event-item ul i {
+.locations .location-item ul i {
   font-size: 20px;
   padding-right: 4px;
   color: #cda45e;
 }
 
-.events .event-item p:last-child {
+.locations .location-item p:last-child {
   margin-bottom: 0;
 }
 
-.events .owl-nav, .events .owl-dots {
+.locations .owl-nav, .locations .owl-dots {
   margin-top: 5px;
   text-align: center;
 }
 
-.events .owl-dot {
+.locations .owl-dot {
   display: inline-block;
   margin: 0 5px;
   width: 12px;
@@ -1104,124 +1127,36 @@ section {
   background-color: #ddd !important;
 }
 
-.events .owl-dot.active {
+.locations .owl-dot.active {
   background-color: #cda45e !important;
 }
 
 @media (min-width: 992px) {
-  .events .testimonial-item p {
+  .locations .testimonial-item p {
     width: 80%;
   }
 }
 
-/*--------------------------------------------------------------
-# Book A Table
---------------------------------------------------------------*/
-.book-a-table .php-email-form {
-  width: 100%;
-}
-
-.book-a-table .php-email-form .form-group {
-  padding-bottom: 8px;
-}
-
-.book-a-table .php-email-form .validate {
-  display: none;
-  color: red;
-  margin: 0 0 15px 0;
-  font-weight: 400;
-  font-size: 13px;
-}
-
-.book-a-table .php-email-form .error-message {
-  display: none;
-  color: #fff;
-  background: #ed3c0d;
+.locations .owl-nav, .locations .owl-dots {
+  margin-top: 5px;
   text-align: center;
-  padding: 15px;
-  font-weight: 600;
 }
 
-.book-a-table .php-email-form .sent-message {
-  display: none;
-  color: #fff;
-  background: #18d26e;
-  text-align: center;
-  padding: 15px;
-  font-weight: 600;
-}
-
-.book-a-table .php-email-form .loading {
-  display: none;
-  text-align: center;
-  padding: 15px;
-}
-
-.book-a-table .php-email-form .loading:before {
-  content: "";
+.locations .owl-dot {
   display: inline-block;
+  margin: 0 5px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  margin: 0 10px -6px 0;
-  border: 3px solid #cda45e;
-  border-top-color: #1a1814;
-  -webkit-animation: animate-loading 1s linear infinite;
-  animation: animate-loading 1s linear infinite;
+  background-color: #ddd !important;
 }
 
-.book-a-table .php-email-form input, .book-a-table .php-email-form textarea {
-  border-radius: 0;
-  box-shadow: none;
-  font-size: 14px;
-  background: #0c0b09;
-  border-color: #625b4b;
-  color: white;
+.locations .owl-dot.active {
+  background-color: #cda45e !important;
 }
 
-.book-a-table .php-email-form input::-webkit-input-placeholder, .book-a-table .php-email-form textarea::-webkit-input-placeholder {
-  color: #a49b89;
-}
-
-.book-a-table .php-email-form input::-moz-placeholder, .book-a-table .php-email-form textarea::-moz-placeholder {
-  color: #a49b89;
-}
-
-.book-a-table .php-email-form input:-ms-input-placeholder, .book-a-table .php-email-form textarea:-ms-input-placeholder {
-  color: #a49b89;
-}
-
-.book-a-table .php-email-form input::-ms-input-placeholder, .book-a-table .php-email-form textarea::-ms-input-placeholder {
-  color: #a49b89;
-}
-
-.book-a-table .php-email-form input::placeholder, .book-a-table .php-email-form textarea::placeholder {
-  color: #a49b89;
-}
-
-.book-a-table .php-email-form input:focus, .book-a-table .php-email-form textarea:focus {
-  border-color: #cda45e;
-}
-
-.book-a-table .php-email-form input {
-  height: 44px;
-}
-
-.book-a-table .php-email-form textarea {
-  padding: 10px 12px;
-}
-
-.book-a-table .php-email-form button[type="submit"] {
-  background: #cda45e;
-  border: 0;
-  padding: 10px 35px;
-  color: #fff;
-  transition: 0.4s;
-  border-radius: 50px;
-}
-
-.book-a-table .php-email-form button[type="submit"]:hover {
-  background: #d3af71;
+.location-item img {
+  border-radius: 1.25rem;
 }
 
 /*--------------------------------------------------------------
@@ -1334,6 +1269,7 @@ section {
   background: #343a40;
   position: relative;
   overflow: hidden;
+  border-radius: 1.25rem;
 }
 
 .chefs .member .member-info {

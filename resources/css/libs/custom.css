@@ -1,13 +1,63 @@
-  .fc-day-sun{ 
-    color:#337ab7;  
-    border-color: black;  
-    background-color: #ffa58c; 
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards_item {
+  display: flex;
+  padding: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .cards_item {
+    width: 50%;
   }
+}
 
-  .fc-day-sat{ 
-    color:#337ab7;  
-    border-color: black;  
-    background-color: #ffa58c; 
+@media (min-width: 56rem) {
+  .cards_item {
+    width: 50%;
   }
+}
 
+.card {
+  background-color: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
+.card_content {
+  padding: 1rem;
+}
+
+.card_title {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #cda45e;
+}
+
+.card_subtitle {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  color: #cda45e;
+}
+
+.card_text {
+  color: #ffffff;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;    
+  font-weight: 400;
+}
+
+td.hk-agenda__day--sat, td.hk-agenda__day--sun {
+  background: #cda45e5c;
+}

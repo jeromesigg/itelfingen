@@ -25,9 +25,10 @@ mix.styles([
     'resources/css/libs/style.css',
     'resources/css/libs/events.css',
     'resources/css/libs/hero-slider-style.css',
-    'resources/css/libs/magnific-popup.css',
     'resources/css/libs/gallery-style.css',
     'resources/css/libs/custom.css',
+    'resources/css/libs/photoswipe.css',
+    'resources/css/libs/default-skin.css',
 ], 'public/css/main.css');
 mix.scripts([
     'resources/js/libs/jquery.min.js',
@@ -41,7 +42,8 @@ mix.scripts([
     'resources/js/libs/isotope.pkgd.min.js',
     'resources/js/libs/aos.js',
     'resources/js/libs/hero-slider-main.js',
-    'resources/js/libs/jquery.magnific-popup.min.js',
+    'resources/js/libs/photoswipe-ui-default.min.js',
+    'resources/js/libs/photoswipe.min.js',
     'resources/js/libs/main.js',
     'resources/js/libs/custom.js',
  ], 'public/js/main.js');  

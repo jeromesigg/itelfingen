@@ -1,4 +1,4 @@
-<section id="locations" class="events">
+<section id="locations" class="locations">
     <div class="container" data-aos="fade-up">
   
       <div class="section-title">
@@ -6,9 +6,9 @@
         <p>Was Sie alles in der Umgebung des Hauses erleben können.</p>
       </div>
   
-      <div class="owl-carousel events-carousel" data-aos="fade-up" data-aos-delay="100">
+      <div class="owl-carousel locations-carousel" data-aos="fade-up" data-aos-delay="100">
   
-        <div class="row event-item">
+        <div class="row location-item">
           <div class="col-lg-6">
             <img src="/img/sommer.jpg" class="img-fluid" alt="">
           </div>
@@ -27,7 +27,7 @@
             </p>
           </div>
         </div>  
-        <div class="row event-item">
+        <div class="row location-item">
           <div class="col-lg-6 pt-4 pt-lg-0 content">
             <h3>Winter</h3>
             <p>
@@ -54,4 +54,4 @@
       </div>
   
     </div>
-  </section><!-- End Events Section -->
+  </section><!-- End Locations Section -->

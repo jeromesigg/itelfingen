@@ -164,8 +164,8 @@
     });
   });
 
-  // Events carousel (uses the Owl Carousel library)
-  $(".events-carousel").owlCarousel({
+  // locations carousel (uses the Owl Carousel library)
+  $(".locations-carousel").owlCarousel({
     autoplay: true,
     dots: true,
     loop: true,
@@ -194,9 +194,26 @@
     }
   });
 
-  // Initiate venobox lightbox
-  $(document).ready(function() {
-    $('.venobox').venobox();
+  // Räume carousel (uses the Owl Carousel library)
+  $(".rooms-carousel").owlCarousel({
+    autoplay: false,
+    dots: true,
+    loop: true,
+    margin: 25,
+    items: 4,
+    autoplayTimeout: 20000,
+    autoplayHoverPause:true,
+    responsive: {
+      0: {
+        items: 1
+      },
+      768: {
+        items: 2
+      },
+      900: {
+        items: 4
+      }
+    }
   });
 
   // Initi AOS

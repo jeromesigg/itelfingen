@@ -32,13 +32,3 @@ function adjustHeightOfPage(pageNo) {
       $('.cd-hero-slider li:nth-of-type(' + pageNo + ')').css("min-height", "100%");
   }
 }
-
-$(window).on('load', function(){
-  adjustHeightOfPage(1); // Adjust page height
-
-  $('.gallery-one').magnificPopup({
-      delegate: 'a', // child items selector, by clicking on it popup will open
-      type: 'image',
-      gallery:{enabled:true}                
-  });           
-});

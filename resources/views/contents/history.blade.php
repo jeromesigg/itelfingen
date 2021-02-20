@@ -1,4 +1,4 @@
-<section id="history" class="specials">
+<section id="history" class="history">
     <div class="container" data-aos="fade-up">
   
       <div class="section-title">
@@ -37,4 +37,4 @@
       </div>
   
     </div>
-  </section><!-- End Specials Section -->
+  </section><!-- End History Section -->

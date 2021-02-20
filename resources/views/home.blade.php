@@ -13,7 +13,10 @@
         @include('contents.about')  
 
         <!-- ======= Why Us Section ======= -->
-        @include('contents.why_us')  
+        @include('contents.rooms')  
+        
+        <!-- ======= Gallery Section ======= -->
+        @include('contents.gallery') 
 
         <!-- ======= Menu Section ======= -->
         @include('contents.pricelist')  
@@ -21,13 +24,11 @@
         <!-- ======= Booking Section ======= -->
         @include('contents.event')  
 
-        <!-- ======= Gallery Section ======= -->
-        @include('contents.gallery') 
 
         <!-- ======= Events Section ======= -->
         @include('contents.locations')  
 
-        <!-- ======= Specials Section ======= -->
+        <!-- ======= History Section ======= -->
         @include('contents.history') 
 
         <!-- ======= Testimonials Section ======= -->
@@ -48,5 +49,6 @@
 
   <!-- ======= Javascript Section ======= -->
   @include('contents.event_js')
-
+  @include('contents.gallery_js')
+ 
 @endsection
