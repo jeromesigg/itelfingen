@@ -8,7 +8,7 @@
     <div class="tm-img-gallery gallery" itemscope itemtype="http://schema.org/ImageGallery">
       @foreach ($pictures as $key=>$picture)
       <div class="grid-item">
-        <figure class="effect-sadie" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+        <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
           <a href="{{$picture->photo->file}}" itemprop="contentUrl" data-index="{{$key}}">
           <img src="{{$picture->cropped_photo->file}}" itemprop="thumbnail" alt="Image" class="img-fluid tm-img">
           </a>

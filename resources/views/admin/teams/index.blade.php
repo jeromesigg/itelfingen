@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<h1>Trauzeugen</h1>
+<h3>Team</h3>
     
 <table class="table">
     <thead>

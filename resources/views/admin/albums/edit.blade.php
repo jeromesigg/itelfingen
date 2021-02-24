@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <!-- Page Header-->
             <header> 
-                <h1 class="h3 display">Album</h1>
+                <h3 class="display">Album</h3>
             </header>
             <div class="row">
                 <div class="col-sm-6">

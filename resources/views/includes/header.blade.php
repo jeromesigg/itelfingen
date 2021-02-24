@@ -2,15 +2,12 @@
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-        <h1 class="logo mr-auto"><a href="{{ url('/') }}">Ferienhaus Itelfingen</a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+        <h2 class="logo mr-auto"><a href="#header" class="scrollto">Ferienhaus Itelfingen</a></h2>
 
 
         <nav class="nav-menu d-none d-lg-block">
             <ul id="top-menu">
-                <li class="active"><a href="#header">Home</a></li>
-                <li><a href="#rooms">Details</a></li>
+                <li><a href="/#rooms">Details</a></li>
                 <li><a href="#gallery">Fotos</a></li>
                 <li><a href="#pricelist">Preisliste</a></li>
                 <li><a href="#booking">Belegungen</a></li>
@@ -19,7 +16,6 @@
                 <li><a href="#contact">Kontakt</a></li>
                 <li class="book-a-table text-center"><a href="#booking">Haus Buchen</a></li>
                 @guest
-                <li> <a href="{{ route('login') }}">Login</a></li>
                 @else
                     <li><a href="/admin" target="blank">Dashboard</a></li>            
                

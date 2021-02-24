@@ -1,32 +1,14 @@
 @extends('layouts.admin')
 @section('styles')
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>
-
-<style type="text/css">
-    img {
-    display: block;
-    max-width: 100%;
-    }
-    .preview {
-    overflow: hidden;
-    width: 160px; 
-    height: 160px;
-    margin: 10px;
-    border: 1px solid red;
-    }
-    .modal-lg{
-    max-width: 1000px !important;
-    }
-    </style>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>
 @endsection
 @section('content')
     <section>
         <div class="container-fluid">
             <header> 
-                <h1 class="h3 display">Albumbild bearbeiten</h1>
+                <h3 class="display">Albumbild bearbeiten</h3>
             </header>
             <div class="row">
                 <div class="col-sm-3" >

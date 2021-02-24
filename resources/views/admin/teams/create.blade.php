@@ -4,7 +4,7 @@
     <section>
         <div class="container-fluid">
             <header> 
-                <h1 class="h3 display">Trauzeugen erstellen</h1>
+                <h3 class="display">Trauzeugen erstellen</h3>
             </header>
             <div class="row">
                 {!! Form::open(['method' => 'POST', 'action'=>'AdminTeamsController@store', 'files' => true]) !!}

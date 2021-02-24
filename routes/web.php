@@ -15,14 +15,17 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
+Route::get('/impressum', 'HomeController@impressum')->name('impressum');
 Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
+
 
 // Route::get('/home', 'HomeController@index')->name('home');
 
 //fullcalender
 Route::post('event/create','EventController@create');
+
 
 
 Route::post('/contacts', 'ContactController@store');
@@ -50,6 +53,8 @@ Route::get('admin/run-migrations', function () {
 });
 
 Route::get('admin/run-deployment', function () {
+    echo 'sitemap:generate <br>';
+    Artisan::call('sitemap:generate');
     echo 'config:cache <br>';
     Artisan::call('config:cache');
     echo 'view:cache <br>';

@@ -61,3 +61,39 @@
 td.hk-agenda__day--sat, td.hk-agenda__day--sun {
   background: #cda45e5c;
 }
+
+/*
+ * Bootstrap Cookie Alert by Wruczek
+ * https://github.com/Wruczek/Bootstrap-Cookie-Alert
+ * Released under MIT license
+ */
+ .cookie-consent {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  z-index: 999;
+  padding: 10px 5px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 28px;
+  font-family: "Helvetica neue", Helvetica, sans-serif;
+  }
+
+.cookie-consent.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0%);
+  transition-delay: 1000ms;
+}
+
+.cookie-consent a {
+  text-decoration: underline
+}
+
+.cookie-consent__agree {
+  margin-left: 10px;
+  vertical-align: baseline;
+}

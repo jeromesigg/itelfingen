@@ -4,7 +4,7 @@
     <section>
         <div class="container-fluid">
             <header> 
-                <h1 class="h3 display">Geschenk erstellen</h1>
+                <h3 class="display">Geschenk erstellen</h3>
             </header>
             <div class="row">
                 {!! Form::open(['method' => 'POST', 'action'=>'AdminGiftsController@store', 'files' => true]) !!}

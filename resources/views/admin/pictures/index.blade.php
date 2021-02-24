@@ -6,7 +6,7 @@
     <div class="container-fluid">
 
         <header> 
-            <h1>Albumbilder</h1>
+            <h3>Albumbilder</h3>
         </header>
 
         <div class="row">

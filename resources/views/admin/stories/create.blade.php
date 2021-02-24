@@ -4,7 +4,7 @@
     <section>
         <div class="container-fluid">
             <header> 
-                <h1 class="h3 display">Story erstellen</h1>
+                <h3 class="display">Story erstellen</h3>
             </header>
             <div class="row">
                 {!! Form::open(['method' => 'POST', 'action'=>'AdminStoriesController@store', 'files' => true]) !!}

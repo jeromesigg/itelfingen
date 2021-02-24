@@ -4,13 +4,18 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Lagerhaus Itelfinden">
+        <meta name="description" content="Ferien- Lagerhaus Itelfingen">
         <meta name="author" content="Jérôme Sigg">
         <meta name="robots" content="all,follow">
 
-        <title>Lagerhaus Itelfingen</title>
+        <title>Ferien- Lagerhaus Itelfingen</title>
 
         <!-- Bootstrap Core CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+        <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
         <link href="{{asset('css/admin.css')}}" rel="stylesheet">
 
         @yield('styles')
@@ -40,6 +45,9 @@
         
 
         <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+        
         <script src="{{asset('js/admin.js')}}"></script>
         @yield('scripts')        
     </body>

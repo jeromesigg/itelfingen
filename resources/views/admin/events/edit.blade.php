@@ -3,7 +3,7 @@
     <section>
         <div class="container-fluid">
             <header> 
-                <h1 class="h3 display">Buchung bearbeiten</h1>
+                <h3 class="display">Buchung bearbeiten</h3>
             </header>
             <div class="row">
                 <div class="form-row">

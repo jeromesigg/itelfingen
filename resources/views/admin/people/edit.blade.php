@@ -4,7 +4,7 @@
     <section>
         <div class="container-fluid">
             <header> 
-                <h1 class="h3 display">Person bearbeiten</h1>
+                <h3 class="display">Person bearbeiten</h3>
             </header>
             <div class="row">
                  <div class="col-sm-9">

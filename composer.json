@@ -19,7 +19,9 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.1",
-        "phpoffice/phpword": "^0.17.0"
+        "phpoffice/phpword": "^0.17.0",
+        "spatie/laravel-cookie-consent": "^2.12",
+        "spatie/laravel-sitemap": "^5.9"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

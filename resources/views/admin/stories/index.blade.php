@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<h1>Unsere Geschichte</h1>
+<h3>Unsere Geschichte</h3>
     
 <table class="table">
     <thead>

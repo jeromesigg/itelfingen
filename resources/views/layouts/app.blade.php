@@ -4,14 +4,7 @@
       @include('includes.head')  
   </head>
   <body>
-
-        
-
-          @yield('content')
-      
-
-    <!-- jQuery -->
-    <script src="{{ asset('js/main.js') }}"></script>
+    @yield('content')
     @yield('scripts')
   </body>
 </html>

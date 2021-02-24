@@ -5,7 +5,7 @@
     <div class="container-fluid">
 
         <header> 
-            <h1>Buchungen</h1>
+            <h3>Buchungen</h3>
         </header>
     
         <div class="row">

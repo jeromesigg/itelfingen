@@ -79,4 +79,11 @@ class HomeController extends Controller
         return view('home', compact('homepage', 'pictures', 'albums', 'events_json', 'pricelists', 'testimonials', 'people', 
             'histories', 'event_type', 'event_attributes', 'contact_attributes'));
     }
+
+    public function impressum()
+    {
+        $homepage = Homepage::FindOrFail(1);
+        
+        return view('contents.impressum', compact('homepage'));
+    }
 }
