@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use App\Event;
-use App\Homepage;
-use Carbon\Carbon;
-use App\Helper\Helper;
-use Redirect,Response;
-use Illuminate\Http\Request;
 use App\Http\Requests\EventRequest;
 use Illuminate\Support\Facades\Mail;
+use Spatie\IcalendarGenerator\Components\Calendar;
+use Spatie\IcalendarGenerator\Components\Event as ICal_Event;
 
 class EventController extends Controller
 { 
@@ -34,8 +32,25 @@ class EventController extends Controller
     }
 
     public function get_ical_public()
-    {  
-        return Helper::getEventsICalObject();
+    {         
+        $events_ical = [];
+        $events = Event::all();
+        foreach($events as $event){
+            array_push($events_ical, 
+                ICal_Event::create($event->groups . ' - ' . $event->firstname . '  ' . $event->name)
+                ->period(new DateTime($event->start_date), new DateTime($event->end_date)));
+        }
+
+        $calendar = Calendar::create()
+            ->name('Ferien- und Lagerhaus Itelfingen')
+            ->description('Public Kalender von Itelfingen')
+            ->event($events_ical);
+
+        return response($calendar->get(), 200, [
+            'Content-Type' => 'text/calendar',
+            'Content-Disposition' => 'attachment; filename="calendar.ics"',
+            'charset' => 'utf-8',
+        ]);
     }
 
 
