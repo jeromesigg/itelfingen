@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Event;
 use App\Homepage;
 use Carbon\Carbon;
+use App\Helper\Helper;
 use Redirect,Response;
 use Illuminate\Http\Request;
 use App\Http\Requests\EventRequest;
@@ -21,11 +22,21 @@ class EventController extends Controller
         $email = $input['email'];
         Event::create($input);
         Mail::send('emails.send_event',  $input, function($message) use($email, $name){
-            $message->to($email, $name)->subject('Ihre Buchung für das Ferienhaus Itelfingen');
+            $message
+                ->to($email, $name)
+                ->replyto(config('mail.from.address'), config('mail.from.name'))
+                ->subject('Ihre Buchung für das Ferienhaus Itelfingen');
         });
         Mail::send('emails.send_event',  $input, function($message){
-          $message->to('jerome.sigg@gmail.com', 'Jerome')->subject('Buchung für das Ferienhaus Itelfingen');
+          $message->to(config('mail.from.address'), config('mail.from.name'))->subject('Buchung für das Ferienhaus Itelfingen');
         });
         return redirect()->to(url()->previous() . '#booking')->with('success_event', 'Vielen Dank für die Nachricht. Wir werden uns so schnell wie möglich melden.');
     }
+
+    public function get_ical_public()
+    {  
+        return Helper::getEventsICalObject();
+    }
+
+
 }

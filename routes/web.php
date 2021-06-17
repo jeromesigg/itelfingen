@@ -25,6 +25,8 @@ Auth::routes();
 
 //fullcalender
 Route::post('event/create','EventController@create');
+Route::get('event/ical_public','EventController@get_ical_public');
+
 
 
 
