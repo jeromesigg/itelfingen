@@ -19,5 +19,7 @@
 <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  
 <link href="{{asset('css/app.css')}}" rel="stylesheet">
 <link href="{{asset('css/main.css')}}" rel="stylesheet">

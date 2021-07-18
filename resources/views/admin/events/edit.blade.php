@@ -75,8 +75,8 @@
                                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                                     </div>
                                     <div class="form-group">
-                                        {!! Form::label('event_statuses', 'Status:') !!}
-                                        {!! Form::select('event_statuses', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                        {!! Form::label('event_status_id', 'Status:') !!}
+                                        {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
                                     </div>
                                     
                                     <br>

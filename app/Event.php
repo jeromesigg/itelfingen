@@ -10,7 +10,7 @@ class Event extends Model
     //
     protected $fillable = [
     'name', 'title', 'event_status_id', 'start_date', 'end_date', 
-    'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'contract', 'contract_status_id', 'contract_intern'
+    'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'contract', 'contract_status_id', 'contract_intern', 'comment_intern'
     ];
 
     // protected $dates = [

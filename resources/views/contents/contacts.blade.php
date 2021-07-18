@@ -60,24 +60,24 @@
 
       <div class="col-lg-8 mt-5 mt-lg-0">
 
-        {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store' ])!!}
+        {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store', 'autocomplete'=>"off"])!!}
           <div class="form-row">
             <div class="col-md-6 form-group">
-              {!! Form::label('name', 'Name:') !!}
-              {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
+              {!! Form::label('name', 'Kontakt:') !!}
+              {!! Form::text('name', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
             </div>
             <div class="col-md-6 form-group">
               {!! Form::label('email', 'Email:') !!}
-              {!! Form::email('email', null, ['class' => 'form-control', 'required']) !!}
+              {!! Form::email('email', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
             </div>
           </div>
           <div class="form-group">
             {!! Form::label('subject', 'Betreff:') !!}
-            {!! Form::text('subject', null, ['class' => 'form-control', 'required']) !!}
+            {!! Form::text('subject', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
           </div>
           <div class="form-group">
             {!! Form::label('content', 'Nachricht:') !!}
-            {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8]) !!}
+            {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8, 'data-lpignore'=>'true']) !!}
           </div>
           <div class="form-group">
             {!! Form::captcha($contact_attributes) !!}<br>

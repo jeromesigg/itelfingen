@@ -12,6 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.styles([
+    'resources/css/admin/jquery-ui.css',
     'resources/css/libs/icofont.min.css',
     'resources/css/libs/boxicons.min.css',
     'resources/css/libs/owl.carousel.min.css',
@@ -25,6 +26,7 @@ mix.styles([
     'resources/css/libs/default-skin.css',
 ], 'public/css/main.css');
 mix.scripts([
+    'resources/js/admin/jquery-ui.js',
     'resources/js/libs/validate.js',
     'resources/js/libs/owl.carousel.min.js',
     'resources/js/libs/isotope.pkgd.min.js',
@@ -39,6 +41,7 @@ mix.scripts([
  //   Admin
 mix.styles([
     'resources/css/libs/font-awesome.css',
+    'resources/css/admin/jquery-ui.css',
     'resources/css/admin/fontastic.css',
     'resources/css/admin/jquery.mCustomScrollbar.css',
     'resources/css/admin/style.default.premium.css',

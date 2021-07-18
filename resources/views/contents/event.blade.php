@@ -118,19 +118,28 @@
                                 Daten sind auch im Kalender auswählbar.
                             </div>
                             <br>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="form-row">
                                 <div class="col-md-6 form-group">
-                                  {!! Form::label('name', 'Name:') !!}
-                                  {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
+                                  {!! Form::label('firstname', 'Vorname:') !!}
+                                  {!! Form::text('firstname', null, ['class' => 'form-control', 'required']) !!}
                                 </div>
                                 <div class="col-md-6 form-group">
-                                  {!! Form::label('firstname', 'Vorname:') !!}
-                                  {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
+                                  {!! Form::label('name', 'Nachname:') !!}
+                                  {!! Form::text('name', null, ['class' => 'form-control']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
-                                {!! Form::label('group_name', 'Anlass / Gruppe:') !!}
-                                {!! Form::text('group_name', null, ['class' => 'form-control', 'required']) !!}
+                                {!! Form::label('group', 'Anlass / Gruppe:') !!}
+                                {!! Form::text('group', null, ['class' => 'form-control', 'required']) !!}
                             </div>
                             <div class="form-group">
                                 {!! Form::label('email', 'E-Mail:') !!}
@@ -142,16 +151,17 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-md-3 form-group">
-                                {!! Form::label('plz', 'PLZ:') !!}
-                                {!! Form::text('plz', null, ['class' => 'form-control', 'required']) !!}
+                                    {!! Form::label('zipcode', 'PLZ:') !!}
+                                    {!! Form::text('zipcode', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
                                 </div>
                                 <div class="col-md-9 form-group">
-                                {!! Form::label('city', 'Ortschaft:') !!}
-                                {!! Form::text('city', null, ['class' => 'form-control', 'required']) !!}
+                                    {!! Form::label('city', 'Ortschaft:') !!}
+                                    {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
                                 </div>
+                                {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
                             </div>
                             <div class="form-group">
-                                {!! Form::label('telephone', 'Telefon:') !!}
+                                {!! Form::label('telephone', 'Telefon / Mobil:') !!}
                                 {!! Form::text('telephone', null, ['class' => 'form-control', 'required']) !!}
                             </div>
                             <div class="form-group">

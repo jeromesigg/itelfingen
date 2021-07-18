@@ -4,6 +4,7 @@
 /public/contracts
 /public/images
 /storage/*.key
+/storage/app/google-calendar
 /vendor
 .env
 .env.backup

@@ -11,6 +11,7 @@ use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Spatie\GoogleCalendar\Event as Event_API;
 
 class AdminEventController extends Controller
 {
@@ -182,6 +183,18 @@ class AdminEventController extends Controller
             $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
         }
 
+        $event = Event::findOrFail($id);
+        if(($event['event_status_id'] == config('status.event_neu')) && ($input['event_status_id'] == config('status.event_bestaetigt'))){
+
+            $event = Event::create($input); 
+            $event_api = new Event_API;
+
+            $event_api->name = $event->event_status['name'] . ' - ' . $name . ' - ' . $event['group_name'];
+            $event_api->startDate = Carbon::parse($event->start_date);
+            $event_api->endDate = Carbon::parse($event->end_date);
+            
+            $event_api->save();
+        }
         $event->update($input);
         return redirect('/admin/events');
     }
