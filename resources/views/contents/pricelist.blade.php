@@ -9,16 +9,19 @@
       <div class="row pricelist-container" data-aos="fade-up" data-aos-delay="200">
         <ul class="cards">
           <li class="cards_item">
-            <div class="card">
+            <div class="card" style="width: 100%">
               <div class="card_content">
-                <span class="card_title"> Übernachtungen (Min. 10 Personen)</span>
+                <span class="card_title"> Übernachtungen</span>
                 <br>
-                <p>Mindesttaxe 200.- pro Nacht</p>
-                <span class="card_subtitle">Vereine</span>
-                <p>Fr. 20.- pro Nacht und Person (ab 5 Jahren)</p>
+                <p>Buchungspauschale 200.-</p>
+                <p>Reinigungsspauschale 200.-</p>
+                <span class="card_subtitle">Genossenschafter</span>
+                <p>Fr. 36.- pro Nacht und Person (ab 16 Jahren)</p>
+                <p>Fr. 18.- pro Nacht und Person (bis 16 Jahren)</p>
                 <br>
                 <span class="card_subtitle">Privatpersonen</span>
-                <p>Fr. 25.- pro Nacht und Person (ab 5 Jahren)</p>
+                <p>Fr. 60.- pro Nacht und Person (ab 16 Jahren)</p>
+                <p>Fr. 30.- pro Nacht und Person (bis 16 Jahren)</p>
                 <br>
               </div>
             </div>
