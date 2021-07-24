@@ -118,7 +118,7 @@
                                     </div>
                                     <br>
                                     <div class="form-group">
-                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet:') !!}
+                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird in Drive Ordner Hochgeladen):') !!}
                                         @if ($event->contract_signed)
                                             <a href="{{ URL::to('contracts/signed',$event->contract_signed)  }}" target="_blank">{{ $event->contract_signed}}</a>
                                         @endif
@@ -127,8 +127,8 @@
                                     </div>
                                     <br>
                                     <div class="form-group">
-                                        {!! Form::label('contract_statuses', 'Vertrag-Status:') !!}
-                                        {!! Form::select('contract_statuses', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                        {!! Form::label('contract_status_id', 'Vertrag-Status:') !!}
+                                        {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
                                     </div>
                                 </div>
                             </div>

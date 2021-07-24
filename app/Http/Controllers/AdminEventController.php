@@ -224,6 +224,9 @@ class AdminEventController extends Controller
             $input['contract_signed'] = $name;
             $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
             $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
+            // return file_get_contents(public_path().'/contracts/signed/'. $name); 
+            // return response()->download(public_path().'/contracts/signed/'. $name); 
+            Storage::disk('google')->put($name, response()->download(public_path().'/contracts/signed/'. $name)); 
         }
 
         $event = Event::findOrFail($id);
