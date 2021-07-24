@@ -6,6 +6,7 @@ use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdminUserController extends Controller
 {
@@ -55,6 +56,11 @@ class AdminUserController extends Controller
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
         }
+        
+        if($file = $request->file('signature')){
+            $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
+            $input['signature'] = $path;
+        }
 
         User::create($input);
 
@@ -99,12 +105,18 @@ class AdminUserController extends Controller
         //
         $user = User::findOrFail($id);
 
+
         if(trim($request->password) == ''){
             $input = $request->except('password');
         }
         else{
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
+        }
+
+        if($file = $request->file('signature')){
+            $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
+            $input['signature'] = $path;
         }
 
         $user->update($input);
@@ -123,4 +135,11 @@ class AdminUserController extends Controller
         User::findOrFail($id)->delete();
         return redirect('/admin/users');
     }
+
+    public function get_signature(User $user)
+    {
+        /**this will force download your file**/
+        return Storage::download($user->signature);
+    }
+    
 }

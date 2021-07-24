@@ -92,6 +92,16 @@
                                             {!! Form::number('member_kids', null, ['class' => 'form-control']) !!}
                                         </div>
                                     </div>
+                                    <div class="form-row">
+                                        <div class="col-md-6 form-group">
+                                            {!! Form::label('total_days', 'Tage:') !!}
+                                            {!! Form::number('total_days', null, ['class' => 'form-control', 'required']) !!}
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            {!! Form::label('total_amount', 'Total:') !!}
+                                            {!! Form::number('total_amount', null, ['class' => 'form-control', 'required']) !!}
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         {!! Form::label('event_status_id', 'Status:') !!}
                                         {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}

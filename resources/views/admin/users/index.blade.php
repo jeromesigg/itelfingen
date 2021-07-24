@@ -16,6 +16,18 @@
                         {!! Form::text('username', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
+                        {!! Form::label('fullname', 'Name:') !!}
+                        {!! Form::text('fullname', null, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('phone', 'Handy-Nummer:') !!}
+                        {!! Form::text('phone', null, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('signature', 'Unterschrift:') !!}
+                        {!! Form::file('signature', null, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="form-group">
                         {!! Form::label('role_id', 'Role:') !!}
                         {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control']) !!}
                     </div>

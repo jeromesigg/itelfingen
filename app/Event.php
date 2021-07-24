@@ -11,18 +11,14 @@ class Event extends Model
     protected $fillable = [
     'name', 'title', 'event_status_id', 'start_date', 'end_date', 
     'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'contract', 'contract_status_id', 'contract_intern', 'comment_intern', 
-    'terms','other_adults', 'member_adult', 'other_kids', 'member_kids', 'total'
+    'terms','other_adults', 'member_adults', 'other_kids', 'member_kids', 'total_people', 'total_amount', 'total_days'
 
     ];
 
     protected $casts =  [
         'terms' => 'boolean',
     ];
-
-    // protected $dates = [
-    //     'end_date', 'start_date'
-    // ];
-
+    
     public function event_status(){
         return $this->belongsTo('App\EventStatus');
     }
@@ -30,12 +26,4 @@ class Event extends Model
     public function contract_status(){
         return $this->belongsTo('App\ContractStatus');
     }
-
-    // public function getStartDateAttribute($value){
-    //     return Carbon::parse($value)->format('Y-m-d');
-    // }
-
-    // public function getEndDateAttribute($value){
-    //     return Carbon::parse($value)->format('Y-m-d');
-    // }
 }

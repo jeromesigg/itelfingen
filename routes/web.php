@@ -39,6 +39,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/people', 'AdminPersonController');
     Route::resource('admin/histories', 'AdminHistoryController');
     Route::resource('admin/users', 'AdminUserController');
+    Route::get('admin/users/download/{user}', ['as'=>'download_signature','uses'=>'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController');
     Route::get('admin/events/{event}/downloadcontract', 'AdminEventController@DownloadContract')->name('events.downloadcontract');
     Route::resource('admin/contacts', 'AdminContactController');

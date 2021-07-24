@@ -177,6 +177,7 @@
                                                     {!! Form::label('end_date', 'End Datum:') !!}
                                                     {!! Form::date('end_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
                                                     </div>
+                                                    {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
                                                 </div>
                                                 <table class="table">
                                                     <thead>
@@ -192,7 +193,8 @@
                                                             <th scope="row"></th>
                                                             <th>Total <span id="days"></span></th>
                                                             <th></th>
-                                                            <th>CHF <span id="total"></span>.-</th>
+                                                            <th>CHF <span id="total_amount_show"></span>.-</th>
+                                                            {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
                                                         </tr>
                                                         <tr>
                                                             <th colspan="4">
@@ -204,37 +206,37 @@
                                                         <tr>
                                                             <th scope="row">1</th>
                                                             <td>Buchungspauschale</td>
-                                                            <td>CHF 200.-</td>
-                                                            <td>CHF 200.-</td>
+                                                            <td>CHF {{config('pricelist.booking')}}.-</td>
+                                                            <td>CHF {{config('pricelist.booking')}}.-</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">1</th>
                                                             <td>Reinigungspauschale</td>
-                                                            <td>CHF 200.-</td>
-                                                            <td>CHF 200.-</td>
+                                                            <td>CHF {{config('pricelist.cleaning')}}.-</td>
+                                                            <td>CHF {{config('pricelist.cleaning')}}.-</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">{!! Form::number('other_adults', null, [ 'class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}</th>
                                                             <td>Übernachtungen Erwachsene</td>
-                                                            <td>CHF 60.-</td>
+                                                            <td>CHF {{config('pricelist.other_adults')}}.-</td>
                                                             <td>CHF <span id="other_adults_total"></span>.-</td>
                                                         </tr>
                                                         <tr>
-                                                            <th scope="row">   {!! Form::number('member_adult', null, ['class' => 'form-control', 'id' => 'member_adult', 'onchange' => "Total_Change()"]) !!}</th>
+                                                            <th scope="row">   {!! Form::number('member_adults', null, ['class' => 'form-control', 'id' => 'member_adults', 'onchange' => "Total_Change()"]) !!}</th>
                                                             <td>Übernachtungen Erwachsene (Genossenschafter)</td>
-                                                            <td>CHF 36.-</td>
+                                                            <td>CHF {{config('pricelist.member_adults')}}.-</td>
                                                             <td>CHF <span id="member_adult_total"></span>.-</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">{!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}</th>
                                                             <td>Übernachtungen Kind (bis 16 Jahre)</td>
-                                                            <td>CHF 30.-</td>
+                                                            <td>CHF {{config('pricelist.other_kids')}}.-</td>
                                                             <td>CHF <span id="other_kids_total"></span>.-</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">{!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}</th>
                                                             <td>Übernachtungen Kind (Genossenschafter)</td>
-                                                            <td>CHF 18.-</td>
+                                                            <td>CHF {{config('pricelist.member_kids')}}.-</td>
                                                             <td>CHF <span id="member_kids_total"></span>.-</td>
                                                         </tr>
                                                     </tbody>

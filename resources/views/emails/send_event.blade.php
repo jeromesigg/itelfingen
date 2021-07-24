@@ -15,6 +15,10 @@
                 <td>{{Carbon\Carbon::parse($start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($end_date)->format('d.m.Y')}}</td>
             </tr>
             <tr>
+                <th scope="row" style="text-align:left">Anzahl Übernachtungen</th>
+                <td>{{$total_days}}<td>
+            </tr>
+            <tr>
                 <th scope="row" style="text-align:left">Name</th>
                 <td>{{$firstname}} {{$name}}</td>
             </tr>
@@ -40,7 +44,7 @@
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Erwachsene (Genossenschafter)</th>
-                <td>{{$member_adult}}<td>
+                <td>{{$member_adults}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Kind (bis 16 Jahre)</th>
@@ -49,6 +53,10 @@
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Kind (Genossenschafter)</th>
                 <td>{{$member_kids}}<td>
+            </tr>
+            <tr>
+                <th scope="row" style="text-align:left">Voraussichtliches Total:</th>
+                <td>CHF {{$total_amount}}.-<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Bemerkung</th>

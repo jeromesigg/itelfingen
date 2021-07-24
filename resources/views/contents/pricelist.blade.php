@@ -16,12 +16,12 @@
                 <p>Buchungspauschale 200.-</p>
                 <p>Reinigungsspauschale 200.-</p>
                 <span class="card_subtitle">Genossenschafter</span>
-                <p>Fr. 36.- pro Nacht und Person (ab 16 Jahren)</p>
-                <p>Fr. 18.- pro Nacht und Person (bis 16 Jahren)</p>
+                <p>Fr. {{config('pricelist.member_adults')}}.- pro Nacht und Person (ab 16 Jahren)</p>
+                <p>Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (bis 16 Jahren)</p>
                 <br>
                 <span class="card_subtitle">Privatpersonen</span>
-                <p>Fr. 60.- pro Nacht und Person (ab 16 Jahren)</p>
-                <p>Fr. 30.- pro Nacht und Person (bis 16 Jahren)</p>
+                <p>Fr. {{config('pricelist.other_adults')}}.- pro Nacht und Person (ab 16 Jahren)</p>
+                <p>Fr. {{config('pricelist.other_kids')}}.- pro Nacht und Person (bis 16 Jahren)</p>
                 <br>
               </div>
             </div>
@@ -43,8 +43,7 @@
                 <br>
                 <li>Im Preis sind alle Taxen für Strom, Warmwasser, Heizung, Wifi etc. enthalten. </li>
                 <li>Drei Parkplätze sind im Preis enthalten. Jeder weitere kostet 5.- pro Tag (bis zu 5 weitere Plätze). </li>
-                <li>Wartezeit des Hauswartes bei der Hausüber oder -rückgabe wird mit Fr. 25.- pro Stunde in Rechnung gestellt.</li>
-                <li>Rücktritt nach Vertragsunterzeichnung 200.- oder 100.- bei Weitervermietung.</li> 
+                <li>Die Annulationskosten betragen 50% des Totalbetrags bis 14 Tage vor Mietbegin, danach 100% des Totalbetrags. </li> 
                 </ul>
               </div>    
             </div>        

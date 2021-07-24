@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\ContractStatus;
 use App\Event;
-use App\EventStatus;
 use Carbon\Carbon;
+use App\EventStatus;
+use App\ContractStatus;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Spatie\GoogleCalendar\Event as Event_API;
 
@@ -105,21 +107,61 @@ class AdminEventController extends Controller
     public function DownloadContract($id)
     {
         $event = Event::findOrFail($id);
+        $user = Auth::user();
             /* Set the PDF Engine Renderer Path */
         $domPdfPath = base_path('vendor/dompdf/dompdf');
         Settings::setPdfRendererPath($domPdfPath);
         Settings::setPdfRendererName('DomPDF');
 
         /*@ Reading doc file */
-        $template = new TemplateProcessor(public_path('contracts/result.docx'));
+        $date = Carbon::now()->locale('de_CH')->format('d.m.Y');  
+        $date_file = Carbon::now()->locale('de_CH')->format('ymd');  
+        $start_date_date = Carbon::create($event['start_date'])->locale('de_CH');
+        $start_date = $start_date_date->format('d.m.Y');  
+        $start_date_file = $start_date_date->format('dm');  
+        $end_date_date = Carbon::create($event['end_date'])->locale('de_CH');
+        $end_date = $end_date_date->format('d.m.Y'); 
+        $end_date_file = $end_date_date->format('dm');  
+        $total_other_adults = $event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
+        $total_member_adults =$event['member_adults'] * $event['total_days'] * config('pricelist.member_adults');
+        $total_other_kids = $event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
+        $total_member_kids =$event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
+
+        $template = new TemplateProcessor(storage_path('app/contracts/Mietvertrag.docx'));
     
         /*@ Replacing variables in doc file */
-        $template->setValue('date', now());
-        $template->setValue('firstname', $event['firstname']);
-        $template->setValue('lastname',  $event['name']);
+        $template->setValues(array(
+            'date_now' => $date,
+            'firstname' => $event['firstname'],
+            'lastname' =>  $event['name'],
+            'street' =>  $event['street'],
+            'plz' =>  $event['plz'],
+            'city' =>  $event['city'],
+            'start_date' =>  $start_date,
+            'end_date' =>  $end_date,
+            'booking' =>  config('pricelist.booking'),
+            'cleaning' => config('pricelist.cleaning'),
+            'price_other_adults' => config('pricelist.other_adults'),
+            'price_member_adults' => config('pricelist.member_adults'),
+            'price_other_kids' => config('pricelist.other_kids'),
+            'price_member_kids' => config('pricelist.member_kids'),
+            'other_adults' =>  $event['other_adults'],
+            'member_adults' =>  $event['member_adults'],
+            'other_kids' => $event['other_kids'],
+            'member_kids' =>  $event['member_kids'],
+            'total_other_adults' =>  $total_other_adults,
+            'total_member_adults' => $total_member_adults,
+            'total_other_kids' =>  $total_other_kids,
+            'total_member_kids' =>  $total_member_kids,
+            'total_amount' =>  $event['total_amount'],
+            'username' =>  $user['fullname'],
+            'user_number' => $user['phone']));
+        
+        $template->setImageValue('signature', Storage::url($user['signature']));
 
         /*@ Save Temporary Word File With New Name */
-        $saveDocPath = public_path('contracts/new-result.docx');
+        $filename =  $date_file . '_Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
+        $saveDocPath = public_path('contracts/' . $filename . '.docx');
         $template->saveAs($saveDocPath);
 
         // Load temporarily create word file
@@ -129,20 +171,21 @@ class AdminEventController extends Controller
 
 
         //Save it into PDF
-        // $savePdfPath = public_path('contracts/new-result.pdf');
+        $savePdfPath = public_path('contracts/' . $filename . '.pdf');
         
-        // /*@ If already PDF exists then delete it */
-        // if ( file_exists($savePdfPath) ) {
-        //     unlink($savePdfPath);
-        // }
+        /*@ If already PDF exists then delete it */
+        if ( file_exists($savePdfPath) ) {
+            unlink($savePdfPath);
+        }
 
-        // //Save it into PDF
-        // $PDFWriter = IOFactory::createWriter($Content,'PDF');
-        // $PDFWriter->save($savePdfPath); 
-        // /*@ Remove temporarily created word file */
-        // if ( file_exists($saveDocPath) ) {
-        //     unlink($saveDocPath);
-        // }
+        //Save it into PDF
+        $PDFWriter = IOFactory::createWriter($Content,'PDF');
+        $PDFWriter->save($savePdfPath); 
+        /*@ Remove temporarily created word file */
+        if ( file_exists($saveDocPath) ) {
+            unlink($saveDocPath);
+        }
+        return response()->download($savePdfPath);
 
         // $data["email"] = "jerome.sigg@gmail.com";
         // $data["title"] = "From ItSolutionStuff.com";

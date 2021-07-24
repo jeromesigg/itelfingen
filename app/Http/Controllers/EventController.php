@@ -30,7 +30,11 @@ class EventController extends Controller
         }
 
         $input = $request->all();
-        $input['total'] = $input['other_adults'] + $input['member_adult'] + $input['other_kids'] + $input['member_kids'];
+        $input['other_adults'] = max($input['other_adults'], 0);
+        $input['member_adults'] = max($input['member_adults'], 0);
+        $input['other_kids'] = max($input['other_kids'], 0);
+        $input['member_kids'] = max($input['member_kids'], 0);
+        $input['total_people'] = $input['other_adults'] + $input['member_adults'] + $input['other_kids'] + $input['member_kids'];
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
@@ -48,7 +52,7 @@ class EventController extends Controller
         Mail::send('emails.send_event',  $input, function($message){
           $message->to(config('mail.from.address'), config('mail.from.name'))->subject('Buchung für das Ferienhaus Itelfingen');
         });
-        return redirect()->to(url()->previous() . '#booking')->with('success_event', 'Vielen Dank für die Nachricht. Wir werden uns so schnell wie möglich melden.');
+        return redirect()->to(url()->previous() . '#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden.');
     }
 
     public function searchResponseCity(Request $request)

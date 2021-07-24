@@ -17,10 +17,10 @@ class AddFieldsToEvents extends Migration
             //
             $table->text('marketing_comment')->nullable();
             $table->integer('other_adults')->nullable();
-            $table->integer('member_adult')->nullable();
+            $table->integer('member_adults')->nullable();
             $table->integer('other_kids')->nullable();
             $table->integer('member_kids')->nullable();
-            $table->integer('total')->nullable();
+            $table->integer('total_people')->nullable();
             $table->boolean('terms')->nullable();         
         });
     }
@@ -36,10 +36,10 @@ class AddFieldsToEvents extends Migration
             //
             $table->dropColumn('marketing_comment');
             $table->dropColumn('other_adults');
-            $table->dropColumn('member_adult');
+            $table->dropColumn('member_adults');
             $table->dropColumn('other_kids');
             $table->dropColumn('member_kids');
-            $table->dropColumn('total');
+            $table->dropColumn('total_people');
             $table->dropColumn('terms');     
         });
     }
