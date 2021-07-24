@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -26,10 +25,6 @@ Auth::routes();
 //fullcalender
 Route::post('event/create','EventController@create');
 Route::get('event/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'EventController@searchResponseCity']);
-
-
-
-
 
 Route::post('/contacts', 'ContactController@store');
 

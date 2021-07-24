@@ -5,8 +5,6 @@
     <div class="row" style="min-height: 100vh !important;">
       <div class="col-md-5 col-lg-6 col-xl-4 px-lg-5 d-flex align-items-center">
         <div class="w-100 py-5">
-          <div class="text-center"><img src="images/logo.jpg" alt="Login" style="max-width: 20rem;" class="img-fluid mb-4">
-          </div>
           <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="form-group">

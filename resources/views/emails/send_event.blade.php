@@ -35,11 +35,27 @@
                 <td>{{$telephone}}<td>
             </tr>
             <tr>
+                <th scope="row" style="text-align:left">Übernachtungen Erwachsene</th>
+                <td>{{$other_adults}}<td>
+            </tr>
+            <tr>
+                <th scope="row" style="text-align:left">Übernachtungen Erwachsene (Genossenschafter)</th>
+                <td>{{$member_adult}}<td>
+            </tr>
+            <tr>
+                <th scope="row" style="text-align:left">Übernachtungen Kind (bis 16 Jahre)</th>
+                <td>{{$other_kids}}<td>
+            </tr>
+            <tr>
+                <th scope="row" style="text-align:left">Übernachtungen Kind (Genossenschafter)</th>
+                <td>{{$member_kids}}<td>
+            </tr>
+            <tr>
                 <th scope="row" style="text-align:left">Bemerkung</th>
                 <td>{{$comment}}<td>
             </tr>
         </tbody>
     </table>
-    Sobald die Buchung überprüft wurde, erhälst du von unserem Hausverwalter eine E-Mail mit dem Vertrag und allen weiteren Dokumenten.
+    Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit dem Vertrag und allen weiteren Dokumenten.
 </body>
 </html>

@@ -43,12 +43,8 @@
                 <br>
                 <li>Im Preis sind alle Taxen für Strom, Warmwasser, Heizung, Wifi etc. enthalten. </li>
                 <li>Drei Parkplätze sind im Preis enthalten. Jeder weitere kostet 5.- pro Tag (bis zu 5 weitere Plätze). </li>
-                <li>Fixleintuch und Kissenbezug müssen selbst mitgebracht oder für 5.- pro Set gemietet werden. </li>
-                <li>Nachreinigung kostet 50.- pro Stunde, falls das Haus nicht sauber übergeben wird.</li>
                 <li>Wartezeit des Hauswartes bei der Hausüber oder -rückgabe wird mit Fr. 25.- pro Stunde in Rechnung gestellt.</li>
-                <li>Genossenschafter erhalten 20% Ermässigung.</li>
                 <li>Rücktritt nach Vertragsunterzeichnung 200.- oder 100.- bei Weitervermietung.</li> 
-                
                 </ul>
               </div>    
             </div>        

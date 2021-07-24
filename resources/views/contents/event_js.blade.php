@@ -1,4 +1,29 @@
 <script>
+function wizard_step(i) {
+	if(i===1){
+  		document.getElementById("wizard_calendar").style.display = "block";
+		document.getElementById("wizard_formular").style.display = "none";
+	}
+	if(i===2){
+  		document.getElementById("wizard_formular").style.display = "block";
+		document.getElementById("wizard_calendar").style.display = "none";
+	}
+}
+
+function Total_Change() {
+	var days = (Agenda.end - Agenda.start)/(24*3600*1000);
+	var other_adults_total = parseInt(document.getElementById("other_adults").value) * 60 * days || 0;
+	var member_adult_total = parseInt(document.getElementById("member_adult").value)* 36 * days || 0;
+	var other_kids_total = parseInt(document.getElementById("other_kids").value) * 30 * days|| 0;
+	var member_kids_total = parseInt(document.getElementById("member_kids").value) * 18 * days || 0;
+	var total = 200 + 200 + other_adults_total + member_adult_total + other_kids_total + member_kids_total;
+	$('#other_adults_total').text(other_adults_total);
+	$('#member_adult_total').text(member_adult_total);
+	$('#other_kids_total').text(other_kids_total);
+	$('#member_kids_total').text(member_kids_total);
+	$('#total').text(total);
+}
+
 window.onload = function() { 
     Agenda.load(@json($events_json), @json($event_type))
     };
@@ -75,7 +100,7 @@ Agenda = {
 				}
 			}
 		}
-		for (var i = 0; i < 9; ++i) {
+		for (var i = 0; i < 6; ++i) {
 			this.matrix[i] = [];
 			$('#agendaMonat' + i).append("<tr>" +
 				"<td class='hk-agenda__label'>Mo</td>" +
@@ -130,6 +155,7 @@ Agenda = {
 			setTimeout(function() { $('#reservation_error_2').hide(); }, 5000);
 		}
 		this.apply();
+		this.getDays()
 	},
 	// after clicking a date in the calendar
 	select: function(i, j, k) {
@@ -139,7 +165,6 @@ Agenda = {
 					this.start = null;
 					this.end = null;
 				}
-					console.log(this.matrix)
 				if (this.start === null && (this.reserved[Date.parse(this.matrix[i][j][k].date)] || {}).rState);
 				else if (this.start === null)
 					this.start = this.matrix[i][j][k].date;
@@ -160,7 +185,6 @@ Agenda = {
 					$('#reservation_error_2').show();
 					setTimeout(function() { $('#reservation_error_2').hide(); }, 5000);
 				}
-					console.log(this.matrix)
 				this.apply();
 				break;
 			case 'admin':
@@ -173,6 +197,15 @@ Agenda = {
 				}
 				break;
 		}
+		this.getDays();
+	},
+	getDays: function(){
+		var days = (this.end - this.start)/(24*3600*1000);
+		if(days > 0){
+			var text = days == 1 ? 'Nacht' : 'Nächte';
+			$('#days').text('(' + days + ' ' + text+')');
+		}
+		Total_Change();
 	},
 	// reset selection
 	clear: function() {
@@ -183,7 +216,7 @@ Agenda = {
 	// repaint calendar
 	apply: function() {
 		this.index = {};
-		for (var i = 0, month; i < 9; ++i) {
+		for (var i = 0, month; i < 6; ++i) {
 			var date = new Date(this.date.getFullYear(), this.date.getMonth() + i, 1);
 			document.getElementById('agendaTitel' + i).firstChild.nodeValue = this.monate[month = date.getMonth()] + ' ' + date.getFullYear();
 			for (var k = 0; k < (date.getDay() == 0 ? 6 : date.getDay() - 1); ++k) {
@@ -212,11 +245,6 @@ Agenda = {
 		if (this.start !== null && (!this.reserved[Date.parse(this.start)] || !this.reserved[Date.parse(this.start)].rState)) {
 			var date = new Date(this.start);
 			var end = new Date(this.end || date);
-			console.log(date)
-			console.log(this.matrix)
-
-			// console.log(date + ' ' + end)
-			// console.log(this.matrix)
 			if (Date.parse(date) == Date.parse(end)) {
 				if (this.index[Date.parse(date)]) {
 					if (this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state.charAt(0) == 'F')
@@ -232,7 +260,6 @@ Agenda = {
 					date.setDate(date.getDate() + 1);
 				}
 				for (; Date.parse(date) != Date.parse(end); date.setDate(date.getDate() + 1)){
-					console.log(date + ': ' + Date.parse(date));
 					if ((this.reserved[Date.parse(date)] || {}).rState)
 						break;
 					else if (this.index[Date.parse(date)])

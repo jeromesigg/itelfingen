@@ -22,12 +22,12 @@ class CreateEventsTable extends Migration
             $table->date('end_date');
             $table->string('name');
             $table->string('firstname')->nullable();
-            $table->string('group_name');
+            $table->string('group_name')->nullable();
             $table->string('email');
             $table->string('street');
             $table->integer('plz');
             $table->string('city');
-            $table->string('telephone');
+            $table->string('telephone')->nullable();
             $table->text('comment')->nullable();
         });
     }

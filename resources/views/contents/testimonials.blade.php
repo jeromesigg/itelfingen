@@ -1,4 +1,5 @@
-<section id="testimonials" class="testimonials section-bg">
+@if($testimonials->count() > 0)
+  <section id="testimonials" class="testimonials section-bg">
     <div class="container" data-aos="fade-up">
   
       <div class="section-title">
@@ -21,3 +22,4 @@
       </div>
     </div>
   </section>
+@endif

@@ -3,22 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\City;
-use DateTime;
 use App\Event;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\EventRequest;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
+
+use Validator;
 
 class EventController extends Controller
 { 
+    
     public function create(EventRequest $request)
     {  
         $validator = Validator::make($request->all(), [
             'zipcode' => 'numeric',
-        ], ['zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.']);
+            'name' => 'required',
+            'terms' => 'accepted',
+        ], [
+            'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
+            'terms.accepted' => 'Die Hausordnung muss akzeptiert werden.']);
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous() . '#booking')
@@ -27,6 +30,7 @@ class EventController extends Controller
         }
 
         $input = $request->all();
+        $input['total'] = $input['other_adults'] + $input['member_adult'] + $input['other_kids'] + $input['member_kids'];
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
@@ -60,5 +64,4 @@ class EventController extends Controller
         else
             return ['name'=>'','plz'=>'','id'=>''];
     }
-
 }

@@ -1,7 +1,6 @@
 <section id="booking" class="calendar">
   
     <div class="container" data-aos="fade-up">
-  
         <div class="section-title">
             <h2>Buchungen</h2>
             <p>Buchen Sie gleich Ihren nächsten Aufenthalt bei uns</p>
@@ -16,22 +15,22 @@
                 </strong>
             </div>
         @endif
-        @if ($errors->event->any())
-          <div class="alert alert-danger">
-              <ul>
-                  @foreach ($errors->event->all() as $error)
-                      <li>{{ $error }}</li>
-                  @endforeach
-              </ul>
-          </div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
   
-        <div class="hk-reservation hk-reservation__step1">
+        <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container container-fluid">
                 {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform']) !!}
                     <br>
                     <div class="row">
-                        <div class="col-lg-12 col-xl-8 hk-calendar">
+                        <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
                             <div id="reservation_error" style="display: none" class="error">
                                 An diesem Datum kann nicht reserviert werden
@@ -106,86 +105,164 @@
                             </div>
                             <br>
                             <div class="form-group">
-                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary', 'id' => 'EventSubmit1', 'disabled' => 'disabled'])!!}
+                                <button type="button" class="btn btn-primary" onclick="wizard_step(2)">Weiter</button>
                             </div>
                             <br>
                             <br>
                         </div>
-        
-                        <div class="col-md-12 col-xl-4 hk-dateselect">
-                            <h3>Gewünschtes Datum</h3>
-                            <div class="text-muted">
-                                Daten sind auch im Kalender auswählbar.
-                            </div>
-                            <br>
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            <div class="form-row">
-                                <div class="col-md-6 form-group">
-                                  {!! Form::label('firstname', 'Vorname:') !!}
-                                  {!! Form::text('firstname', null, ['class' => 'form-control', 'required']) !!}
-                                </div>
-                                <div class="col-md-6 form-group">
-                                  {!! Form::label('name', 'Nachname:') !!}
-                                  {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('group', 'Anlass / Gruppe:') !!}
-                                {!! Form::text('group', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('email', 'E-Mail:') !!}
-                                {!! Form::email('email', null, ['class' => 'form-control', 'required', 'email']) !!}
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('street', 'Strasse:') !!}
-                                {!! Form::text('street', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-3 form-group">
-                                    {!! Form::label('zipcode', 'PLZ:') !!}
-                                    {!! Form::text('zipcode', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
-                                </div>
-                                <div class="col-md-9 form-group">
-                                    {!! Form::label('city', 'Ortschaft:') !!}
-                                    {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
-                                </div>
-                                {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('telephone', 'Telefon / Mobil:') !!}
-                                {!! Form::text('telephone', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group">
-                                {!! Form::label('comment', 'Bemerkungen:') !!}
-                                {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3]) !!}
-                            </div>
-                            <div id="reservation_error_2" style="display: none" class="error">
-                                An diesem Datum kann nicht reserviert werden
-                                <br><br>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6 form-group">
-                                {!! Form::label('start_date', 'Start Datum:') !!}
-                                {!! Form::date('start_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
-                                </div>
-                                <div class="col-md-6 form-group">
-                                {!! Form::label('end_date', 'End Datum:') !!}
-                                {!! Form::date('end_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                {!! Form::captcha($event_attributes) !!}<br>
-                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary', 'id' => 'EventSubmit2', 'disabled' => 'disabled'])!!}
-                            </div>
+                        <div class="col-md-12 col-xl-12 hk-dateselect" id="wizard_formular" style="display: none">
+                            <h3>Buchungs Informationen</h3>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="row" >
+                                            <div class="col-md-12 col-xl-4" >
+                                                <div class="form-row">
+                                                    <div class="col-md-6 form-group">
+                                                    {!! Form::label('firstname', 'Vorname:') !!}
+                                                    {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                    {!! Form::label('name', 'Nachname*:') !!}
+                                                    {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {!! Form::label('group', 'Anlass / Gruppe:') !!}
+                                                    {!! Form::text('group', null, ['class' => 'form-control']) !!}
+                                                </div>
+                                                <div class="form-group">
+                                                    {!! Form::label('email', 'E-Mail*:') !!}
+                                                    {!! Form::email('email', null, ['class' => 'form-control', 'required', 'email']) !!}
+                                                </div>
+                                                <div class="form-group">
+                                                    {!! Form::label('street', 'Strasse*:') !!}
+                                                    {!! Form::text('street', null, ['class' => 'form-control', 'required']) !!}
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-3 form-group">
+                                                        {!! Form::label('zipcode', 'PLZ*:') !!}
+                                                        {!! Form::text('zipcode', null, ['class' => 'form-control autocomplete_txt', 'required', 'numeric']) !!}
+                                                    </div>
+                                                    <div class="col-md-9 form-group">
+                                                        {!! Form::label('city', 'Ortschaft*:') !!}
+                                                        {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
+                                                    </div>
+                                                    {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
+                                                </div>
+                                                <div class="form-group">
+                                                    {!! Form::label('telephone', 'Telefon / Mobil:') !!}
+                                                    {!! Form::text('telephone', null, ['class' => 'form-control']) !!}
+                                                </div>
+                                                <div class="form-group">
+                                                    {!! Form::label('marketing_comment', 'Wie sind Sie auf uns aufmerksam geworden?') !!}
+                                                    {!! Form::textarea('marketing_comment', null, ['class' => 'form-control', 'rows' => 5]) !!}
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="terms">Ich akzeptiere die {!! Html::link('files/Hausordnung.pdf', 'Hausordnung', ['target' => 'blank']) !!}:</label>
+                                                    {!! Form::checkbox('terms', '1', null) !!}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-xl-8 hk-dateselect" >
+                                                <div id="reservation_error_2" style="display: none" class="error">
+                                                    An diesem Datum kann nicht reserviert werden
+                                                    <br><br>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-md-6 form-group">
+                                                    {!! Form::label('start_date', 'Start Datum:') !!}
+                                                    {!! Form::date('start_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                    {!! Form::label('end_date', 'End Datum:') !!}
+                                                    {!! Form::date('end_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
+                                                    </div>
+                                                </div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="width: 10%">Anzahl</th>
+                                                            <th scope="col">Artikel</th>
+                                                            <th scope="col">Kosten</th>
+                                                            <th scope="col">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th scope="row"></th>
+                                                            <th>Total <span id="days"></span></th>
+                                                            <th></th>
+                                                            <th>CHF <span id="total"></span>.-</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th colspan="4">
+                                                        <span style="font-size: small">Die definitiven Preise werden im Mietvertrag festgelegt.</span> 
+                                                    </th>
+                                                    </tr>
+                                                    </tfoot>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>Buchungspauschale</td>
+                                                            <td>CHF 200.-</td>
+                                                            <td>CHF 200.-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>Reinigungspauschale</td>
+                                                            <td>CHF 200.-</td>
+                                                            <td>CHF 200.-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">{!! Form::number('other_adults', null, [ 'class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}</th>
+                                                            <td>Übernachtungen Erwachsene</td>
+                                                            <td>CHF 60.-</td>
+                                                            <td>CHF <span id="other_adults_total"></span>.-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">   {!! Form::number('member_adult', null, ['class' => 'form-control', 'id' => 'member_adult', 'onchange' => "Total_Change()"]) !!}</th>
+                                                            <td>Übernachtungen Erwachsene (Genossenschafter)</td>
+                                                            <td>CHF 36.-</td>
+                                                            <td>CHF <span id="member_adult_total"></span>.-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">{!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}</th>
+                                                            <td>Übernachtungen Kind (bis 16 Jahre)</td>
+                                                            <td>CHF 30.-</td>
+                                                            <td>CHF <span id="other_kids_total"></span>.-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">{!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}</th>
+                                                            <td>Übernachtungen Kind (Genossenschafter)</td>
+                                                            <td>CHF 18.-</td>
+                                                            <td>CHF <span id="member_kids_total"></span>.-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="form-group">
+                                                    {!! Form::label('comment', 'Bemerkungen:') !!}
+                                                    {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3, 'placeholder'=>'z.B. Genossenschafts-Nr. oder Name der Genossenschafter']) !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>    
+                                <tr>   
+                                    <td>
+                                        <div class="form-row">   
+                                            <div class="col-md-4"> 
+                                                <button type="button" class="btn btn-primary" onclick="wizard_step(1)">Zurück</button>
+                                            </div>
+                                            <div class="col-md-4"> 
+                                                {!! Form::captcha($event_attributes) !!}
+                                            </div>
+                                            <div class="col-md-4"> 
+                                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary', 'id' => 'EventSubmit', 'disabled' => 'disabled'])!!}
+                                            </div>
+                                        </div>  
+                                    </td>
+                                </tr>   
+                            </table>
                         </div>
                     </div>
                 {!! Form::close()!!}

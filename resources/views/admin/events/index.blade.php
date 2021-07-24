@@ -19,6 +19,7 @@
                         <th scope="col">Vorname</th>
                         <th scope="col">E-Mail</th>
                         <th scope="col">Gruppe</th>
+                        <th scope="col">Personen</th>
                         <th scope="col">Bemerkung</th>
                         <th scope="col">Bemerkung Intern</th>
                         <th scope="col">Vertrag</th>
@@ -35,6 +36,7 @@
                             <td>{{$event->firstname}}</td>
                             <td>{{$event->email}}</td>
                             <td>{{$event->group_name}}</td>
+                            <td>{{$event->total}}</td>
                             <td>{{$event->comment}}</td>
                             <td>{{$event->comment_intern}}</td>
                             <td>{{$event->contract_status['name']}}</td>

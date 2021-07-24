@@ -10,7 +10,7 @@
                 <li><a href="/#rooms">Details</a></li>
                 <li><a href="#gallery">Fotos</a></li>
                 <li><a href="#pricelist">Preisliste</a></li>
-                <li><a href="#booking">Belegungen</a></li>
+                <li><a href="#booking">Belegungsplan</a></li>
                 <li><a href="#locations">Ausflugtipps</a></li>
                 <li><a href="#history">Historisches</a></li>
                 <li><a href="#contact">Kontakt</a></li>

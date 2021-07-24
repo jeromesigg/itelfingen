@@ -56,6 +56,6 @@
   
 </div> 
       <br>
-      Zum Hausplan
+      Zum {!! Html::link('files/Hausplan.pdf', 'Hausplan', ['target' => 'blank']) !!}
     </div>
   </section><!-- End Why Us Section -->

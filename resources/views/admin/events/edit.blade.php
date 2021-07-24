@@ -74,6 +74,24 @@
                                             {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
                                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                                     </div>
+                                    <div class="form-row">
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('other_adults', 'Erw:') !!}
+                                            {!! Form::number('other_adults', null, ['class' => 'form-control']) !!}
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('member_adults', 'Erw (G):') !!}
+                                            {!! Form::number('member_adults', null, ['class' => 'form-control']) !!}
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('other_kids', 'Kinder:') !!}
+                                            {!! Form::number('other_kids', null, ['class' => 'form-control']) !!}
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('member_kids', 'Kinder (G):') !!}
+                                            {!! Form::number('member_kids', null, ['class' => 'form-control']) !!}
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         {!! Form::label('event_status_id', 'Status:') !!}
                                         {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}

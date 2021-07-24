@@ -10,7 +10,13 @@ class Event extends Model
     //
     protected $fillable = [
     'name', 'title', 'event_status_id', 'start_date', 'end_date', 
-    'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'contract', 'contract_status_id', 'contract_intern', 'comment_intern'
+    'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'contract', 'contract_status_id', 'contract_intern', 'comment_intern', 
+    'terms','other_adults', 'member_adult', 'other_kids', 'member_kids', 'total'
+
+    ];
+
+    protected $casts =  [
+        'terms' => 'boolean',
     ];
 
     // protected $dates = [
