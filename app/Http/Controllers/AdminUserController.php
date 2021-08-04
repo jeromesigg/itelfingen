@@ -17,9 +17,17 @@ class AdminUserController extends Controller
      */
     public function index()
     {
-        //
-        $users = User::paginate(10);
-        $roles = Role::pluck('name','id')->all();
+        //       
+        $user = Auth::user();
+        if($user->isTeam() && !$user->isAdmin()){
+            $users =  User::whereId($user->id)->paginate(10);
+            $roles =Role::whereId($user->role_id)->pluck('name','id')->all();
+
+        }
+        else{
+            $users = User::paginate(10);
+            $roles = Role::pluck('name','id')->all();
+        }
         return view('admin.users.index', compact('users', 'roles'));
     }
 
@@ -87,8 +95,14 @@ class AdminUserController extends Controller
     public function edit($id)
     {
         //
+        if(Auth::user()->isTeam() && !Auth::user()->isAdmin()){
+            $roles =Role::whereId(Auth::user()->role_id)->pluck('name','id')->all();
+
+        }
+        else{
+            $roles = Role::pluck('name','id')->all();
+        }
         $user = User::findOrFail($id);
-        $roles = Role::pluck('name','id')->all();
 
         return view('admin.users.edit', compact('user', 'roles'));
     }

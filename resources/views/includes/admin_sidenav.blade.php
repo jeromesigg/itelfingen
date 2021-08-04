@@ -25,19 +25,16 @@
             <h5 class="sidenav-heading">Hausverwaltung</h5>
             <ul id="side-main-menu" class="side-menu list-unstyled"> 
                 <li>
-                    <a  href="{{route('contacts.index')}}" ><i class="fas fa-user"></i>Anfragen</a>
+                    <a  href="{{route('contacts.index')}}" ><i class="fas fa-user"></i> Anfragen</a>
                 </li>  
                 <li>
                     <a href="#EventsDropdown" aria-expanded="false" data-toggle="collapse"> <i class="far fa-calendar-alt"></i> Buchungen</a>
                     <ul id="EventsDropdown" class="collapse list-unstyled ">
                         <li>
-                            <a href="{{route('events.index')}}">Buchungen</a>
+                            <a href="{{route('events.index')}}"> Buchungen</a>
                         </li>
                         <li>
-                            <a href="{{route('events.index')}}">Verträge</a>
-                        </li>
-                        <li>
-                            <a href="{{route('events.create')}}">Buchung erstellen</a>
+                            <a href="{{route('events.create')}}"> Buchung erstellen</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -46,13 +43,10 @@
                     <a href="#AlbumsDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-images"></i> Fotoalbum</a>
                     <ul id="AlbumsDropdown" class="collapse list-unstyled ">
                         <li>
-                            <a href="{{route('albums.index')}}">Album</a>
+                            <a href="{{route('pictures.index')}}"> Fotos</a>
                         </li>
                         <li>
-                            <a href="{{route('pictures.index')}}">Fotos</a>
-                        </li>
-                        <li>
-                            <a href="{{route('pictures.create')}}">Fotos erstellen</a>
+                            <a href="{{route('pictures.create')}}"> Fotos erstellen</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -60,38 +54,35 @@
            
 
             </ul>
-            
+        
+        <h5 class="sidenav-heading">Administration</h5>
+        <ul id="side-main-menu" class="side-menu list-unstyled">     
         @if (Auth::user()->isAdmin())
-            <h5 class="sidenav-heading">Administration</h5>
-            <ul id="side-main-menu" class="side-menu list-unstyled"> 
                 <li><a href="#HomepageDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-clipboard-list"></i> Homepage</a></li>
                 <ul id="HomepageDropdown" class="collapse list-unstyled ">
                     <li>
-                        <a href="{{route('homepages.index')}}">Homepage</a>
+                        <a href="{{route('homepages.index')}}"> Homepage</a>
                     </li>
                     <li>
-                        <a href="{{route('homepages.edit',1)}}">Homepage Anpassen</a>
+                        <a href="{{route('homepages.edit',1)}}"> Homepage Anpassen</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
                 <li>
-                    <a  href="{{route('pricelists.index')}}" ><i class="fas fa-money-check-alt"></i> Preisliste</a>
-                </li>  
-                <li>
                     <a  href="{{route('testimonials.index')}}" ><i class="far fa-comment"></i> Bewertungen</a>
                 </li>  
                 <li>
-                    <a  href="{{route('people.index')}}" ><i class="fas fa-user-friends"></i>Personen</a>
+                    <a  href="{{route('people.index')}}" ><i class="fas fa-user-friends"></i> Personen</a>
                 </li> 
                 <li>
-                    <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i>Geschichte</a>
+                    <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i> Geschichte</a>
                 </li> 
-                <li>
-                    <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i>Benutzer</a>
-                </li> 
-            </ul>
             @endif
+            <li>
+                <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i> Benutzer</a>
+            </li> 
+        </ul>
 
         </div>
             

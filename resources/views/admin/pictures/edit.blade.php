@@ -22,10 +22,6 @@
                         {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('album_id', 'Album:') !!}
-                        {!! Form::select('album_id', [''=>'Wähle Album'] + $albums, null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
                             {!! Form::label('photo_id', 'Original Photo:') !!}
                             {!! Form::file('photo_id', ['class' => 'photo_id', 'required']) !!}
                     </div>

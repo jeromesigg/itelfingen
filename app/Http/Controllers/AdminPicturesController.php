@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Album;
 use App\Photo;
 use App\Picture;
 use Illuminate\Http\Request;
@@ -30,8 +28,7 @@ class AdminPicturesController extends Controller
     public function create()
     {
         //
-        $albums = Album::pluck('name','id')->all();
-        return view('admin.pictures.create', compact('albums'));
+        return view('admin.pictures.create');
     }
 
     /**
@@ -85,9 +82,8 @@ class AdminPicturesController extends Controller
     public function edit($id)
     {
         //
-        $albums = Album::pluck('name','id')->all();
         $picture = Picture::findOrFail($id);
-        return view('admin.pictures.edit', compact('albums','picture'));
+        return view('admin.pictures.edit', compact('picture'));
     }
 
     /**

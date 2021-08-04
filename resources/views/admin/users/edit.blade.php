@@ -30,10 +30,6 @@
                         {!! Form::file('signature', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::label('is_active', 'Status:') !!}
-                        {!! Form::select('is_active', array(1 => "Aktiv", 0 => 'Archiviert'), null,  ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
                         {!! Form::label('role_id', 'Role:') !!}
                         {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control']) !!}
                     </div>

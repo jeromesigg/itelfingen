@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDefaultAndInternalNameToAlbums extends Migration
+class AddBexioIdsToEvent extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddDefaultAndInternalNameToAlbums extends Migration
      */
     public function up()
     {
-        Schema::table('albums', function (Blueprint $table) {
+        Schema::table('events', function (Blueprint $table) {
             //
-            $table->string('internal_name');
-            $table->boolean('default_album')->nullable()->default(false);
+            $table->integer('bexio_user_id')->nullable();
+            $table->integer('bexio_invoice_id')->nullable();
         });
     }
 
@@ -27,10 +27,10 @@ class AddDefaultAndInternalNameToAlbums extends Migration
      */
     public function down()
     {
-        Schema::table('albums', function (Blueprint $table) {
+        Schema::table('events', function (Blueprint $table) {
             //
-            $table->dropColumn('internal_name');
-            $table->dropColumn('default_album');
+            $table->dropColumn('bexio_user_id');
+            $table->dropColumn('bexio_invoice_id');
         });
     }
 }

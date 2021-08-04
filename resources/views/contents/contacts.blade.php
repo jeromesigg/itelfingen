@@ -42,17 +42,17 @@
             <p>{!! nl2br($homepage->address) !!}</p>
           </div>
 
-          <div class="email">
+          {{-- <div class="email">
             <i class="icofont-envelope"></i>
             <h4>Email:</h4>
             <p>{{$homepage->mail}}</p>
-          </div>
+          </div> --}}
 
-          <div class="phone">
+          {{-- <div class="phone">
             <i class="icofont-phone"></i>
             <h4>Tel. P (abends):</h4>
             <p>{{$homepage->phone}}</p>
-          </div>
+          </div> --}}
 
         </div>
 

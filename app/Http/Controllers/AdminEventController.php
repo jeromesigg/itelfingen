@@ -7,10 +7,10 @@ use Carbon\Carbon;
 use App\EventStatus;
 use App\ContractStatus;
 use Illuminate\Http\Request;
+use Ixudra\Curl\Facades\Curl;
 use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Spatie\GoogleCalendar\Event as Event_API;
@@ -65,6 +65,8 @@ class AdminEventController extends Controller
     public function create()
     {
         //
+        $event_statuses = EventStatus::pluck('name','id')->all();
+        return view('admin.events.create', compact('event_statuses'));
     }
 
     /**
@@ -76,6 +78,10 @@ class AdminEventController extends Controller
     public function store(Request $request)
     {
         //
+        $input = $request->all();
+        $input['contract_status_id'] = config('status.contract_offen');
+        Event::create($input);
+        return redirect('/admin/events');
     }
 
     /**
@@ -107,6 +113,9 @@ class AdminEventController extends Controller
     public function DownloadContract($id)
     {
         $event = Event::findOrFail($id);
+        if($event['contract_status_id'] < config('status.contract_versendet')){
+            $event->update(['contract_status_id' => config('status.contract_versendet')]);
+        }
         $user = Auth::user();
             /* Set the PDF Engine Renderer Path */
         $domPdfPath = base_path('vendor/dompdf/dompdf');
@@ -124,8 +133,8 @@ class AdminEventController extends Controller
         $end_date_file = $end_date_date->format('dm');  
         $total_other_adults = $event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
         $total_member_adults =$event['member_adults'] * $event['total_days'] * config('pricelist.member_adults');
-        $total_other_kids = $event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
-        $total_member_kids =$event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
+        $total_other_kids = $event['other_kids'] * $event['total_days'] * config('pricelist.other_kids');
+        $total_member_kids =$event['member_kids'] * $event['total_days'] * config('pricelist.member_kids');
 
         $template = new TemplateProcessor(storage_path('app/contracts/Mietvertrag.docx'));
     
@@ -185,6 +194,7 @@ class AdminEventController extends Controller
         if ( file_exists($saveDocPath) ) {
             unlink($saveDocPath);
         }
+
         return response()->download($savePdfPath);
 
         // $data["email"] = "jerome.sigg@gmail.com";
@@ -211,28 +221,18 @@ class AdminEventController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $event = Event::findOrFail($id);
         $input = $request->all();
-        if($file = $request->file('contract')){
-            $name = str_replace(' ', '', $file->getClientOriginalName());
-            $file->move('contracts', $name);
-            $input['contract'] = $name;
-            $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_versendet'));
-        }
         if($file = $request->file('contract_signed')){
             $name = str_replace(' ', '', $file->getClientOriginalName());
             $file->move('contracts/signed', $name);
             $input['contract_signed'] = $name;
             $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
             $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
-            // return file_get_contents(public_path().'/contracts/signed/'. $name); 
-            // return response()->download(public_path().'/contracts/signed/'. $name); 
             Storage::disk('google')->put($name, response()->download(public_path().'/contracts/signed/'. $name)); 
         }
 
-        $event = Event::findOrFail($id);
         if(($event['event_status_id'] == config('status.event_neu')) && ($input['event_status_id'] == config('status.event_bestaetigt'))){
-
-            $event = Event::create($input); 
             $event_api = new Event_API;
 
             $event_api->name = $event->event_status['name'] . ' - ' . $name . ' - ' . $event['group_name'];
@@ -240,9 +240,107 @@ class AdminEventController extends Controller
             $event_api->endDate = Carbon::parse($event->end_date);
             
             $event_api->save();
+
+            AdminEventController::SendToBexio($event->id);
         }
         $event->update($input);
-        return redirect('/admin/events');
+        return redirect()->back();
+    }
+
+    static function SendToBexio($id)
+    {
+        $event = Event::findOrFail($id);
+        if (!$event['bexio_user_id']){
+            $query = array(
+                array( 
+                    'field' => 'name_1',
+                    'value' => $event->name
+                ),
+                array( 
+                    'field' => 'name_2',
+                    'value' => $event->firstname
+                ),
+                array( 
+                    'field' => 'address',
+                    'value' => $event->street
+                ),
+                array( 
+                    'field' => 'postcode',
+                    'value' => $event->plz
+                ),);
+            $person = Curl::to('https://api.bexio.com/2.0/contact/search')
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->withContentType('application/json')
+                    ->withData($query)
+                    ->asJson(true)
+                    ->enableDebug('C:\Temp\logFile.txt')
+                    ->post();
+            if(count($person) === 0){
+                $person = Curl::to('https://api.bexio.com/2.0/contact')
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->withContentType('application/json')
+                    ->withData( array( 
+                        'contact_type_id' => '2',
+                        'name_1' => $event->name,
+                        'name_2' => $event->firstname,
+                        'address' => $event->street,
+                        'postcode' => $event->plz,
+                        'city' => $event->city,
+                        'country_id' => 1,
+                        'mail' => $event->email,
+                        'phone_mobile' => $event->telephone,
+                        'remarks' => $event->comment,
+                        'user_id' => 1,
+                        'owner_id' => 1,
+                        ) )
+                    ->asJson(true)
+                    ->post();
+            }  
+            if(!isset($person->error)){
+               $event->update(['bexio_user_id' => $person[0]['id']]);   
+               $event = Event::findOrFail($id);
+            }
+        }
+
+        if (!$event['bexio_invoice_id']){
+            $title = "Buchung vom " . $event->start_date . " bis " . $event->end_date;
+            $positions = array(
+                array(
+                    'amount' => 1,
+                    'type' => 'KbPositionCustom' ,
+                    'tax_id' => 16,    
+                    'unit_price' => $event->total_amount,
+                )
+            );
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->withContentType('application/json')
+            ->withData( 
+                array( 
+                    'title' => $title,
+                    'contact_id' => $event->bexio_user_id,
+                    'user_id' => 1,
+                    'is_valid_from' => now(),
+                    'is_valid_to' => Carbon::create($event->end_date)->addDays(30),
+                    'positions' => $positions
+                ) 
+            )
+            ->asJson(true)
+            ->post();
+
+            if(!isset($invoice->error)){
+                $event = $event->update(['bexio_invoice_id' => $invoice['id']]);   
+            }
+
+            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->post();
+        }
+
     }
 
     /**
@@ -255,9 +353,6 @@ class AdminEventController extends Controller
     {
         //
         $event = Event::findOrFail($id);
-        if($event->contract){
-            unlink(public_path() . $event->contract->file);
-        }
         if($event->contract_signed){
             unlink(public_path() . $event->contract_signed->file);
         }

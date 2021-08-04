@@ -31,10 +31,8 @@ Route::post('/contacts', 'ContactController@store');
 Route::group(['middleware' => 'admin'], function(){
     Route::get('/admin','AdminController@index');
     Route::resource('admin/homepages','AdminHomepageController');
-    Route::resource('admin/albums', 'AdminAlbumsController');
     Route::resource('admin/pictures', 'AdminPicturesController');
     Route::resource('admin/eventstatuses', 'AdminEventStatusesController');
-    Route::resource('admin/pricelists', 'AdminPricelistController');
     Route::resource('admin/testimonials', 'AdminTestimonialController');
     Route::resource('admin/people', 'AdminPersonController');
     Route::resource('admin/histories', 'AdminHistoryController');
@@ -42,6 +40,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::get('admin/users/download/{user}', ['as'=>'download_signature','uses'=>'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController');
     Route::get('admin/events/{event}/downloadcontract', 'AdminEventController@DownloadContract')->name('events.downloadcontract');
+    Route::get('admin/events/{event}/SendToBexio', 'AdminEventController@SendToBexio')->name('events.sendtobexio');
     Route::resource('admin/contacts', 'AdminContactController');
 
 

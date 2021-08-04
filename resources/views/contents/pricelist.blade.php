@@ -31,8 +31,7 @@
               <div class="card_content">
                 <span class="card_title">Tagesaufenthalte (ohne Übernachtung)</span>
                 <br>
-                <p>Preis pro Tag 300.-</p>
-                <p>Falls das Haus nicht bis 10:00 Uhr am Folgetag abgegeben wird, wird ein zweiter Tag verrechnet.</p>
+                <p>Falls Sie das Haus nur für einen Tag mieten wollen, nehmen Sie bitte der Verwaltung <a href="#contact">Kontakt</a> auf.</p>
               </div>    
            </div>        
           </li>

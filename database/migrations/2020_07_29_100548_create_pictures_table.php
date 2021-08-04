@@ -18,12 +18,10 @@ class CreatePicturesTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->bigInteger('photo_id')->index()->unsigned()->nullable();
-            $table->bigInteger('album_id')->index()->unsigned()->nullable();
         });
         Schema::table('pictures', function (Blueprint $table) {
             //
             $table->foreign('photo_id')->references('id')->on('photos');
-            $table->foreign('album_id')->references('id')->on('albums');
         });
     }
 
@@ -37,7 +35,6 @@ class CreatePicturesTable extends Migration
         Schema::table('pictures', function (Blueprint $table) {
             //
             $table->dropForeign(['photo_id']);
-            $table->dropForeign(['album_id']);
         });
         Schema::dropIfExists('pictures');
     }

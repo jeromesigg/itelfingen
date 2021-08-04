@@ -179,68 +179,71 @@
                                                     </div>
                                                     {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
                                                 </div>
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col" style="width: 10%">Anzahl</th>
-                                                            <th scope="col">Artikel</th>
-                                                            <th scope="col">Kosten</th>
-                                                            <th scope="col">Total</th>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col" style="width: 10%">Anzahl</th>
+                                                                <th scope="col" style="width: 65%">Artikel</th>
+                                                                <th scope="col" style="width: 10%">Kosten</th>
+                                                                <th scope="col" style="width: 15%">Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th scope="row"></th>
+                                                                <th>Total <span id="days"></span></th>
+                                                                <th></th>
+                                                                <th><span id="total_amount_show"></span>.-</th>
+                                                                {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="4">
+                                                            <span style="font-size: small">G = Genossenschafter <br>
+                                                                Alle Preise in CHF. Die definitiven Preise werden im Mietvertrag festgelegt.</span> 
+                                                        </th>
                                                         </tr>
-                                                    </thead>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th scope="row"></th>
-                                                            <th>Total <span id="days"></span></th>
-                                                            <th></th>
-                                                            <th>CHF <span id="total_amount_show"></span>.-</th>
-                                                            {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
-                                                        </tr>
-                                                        <tr>
-                                                            <th colspan="4">
-                                                        <span style="font-size: small">Die definitiven Preise werden im Mietvertrag festgelegt.</span> 
-                                                    </th>
-                                                    </tr>
-                                                    </tfoot>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>Buchungspauschale</td>
-                                                            <td>CHF {{config('pricelist.booking')}}.-</td>
-                                                            <td>CHF {{config('pricelist.booking')}}.-</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>Reinigungspauschale</td>
-                                                            <td>CHF {{config('pricelist.cleaning')}}.-</td>
-                                                            <td>CHF {{config('pricelist.cleaning')}}.-</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">{!! Form::number('other_adults', null, [ 'class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}</th>
-                                                            <td>Übernachtungen Erwachsene</td>
-                                                            <td>CHF {{config('pricelist.other_adults')}}.-</td>
-                                                            <td>CHF <span id="other_adults_total"></span>.-</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">   {!! Form::number('member_adults', null, ['class' => 'form-control', 'id' => 'member_adults', 'onchange' => "Total_Change()"]) !!}</th>
-                                                            <td>Übernachtungen Erwachsene (Genossenschafter)</td>
-                                                            <td>CHF {{config('pricelist.member_adults')}}.-</td>
-                                                            <td>CHF <span id="member_adult_total"></span>.-</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">{!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}</th>
-                                                            <td>Übernachtungen Kind (bis 16 Jahre)</td>
-                                                            <td>CHF {{config('pricelist.other_kids')}}.-</td>
-                                                            <td>CHF <span id="other_kids_total"></span>.-</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">{!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}</th>
-                                                            <td>Übernachtungen Kind (Genossenschafter)</td>
-                                                            <td>CHF {{config('pricelist.member_kids')}}.-</td>
-                                                            <td>CHF <span id="member_kids_total"></span>.-</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                        </tfoot>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row">1</th>
+                                                                <td>Buchung</td>
+                                                                <td>{{config('pricelist.booking')}}.-</td>
+                                                                <td>{{config('pricelist.booking')}}.-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">1</th>
+                                                                <td>Reinigung</td>
+                                                                <td>{{config('pricelist.cleaning')}}.-</td>
+                                                                <td>{{config('pricelist.cleaning')}}.-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">{!! Form::number('other_adults', null, [ 'class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}</th>
+                                                                <td>Erwachsene</td>
+                                                                <td>{{config('pricelist.other_adults')}}.-</td>
+                                                                <td><span id="other_adults_total"></span>.-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">   {!! Form::number('member_adults', null, ['class' => 'form-control', 'id' => 'member_adults', 'onchange' => "Total_Change()"]) !!}</th>
+                                                                <td>Erwachsene (G)</td>
+                                                                <td>{{config('pricelist.member_adults')}}.-</td>
+                                                                <td><span id="member_adult_total"></span>.-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">{!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}</th>
+                                                                <td>Kinder (bis 16 Jahre)</td>
+                                                                <td>{{config('pricelist.other_kids')}}.-</td>
+                                                                <td><span id="other_kids_total"></span>.-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">{!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}</th>
+                                                                <td>Kinder (G)</td>
+                                                                <td>{{config('pricelist.member_kids')}}.-</td>
+                                                                <td><span id="member_kids_total"></span>.-</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                                 <div class="form-group">
                                                     {!! Form::label('comment', 'Bemerkungen:') !!}
                                                     {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3, 'placeholder'=>'z.B. Genossenschafts-Nr. oder Name der Genossenschafter']) !!}

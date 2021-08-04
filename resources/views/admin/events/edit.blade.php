@@ -109,16 +109,7 @@
                                     
                                     <br>
                                     <div class="form-group">
-                                        {!! Form::label('contract', 'Vertrag:') !!}
-                                        @if ($event->contract)
-                                            <a href="{{ URL::to('contracts',$event->contract)  }}" target="_blank">{{ $event->contract}}</a>
-                                        @endif
-                                        <br>
-                                        {!! Form::file('contract', null, ['class' => 'form-control']) !!}
-                                    </div>
-                                    <br>
-                                    <div class="form-group">
-                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird in Drive Ordner Hochgeladen):') !!}
+                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird in Drive Ordner hochgeladen und an Bexio gesendet):') !!}
                                         @if ($event->contract_signed)
                                             <a href="{{ URL::to('contracts/signed',$event->contract_signed)  }}" target="_blank">{{ $event->contract_signed}}</a>
                                         @endif
@@ -136,7 +127,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <div class="form-group">
-                            <a type='submit' class = 'btn btn-secondary' href="{{ route('events.downloadcontract', $event->id) }}">Vertrag herunterladen</a>
+                            <a type='submit' class = 'btn btn-primary' href="{{ route('events.downloadcontract', $event->id) }}">Vertrag herunterladen</a>
                         </div>
                         <div class="form-group">
                             {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
