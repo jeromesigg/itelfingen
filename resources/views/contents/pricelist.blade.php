@@ -40,9 +40,9 @@
               <div class="card_content">
                 <ul>
                 <br>
-                <li>Im Preis sind alle Taxen für Strom, Warmwasser, Heizung, Wifi etc. enthalten. </li>
+                <li>Im Preis sind alle Taxen für Strom, Warmwasser und Heizung enthalten. </li>
                 <li>Drei Parkplätze sind im Preis enthalten. Jeder weitere kostet 5.- pro Tag (bis zu 5 weitere Plätze). </li>
-                <li>Die Annulationskosten betragen 50% des Totalbetrags bis 14 Tage vor Mietbegin, danach 100% des Totalbetrags. </li> 
+                <li>Die Annulationskosten betragen 50% des Totalbetrags bis 14 Tage vor Mietbeginn, danach 100% des Totalbetrags. </li> 
                 </ul>
               </div>    
             </div>        

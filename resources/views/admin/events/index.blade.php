@@ -9,45 +9,46 @@
         </header>
     
         <div class="row">
-    
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Datum von</th>
-                        <th scope="col">Datum bis</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Vorname</th>
-                        <th scope="col">E-Mail</th>
-                        <th scope="col">Gruppe</th>
-                        <th scope="col">Personen</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Bemerkung</th>
-                        <th scope="col">Bemerkung Intern</th>
-                        <th scope="col">Vertrag</th>
-                        <th scope="col">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if($events)
-                    @foreach ($events as $event)
+            <div class="table-responsive">
+                <table class="table table-striped ">
+                    <thead>
                         <tr>
-                            <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} </td>
-                            <td> {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
-                            <td><a href="{{route('events.edit', $event->id)}}">{{$event->name}}</a></td>
-                            <td>{{$event->firstname}}</td>
-                            <td>{{$event->email}}</td>
-                            <td>{{$event->group_name}}</td>
-                            <td>{{$event->total_people}}</td>
-                            <td>{{$event->total_amount}}.-</td>
-                            <td>{{$event->comment}}</td>
-                            <td>{{$event->comment_intern}}</td>
-                            <td>{{$event->contract_status['name']}}</td>
-                            <td>{{$event->event_status['name']}}</td>
-                        </tr>   
-                    @endforeach
-                    @endif
-                </tbody>
-            </table>
+                            <th scope="col">Datum von</th>
+                            <th scope="col">Datum bis</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Vorname</th>
+                            <th scope="col">E-Mail</th>
+                            <th scope="col">Gruppe</th>
+                            <th scope="col">Personen</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Bemerkung</th>
+                            <th scope="col">Bemerkung Intern</th>
+                            <th scope="col">Vertrag</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($events)
+                        @foreach ($events as $event)
+                            <tr>
+                                <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} </td>
+                                <td> {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
+                                <td><a href="{{route('events.edit', $event->id)}}">{{$event->name}}</a></td>
+                                <td>{{$event->firstname}}</td>
+                                <td>{{$event->email}}</td>
+                                <td>{{$event->group_name}}</td>
+                                <td>{{$event->total_people}}</td>
+                                <td>{{$event->total_amount}}.-</td>
+                                <td>{{$event->comment}}</td>
+                                <td>{{$event->comment_intern}}</td>
+                                <td>{{$event->contract_status['name']}}</td>
+                                <td>{{$event->event_status['name']}}</td>
+                            </tr>   
+                        @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-5">
                     {{$events->render()}}

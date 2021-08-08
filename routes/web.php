@@ -40,6 +40,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::get('admin/users/download/{user}', ['as'=>'download_signature','uses'=>'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController');
     Route::get('admin/events/{event}/downloadcontract', 'AdminEventController@DownloadContract')->name('events.downloadcontract');
+    Route::get('admin/events/{event}/downloadcontractsigned', 'AdminEventController@DownloadContractSigned')->name('events.downloadcontractsigned');
     Route::get('admin/events/{event}/SendToBexio', 'AdminEventController@SendToBexio')->name('events.sendtobexio');
     Route::resource('admin/contacts', 'AdminContactController');
 

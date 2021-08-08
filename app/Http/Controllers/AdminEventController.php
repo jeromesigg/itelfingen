@@ -9,7 +9,6 @@ use App\ContractStatus;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -166,49 +165,26 @@ class AdminEventController extends Controller
             'username' =>  $user['fullname'],
             'user_number' => $user['phone']));
         
-        $template->setImageValue('signature', Storage::url($user['signature']));
+        if($user['signature']){
+            $template->setImageValue('signature', Storage::url($user['signature']));
+        }
+        else{
+            $template->setValue('signature', '');
+        }
 
         /*@ Save Temporary Word File With New Name */
         $filename =  $date_file . '_Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
-        $saveDocPath = public_path('contracts/' . $filename . '.docx');
+        $saveDocPath = storage_path('app/contracts/' . $filename . '.docx');
         $template->saveAs($saveDocPath);
-
-        // Load temporarily create word file
-        $Content = IOFactory::load($saveDocPath); 
     
         return response()->download($saveDocPath);
+    }
 
-
-        //Save it into PDF
-        $savePdfPath = public_path('contracts/' . $filename . '.pdf');
-        
-        /*@ If already PDF exists then delete it */
-        if ( file_exists($savePdfPath) ) {
-            unlink($savePdfPath);
-        }
-
-        //Save it into PDF
-        $PDFWriter = IOFactory::createWriter($Content,'PDF');
-        $PDFWriter->save($savePdfPath); 
-        /*@ Remove temporarily created word file */
-        if ( file_exists($saveDocPath) ) {
-            unlink($saveDocPath);
-        }
-
-        return response()->download($savePdfPath);
-
-        // $data["email"] = "jerome.sigg@gmail.com";
-        // $data["title"] = "From ItSolutionStuff.com";
-        // $data["body"] = "This is Demo";
-  
-        // Mail::send('emails.myTestMail', $data, function($message)use($data, $savePdfPath) {
-        //     $message->to($data["email"], $data["email"])
-        //             ->subject($data["title"])
-        //             ->attach($savePdfPath, [
-        //                 'as'    => 'Vertrag.pdf',
-        //                 'mime'   => 'application/pdf',
-        //             ]);
-        // });
+    public function DownloadContractSigned($id)
+    {
+        $event = Event::findOrFail($id);
+        $path = storage_path('app/contracts/signed/'.$event['contract_signed']);
+        return response()->download($path);
     }
 
     /**
@@ -225,32 +201,48 @@ class AdminEventController extends Controller
         $input = $request->all();
         if($file = $request->file('contract_signed')){
             $name = str_replace(' ', '', $file->getClientOriginalName());
-            $file->move('contracts/signed', $name);
+            $file->storeAs('contracts/signed/', $name);
             $input['contract_signed'] = $name;
             $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
             $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
-            Storage::disk('google')->put($name, response()->download(public_path().'/contracts/signed/'. $name)); 
+            Storage::disk('google')->put($name, response()->download(storage_path('app/contracts/signed/'. $name))); 
         }
 
         if(($event['event_status_id'] == config('status.event_neu')) && ($input['event_status_id'] == config('status.event_bestaetigt'))){
             $event_api = new Event_API;
 
-            $event_api->name = $event->event_status['name'] . ' - ' . $name . ' - ' . $event['group_name'];
+            $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'];
             $event_api->startDate = Carbon::parse($event->start_date);
-            $event_api->endDate = Carbon::parse($event->end_date);
+            $event_api->endDate = Carbon::parse($event->end_date)->addDay();
             
             $event_api->save();
 
-            AdminEventController::SendToBexio($event->id);
+            $this->SendToBexioEx($event);
         }
         $event->update($input);
         return redirect()->back();
     }
 
-    static function SendToBexio($id)
+    public function SendToBexio($id)
     {
         $event = Event::findOrFail($id);
-        if (!$event['bexio_user_id']){
+        $event = $this->SendToBexioEx($event);
+        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
+        ->withHeader('Accept: application/json')
+        ->withBearer(config('app.bexio_token'))
+        ->asJson( true )
+        ->get(); 
+
+        if(!isset($invoice['error_code'])){
+            Storage::disk('local')->put('invoices/Rechnung_' . $event['bexio_invoice_id'] . '.pdf',base64_decode($invoice['content']));
+            $path = storage_path('app/invoices/Rechnung_'.$event['bexio_invoice_id'].'.pdf');
+            return response()->download($path);
+        }
+        return redirect()->back();
+    }
+
+    public function SendToBexioEx(Event $event){
+        if (!isset($event['bexio_user_id'])){
             $query = array(
                 array( 
                     'field' => 'name_1',
@@ -274,7 +266,6 @@ class AdminEventController extends Controller
                     ->withContentType('application/json')
                     ->withData($query)
                     ->asJson(true)
-                    ->enableDebug('C:\Temp\logFile.txt')
                     ->post();
             if(count($person) === 0){
                 $person = Curl::to('https://api.bexio.com/2.0/contact')
@@ -299,19 +290,21 @@ class AdminEventController extends Controller
                     ->post();
             }  
             if(!isset($person->error)){
-               $event->update(['bexio_user_id' => $person[0]['id']]);   
-               $event = Event::findOrFail($id);
+                $event = $event->update(['bexio_user_id' => $person[0]['id']]);   
             }
         }
 
-        if (!$event['bexio_invoice_id']){
-            $title = "Buchung vom " . $event->start_date . " bis " . $event->end_date;
+        if (!isset($event['bexio_invoice_id'])){
+            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
+            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
+            $title = "Buchung vom " . $start_date . " bis " . $end_date;
             $positions = array(
                 array(
                     'amount' => 1,
                     'type' => 'KbPositionCustom' ,
                     'tax_id' => 16,    
                     'unit_price' => $event->total_amount,
+                    'text' => 'Buchung Ferienhaus Itelfingen gemäss Vertrag'
                 )
             );
             $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
@@ -332,15 +325,30 @@ class AdminEventController extends Controller
             ->post();
 
             if(!isset($invoice->error)){
-                $event = $event->update(['bexio_invoice_id' => $invoice['id']]);   
+                $event = $event->update(['bexio_invoice_id' => $invoice['id']]);  
+
+                Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->post(); 
             }
 
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->post();
         }
 
+        if (!isset($event['bexio_file_id']) && $event['contract_signed']){
+            $file = Curl::to('https://api.bexio.com/3.0/files ')
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->withFile($event['contract_signed'], storage_path('app/contracts/signed/'.$event['contract_signed']))
+            ->post();
+
+            $file = json_decode($file, true);
+
+            if(!isset($file->error)){
+                $event = $event->update(['bexio_file_id' => $file[0]['id']]);  
+            }
+        }
+        return $event;
     }
 
     /**

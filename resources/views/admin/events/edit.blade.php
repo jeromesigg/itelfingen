@@ -111,7 +111,7 @@
                                     <div class="form-group">
                                         {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird in Drive Ordner hochgeladen und an Bexio gesendet):') !!}
                                         @if ($event->contract_signed)
-                                            <a href="{{ URL::to('contracts/signed',$event->contract_signed)  }}" target="_blank">{{ $event->contract_signed}}</a>
+                                            <a type='submit' href="{{ route('events.downloadcontractsigned', $event->id) }}">{{$event->contract_signed}}</a>
                                         @endif
                                         <br>
                                         {!! Form::file('contract_signed', null, ['class' => 'form-control']) !!}
@@ -125,17 +125,20 @@
                             </div>
                         {!! Form::close()!!}
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <a type='submit' class = 'btn btn-primary' href="{{ route('events.downloadcontract', $event->id) }}">Vertrag herunterladen</a>
                         </div>
+                        <br>
                         <div class="form-group">
-                            {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
-                                <div class="form-group">
-                                    {!! Form::submit('Buchung löschen', ['class' => 'btn btn-danger'])!!}
-                                </div>
-                            {!! Form::close()!!}
+                            <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendtobexio', $event->id) }}">Rechnung herunterladen</a>
                         </div>
+                        <br>
+                        {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
+                            <div class="form-group">
+                                {!! Form::submit('Buchung löschen', ['class' => 'btn btn-danger'])!!}
+                            </div>
+                        {!! Form::close()!!}
                     </div>
                 </div>
             </div>

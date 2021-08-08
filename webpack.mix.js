@@ -26,7 +26,7 @@ mix.styles([
     'resources/css/libs/default-skin.css',
 ], 'public/css/main.css');
 mix.scripts([
-    'resources/js/admin/jquery-ui.js',
+    'resources/js/admin/jquery-ui.min.js',
     'resources/js/libs/validate.js',
     'resources/js/libs/owl.carousel.min.js',
     'resources/js/libs/isotope.pkgd.min.js',
@@ -48,7 +48,7 @@ mix.styles([
     'resources/css/libs/events.css',
 ], 'public/css/admin.css');
 mix.scripts([
- 'resources/js/admin/jquery-ui.js',
+ 'resources/js/admin/jquery-ui.min.js',
  'resources/js/admin/jquery.mCustomScrollbar.js',
  'resources/js/admin/front.js',
  'resources/js/admin/jqBootstrapValidation.js',

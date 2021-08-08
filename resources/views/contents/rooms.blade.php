@@ -13,7 +13,7 @@
                 <span class="card_title">EG</span>
                 <ul>
                   <li>Aufenthaltsraum mit Platz für 20 Personen (34m<sup>2</sup>)</li>
-                  <li>Küche</li>
+                  <li>Moderne Küche</li>
                   <li>1 Zimmer mit 2 Betten</li>
                   <li>Nasszellen mit Dusche und WC</li>
                   <li>Nasszellen mit Dusche </li>
@@ -29,6 +29,7 @@
               <li>1 Zimmer mit 10 Betten </li>
               <li>1 Zimmer mit 4 Betten</li>
               <li>1 Zimmer mit 2 Betten</li>
+              <li>Alle Betten inkl. Bettwäsche und Kissen</li>
               <li>WC</li>
                 
             </ul>
