@@ -21,7 +21,7 @@ class AdminController extends Controller
     public function index(){
         $events_all = Event::where('event_status_id','<',config('status.event_eigene'))->count();
         $events_new = Event::where('event_status_id',config('status.event_neu'))->orderBy('start_date')->get();
-        $contract_open = Event::where('contract_status_id',config('status.contract_offen'))->count();
+        $contract_open = Event::where('contract_status_id',config('status.contract_versendet'))->count();
         $contacts_new = Contact::where('done',false)->orderBy('created_at')->get();
 
         $icon_array = collect([
@@ -37,7 +37,7 @@ class AdminController extends Controller
             ],
             (object) [
                 'icon' => 'icon-check',
-                'name' => 'Offene Verträge',
+                'name' => 'Verträge unterwegs',
                 'number' => $contract_open
             ],   
             (object) [

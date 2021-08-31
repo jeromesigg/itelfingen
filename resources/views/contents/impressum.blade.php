@@ -30,6 +30,12 @@
                   <h4>Hausadresse:</h4>
                   <p>{!! nl2br($homepage->address) !!}</p>
                 </div>
+
+                <div class="address">
+                  <i class="icofont-google-map"></i>
+                  <h4>Postadresse:</h4>
+                  <p>{!! nl2br($homepage->postaddress) !!}</p>
+                </div>
       
                 <div class="email">
                   <i class="icofont-envelope"></i>

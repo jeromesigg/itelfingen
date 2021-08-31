@@ -123,7 +123,6 @@ class AdminEventController extends Controller
 
         /*@ Reading doc file */
         $date = Carbon::now()->locale('de_CH')->format('d.m.Y');  
-        $date_file = Carbon::now()->locale('de_CH')->format('ymd');  
         $start_date_date = Carbon::create($event['start_date'])->locale('de_CH');
         $start_date = $start_date_date->format('d.m.Y');  
         $start_date_file = $start_date_date->format('dm');  
@@ -173,7 +172,7 @@ class AdminEventController extends Controller
         }
 
         /*@ Save Temporary Word File With New Name */
-        $filename =  $date_file . '_Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
+        $filename =  'Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
         $saveDocPath = storage_path('app/contracts/' . $filename . '.docx');
         $template->saveAs($saveDocPath);
     
@@ -199,8 +198,10 @@ class AdminEventController extends Controller
         //
         $event = Event::findOrFail($id);
         $input = $request->all();
-        if($file = $request->file('contract_signed')){
-            $name = str_replace(' ', '', $file->getClientOriginalName());
+        if($file = $request->file('contract_signed')){ 
+            $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
+            $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
+            $name =  'Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
             $file->storeAs('contracts/signed/', $name);
             $input['contract_signed'] = $name;
             $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
