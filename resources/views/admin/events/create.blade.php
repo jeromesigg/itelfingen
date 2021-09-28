@@ -5,6 +5,10 @@
         <header> 
             <h3 class="display">Buchung erstellen</h3>
         </header>
+        <div>
+            <button class="btn btn-primary" onclick="createIntern()">Interne Buchung erstellen</button>
+        </div>
+        <br>
         {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@store']]) !!}
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -98,9 +102,15 @@
                             {!! Form::number('total_amount', null, ['class' => 'form-control', 'required']) !!}
                         </div>
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('event_status_id', 'Status:') !!}
-                        {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                    <div class="form-row">
+                        <div class="col-md-6 form-group">
+                            {!! Form::label('event_status_id', 'Status:') !!}
+                            {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            {!! Form::label('user_id', 'Verantwortlicher:') !!}
+                            {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,4 +121,19 @@
         </div>   
     </div>
 </section>
+@endsection
+@section('scripts')
+<script>
+    function createIntern() {
+	    $('#name').val("Interne Buchung");
+	    $('#street').val("Itelfingen 3");
+	    $('#plz').val("6344");
+	    $('#city').val("Meierskappel");
+	    $('#email').val("verwalter@itelfingen.ch");
+	    $('#total_people').val("0");
+	    $('#total_days').val("0");
+	    $('#total_amount').val("0");
+	    $('#event_status_id').val(@json(config('status.event_eigene')));
+    }
+</script>
 @endsection

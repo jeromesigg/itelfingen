@@ -42,6 +42,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::get('admin/events/{event}/downloadcontract', 'AdminEventController@DownloadContract')->name('events.downloadcontract');
     Route::get('admin/events/{event}/downloadcontractsigned', 'AdminEventController@DownloadContractSigned')->name('events.downloadcontractsigned');
     Route::get('admin/events/{event}/SendToBexio', 'AdminEventController@SendToBexio')->name('events.sendtobexio');
+    Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendcleaningmail');
     Route::resource('admin/contacts', 'AdminContactController');
 
 

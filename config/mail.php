@@ -93,6 +93,8 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'cleaning_mail' => env('CLEANING_MAIL', 'hello@example.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings

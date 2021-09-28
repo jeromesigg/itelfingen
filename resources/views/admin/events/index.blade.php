@@ -23,6 +23,7 @@
                             <th scope="col">Total</th>
                             <th scope="col">Bemerkung</th>
                             <th scope="col">Bemerkung Intern</th>
+                            <th scope="col">Verantwortlich</th>
                             <th scope="col">Vertrag</th>
                             <th scope="col">Status</th>
                         </tr>
@@ -41,6 +42,7 @@
                                 <td>{{$event->total_amount}}.-</td>
                                 <td>{{$event->comment}}</td>
                                 <td>{{$event->comment_intern}}</td>
+                                <td>{{$event->user ? $event->user['username'] : ""}}</td>
                                 <td>{{$event->contract_status['name']}}</td>
                                 <td>{{$event->event_status['name']}}</td>
                             </tr>   

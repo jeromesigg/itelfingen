@@ -102,14 +102,20 @@
                                             {!! Form::number('total_amount', null, ['class' => 'form-control', 'required']) !!}
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        {!! Form::label('event_status_id', 'Status:') !!}
-                                        {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                    <div class="form-row">
+                                        <div class="col-md-6 form-group">
+                                            {!! Form::label('event_status_id', 'Status:') !!}
+                                            {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            {!! Form::label('user_id', 'Verantwortlicher:') !!}
+                                            {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                                        </div>
                                     </div>
                                     
                                     <br>
                                     <div class="form-group">
-                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird in Drive Ordner hochgeladen und an Bexio gesendet):') !!}
+                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird an Bexio gesendet):') !!}
                                         @if ($event->contract_signed)
                                             <a type='submit' href="{{ route('events.downloadcontractsigned', $event->id) }}">{{$event->contract_signed}}</a>
                                         @endif
@@ -134,11 +140,33 @@
                             <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendtobexio', $event->id) }}">Rechnung herunterladen</a>
                         </div>
                         <br>
+                        @if(!$event->cleaning_mail)
+                            <div class="form-group">
+                                <button class="btn btn-secondary" onclick="PrepareMail()">Mail an Putzfirma</button>
+                            </div>
+                            <br>
+                        @endif
                         {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
                             <div class="form-group">
                                 {!! Form::submit('Buchung löschen', ['class' => 'btn btn-danger'])!!}
                             </div>
                         {!! Form::close()!!}
+                        <div id="cleaning_mail" style="display: none">
+                            {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@SendCleaningMail', $event->id]]) !!}
+                            <div class="form-group">
+                                    {!! Form::label('cleaning_mail_address', 'Mail Adresse:') !!}
+                                    {!! Form::text('cleaning_mail_address', null, ['class' => 'form-control']) !!}
+                            </div>
+                            <div class="form-group">
+                                    {!! Form::label('cleaning_mail_text', 'Mail Text:') !!}
+                                    {!! Form::textarea('cleaning_mail_text', null, ['class' => 'form-control', 'rows' =>9]) !!}
+                            </div>
+                            <div class="form-group">
+                                {!! Form::submit('Mail versenden', ['class' => 'btn btn-secondary'])!!}
+                            </div>
+                            {!! Form::close()!!}
+                        </div>
+                        <br>
                     </div>
                 </div>
             </div>
@@ -147,4 +175,24 @@
             </div>   
         </div>
     </section>
+@endsection
+@section('scripts')
+<script>
+    function PrepareMail() {
+  		document.getElementById("cleaning_mail").style.display = "block";
+          
+        start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
+        end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
+        other_adults_total = parseInt(document.getElementById("other_adults").value) || 0;
+        member_adult_total = parseInt(document.getElementById("member_adults").value) || 0;
+        other_kids_total = parseInt(document.getElementById("other_kids").value) || 0;
+        member_kids_total = parseInt(document.getElementById("member_kids").value) || 0;
+        total = other_adults_total + member_adult_total + other_kids_total + member_kids_total;
+        text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis " 
+        + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für " 
+        + total + " Personen. Für einige nachfolgende Reinigung wären wir froh\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
+	    $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
+	    $('#cleaning_mail_text').val(text);
+    }
+</script>
 @endsection

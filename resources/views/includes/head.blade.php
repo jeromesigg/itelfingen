@@ -8,7 +8,6 @@
 <meta content="Ein Ort zum Entspannen und gleichzeitig neue Abenteuer zu erleben. Buchen Sie gleich heute Ihren nächsten Aufenthalt bei uns." name="description">
 <meta content="Ferienhaus,Lagerhaus,Itelfingen,Übernachtung,Gruppenhaus,Luzern,Zug q" name="keywords">
 
-!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-F60JJ5ECJX"></script>
 <script>
   window.dataLayer = window.dataLayer || [];

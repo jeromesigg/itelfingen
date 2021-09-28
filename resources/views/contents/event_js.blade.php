@@ -32,8 +32,23 @@ function Total_Change() {
 	$("#total_days").val(days);
 }
 
+if(document.getElementById('start_date') == undefined){
+	start_date_init = null;
+}
+else{
+	start_date_init = document.getElementById('start_date').value == "" ? null : new Date(document.getElementById('start_date').value);
+}
+if(document.getElementById('end_date') == undefined){
+	end_date_init = null;
+}
+else{
+	end_date_init = document.getElementById('start_date').value == "" ? null : new Date(document.getElementById('end_date').value);
+}
 window.onload = function() { 
     Agenda.load(@json($events_json), @json($event_type))
+	if(document.getElementById('total_amount') != undefined){
+		Total_Change()
+	}
     };
 
 function addDays(date, days) {
@@ -81,8 +96,10 @@ var undefined;
 Agenda = {
 	monate: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
 	date: new Date(new Date().getFullYear(), new Date().getMonth() - new Date().getMonth() % 3, 1),
-	start: null,
-	end: null,
+	// start: new Date(document.getElementById("start_date").value),
+	// end: new Date(document.getElementById("end_date").value),
+	start: start_date_init == undefined ? null : new Date(start_date_init.getFullYear(), start_date_init.getMonth(), start_date_init.getDate()),
+	end: end_date_init == undefined ? null : new Date(end_date_init.getFullYear(), end_date_init.getMonth(), end_date_init.getDate()),
 	reserved: {},
 	matrix: [],
 	// initial calendar setup
@@ -290,6 +307,7 @@ Agenda = {
 			$("#end_date").val(end_date.toISOString().split('T')[0]);
 		}
 		var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+		today = addDays(today, +7);
 		for (date in this.index) {
 			this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].node.className = 'hk-agenda__day--' + this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].state;
 			if (this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].state == 'FF') {

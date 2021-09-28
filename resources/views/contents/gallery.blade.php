@@ -16,7 +16,10 @@
       </div>             
       @endforeach    
     </div>
-    
+    <h3 style="margin-top: 20px">
+      Mehr Bilder gibt es auf unserer <a href="https://www.instagram.com/itelfingen/" target="blank">Instagram-Seite</a>
+    </h3>
   </div> 
+  
 </section>
 

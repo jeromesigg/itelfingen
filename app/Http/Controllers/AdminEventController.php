@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Event;
+use App\Homepage;
 use Carbon\Carbon;
 use App\EventStatus;
 use App\ContractStatus;
@@ -10,9 +12,12 @@ use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use PhpOffice\PhpWord\Settings;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Spatie\GoogleCalendar\Event as Event_API;
+
+use function PHPUnit\Framework\isNull;
 
 class AdminEventController extends Controller
 {
@@ -64,8 +69,10 @@ class AdminEventController extends Controller
     public function create()
     {
         //
+        $homepages = Homepage::all();
         $event_statuses = EventStatus::pluck('name','id')->all();
-        return view('admin.events.create', compact('event_statuses'));
+        $users = User::where('role_id',config('status.role_Team'))->pluck('username','id')->all();
+        return view('admin.events.create', compact('event_statuses', 'homepages', 'users'));
     }
 
     /**
@@ -106,7 +113,8 @@ class AdminEventController extends Controller
         $event_statuses = EventStatus::pluck('name','id')->all();
         $contract_statuses = ContractStatus::pluck('name','id')->all();
         $event = Event::findOrFail($id);
-        return view('admin.events.edit', compact('event_statuses','event', 'contract_statuses'));
+        $users = User::where('role_id',config('status.role_Team'))->pluck('username','id')->all();
+        return view('admin.events.edit', compact('event_statuses','event', 'contract_statuses', 'users'));
     }
 
     public function DownloadContract($id)
@@ -206,18 +214,23 @@ class AdminEventController extends Controller
             $input['contract_signed'] = $name;
             $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
             $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
-            Storage::disk('google')->put($name, response()->download(storage_path('app/contracts/signed/'. $name))); 
+            // Storage::disk('google')->put($name, response()->download(storage_path('app/contracts/signed/'. $name))); 
         }
 
+        return dd(is_null($event['bexio_user_id']));
+
         if(($event['event_status_id'] == config('status.event_neu')) && ($input['event_status_id'] == config('status.event_bestaetigt'))){
-            $event_api = new Event_API;
+            if(config('app.env') == 'production'){
+                $event_api = new Event_API;
 
-            $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'];
-            $event_api->startDate = Carbon::parse($event->start_date);
-            $event_api->endDate = Carbon::parse($event->end_date)->addDay();
+                $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'];
+                $event_api->startDate = Carbon::parse($event->start_date);
+                $event_api->endDate = Carbon::parse($event->end_date)->addDay();
+                
+                $event_api->save();
+            }
+
             
-            $event_api->save();
-
             $this->SendToBexioEx($event);
         }
         $event->update($input);
@@ -243,7 +256,7 @@ class AdminEventController extends Controller
     }
 
     public function SendToBexioEx(Event $event){
-        if (!isset($event['bexio_user_id'])){
+        if(is_null($event['bexio_user_id'])){
             $query = array(
                 array( 
                     'field' => 'name_1',
@@ -295,7 +308,7 @@ class AdminEventController extends Controller
             }
         }
 
-        if (!isset($event['bexio_invoice_id'])){
+        if (is_null($event['bexio_invoice_id'])){
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
             $title = "Buchung vom " . $start_date . " bis " . $end_date;
@@ -336,7 +349,7 @@ class AdminEventController extends Controller
 
         }
 
-        if (!isset($event['bexio_file_id']) && $event['contract_signed']){
+        if (is_null($event['bexio_file_id']) && !is_null($event['contract_signed'])){
             $file = Curl::to('https://api.bexio.com/3.0/files ')
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
@@ -350,6 +363,16 @@ class AdminEventController extends Controller
             }
         }
         return $event;
+    }
+
+    public function SendCleaningMail(Request $request, $id){
+        $input = $request->all();
+        Mail::raw($input['cleaning_mail_text'],  function($message) use($input){
+          $message->to($input['cleaning_mail_address'])->subject('Reiningungsanfrage Ferienhaus Itelfingen');
+        });
+        $event = Event::findOrFail($id);
+        $event->update(['cleaning_mail' => true]);
+        return redirect()->back();
     }
 
     /**
