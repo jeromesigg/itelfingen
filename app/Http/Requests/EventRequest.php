@@ -25,17 +25,11 @@ class EventRequest extends FormRequest
      */
     public function rules()
     {
-        $this->redirect = url()->previous() . "#booking";
 
-        return [
-            'g-recaptcha-response' => 'required|captcha'
-        ];
     }
 
-        public function messages()
-        {
-            return [
-                'g-recaptcha-response.required' => 'Das Captcha muss ausgewählt sein.'
-            ];
-        }
+    public function messages()
+    {
+
+    }
 }

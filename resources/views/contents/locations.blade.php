@@ -3,7 +3,7 @@
   
       <div class="section-title">
         <h2>Ausflugtipps</h2>
-        <p>Was Sie alles in der Umgebung des Hauses erleben können.</p>
+        <p style="color: white">Was Sie alles in der Umgebung des Hauses erleben können.</p>
       </div>
   
       <div class="owl-carousel locations-carousel" data-aos="fade-up" data-aos-delay="100">

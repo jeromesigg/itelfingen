@@ -7,14 +7,14 @@
 
         <nav class="nav-menu d-none d-lg-block">
             <ul id="top-menu">
-                <li><a href="/#rooms">Details</a></li>
+                {{-- <li><a href="/#rooms">Details</a></li>
                 <li><a href="#gallery">Fotos</a></li>
                 <li><a href="#pricelist">Preisliste</a></li>
                 <li><a href="#booking">Belegungsplan</a></li>
                 <li><a href="#locations">Ausflugtipps</a></li>
                 <li><a href="#history">Historisches</a></li>
-                <li><a href="#contact">Kontakt</a></li>
-                <li class="book-a-table text-center"><a href="#booking">Haus Buchen</a></li>
+                <li><a href="#contact">Kontakt</a></li> --}}
+                <li class="book text-center"><a href="#booking">Jetzt Buchen</a></li>
                 @guest
                 @else
                     <li><a href="/admin" target="blank">Dashboard</a></li>            

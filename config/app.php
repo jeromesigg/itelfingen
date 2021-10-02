@@ -165,7 +165,6 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Buzz\LaravelGoogleCaptcha\CaptchaServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
         /*
@@ -234,7 +233,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-        'Captcha' => \Buzz\LaravelGoogleCaptcha\CaptchaFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
     ],
 

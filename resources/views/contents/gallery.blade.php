@@ -1,4 +1,4 @@
-<section id="gallery" class="gallery section">
+<section id="gallery" class="gallery section-bg">
 
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="section-title">

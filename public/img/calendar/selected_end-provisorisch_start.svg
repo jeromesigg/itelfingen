@@ -7,8 +7,8 @@
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Calendar-Triangle" fill-rule="nonzero">
             <g id="triangle">
-                <polygon id="Triangle" fill="#FDCC92" points="200 0 200 200 0 200"></polygon>
-                <polygon id="Triangle-Copy" fill="#033745" points="200 0 0 0 0 200"></polygon>
+                <polygon id="Triangle" fill="#A5BAA5" points="200 0 200 200 0 200"></polygon>
+                <polygon id="Triangle-Copy" fill="#293242" points="200 0 0 0 0 200"></polygon>
             </g>
         </g>
     </g>

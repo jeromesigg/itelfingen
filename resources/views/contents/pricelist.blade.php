@@ -1,4 +1,4 @@
-<section id="pricelist" class="pricelist section-bg">
+<section id="pricelist" class="pricelist section">
     <div class="container" data-aos="fade-up">
   
       <div class="section-title">

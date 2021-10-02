@@ -1,3 +1,19 @@
+:root{
+  --gladegreen: #657F61;
+  --ebonyclay: #293242;
+  --norway: #A5BAA5;
+  --grannysmith: #8DA3A8;
+  --orientalpink: #C78B8E;
+}
+
+@font-face {
+  font-family: 'PPMigra';
+  src: url('../fonts/PPMIgra-Regular.woff2') format('woff2'),
+       url('../fonts/PPMIgra-Regular.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;
@@ -24,9 +40,9 @@
 }
 
 .card {
-  background-color: white;
-  border-radius: 1.25rem;
-  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  background-color: var(--ebonyclay);
+  /* border-radius: 1.25rem; */
+  /* box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25); */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -34,20 +50,21 @@
 
 .card_content {
   padding: 1rem;
+  color: white;
 }
 
 .card_title {
   display: block;
   font-size: 28px;
   font-weight: 700;
-  color: #cda45e;
+  color: white;
 }
 
 .card_subtitle {
   display: block;
   font-size: 24px;
   font-weight: 600;
-  color: #cda45e;
+  color: white;
 }
 
 .card_text {
@@ -59,7 +76,7 @@
 }
 
 td.hk-agenda__day--sat, td.hk-agenda__day--sun {
-  background: #cda45e5c;
+  /* background: #cda45e5c; */
 }
 
 /*
@@ -79,7 +96,7 @@ td.hk-agenda__day--sat, td.hk-agenda__day--sun {
   text-align: center;
   font-size: 12px;
   line-height: 28px;
-  font-family: "Helvetica neue", Helvetica, sans-serif;
+  font-family: "Titillium Web";
   }
 
 .cookie-consent.show {
@@ -97,3 +114,20 @@ td.hk-agenda__day--sat, td.hk-agenda__day--sun {
   margin-left: 10px;
   vertical-align: baseline;
 }
+
+.btn-primary {
+  color: black;
+  background-color: var(--gladegreen);
+  border-color: var(--gladegreen);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  color: black;
+  background-color: var(--gladegreen);
+  border-color: var(--gladegreen);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+

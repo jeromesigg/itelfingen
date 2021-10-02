@@ -6,8 +6,8 @@
     <defs></defs>
     <g id="Calendar-Triangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="triangle" fill-rule="nonzero">
-            <polygon id="Triangle" fill="#FDCC92" points="200 0 200 200 0 200"></polygon>
-            <polygon id="Triangle-Copy" fill="#F2685D" points="200 0 0 0 0 200"></polygon>
+            <polygon id="Triangle" fill="#A5BAA5" points="200 0 200 200 0 200"></polygon>
+            <polygon id="Triangle-Copy" fill="#C78B8E" points="200 0 0 0 0 200"></polygon>
         </g>
     </g>
 </svg>

@@ -51,106 +51,109 @@
 .hk-agenda__day--SS,
 .hk-agenda__day--FS,
 .hk-agenda__day--SF {
-	border: 1px solid #033745;
-	background: #033745;
+	border: 1px solid var(--ebonyclay);
+	background: var(--ebonyclay);
 	color: #eee;
 }
 
 .hk-agenda__day--PP {
-	border: 1px solid #fbb76e;
-	background: #fdcc92;
-	color: #773500;
+	border: 1px solid #7e967e;
+	background: var(--norway);
+	color: #333;
+
 }
 
 .hk-agenda__day--FP {
 	border: 1px solid #ccc;
-	border-bottom: 1px solid #fbb76e;
-	border-right: 1px solid #fbb76e;
-	background: #fdcc92 url(/img/calendar/provisorisch_start.svg) 50% 50%;
-	color: #773500;
+	border-bottom: 1px solid #7e967e;
+	border-right: 1px solid #7e967e;
+	background: var(--norway) url(/img/calendar/provisorisch_start.svg) 50% 50%;
+	color: #333;
+
 }
 
 .hk-agenda__day--PF {
 	border: 1px solid #ccc;
-	border-top: 1px solid #fbb76e;
-	border-left: 1px solid #fbb76e;
-	background: #fdcc92 url(/img/calendar/provisorisch_end.svg) 50% 50%;
-	color: #773500;
+	border-top: 1px solid #7e967e;
+	border-left: 1px solid #7e967e;
+	background: var(--norway) url(/img/calendar/provisorisch_end.svg) 50% 50%;
+	color: #333;
+
 }
 
 .hk-agenda__day--BB {
-	border: 1px solid #d74a40;
-	background: #f2685d;
-	color: #2f0502;
+	border: 1px solid #aa7679;
+	background: var(--orientalpink);
+	color: #333;
 }
 
 .hk-agenda__day--FB {
 	border: 1px solid #ccc;
-	border-bottom: 1px solid #d74a40;
-	border-right: 1px solid #d74a40;
-	background: #f2685d url(/img/calendar/besetzt_start.svg) 50% 50%;
-	color: #2f0502;
+	border-bottom: 1px solid #aa7679;
+	border-right: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/besetzt_start.svg) 50% 50%;
+	color: #333;
 }
 
 .hk-agenda__day--BF {
 	border: 1px solid #ccc;
-	border-top: 1px solid #d74a40;
-	border-left: 1px solid #d74a40;
-	background: #f2685d url(/img/calendar/besetzt_end.svg) 50% 50%;
-	color: #2f0502;
+	border-top: 1px solid #aa7679;
+	border-left: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/besetzt_end.svg) 50% 50%;
+	color: #333;
 }
 
 .hk-agenda__day--PB {
-	border-top: 1px solid #fbb76e;
-	border-left: 1px solid #fbb76e;
-	border-bottom: 1px solid #d74a40;
-	border-right: 1px solid #d74a40;
-	background: #f2685d url(/img/calendar/provisorisch_end-besetzt_start.svg) 50% 50%;
-	color: #2f0502;
+	border-top: 1px solid #7e967e;
+	border-left: 1px solid #7e967e;
+	border-bottom: 1px solid #aa7679;
+	border-right: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/provisorisch_end-besetzt_start.svg) 50% 50%;
+	color: #333;
 }
 
 .hk-agenda__day--BP {
-	border: 1px solid #fbb76e;
-	border-right: 1px solid #fbb76e;
-	border-top: 1px solid #d74a40;
-	border-left: 1px solid #d74a40;
-	background: #f2685d url(/img/calendar/besetzt_end-provisorisch_start.svg) 50% 50%;
-	color: #2f0502;
+	border: 1px solid #7e967e;
+	border-right: 1px solid #7e967e;
+	border-top: 1px solid #aa7679;
+	border-left: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/besetzt_end-provisorisch_start.svg) 50% 50%;
+	color: #333;
 }
 
 .hk-agenda__day--SP {
-	border-top: 1px solid #033745;
-	border-right: 1px solid #033745;
-	border-bottom: 1px solid #fbb76e;
-	border-right: 1px solid #fbb76e;
-	background: #f2685d url(/img/calendar/selected_end-provisorisch_start.svg) 50% 50%;
+	border-top: 1px solid var(--ebonyclay);
+	border-right: 1px solid var(--ebonyclay);
+	border-bottom: 1px solid #7e967e;
+	border-right: 1px solid #7e967e;
+	background: var(--orientalpink) url(/img/calendar/selected_end-provisorisch_start.svg) 50% 50%;
 	color: #eee;
 }
 
 .hk-agenda__day--PS {
-	border-bottom: 1px solid #033745;
-	border-left: 1px solid #033745;
-	border-top: 1px solid #fbb76e;
-	border-left: 1px solid #fbb76e;
-	background: #f2685d url(/img/calendar/provisorisch_end-selected_start.svg) 50% 50%;
+	border-bottom: 1px solid var(--ebonyclay);
+	border-left: 1px solid var(--ebonyclay);
+	border-top: 1px solid #7e967e;
+	border-left: 1px solid #7e967e;
+	background: var(--orientalpink) url(/img/calendar/provisorisch_end-selected_start.svg) 50% 50%;
 	color: #eee;
 }
 
 .hk-agenda__day--SB {
-	border-top: 1px solid #033745;
-	border-right: 1px solid #033745;
-	border-bottom: 1px solid #d74a40;
-	border-right: 1px solid #d74a40;
-	background: #f2685d url(/img/calendar/selected_end-besetzt_start.svg) 50% 50%;
+	border-top: 1px solid var(--ebonyclay);
+	border-right: 1px solid var(--ebonyclay);
+	border-bottom: 1px solid #aa7679;
+	border-right: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/selected_end-besetzt_start.svg) 50% 50%;
 	color: #eee;
 }
 
 .hk-agenda__day--BS {
-	border-bottom: 1px solid #033745;
-	border-left: 1px solid #033745;
-	border-top: 1px solid #d74a40;
-	border-left: 1px solid #d74a40;
-	background: #f2685d url(/img/calendar/besetzt_end-selected_start.svg) 50% 50%;
+	border-bottom: 1px solid var(--ebonyclay);
+	border-left: 1px solid var(--ebonyclay);
+	border-top: 1px solid #aa7679;
+	border-left: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/besetzt_end-selected_start.svg) 50% 50%;
 	color: #eee;
 }
 
@@ -161,8 +164,8 @@
 .hk-agenda__day--PN,
 .hk-agenda__day--NF,
 .hk-agenda__day--FN {
-	border: 1px solid #999;
-	background: #BFBFBF;
+	border: 1px solid #aa7679;
+	background: var(--orientalpink);
 	color: #444;
 }
 

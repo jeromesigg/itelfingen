@@ -3,8 +3,8 @@
     <h1>{{$homepage->title}}</h1>
     <h2>{{$homepage->subtitle}}</h2>
     <div class="btns">
-      <a href="#about" class="btn-menu animated fadeInUp scrollto">Unser Haus</a>
-      <a href="#booking" class="btn-book animated fadeInUp scrollto">Haus Buchen</a>
+      {{-- <a href="#about" class="btn-menu animated fadeInUp scrollto">Unser Haus</a> --}}
+      <a href="#booking" class="btn-book animated fadeInUp scrollto">Jetzt Buchen</a>
     </div>
   </div>
 </section><!-- End Hero -->

@@ -7,7 +7,7 @@
     <g id="Calendar-Triangle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="triangle" fill-rule="nonzero">
             <polygon id="Triangle" fill="#FFFFFF" points="200 0 200 200 0 200"></polygon>
-            <polygon id="Triangle-Copy" fill="#FDCC92" points="200 0 0 0 0 200"></polygon>
+            <polygon id="Triangle-Copy" fill="#A5BAA5" points="200 0 0 0 0 200"></polygon>
         </g>
     </g>
 </svg>

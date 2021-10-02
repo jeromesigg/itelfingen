@@ -1,4 +1,4 @@
-<section id="rooms" class="rooms section-bg">
+<section id="rooms" class="rooms section">
     <div class="container" data-aos="fade-up">
   
       <div class="section-title">

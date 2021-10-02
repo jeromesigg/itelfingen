@@ -1,4 +1,4 @@
-<section id="booking" class="calendar">
+<section id="booking" class="calendar section">
   
     <div class="container" data-aos="fade-up">
         <div class="section-title">
@@ -77,27 +77,19 @@
                             <div class="hk-agenda__legend">
                                 <h5>Legende</h5>
                                 <div class="row">
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-md-6 col-sm-6">
                                         <span class="hk-agenda__legend-block hk-agenda__day--FF"></span>
                                         <span class="hk-agenda__legend-label">Frei</span>
                                     </div>
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-md-6 col-sm-6">
                                         <span class="hk-agenda__legend-block hk-agenda__day--PP"></span>
                                         <span class="hk-agenda__legend-label">Provisorisch besetzt</span>
                                     </div>
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-md-6 col-sm-6">
                                         <span class="hk-agenda__legend-block hk-agenda__day--BB"></span>
                                         <span class="hk-agenda__legend-label">Besetzt</span>
                                     </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <span class="hk-agenda__legend-block hk-agenda__day--NN"></span>
-                                        <span class="hk-agenda__legend-label">Nicht verfügbar</span>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
-                                        <span class="hk-agenda__legend-block hk-agenda__day--SS"></span>
-                                        <span class="hk-agenda__legend-label">Gewähltes Datum</span>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-md-6 col-sm-6">
                                         <span class="hk-agenda__legend-block hk-agenda__day--BF"></span>
                                         <span class="hk-agenda__legend-label">Halbtage</span>
                                     </div>
@@ -259,10 +251,7 @@
                                                 <button type="button" class="btn btn-primary" onclick="wizard_step(1)">Zurück</button>
                                             </div>
                                             <div class="col-md-4"> 
-                                                {!! Form::captcha($event_attributes) !!}
-                                            </div>
-                                            <div class="col-md-4"> 
-                                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary', 'id' => 'EventSubmit', 'disabled' => 'disabled'])!!}
+                                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary'])!!}
                                             </div>
                                         </div>  
                                     </td>

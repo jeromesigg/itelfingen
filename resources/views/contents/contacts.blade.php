@@ -60,7 +60,7 @@
 
       <div class="col-lg-8 mt-5 mt-lg-0">
 
-        {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store', 'autocomplete'=>"off"])!!}
+        {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store', 'autocomplete'=>"off", 'id' => 'contact'])!!}
           <div class="form-row">
             <div class="col-md-6 form-group">
               {!! Form::label('name', 'Kontakt:') !!}
@@ -80,8 +80,7 @@
             {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8, 'data-lpignore'=>'true']) !!}
           </div>
           <div class="form-group">
-            {!! Form::captcha($contact_attributes) !!}<br>
-            {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-primary',  'id' => 'ContactSubmit', 'disabled' => 'disabled'])!!}
+            {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-primary'])!!}
         </div>
         {!! Form::close()!!}
       </div>
