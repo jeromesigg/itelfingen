@@ -931,10 +931,6 @@ section {
   margin-bottom: 20px;
 }
 
-.history .details p {
-  /* color: #aaaaaa; */
-}
-
 .history .details p:last-child {
   margin-bottom: 0;
 }

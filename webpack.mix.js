@@ -12,6 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.styles([
+    'resources/css/libs/fonts.css',
     'resources/css/admin/jquery-ui.css',
     'resources/css/libs/icofont.min.css',
     'resources/css/libs/boxicons.min.css',
@@ -40,6 +41,7 @@ mix.scripts([
 
  //   Admin
 mix.styles([
+    'resources/css/libs/fonts.css',
     'resources/css/libs/font-awesome.css',
     'resources/css/admin/jquery-ui.css',
     'resources/css/admin/fontastic.css',

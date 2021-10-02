@@ -1,0 +1,16 @@
+:root{
+    --gladegreen: #657F61;
+    --ebonyclay: #293242;
+    --norway: #A5BAA5;
+    --grannysmith: #8DA3A8;
+    --orientalpink: #C78B8E;
+  }
+  
+  @font-face {
+    font-family: 'PPMigra';
+    src: url('../fonts/PPMIgra-Regular.woff2') format('woff2'),
+         url('../fonts/PPMIgra-Regular.woff2') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
