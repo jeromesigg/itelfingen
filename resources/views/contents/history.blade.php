@@ -20,7 +20,7 @@
             @foreach ($histories as $i => $history)
                 <div class="tab-pane {{$i === 0 ? 'active show' : ''}}" id="{{$history->shorttitle}}">
                   <div class="row">
-                    @if($history->photo)
+                    @if(false)
                       <div class="col-lg-6 details order-2 order-lg-1">
                         <h3>{{$history->title}}</h3>
                         <p class="font-italic">{{$history->subtitle}}</p>

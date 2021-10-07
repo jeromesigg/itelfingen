@@ -13,7 +13,7 @@
                 <p class="card_text">
                   Buchungspauschale 200.- <br>
                   Reinigungsspauschale 200.-
-                  <span class="card_subtitle">Genossenschafter:innne</span>
+                  <span class="card_subtitle">Genossenschafter:innen</span>
                   Fr. {{config('pricelist.member_adults')}}.- pro Nacht und Person (ab 16 Jahren) <br>
                   Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (bis 16 Jahren)
                   <span class="card_subtitle">Privatpersonen</span>

@@ -4,6 +4,9 @@
     <div class="section-title">
       <p>Schreib uns</p>
     </div>
+    <p>
+      Fragen, Anregungen? Du willst teil der Genossenschaft werden? Wir freuen uns über Deine Nachricht.
+    </p>
   </div>
   @if ($errors->contact->any())
     <div class="alert alert-danger">
