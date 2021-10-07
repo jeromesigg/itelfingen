@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="{{env('APP_NAME')}}">
         <meta name="author" content="Jérôme Sigg">
-        <meta name="robots" content="all,follow">
+        <meta name="robots" content="noindex,nofollow">
 
         <title>{{config('app.name')}} - Dashboard</title>
 

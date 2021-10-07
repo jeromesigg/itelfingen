@@ -128,6 +128,7 @@ class AdminPicturesController extends Controller
         //
         $picture = Picture::findOrFail($id);
         unlink(public_path() . $picture->photo->file);
+        unlink(public_path() . $picture->cropped_photo->file);
 
         $picture->delete();
 

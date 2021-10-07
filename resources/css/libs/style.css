@@ -15,11 +15,6 @@ body {
   line-height: 2rem;
 }
 
-a:hover {
-  color: #cda45e;
-  text-decoration: none;
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: "Titillium Web";
 }
@@ -35,7 +30,7 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   z-index: 9999;
   overflow: hidden;
-  background: #1a1814;
+  background: var(--ebonyclay);
 }
 
 #preloader:before {
@@ -43,9 +38,9 @@ h1, h2, h3, h4, h5, h6 {
   position: fixed;
   top: calc(50% - 30px);
   left: calc(50% - 30px);
-  border: 6px solid #1a1814;
-  border-top-color: #cda45e;
-  border-bottom-color: #cda45e;
+  border: 6px solid var(--ebonyclay);
+  border-top-color: var(--orientalpink);
+  border-bottom-color: var(--orientalpink);
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -90,13 +85,13 @@ h1, h2, h3, h4, h5, h6 {
   width: 44px;
   height: 44px;
   border-radius: 50px;
-  color: #cda45e;
+  color: var(--orientalpink);
   transition: all 0.4s;
-  border: 2px solid #cda45e;
+  border: 2px solid var(--orientalpink);
 }
 
 .back-to-top i:hover {
-  background: #cda45e;
+  background: var(--orientalpink);
   color: #1a1814;
 }
 
@@ -122,58 +117,20 @@ h1, h2, h3, h4, h5, h6 {
   top: -40px;
 }
 
-#topbar .contact-info {
-  color: white;
-}
-
-#topbar .contact-info i {
-  color: #d9ba85;
-  padding-right: 4px;
-}
-
-#topbar .contact-info i + i {
-  margin-left: 15px;
-}
-
-#topbar .languages ul {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  color: #cda45e;
-}
-
-#topbar .languages ul a {
-  color: white;
-}
-
-#topbar .languages ul li + li {
-  padding-left: 10px;
-}
-
-#topbar .languages ul li + li::before {
-  display: inline-block;
-  padding-right: 10px;
-  color: rgba(255, 255, 255, 0.5);
-  content: "/";
-}
-
 /*--------------------------------------------------------------
 # Header
 --------------------------------------------------------------*/
 #header {
-  background: rgba(255, 255, 255, 0.397);
-  border-bottom: 1px solid rgba(245, 245, 245, 0.253);
+  background: white;
+  border-bottom: 1px solid whitesmoke;
   transition: all 0.5s;
   z-index: 997;
-  padding: 15px 0;
   /* top: 40px; */
 }
 
 #header.header-scrolled {
   top: 0;
-  background: white;;
+  background: white;
   border-bottom: 1px solid whitesmoke;
 }
 
@@ -193,7 +150,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #header .logo img {
-  max-height: 40px;
+  max-height: 100px;
 }
 
 /*--------------------------------------------------------------
@@ -226,12 +183,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-menu .book a {
-  background: var(--grannysmith);
   padding: 8px 25px;
   text-transform: uppercase;
   color: black;
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: 1px;
   transition: 0.3s;
 }
@@ -246,7 +202,7 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
   visibility: hidden;
   padding: 10px 0;
-  background: #fff;
+  background: var(--ebonyclay);
   box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
   transition: 0.3s;
 }
@@ -330,19 +286,14 @@ h1, h2, h3, h4, h5, h6 {
   text-align: right;
 }
 
-.mobile-nav-toggle i {
-  color: #fff;
-}
-
 .mobile-nav {
   position: fixed;
   top: 15px;
   right: 15px;
-  bottom: 15px;
   left: 15px;
   z-index: 9999;
   overflow-y: auto;
-  background: #1a1814;
+  background: whitesmoke;
   border: 2px solid rgba(255, 255, 255, 0.1);
   transition: ease-in-out 0.2s;
   opacity: 0;
@@ -368,11 +319,6 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1;
   cursor: pointer;
   text-align: right;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.mobile-nav .mobile-nav-close:hover {
-  color: #fff;
 }
 
 .mobile-nav a {
@@ -585,12 +531,21 @@ h1, h2, h3, h4, h5, h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 60px 0;
+  padding: 120px 0;
   overflow: hidden;
 }
 
 .section-bg {
   background-color: var(--grannysmith);
+}
+
+.section-green {
+  background-color: var(--norway);
+}
+
+.section-blue {
+  background-color: var(--ebonyclay);
+  color:white;
 }
 
 .section-title {
@@ -621,10 +576,10 @@ section {
 .section-title p {
   margin: 0;
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-family: "Tittlium Web";
+  font-size:3rem;
+  font-weight: 500;
+  font-family: "PPMigra";
+  line-height: 3rem;
   /* color: #cda45e; */
 }
 
@@ -686,7 +641,6 @@ section {
   /* background: url("../images/about-bg.jpg") center center; */
   background-size: cover;
   position: relative;
-  padding: 80px 0;
 }
 
 .about:before {
@@ -702,6 +656,7 @@ section {
 .about .about-img {
   position: relative;
   transition: .5s;
+  max-width: 600px;
 }
 
 .about .about-img img {
@@ -949,11 +904,12 @@ section {
   background: url(../images/events-bg.jpg) center center no-repeat;
   background-size: cover;
   position: relative;
+  height: 750px;
 }
 
 .locations::before {
   content: '';
-  background-color: rgba(0, 0, 0, 0.8);
+  /* background-color: rgba(0, 0, 0, 0.8); */
   position: absolute;
   top: 0;
   right: 0;

@@ -5,8 +5,10 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <title>{{config('app.name')}}</title>
-<meta content="Ein Ort zum Entspannen und gleichzeitig neue Abenteuer zu erleben. Buchen Sie gleich heute Ihren nächsten Aufenthalt bei uns." name="description">
+<meta content="Ein Ferienhaus zum Entspannen und gleichzeitig neue Abenteuer zu erleben. Buchen Sie gleich heute Ihren nächsten Aufenthalt bei uns." name="description">
 <meta content="Ferienhaus,Lagerhaus,Itelfingen,Übernachtung,Gruppenhaus,Luzern,Zug q" name="keywords">
+<meta name="author" content="Jérôme Sigg">
+<meta name="robots" content="index">
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-F60JJ5ECJX"></script>
 <script>

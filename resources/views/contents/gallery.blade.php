@@ -1,9 +1,8 @@
-<section id="gallery" class="gallery section-bg">
+<section id="gallery" class="gallery section">
 
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="section-title">
-      <h2>Gallerie</h2>
-      <p>Ein paar Impressionen des Ferienhauses</p>
+      <p>Impressionen</p>
     </div>      
     <div class="tm-img-gallery gallery" itemscope itemtype="http://schema.org/ImageGallery">
       @foreach ($pictures as $key=>$picture)

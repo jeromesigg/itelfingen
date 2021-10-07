@@ -2,8 +2,7 @@
   <div class="container" data-aos="fade-up">
 
     <div class="section-title">
-      <h2>Kontakt</h2>
-      <p>Kontaktieren Sie uns</p>
+      <p>Schreib uns</p>
     </div>
   </div>
   @if ($errors->contact->any())
@@ -80,7 +79,7 @@
             {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8, 'data-lpignore'=>'true']) !!}
           </div>
           <div class="form-group">
-            {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-primary'])!!}
+            {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-frontpage'])!!}
         </div>
         {!! Form::close()!!}
       </div>

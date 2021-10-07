@@ -2,8 +2,7 @@
   
     <div class="container" data-aos="fade-up">
         <div class="section-title">
-            <h2>Buchungen</h2>
-            <p>Buchen Sie gleich Ihren nächsten Aufenthalt bei uns</p>
+            <p>Jetzt das Ferienhaus buchen</p>
         </div>
         @if (session()->has('success_event'))
             <div class="alert alert-dismissable alert-success">
@@ -97,7 +96,7 @@
                             </div>
                             <br>
                             <div class="form-group">
-                                <button type="button" class="btn btn-primary" onclick="wizard_step(2)">Weiter</button>
+                                <button type="button" class="btn btn-frontpage" onclick="wizard_step(2)">Weiter</button>
                             </div>
                             <br>
                             <br>
@@ -248,10 +247,10 @@
                                     <td>
                                         <div class="form-row">   
                                             <div class="col-md-4"> 
-                                                <button type="button" class="btn btn-primary" onclick="wizard_step(1)">Zurück</button>
+                                                <button type="button" class="btn btn-frontpage" onclick="wizard_step(1)">Zurück</button>
                                             </div>
                                             <div class="col-md-4"> 
-                                                {!! Form::submit('Reservieren', ['class' => 'btn btn-primary'])!!}
+                                                {!! Form::submit('Reservieren', ['class' => 'btn btn-frontpage'])!!}
                                             </div>
                                         </div>  
                                     </td>

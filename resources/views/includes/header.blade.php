@@ -2,9 +2,8 @@
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-        <h2 class="logo mr-auto"><a href="#header" class="scrollto">Ferienhaus Itelfingen</a></h2>
-
-
+        {{-- <h2 class="logo mr-auto"><a href="" class="scrollto">Ferienhaus Itelfingen</a></h2> --}}
+        <a href="#header" class="logo mr-auto me-lg-0"><img src="img/logo.png" alt="" class="img-fluid"></a>
         <nav class="nav-menu d-none d-lg-block">
             <ul id="top-menu">
                 {{-- <li><a href="/#rooms">Details</a></li>
@@ -14,7 +13,7 @@
                 <li><a href="#locations">Ausflugtipps</a></li>
                 <li><a href="#history">Historisches</a></li>
                 <li><a href="#contact">Kontakt</a></li> --}}
-                <li class="book text-center"><a href="#booking">Jetzt Buchen</a></li>
+                <li class="text-center book"><a href="#booking">Jetzt Buchen</a></li>
                 @guest
                 @else
                     <li><a href="/admin" target="blank">Dashboard</a></li>            

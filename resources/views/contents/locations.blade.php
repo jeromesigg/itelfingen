@@ -1,7 +1,7 @@
 <section id="locations" class="locations">
     <div class="container" data-aos="fade-up">
   
-      <div class="section-title">
+      {{-- <div class="section-title">
         <h2>Ausflugtipps</h2>
         <p style="color: white">Was Sie alles in der Umgebung des Hauses erleben können.</p>
       </div>
@@ -51,7 +51,7 @@
             <img src="/img/winter.jpg" class="img-fluid" alt="">
           </div>
         </div> 
-      </div>
+      </div> --}}
   
     </div>
   </section><!-- End Locations Section -->

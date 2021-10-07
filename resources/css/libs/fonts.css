@@ -8,9 +8,10 @@
   
   @font-face {
     font-family: 'PPMigra';
-    src: url('../fonts/PPMIgra-Regular.woff2') format('woff2'),
-         url('../fonts/PPMIgra-Regular.woff2') format('woff');
-    font-weight: normal;
-    font-style: normal;
+    src:url('../fonts/PPMigra-Regular.eot');
+    src:url('../fonts/PPMigra-Regular.eot') format('embedded-opentype'),
+        url('../fonts/PPMigra-Regular.woff2') format('woff2'),
+        url('../fonts/PPMigra-Regular.woff2') format('woff'),
+    url('../fonts/PPMigra-Regular.ttf') format('truetype'),
+    url('../fonts/PPMigra-Regular.otf') format("opentype");
   }
-  
