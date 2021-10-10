@@ -38,7 +38,8 @@
                     <div class="left-col d-flex">
                         <div class="title"><strong><a href="{{route('events.edit', $event->id)}}">{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a></strong>
                         <p>{{$event->firstname}} {{$event->name}}@if($event->group_name), {{$event->group_name}}@endif
-                            @if($event->comment) - {{$event->comment}}@endif</p>
+                            @if($event->comment) - {{$event->comment}}@endif
+                            @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}@endif</p>
                         </div>
                     </div>
                     <div class="right-col text-right">

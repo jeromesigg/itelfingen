@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Event;
 use Illuminate\Http\Request;
-use App\Http\Requests\EventRequest;
 use Illuminate\Support\Facades\Mail;
 
 use Validator;
@@ -13,7 +12,7 @@ use Validator;
 class EventController extends Controller
 { 
     
-    public function create(EventRequest $request)
+    public function create(Request $request)
     {  
         $validator = Validator::make($request->all(), [
             'zipcode' => 'numeric',

@@ -214,16 +214,14 @@ class AdminEventController extends Controller
             $input['contract_signed'] = $name;
             $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
             $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
-            // Storage::disk('google')->put($name, response()->download(storage_path('app/contracts/signed/'. $name))); 
+            Storage::disk('google')->put($name, response()->download(storage_path('app/contracts/signed/'. $name))); 
         }
-
-        return dd(is_null($event['bexio_user_id']));
 
         if(($event['event_status_id'] == config('status.event_neu')) && ($input['event_status_id'] == config('status.event_bestaetigt'))){
             if(config('app.env') == 'production'){
                 $event_api = new Event_API;
 
-                $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'];
+                $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
                 $event_api->startDate = Carbon::parse($event->start_date);
                 $event_api->endDate = Carbon::parse($event->end_date)->addDay();
                 
@@ -304,7 +302,7 @@ class AdminEventController extends Controller
                     ->post();
             }  
             if(!isset($person->error)){
-                $event = $event->update(['bexio_user_id' => $person[0]['id']]);   
+            $event->update(['bexio_user_id' => $person[0]['id']]);   
             }
         }
 
@@ -339,7 +337,7 @@ class AdminEventController extends Controller
             ->post();
 
             if(!isset($invoice->error)){
-                $event = $event->update(['bexio_invoice_id' => $invoice['id']]);  
+                $event->update(['bexio_invoice_id' => $invoice['id']]);  
 
                 Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
                 ->withHeader('Accept: application/json')
@@ -359,7 +357,7 @@ class AdminEventController extends Controller
             $file = json_decode($file, true);
 
             if(!isset($file->error)){
-                $event = $event->update(['bexio_file_id' => $file[0]['id']]);  
+                $event->update(['bexio_file_id' => $file[0]['id']]);  
             }
         }
         return $event;

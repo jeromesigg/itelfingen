@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\ContactRequest;
 
 class ContactController extends Controller
 {
     //
-    public function store(ContactRequest $request) { 
+    public function store(Request $request) { 
         
         $input = $request->all();
         $email = $input['email'];
