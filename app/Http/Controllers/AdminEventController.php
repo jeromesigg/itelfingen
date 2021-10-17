@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use PhpOffice\PhpWord\Settings;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -71,7 +72,7 @@ class AdminEventController extends Controller
         //
         $homepages = Homepage::all();
         $event_statuses = EventStatus::pluck('name','id')->all();
-        $users = User::where('role_id',config('status.role_Team'))->pluck('username','id')->all();
+        $users = User::where('role_id',config('status.role_Verwalter'))->pluck('username','id')->all();
         return view('admin.events.create', compact('event_statuses', 'homepages', 'users'));
     }
 
@@ -113,85 +114,8 @@ class AdminEventController extends Controller
         $event_statuses = EventStatus::pluck('name','id')->all();
         $contract_statuses = ContractStatus::pluck('name','id')->all();
         $event = Event::findOrFail($id);
-        $users = User::where('role_id',config('status.role_Team'))->pluck('username','id')->all();
+        $users = User::where('role_id',config('status.role_Verwalter'))->pluck('username','id')->all();
         return view('admin.events.edit', compact('event_statuses','event', 'contract_statuses', 'users'));
-    }
-
-    public function DownloadContract($id)
-    {
-        $event = Event::findOrFail($id);
-        if($event['contract_status_id'] < config('status.contract_versendet')){
-            $event->update(['contract_status_id' => config('status.contract_versendet')]);
-        }
-        $user = Auth::user();
-            /* Set the PDF Engine Renderer Path */
-        $domPdfPath = base_path('vendor/dompdf/dompdf');
-        Settings::setPdfRendererPath($domPdfPath);
-        Settings::setPdfRendererName('DomPDF');
-
-        /*@ Reading doc file */
-        $date = Carbon::now()->locale('de_CH')->format('d.m.Y');  
-        $start_date_date = Carbon::create($event['start_date'])->locale('de_CH');
-        $start_date = $start_date_date->format('d.m.Y');  
-        $start_date_file = $start_date_date->format('dm');  
-        $end_date_date = Carbon::create($event['end_date'])->locale('de_CH');
-        $end_date = $end_date_date->format('d.m.Y'); 
-        $end_date_file = $end_date_date->format('dm');  
-        $total_other_adults = $event['other_adults'] * $event['total_days'] * config('pricelist.other_adults');
-        $total_member_adults =$event['member_adults'] * $event['total_days'] * config('pricelist.member_adults');
-        $total_other_kids = $event['other_kids'] * $event['total_days'] * config('pricelist.other_kids');
-        $total_member_kids =$event['member_kids'] * $event['total_days'] * config('pricelist.member_kids');
-
-        $template = new TemplateProcessor(storage_path('app/contracts/Mietvertrag.docx'));
-    
-        /*@ Replacing variables in doc file */
-        $template->setValues(array(
-            'date_now' => $date,
-            'firstname' => $event['firstname'],
-            'lastname' =>  $event['name'],
-            'street' =>  $event['street'],
-            'plz' =>  $event['plz'],
-            'city' =>  $event['city'],
-            'start_date' =>  $start_date,
-            'end_date' =>  $end_date,
-            'booking' =>  config('pricelist.booking'),
-            'cleaning' => config('pricelist.cleaning'),
-            'price_other_adults' => config('pricelist.other_adults'),
-            'price_member_adults' => config('pricelist.member_adults'),
-            'price_other_kids' => config('pricelist.other_kids'),
-            'price_member_kids' => config('pricelist.member_kids'),
-            'other_adults' =>  $event['other_adults'],
-            'member_adults' =>  $event['member_adults'],
-            'other_kids' => $event['other_kids'],
-            'member_kids' =>  $event['member_kids'],
-            'total_other_adults' =>  $total_other_adults,
-            'total_member_adults' => $total_member_adults,
-            'total_other_kids' =>  $total_other_kids,
-            'total_member_kids' =>  $total_member_kids,
-            'total_amount' =>  $event['total_amount'],
-            'username' =>  $user['fullname'],
-            'user_number' => $user['phone']));
-        
-        if($user['signature']){
-            $template->setImageValue('signature', Storage::url($user['signature']));
-        }
-        else{
-            $template->setValue('signature', '');
-        }
-
-        /*@ Save Temporary Word File With New Name */
-        $filename =  'Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
-        $saveDocPath = storage_path('app/contracts/' . $filename . '.docx');
-        $template->saveAs($saveDocPath);
-    
-        return response()->download($saveDocPath);
-    }
-
-    public function DownloadContractSigned($id)
-    {
-        $event = Event::findOrFail($id);
-        $path = storage_path('app/contracts/signed/'.$event['contract_signed']);
-        return response()->download($path);
     }
 
     /**
@@ -206,54 +130,225 @@ class AdminEventController extends Controller
         //
         $event = Event::findOrFail($id);
         $input = $request->all();
-        if($file = $request->file('contract_signed')){ 
-            $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
-            $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
-            $name =  'Mietvertrag_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
-            $file->storeAs('contracts/signed/', $name);
-            $input['contract_signed'] = $name;
-            $input['contract_status_id'] = max($input['contract_status_id'], config('status.contract_zurück'));
-            $input['event_status_id'] = max($input['event_status_id'], config('status.event_bestaetigt'));
-            Storage::disk('google')->put($name, response()->download(storage_path('app/contracts/signed/'. $name))); 
-        }
-
-        if(($event['event_status_id'] == config('status.event_neu')) && ($input['event_status_id'] == config('status.event_bestaetigt'))){
-            if(config('app.env') == 'production'){
-                $event_api = new Event_API;
-
-                $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
-                $event_api->startDate = Carbon::parse($event->start_date);
-                $event_api->endDate = Carbon::parse($event->end_date)->addDay();
-                
-                $event_api->save();
-            }
-
-            
-            $this->SendToBexioEx($event);
-        }
         $event->update($input);
         return redirect()->back();
     }
 
-    public function SendToBexio($id)
+    public function CreateOffer($id)
     {
         $event = Event::findOrFail($id);
-        $event = $this->SendToBexioEx($event);
-        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
-        ->withHeader('Accept: application/json')
-        ->withBearer(config('app.bexio_token'))
-        ->asJson( true )
-        ->get(); 
+        $event = $this->CreateContact($event);
+        if (is_null($event['bexio_offer_id'])){
 
-        if(!isset($invoice['error_code'])){
-            Storage::disk('local')->put('invoices/Rechnung_' . $event['bexio_invoice_id'] . '.pdf',base64_decode($invoice['content']));
-            $path = storage_path('app/invoices/Rechnung_'.$event['bexio_invoice_id'].'.pdf');
-            return response()->download($path);
+            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
+            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
+            $title = "Buchung vom " . $start_date . " bis " . $end_date;
+            $positions = array(
+                array(//Buchungspauschale
+                    'amount' => 1,
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 6,
+                    'unit_price' => config('pricelist.booking'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+                array(//Reiningungspauschale
+                    'amount' => 1,
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 5,
+                    'unit_price' => config('pricelist.cleaning'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+                array(//"Übernachtung Genossenschafter:in"
+                    'amount' => $event['total_days'] * $event['member_adults'],
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 1,
+                    'unit_price' => config('pricelist.member_adults'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+                array(//"Übernachtung Erwachsene"
+                    'amount' => $event['total_days'] * $event['other_adults'],
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 2,
+                    'unit_price' => config('pricelist.other_adults'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+                array(//"Übernachtung Kind Genossenschafter:in"
+                    'amount' => $event['total_days'] * $event['member_kids'],
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 3,
+                    'unit_price' => config('pricelist.member_kids'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+                array(//"Übernachtung Kind"
+                    'amount' => $event['total_days'] * $event['other_kids'],
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 4,
+                    'unit_price' => config('pricelist.other_kids'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+                array(//"Parkplätze"
+                    'amount' => $event['total_days'] * max($event['parking'] - 3, 0),
+                    'type' => 'KbPositionArticle' ,
+                    'tax_id' => 16,    
+                    'article_id' => 7,
+                    'unit_price' => config('pricelist.parking'),
+                    'discount_in_percent' => $event['discount'],
+                ),
+            );
+            $offer = Curl::to('https://api.bexio.com/2.0/kb_offer')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->withContentType('application/json')
+                ->withData( 
+                    array( 
+                        'title' => $title,
+                        'contact_id' => $event->bexio_user_id,
+                        'user_id' => 1,
+                        'is_valid_from' => now(),
+                        'is_valid_until' => Carbon::create($event->start_date)->addDays(-14),
+                        'api_reference' => $event['id'],
+                        'positions' => $positions
+                    ) 
+                )
+                ->asJson(true)
+                ->post();
+
+            if(!isset($offer['error_code'])){
+                $event->update(['bexio_offer_id' => $offer['id']]);  
+
+                Curl::to('https://api.bexio.com/2.0/kb_offer/' . $offer['id'] . '/issue')
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->post(); 
+
+                $message = 'Guten Tag ' . $event['firstname'] . ' ' . $event['name'] .',
+                
+                Vielen Dank für Dein Interesse an das Ferienhaus Itelfingen und Deine ' . $title . '.
+                
+                Unter folgendem Link kannst Du deine Buchung für Deinen Aufenthalt vom ' . $start_date . ' über CHF ' . $offer['total'] .  ' ansehen:
+                [Network Link]
+                
+                Wir hoffen, dass Die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF.
+                Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.
+                
+                Freundliche Grüsse,
+                Das Ferienhaus Itelfingen';
+
+                Curl::to('https://api.bexio.com/2.0/kb_offer/' . $offer['id'] . '/send')
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->withData( 
+                        array( 
+                            'recipient_email' => $event['email'],
+                            'subject' => $title,
+                            'message' => $message,
+                            'mark_as_open' => true
+                        ) 
+                    )
+                    ->asJson(true)
+                    ->post(); 
+            }
         }
         return redirect()->back();
     }
 
-    public function SendToBexioEx(Event $event){
+    public function CreateInvoice($id)
+    {
+        $event = Event::findOrFail($id);
+        $event = $this->CreateContact($event);
+        if (is_null($event['bexio_invoice_id']) && !is_null($event['bexio_offer_id'])){
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'] . '/invoice')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->post(); 
+
+            $invoice = json_decode($invoice, true);
+            if(!isset($invoice['error_code'])){ 
+                $event->update([
+                    'bexio_invoice_id' => $invoice['id'], 
+                    'event_status_id' => config('status.event_bestaetigt')]); 
+                Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->post(); 
+
+            }
+        }
+        else{
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'])
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->get();
+            $invoice = json_decode($invoice, true);
+
+        }
+        if(isset($invoice['id'])){
+
+            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
+            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
+            $title = "Deine Rechnung zur Buchung vom " . $start_date . " bis " . $end_date;
+
+            $message = 'Guten Tag ' . $event['firstname'] . ' ' . $event['name'] .',
+            
+            Vielen Dank für die Bestätigung Deiner Buchung für das Ferienhaus Itelfingen.
+            
+            Unter folgendem Link kannst Du Deine Rechnung für Deinen Aufenthalt vom ' . $start_date . ' über CHF ' . $invoice['total'] .  ' ansehen:
+            [Network Link]
+            
+            Wir bitten um Bezahlung über einer der zur Verfügung stehenden Zahlungsmöglichkeiten.
+            Für Rückfragen zu dieser Rechnung stehen wir jederzeit gerne zur Verfügung.
+            
+            Freundliche Grüsse,
+            Das Ferienhaus Itelfingen';
+
+            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/send')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->withData( 
+                    array( 
+                        'recipient_email' => $event['email'],
+                        'subject' => $title,
+                        'message' => $message,
+                        'mark_as_open' => true
+                    ) 
+                )
+                ->asJson(true)
+                ->post(); 
+            
+            $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->asJson( true )
+                ->get(); 
+    
+            if(!isset($invoice_pdf['error_code'])){
+                $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
+                $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
+                $name_pdf =  'Rechnung_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
+                Storage::disk('google')->put($name_pdf,base64_decode($invoice_pdf['content']));
+      
+            }
+
+            // if(config('app.env') == 'production'){
+                $event_api = new Event_API;
+                $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
+                $event_api->startDate = Carbon::parse($event->start_date);
+                $event_api->endDate = Carbon::parse($event->end_date)->addDay();    
+                $event_api->save();
+            // }
+        }
+        
+        return redirect()->back();
+    }
+
+    public function CreateContact(Event $event)
+    {
         if(is_null($event['bexio_user_id'])){
             $query = array(
                 array( 
@@ -279,6 +374,7 @@ class AdminEventController extends Controller
                     ->withData($query)
                     ->asJson(true)
                     ->post();
+
             if(count($person) === 0){
                 $person = Curl::to('https://api.bexio.com/2.0/contact')
                     ->withHeader('Accept: application/json')
@@ -303,61 +399,6 @@ class AdminEventController extends Controller
             }  
             if(!isset($person->error)){
             $event->update(['bexio_user_id' => $person[0]['id']]);   
-            }
-        }
-
-        if (is_null($event['bexio_invoice_id'])){
-            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
-            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
-            $title = "Buchung vom " . $start_date . " bis " . $end_date;
-            $positions = array(
-                array(
-                    'amount' => 1,
-                    'type' => 'KbPositionCustom' ,
-                    'tax_id' => 16,    
-                    'unit_price' => $event->total_amount,
-                    'text' => 'Buchung Ferienhaus Itelfingen gemäss Vertrag'
-                )
-            );
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->withContentType('application/json')
-            ->withData( 
-                array( 
-                    'title' => $title,
-                    'contact_id' => $event->bexio_user_id,
-                    'user_id' => 1,
-                    'is_valid_from' => now(),
-                    'is_valid_to' => Carbon::create($event->end_date)->addDays(30),
-                    'positions' => $positions
-                ) 
-            )
-            ->asJson(true)
-            ->post();
-
-            if(!isset($invoice->error)){
-                $event->update(['bexio_invoice_id' => $invoice['id']]);  
-
-                Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->post(); 
-            }
-
-        }
-
-        if (is_null($event['bexio_file_id']) && !is_null($event['contract_signed'])){
-            $file = Curl::to('https://api.bexio.com/3.0/files ')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->withFile($event['contract_signed'], storage_path('app/contracts/signed/'.$event['contract_signed']))
-            ->post();
-
-            $file = json_decode($file, true);
-
-            if(!isset($file->error)){
-                $event->update(['bexio_file_id' => $file[0]['id']]);  
             }
         }
         return $event;

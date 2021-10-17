@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <div class="row">
         @foreach ($icon_array as $icon)
-          <div class="col-xl-3 col-md-6 col-6">
+          <div class="col-xl-4 col-md-6 col-6">
             <div class="wrapper count-title d-flex">
               <div class="icon"><i class={{$icon->icon}}></i></div>
               <div class="name"><strong class="text-uppercase">{{$icon->name}}</strong>
@@ -39,7 +39,8 @@
                         <div class="title"><strong><a href="{{route('events.edit', $event->id)}}">{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a></strong>
                         <p>{{$event->firstname}} {{$event->name}}@if($event->group_name), {{$event->group_name}}@endif
                             @if($event->comment) - {{$event->comment}}@endif
-                            @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}@endif</p>
+                            @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}</a>@endif
+                            </p>
                         </div>
                     </div>
                     <div class="right-col text-right">

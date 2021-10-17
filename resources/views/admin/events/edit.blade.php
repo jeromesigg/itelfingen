@@ -14,11 +14,11 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             {!! Form::label('start_date', 'Start:') !!}
-                                            {!! Form::date('start_date', null, ['class' => 'form-control', 'required']) !!}
+                                            {!! Form::date('start_date', null, ['class' => 'form-control', 'required', 'id' => 'start_date', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                         <div class="form-group col-md-6">
                                             {!! Form::label('end_date', 'Ende:') !!}
-                                            {!! Form::date('end_date', null, ['class' => 'form-control']) !!}
+                                            {!! Form::date('end_date', null, ['class' => 'form-control', 'id' => 'end_date', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -59,10 +59,6 @@
                                             {!! Form::text('city', null, ['class' => 'form-control']) !!}
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        {!! Form::label('comment', 'Bemerkung:') !!}
-                                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
-                                    </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             {!! Form::submit('Buchung updaten', ['class' => 'btn btn-primary'])!!}
@@ -71,35 +67,47 @@
                                 </div>
                                 <div class="form-group col-md-6" style="padding-left:30px">
                                     <div class="form-group">
+                                        {!! Form::label('comment', 'Bemerkung:') !!}
+                                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                                    </div>
+                                    <div class="form-group">
                                             {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
                                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                                     </div>
                                     <div class="form-row">
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('other_adults', 'Erw:') !!}
-                                            {!! Form::number('other_adults', null, ['class' => 'form-control']) !!}
+                                            {!! Form::number('other_adults', null, ['class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('member_adults', 'Erw (G):') !!}
-                                            {!! Form::number('member_adults', null, ['class' => 'form-control']) !!}
+                                            {!! Form::number('member_adults', null, ['class' => 'form-control', 'id' => 'member_adults', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('other_kids', 'Kinder:') !!}
-                                            {!! Form::number('other_kids', null, ['class' => 'form-control']) !!}
+                                            {!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('member_kids', 'Kinder (G):') !!}
-                                            {!! Form::number('member_kids', null, ['class' => 'form-control']) !!}
+                                            {!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <div class="col-md-6 form-group">
+                                        <div class="col-md-3 form-group">
                                             {!! Form::label('total_days', 'Tage:') !!}
-                                            {!! Form::number('total_days', null, ['class' => 'form-control', 'required']) !!}
+                                            {!! Form::number('total_days', null, ['class' => 'form-control', 'required', 'id' => 'total_days']) !!}
                                         </div>
-                                        <div class="col-md-6 form-group">
-                                            {!! Form::label('total_amount', 'Total:') !!}
-                                            {!! Form::number('total_amount', null, ['class' => 'form-control', 'required']) !!}
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('discount', 'Rabatt [%]:') !!}
+                                            {!! Form::number('discount', null, ['class' => 'form-control', 'id' => 'discount', 'onchange' => "Total_Change()"]) !!}
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('parking', 'Anz. Parkplätze:') !!}
+                                            {!! Form::number('parking', null, ['class' => 'form-control', 'id' => 'parking', 'onchange' => "Total_Change()"]) !!}
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            {!! Form::label('', 'Total [CHF]:') !!}<br>
+                                            <span id="total"></span>.-
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -112,33 +120,31 @@
                                             {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
                                         </div>
                                     </div>
-                                    
-                                    <br>
-                                    <div class="form-group">
-                                        {!! Form::label('contract_signed', 'Vertrag unterzeichnet (Wird an Bexio gesendet):') !!}
-                                        @if ($event->contract_signed)
-                                            <a type='submit' href="{{ route('events.downloadcontractsigned', $event->id) }}">{{$event->contract_signed}}</a>
-                                        @endif
-                                        <br>
-                                        {!! Form::file('contract_signed', null, ['class' => 'form-control']) !!}
-                                    </div>
-                                    <br>
-                                    <div class="form-group">
-                                        {!! Form::label('contract_status_id', 'Vertrag-Status:') !!}
-                                        {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
-                                    </div>
                                 </div>
                             </div>
                         {!! Form::close()!!}
                     </div>
                     <div class="col-md-3">
-                        <div class="form-group">
-                            <a type='submit' class = 'btn btn-primary' href="{{ route('events.downloadcontract', $event->id) }}">Vertrag herunterladen</a>
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendtobexio', $event->id) }}">Rechnung herunterladen</a>
-                        </div>
+                        @if(!$event['bexio_offer_id'])
+                            <div class="form-group">
+                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.createoffer', $event->id) }}">Angebot versenden</a>
+                            </div>
+                        @else
+                            <div class="form-group">
+                                <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                            </div>
+                        @endif
+                        @if($event['bexio_offer_id'])
+                            @if(!$event['bexio_invoice_id'])
+                                <div class="form-group">
+                                    <a type='submit' class = 'btn btn-primary' href="{{ route('events.createinvoice', $event->id) }}">Rechnung versenden</a>
+                                </div>
+                            @else
+                                <div class="form-group">
+                                    <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
+                                </div>
+                            @endif
+                        @endif
                         <br>
                         @if(!$event->cleaning_mail)
                             <div class="form-group">
@@ -178,6 +184,9 @@
 @endsection
 @section('scripts')
 <script>
+    window.addEventListener("load", function(event) {
+        Total_Change();
+    });
     function PrepareMail() {
   		document.getElementById("cleaning_mail").style.display = "block";
           
@@ -190,9 +199,32 @@
         total = other_adults_total + member_adult_total + other_kids_total + member_kids_total;
         text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis " 
         + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für " 
-        + total + " Personen. Für einige nachfolgende Reinigung wären wir froh\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
+        + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
 	    $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
 	    $('#cleaning_mail_text').val(text);
+    }
+
+    function Total_Change() {
+        start_date = new Date(document.getElementById('start_date').value);
+        end_date = new Date(document.getElementById('end_date').value);
+        days = (end_date - start_date)/(24*3600*1000);
+        other_adults = @json(config('pricelist.other_adults'));
+        member_adults = @json(config('pricelist.member_adults'));
+        other_kids = @json(config('pricelist.other_kids'));
+        member_kids = @json(config('pricelist.member_kids'));
+        booking = @json(config('pricelist.booking'));
+        cleaning = @json(config('pricelist.cleaning'));
+        parking = @json(config('pricelist.parking'));
+        parking_amount = Math.max(parseInt(document.getElementById("parking").value) - 3, 0);
+        parking_total = parking_amount * parking * days || 0;
+        other_adults_total = parseInt(document.getElementById("other_adults").value) * other_adults * days || 0;
+        member_adult_total = parseInt(document.getElementById("member_adults").value)* member_adults * days || 0;
+        other_kids_total = parseInt(document.getElementById("other_kids").value) * other_kids * days || 0;
+        member_kids_total = parseInt(document.getElementById("member_kids").value) * member_kids * days || 0;
+        discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
+        total_amount = (booking + cleaning + other_adults_total + member_adult_total + other_kids_total + member_kids_total + parking_total)* discount;
+        $("#total_days").val(days);
+        $("#total").text(total_amount);
     }
 </script>
 @endsection

@@ -23,10 +23,10 @@
                         {!! Form::label('phone', 'Handy-Nummer:') !!}
                         {!! Form::text('phone', null, ['class' => 'form-control']) !!}
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         {!! Form::label('signature', 'Unterschrift:') !!}
                         {!! Form::file('signature', null, ['class' => 'form-control']) !!}
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         {!! Form::label('role_id', 'Role:') !!}
                         {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control']) !!}

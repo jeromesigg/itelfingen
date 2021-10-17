@@ -237,7 +237,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     {!! Form::label('comment', 'Bemerkungen:') !!}
-                                                    {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3, 'placeholder'=>'z.B. Genossenschafts-Nr. oder Name der Genossenschafter']) !!}
+                                                    {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3, 'placeholder'=>'z.B. Genossenschafts-Nr. oder Name der Genossenschafter, Anzahl Parkplätze etc.']) !!}
                                                 </div>
                                             </div>
                                         </div>

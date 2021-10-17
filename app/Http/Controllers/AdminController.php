@@ -34,12 +34,7 @@ class AdminController extends Controller
                 'icon' => 'icon-padnote',
                 'name' => 'Offene Buchungen',
                 'number' => count($events_new)
-            ],
-            (object) [
-                'icon' => 'icon-check',
-                'name' => 'Verträge unterwegs',
-                'number' => $contract_open
-            ],   
+            ], 
             (object) [
                 'icon' => 'icon-ios-email-outline',
                 'name' => 'Offene Anfragen',
@@ -48,5 +43,9 @@ class AdminController extends Controller
         ]);
         
         return view('admin/index', compact('icon_array', 'contacts_new', 'events_new'));
+    }
+
+    public function changes(){
+        return view('admin/changes');
     }
 }

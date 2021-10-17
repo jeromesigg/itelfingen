@@ -143,3 +143,10 @@ a {
   border-radius: 0;
 }
 
+.section-features{
+  margin: 2rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+

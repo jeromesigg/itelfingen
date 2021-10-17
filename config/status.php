@@ -8,6 +8,7 @@ return [
     'role_Administrator' => 1,
     'role_Team' => 2,
     'role_Gast' => 3,
+    'role_Verwalter' => 5,
 
     'event_neu' => 5,
     'event_bestaetigt' => 10,

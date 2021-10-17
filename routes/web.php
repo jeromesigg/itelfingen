@@ -29,7 +29,9 @@ Route::get('event/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'EventControl
 Route::post('/contacts', 'ContactController@store');
 
 Route::group(['middleware' => 'admin'], function(){
+    
     Route::get('/admin','AdminController@index');
+    Route::get('/admin/changes','AdminController@changes');
     Route::resource('admin/homepages','AdminHomepageController');
     Route::resource('admin/pictures', 'AdminPicturesController');
     Route::resource('admin/eventstatuses', 'AdminEventStatusesController');
@@ -39,9 +41,8 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/users', 'AdminUserController');
     Route::get('admin/users/download/{user}', ['as'=>'download_signature','uses'=>'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController');
-    Route::get('admin/events/{event}/downloadcontract', 'AdminEventController@DownloadContract')->name('events.downloadcontract');
-    Route::get('admin/events/{event}/downloadcontractsigned', 'AdminEventController@DownloadContractSigned')->name('events.downloadcontractsigned');
-    Route::get('admin/events/{event}/SendToBexio', 'AdminEventController@SendToBexio')->name('events.sendtobexio');
+    Route::get('admin/events/{event}/createoffer', 'AdminEventController@CreateOffer')->name('events.createoffer');
+    Route::get('admin/events/{event}/createinvoice', 'AdminEventController@CreateInvoice')->name('events.createinvoice');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendcleaningmail');
     Route::resource('admin/contacts', 'AdminContactController');
 

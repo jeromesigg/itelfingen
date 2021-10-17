@@ -78,10 +78,11 @@
                 <li>
                     <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i> Geschichte</a>
                 </li> 
-            @endif
-            <li>
-                <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i> Benutzer</a>
-            </li> 
+        @endif
+        <li>
+            <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i> Benutzer</a>
+        </li> 
+        <li><a href="/admin/changes"><i class="fas fa-clipboard-list"></i> Änderungen</a></li>
         </ul>
 
         </div>

@@ -7,5 +7,7 @@ return [
     'member_kids' => 18,
     
     'booking' => 200,
-    'cleaning' => 200
+    'cleaning' => 200,
+
+    'parking' => 5,
 ];
