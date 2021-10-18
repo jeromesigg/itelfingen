@@ -891,6 +891,10 @@ section {
   margin-bottom: 0;
 }
 
+.history .details{
+  margin-left: 10px;
+}
+
 @media (max-width: 992px) {
   .history .nav-link {
     border: 0;

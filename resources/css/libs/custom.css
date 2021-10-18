@@ -52,6 +52,13 @@
   border-bottom: 2px solid white;
 }
 
+@media (max-width: 992px) {
+  .card_title-line_white_mobile{
+    border-bottom: 2px solid white;
+  }
+}
+
+
 .card_subtitle {
   margin-top: 1.5rem;
   margin-bottom: 1rem;

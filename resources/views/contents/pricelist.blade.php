@@ -7,7 +7,7 @@
 
       <div class="row pricelist-container" data-aos="fade-up" data-aos-delay="200">
         <div class="col-lg-6">
-            <div class="card" style="width: 100%">
+            <div class="card card_title-line_white_mobile" style="width: 100%">
               <div class="card_content">
                 <span class="card_title"> Übernachtungen</span>
                 <p class="card_text">
