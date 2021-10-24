@@ -122,7 +122,7 @@
   border-color: var(--gladegreen);
   text-transform: uppercase;    
   font-weight: 600;
-  width: 250px;
+  /* width: 250px; */
   height: 50px;
   font-size: 1.5rem;
   border-radius: 0;
@@ -136,10 +136,6 @@
   font-weight: 600;
 }
 
-a:hover {
-  color: var(--orientalpink);
-  text-decoration: underline;
-}
 a {
   color: var(--orientalpink);
   text-decoration: none;

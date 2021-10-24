@@ -16,8 +16,9 @@ return [
     'event_storniert' => 50,
 
     'contract_offen' => 5,
-    'contract_versendet' => 10,
-    'contract_zurück' => 20,
+    'contract_angebot_erstellt' => 7,
+    'contract_angebot_versendet' => 10,
+    'contract_rechnung_gestellt' => 20,
     'contract_storniert' => 50,
 ]
 ?>

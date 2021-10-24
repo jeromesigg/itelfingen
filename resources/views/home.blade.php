@@ -37,12 +37,6 @@
 
 <script type="text/javascript">
 
-
-  function onSubmit(token) {
-    document.getElementById("contact-form").submit();
-    console.log('Hallo');
-  }
-
   //autocomplete script
   $(document).on('focus','.autocomplete_txt',function(){
   type = $(this).attr('name');

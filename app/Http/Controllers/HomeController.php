@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Event;
+use App\Faq;
+use App\FaqChapter;
 use App\History;
 use App\Picture;
 use App\Homepage;
@@ -82,5 +84,14 @@ class HomeController extends Controller
         $homepage = Homepage::FindOrFail(1);
         
         return view('contents.impressum', compact('homepage'));
+    }
+
+    public function faq()
+    {
+        $homepage = Homepage::FindOrFail(1);
+        $faqs = Faq::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        $faq_chapters = FaqChapter::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        
+        return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs'));
     }
 }

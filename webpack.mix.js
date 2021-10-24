@@ -25,7 +25,9 @@ mix.styles([
     'resources/css/libs/custom.css',
     'resources/css/libs/photoswipe.css',
     'resources/css/libs/default-skin.css',
+    'resources/css/libs/faq.css',
 ], 'public/css/main.css');
+
 mix.scripts([
     'resources/js/admin/jquery-ui.min.js',
     'resources/js/libs/validate.js',
@@ -37,6 +39,7 @@ mix.scripts([
     'resources/js/libs/photoswipe.min.js',
     'resources/js/libs/main.js',
     'resources/js/libs/custom.js',
+    'resources/js/libs/faq.js',
  ], 'public/js/main.js');  
 
  //   Admin

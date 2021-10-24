@@ -51,34 +51,39 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>       
-           
-
             </ul>
-        
         <h5 class="sidenav-heading">Administration</h5>
         <ul id="side-main-menu" class="side-menu list-unstyled">     
         @if (Auth::user()->isAdmin())
-                <li><a href="#HomepageDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-clipboard-list"></i> Homepage</a></li>
-                <ul id="HomepageDropdown" class="collapse list-unstyled ">
-                    <li>
-                        <a href="{{route('homepages.index')}}"> Homepage</a>
-                    </li>
-                    <li>
-                        <a href="{{route('homepages.edit',1)}}"> Homepage Anpassen</a>
-                    </li>
-                </ul>
-                <!-- /.nav-second-level -->
-            </li>
+            <li><a href="#HomepageDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-clipboard-list"></i> Homepage</a></li>
+            <ul id="HomepageDropdown" class="collapse list-unstyled ">
                 <li>
-                    <a  href="{{route('testimonials.index')}}" ><i class="far fa-comment"></i> Bewertungen</a>
-                </li>  
+                    <a href="{{route('homepages.index')}}"> Homepage</a>
+                </li>
                 <li>
-                    <a  href="{{route('people.index')}}" ><i class="fas fa-user-friends"></i> Personen</a>
-                </li> 
-                <li>
-                    <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i> Geschichte</a>
-                </li> 
+                    <a href="{{route('homepages.edit',1)}}"> Homepage Anpassen</a>
+                </li>
+            </ul>
+            <!-- /.nav-second-level -->
+            <li>
+                <a  href="{{route('testimonials.index')}}" ><i class="far fa-comment"></i> Bewertungen</a>
+            </li>  
+            <li>
+                <a  href="{{route('people.index')}}" ><i class="fas fa-user-friends"></i> Personen</a>
+            </li> 
+            <li>
+                <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i> Geschichte</a>
+            </li> 
         @endif
+        <li><a href="#FAQDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-list-ul"></i> FAQs</a></li>
+        <ul id="FAQDropdown" class="collapse list-unstyled ">
+            <li>
+                <a href="{{route('faqs.index')}}"> FAQ Liste</a>
+            </li>
+            <li>
+                <a href="{{route('faq_chapters.index')}}"> FAQ Kapitel</a>
+            </li>
+        </ul>
         <li>
             <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i> Benutzer</a>
         </li> 

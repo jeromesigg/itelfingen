@@ -23,6 +23,11 @@
                         <li>Anzahl Parkplätze verrechenbar.</li>
                         <li>Verwalter Rolle eingeführt.</li>
                     </ul>
+                    <h3>V2.2</h3>
+                    <ul>
+                        <li>FAQ</li>
+                        <li>kleinere Layout-Anpassungen</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -37,9 +42,7 @@
                     <h3>Nächste Versionen</h3>
                     <ul>
                         <li>Tagesaufenthalte abbilden</li>
-                        <li>FAQ</li>
                         <li>Login für Vorstand</li>
-                        <li>kleinere Layout-Anpassungen</li>
                         <li>ics-Datei mit Mail versenden</li>
                     </ul>
                 </div>

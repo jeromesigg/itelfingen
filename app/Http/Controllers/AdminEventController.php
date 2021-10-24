@@ -10,12 +10,8 @@ use App\EventStatus;
 use App\ContractStatus;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
-use PhpOffice\PhpWord\Settings;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use PhpOffice\PhpWord\TemplateProcessor;
 use Spatie\GoogleCalendar\Event as Event_API;
 
 use function PHPUnit\Framework\isNull;
@@ -192,15 +188,18 @@ class AdminEventController extends Controller
                     'unit_price' => config('pricelist.other_kids'),
                     'discount_in_percent' => $event['discount'],
                 ),
-                array(//"Parkplätze"
+            );
+            if($event['parking']>3){
+                $parkings= array(//"Parkplätze"
                     'amount' => $event['total_days'] * max($event['parking'] - 3, 0),
                     'type' => 'KbPositionArticle' ,
                     'tax_id' => 16,    
                     'article_id' => 7,
                     'unit_price' => config('pricelist.parking'),
                     'discount_in_percent' => $event['discount'],
-                ),
-            );
+                );
+                array_push($positions, $parkings);
+            }
             $offer = Curl::to('https://api.bexio.com/2.0/kb_offer')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
@@ -219,43 +218,76 @@ class AdminEventController extends Controller
                 ->asJson(true)
                 ->post();
 
+
             if(!isset($offer['error_code'])){
-                $event->update(['bexio_offer_id' => $offer['id']]);  
-
-                Curl::to('https://api.bexio.com/2.0/kb_offer/' . $offer['id'] . '/issue')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->post(); 
-
-                $message = 'Guten Tag ' . $event['firstname'] . ' ' . $event['name'] .',
+                $event->update(['bexio_offer_id' => $offer['id'],
+                'contract_status_id' => config('status.contract_angebot_erstellt')]);  
+                if(config('mail.direct_send')){
+                    $this->SendOfferEx($event);
+                }
                 
-                Vielen Dank für Dein Interesse an das Ferienhaus Itelfingen und Deine ' . $title . '.
-                
-                Unter folgendem Link kannst Du deine Buchung für Deinen Aufenthalt vom ' . $start_date . ' über CHF ' . $offer['total'] .  ' ansehen:
-                [Network Link]
-                
-                Wir hoffen, dass Die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF.
-                Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.
-                
-                Freundliche Grüsse,
-                Das Ferienhaus Itelfingen';
-
-                Curl::to('https://api.bexio.com/2.0/kb_offer/' . $offer['id'] . '/send')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->withData( 
-                        array( 
-                            'recipient_email' => $event['email'],
-                            'subject' => $title,
-                            'message' => $message,
-                            'mark_as_open' => true
-                        ) 
-                    )
-                    ->asJson(true)
-                    ->post(); 
             }
         }
         return redirect()->back();
+    }
+
+    public function SendOffer($id)
+    {
+        $event = Event::findOrFail($id);
+        if (!is_null($event['bexio_offer_id'])){
+            $event = $this->SendOfferEx($event);
+        }
+        return redirect()->back();
+    }
+
+    public function SendOfferEx(Event $event)
+    {
+        if (!is_null($event['bexio_offer_id'])){
+
+            $offer = Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'])
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->get(); 
+            $offer = json_decode($offer, true);
+
+            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
+            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
+            $title = "Buchung vom " . $start_date . " bis " . $end_date;
+            Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'] . '/issue')
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->post(); 
+
+            $message = 'Guten Tag ' . $event['firstname'] . ' ' . $event['name'] .',
+            
+            Vielen Dank für Dein Interesse an das Ferienhaus Itelfingen und Deine ' . $title . '.
+            
+            Unter folgendem Link kannst Du deine Buchung für Deinen Aufenthalt vom ' . $start_date . ' über CHF ' . $offer['total'] .  ' ansehen:
+            [Network Link]
+            
+            Wir hoffen, dass Die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF.
+            Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.
+            
+            Freundliche Grüsse,
+            Das Ferienhaus Itelfingen';
+
+            Curl::to('https://api.bexio.com/2.0/kb_offer/' . $offer['id'] . '/send')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->withData( 
+                    array( 
+                        'recipient_email' => $event['email'],
+                        'subject' => $title,
+                        'message' => $message,
+                        'mark_as_open' => true
+                    ) 
+                )
+                ->asJson(true)
+                ->post(); 
+            $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);  
+        }
+        return true;
+
     }
 
     public function CreateInvoice($id)
@@ -271,8 +303,7 @@ class AdminEventController extends Controller
             $invoice = json_decode($invoice, true);
             if(!isset($invoice['error_code'])){ 
                 $event->update([
-                    'bexio_invoice_id' => $invoice['id'], 
-                    'event_status_id' => config('status.event_bestaetigt')]); 
+                    'bexio_invoice_id' => $invoice['id']]); 
                 Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
@@ -335,13 +366,16 @@ class AdminEventController extends Controller
       
             }
 
-            // if(config('app.env') == 'production'){
+            if(config('app.env') == 'production'){
                 $event_api = new Event_API;
                 $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
                 $event_api->startDate = Carbon::parse($event->start_date);
                 $event_api->endDate = Carbon::parse($event->end_date)->addDay();    
                 $event_api->save();
-            // }
+            }
+            $event->update([
+                'event_status_id' => config('status.event_bestaetigt'),
+                'contract_status_id' => config('status.contract_rechnung_gestellt')]); 
         }
         
         return redirect()->back();

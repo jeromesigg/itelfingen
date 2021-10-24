@@ -15,12 +15,15 @@ class ContactController extends Controller
         
         $input = $request->all();
         $validator = Validator::make($input, [
-            'g-recaptcha-response' => 'required|captcha'
+            'name'  => 'required',
+            'email'  => 'email|required',
+            'content'  => 'required',
+            'g-recaptcha-response' => 'recaptcha'
         ]);
 
         if ($validator->fails()) {
-            return redirect()->to(url()->previous() . '#booking')
-                        ->withErrors($validator)
+            return redirect()->to(url()->previous() . '#contact')
+                        ->withErrors($validator, 'contact')
                         ->withInput();
         }
 

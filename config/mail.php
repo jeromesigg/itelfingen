@@ -94,6 +94,7 @@ return [
     ],
 
     'cleaning_mail' => env('CLEANING_MAIL', 'hello@example.com'),
+    'direct_send' => env('DIRECT_SEND', 'false'),
 
     /*
     |--------------------------------------------------------------------------

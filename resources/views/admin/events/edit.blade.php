@@ -116,35 +116,57 @@
                                             {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
                                         </div>
                                         <div class="col-md-6 form-group">
-                                            {!! Form::label('user_id', 'Verantwortlicher:') !!}
-                                            {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                                            {!! Form::label('contract_status_id', 'Angebot / Rechnung:') !!}
+                                            {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {!! Form::label('user_id', 'Verantwortlicher:') !!}
+                                        {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
                                     </div>
                                 </div>
                             </div>
                         {!! Form::close()!!}
                     </div>
                     <div class="col-md-3">
-                        @if(!$event['bexio_offer_id'])
-                            <div class="form-group">
-                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.createoffer', $event->id) }}">Angebot versenden</a>
-                            </div>
-                        @else
-                            <div class="form-group">
-                                <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
-                            </div>
-                        @endif
-                        @if($event['bexio_offer_id'])
-                            @if(!$event['bexio_invoice_id'])
+                        @switch($event['contract_status_id'])
+                            @case(config('status.contract_offen'))
+                                <div class="form-group">
+                                    <a type='submit' class = 'btn btn-primary' href="{{ route('events.createoffer', $event->id) }}">
+                                        @if(config('mail.direct_send'))
+                                            Angebot erstellen & versenden
+                                        @else
+                                            Angebot erstellen    
+                                        @endif
+                                    </a> 
+                                </div>
+                                @break
+                            @case(config('status.contract_angebot_erstellt'))
+                                <div class="form-group">
+                                    <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                </div>
+                                <div class="form-group">
+                                    <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendoffer', $event->id) }}">Angebot versenden</a>
+                                </div>
+                                @break
+                            @case(config('status.contract_angebot_versendet'))
+                                <div class="form-group">
+                                    <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                </div>
                                 <div class="form-group">
                                     <a type='submit' class = 'btn btn-primary' href="{{ route('events.createinvoice', $event->id) }}">Rechnung versenden</a>
                                 </div>
-                            @else
+                                @break
+                            @case(config('status.contract_rechnung_gestellt'))
+                                <div class="form-group">
+                                    <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                </div>
                                 <div class="form-group">
                                     <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
                                 </div>
-                            @endif
-                        @endif
+                                @break
+                            @default
+                        @endswitch
                         <br>
                         @if(!$event->cleaning_mail)
                             <div class="form-group">

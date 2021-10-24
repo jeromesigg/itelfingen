@@ -3,7 +3,7 @@
     <div class="container d-flex align-items-center">
 
         {{-- <h2 class="logo mr-auto"><a href="" class="scrollto">Ferienhaus Itelfingen</a></h2> --}}
-        <a href="#header" class="logo mr-auto me-lg-0"><img src="img/logo.png" alt="" class="img-fluid"></a>
+        <a href="/" class="logo mr-auto me-lg-0"><img src="img/logo.png" alt="" class="img-fluid"></a>
         <nav class="nav-menu d-none d-lg-block">
             <ul id="top-menu">
                 {{-- <li><a href="/#rooms">Details</a></li>

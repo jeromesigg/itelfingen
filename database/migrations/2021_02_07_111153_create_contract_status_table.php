@@ -23,10 +23,12 @@ class CreateContractStatusTable extends Migration
             array(
                 ['id' => config('status.contract_offen'),
                 'name' => 'Offen'],
-                ['id' => config('status.contract_versendet'),
-                'name' => 'Versendet'],
-                ['id' => config('status.contract_zurück'),
-                'name' => 'Erhalten'],
+                ['id' => config('status.contract_angebot_gestellt'),
+                'name' => 'Angebot erstellt'],
+                ['id' => config('status.contract_angebot_versendet'),
+                'name' => 'Angebot versendet'],
+                ['id' => config('status.contract_rechnung_versendet'),
+                'name' => 'Rechnung versendet'],
                 ['id' => config('status.contract_storniert'),
                 'name' => 'Storniert'],
             )

@@ -30,3 +30,5 @@
 <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
 
 <link href="{{asset('css/main.css')}}" rel="stylesheet">
+
+{!! ReCaptcha::htmlScriptTagJsApi() !!}

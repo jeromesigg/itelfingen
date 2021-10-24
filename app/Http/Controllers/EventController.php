@@ -24,7 +24,7 @@ class EventController extends Controller
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous() . '#booking')
-                        ->withErrors($validator)
+                        ->withErrors($validator, 'event')
                         ->withInput();
         }
 
@@ -38,6 +38,8 @@ class EventController extends Controller
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
         $input['contract_status_id'] = config('status.contract_offen');
+        $input['discount'] = 0;
+        $input['parking'] = 0;
         $name = $input['firstname'] . ' ' . $input['name'];
         $email = $input['email'];
         Event::create($input); 
