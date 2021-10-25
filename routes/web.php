@@ -58,8 +58,6 @@ Route::get('admin/run-migrations', function () {
 });
 
 Route::get('admin/run-deployment', function () {
-    echo 'sitemap:generate <br>';
-    Artisan::call('sitemap:generate');
     echo 'config:cache <br>';
     Artisan::call('config:cache');
     echo 'view:cache <br>';
