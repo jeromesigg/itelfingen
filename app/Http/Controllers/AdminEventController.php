@@ -155,40 +155,52 @@ class AdminEventController extends Controller
                     'article_id' => 5,
                     'unit_price' => config('pricelist.cleaning'),
                     'discount_in_percent' => $event['discount'],
-                ),
-                array(//"Übernachtung Genossenschafter:in"
+                )
+            );
+            if($event['member_adults'] > 0){
+                $member_adults=array(//"Übernachtung Genossenschafter:in"
                     'amount' => $event['total_days'] * $event['member_adults'],
                     'type' => 'KbPositionArticle' ,
                     'tax_id' => 16,    
                     'article_id' => 1,
                     'unit_price' => config('pricelist.member_adults'),
                     'discount_in_percent' => $event['discount'],
-                ),
-                array(//"Übernachtung Erwachsene"
+                );
+                array_push($positions, $member_adults);
+            }
+            if($event['other_adults'] > 0){
+                $other_adults = array(//"Übernachtung Erwachsene"
                     'amount' => $event['total_days'] * $event['other_adults'],
                     'type' => 'KbPositionArticle' ,
                     'tax_id' => 16,    
                     'article_id' => 2,
                     'unit_price' => config('pricelist.other_adults'),
                     'discount_in_percent' => $event['discount'],
-                ),
-                array(//"Übernachtung Kind Genossenschafter:in"
+                );
+                array_push($positions, $other_adults);
+            }            
+            if($event['member_kids'] > 0){
+                $member_kids = array(//"Übernachtung Kind Genossenschafter:in"
                     'amount' => $event['total_days'] * $event['member_kids'],
                     'type' => 'KbPositionArticle' ,
                     'tax_id' => 16,    
                     'article_id' => 3,
                     'unit_price' => config('pricelist.member_kids'),
                     'discount_in_percent' => $event['discount'],
-                ),
-                array(//"Übernachtung Kind"
+                );
+                array_push($positions, $member_kids);
+            }            
+            if($event['other_kids'] > 0){
+                $other_kids = array(//"Übernachtung Kind"
                     'amount' => $event['total_days'] * $event['other_kids'],
                     'type' => 'KbPositionArticle' ,
                     'tax_id' => 16,    
                     'article_id' => 4,
                     'unit_price' => config('pricelist.other_kids'),
                     'discount_in_percent' => $event['discount'],
-                ),
-            );
+                );
+                array_push($positions, $other_kids);
+            }
             if($event['parking']>3){
                 $parkings= array(//"Parkplätze"
                     'amount' => $event['total_days'] * max($event['parking'] - 3, 0),
