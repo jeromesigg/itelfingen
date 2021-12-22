@@ -23,6 +23,10 @@
                 <td>{{$firstname}} {{$name}}</td>
             </tr>
             <tr>
+                <th scope="row" style="text-align:left">E-Mail</th>
+                <td>{{$email}}</td>
+            </tr>
+            <tr>
                 <th scope="row" style="text-align:left">Anlass / Gruppe</th>
                 <td>{{$group_name}}</td>
             </tr>
@@ -40,19 +44,19 @@
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Erwachsene</th>
-                <td>{{$other_adults}}<td>
+                <td>{{$positions[2]}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Erwachsene (Genossenschafter)</th>
-                <td>{{$member_adults}}<td>
+                <td>{{$positions[3]}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Kind (bis 16 Jahre)</th>
-                <td>{{$other_kids}}<td>
+                <td>{{$positions[4]}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Kind (Genossenschafter)</th>
-                <td>{{$member_kids}}<td>
+                <td>{{$positions[5]}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Voraussichtliches Total:</th>

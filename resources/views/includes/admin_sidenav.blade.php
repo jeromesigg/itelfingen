@@ -66,6 +66,9 @@
             </ul>
             <!-- /.nav-second-level -->
             <li>
+                <a  href="{{route('positions.index')}}" ><i class="fas fa-search-dollar"></i> Positionen</a>
+            </li>  
+            <li>
                 <a  href="{{route('testimonials.index')}}" ><i class="far fa-comment"></i> Bewertungen</a>
             </li>  
             <li>

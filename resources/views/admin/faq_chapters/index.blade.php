@@ -10,7 +10,7 @@
     
         <div class="row">
             <div class="col-sm-3">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminFAQChapterController@store']) !!}
+                {!! Form::open(['method' => 'POST', 'action'=>'AdminFaqChapterController@store']) !!}
                     <div class="form-group">
                         {!! Form::label('name', 'Titel:') !!}
                         {!! Form::text('name', null, ['class' => 'form-control']) !!}

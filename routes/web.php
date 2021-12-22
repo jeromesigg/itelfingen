@@ -49,6 +49,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/contacts', 'AdminContactController');
     Route::resource('admin/faqs', 'AdminFaqController');
     Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
+    Route::resource('admin/positions', 'AdminPricelistPositionController');
 
 
 });

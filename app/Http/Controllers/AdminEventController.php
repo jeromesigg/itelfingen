@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Event;
 use App\Homepage;
+use App\Position;
 use Carbon\Carbon;
 use App\EventStatus;
+use App\Helper\Helper;
 use App\ContractStatus;
+use App\PricelistPosition;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Spatie\GoogleCalendar\Event as Event_API;
 
 use function PHPUnit\Framework\isNull;
+use Illuminate\Support\Facades\Storage;
+use Spatie\GoogleCalendar\Event as Event_API;
 
 class AdminEventController extends Controller
 {
@@ -29,6 +32,7 @@ class AdminEventController extends Controller
         $events = Event::where('end_date','>',Carbon::today())->orderBy('start_date')->paginate(5);
         $event_type = 'admin';
         $events_all = Event::all();
+        $positions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
         
         $events_json = [];
         foreach ($events_all as $event)
@@ -55,7 +59,7 @@ class AdminEventController extends Controller
             ];
         }
 
-        return view('admin.events.index', compact('events', 'event_type', 'events_json'));
+        return view('admin.events.index', compact('events', 'event_type', 'events_json', 'positions'));
     }
 
     /**
@@ -88,17 +92,6 @@ class AdminEventController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -107,11 +100,13 @@ class AdminEventController extends Controller
     public function edit($id)
     {
         //
+        $positions = Position::with('pricelist_position')->where('event_id',$id)->get()->sortBy('pricelist_position.bexio_code');
+
         $event_statuses = EventStatus::pluck('name','id')->all();
         $contract_statuses = ContractStatus::pluck('name','id')->all();
         $event = Event::findOrFail($id);
         $users = User::where('role_id',config('status.role_Verwalter'))->pluck('username','id')->all();
-        return view('admin.events.edit', compact('event_statuses','event', 'contract_statuses', 'users'));
+        return view('admin.events.edit', compact('event_statuses','event', 'contract_statuses', 'users', 'positions'));
     }
 
     /**
@@ -126,6 +121,10 @@ class AdminEventController extends Controller
         //
         $event = Event::findOrFail($id);
         $input = $request->all();
+        $plpositions = PricelistPosition::where([['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+        foreach($plpositions as $index => $plposition){
+            Helper::CreateRePos($input['positions'][$index], $plposition['id'], $event);
+        }
         $event->update($input);
         return redirect()->back();
     }
@@ -139,78 +138,22 @@ class AdminEventController extends Controller
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y'); 
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y'); 
             $title = "Buchung vom " . $start_date . " bis " . $end_date;
-            $positions = array(
-                array(//Buchungspauschale
-                    'amount' => 1,
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 6,
-                    'unit_price' => config('pricelist.booking'),
-                    'discount_in_percent' => $event['discount'],
-                ),
-                array(//Reiningungspauschale
-                    'amount' => 1,
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 5,
-                    'unit_price' => config('pricelist.cleaning'),
-                    'discount_in_percent' => $event['discount'],
-                )
-            );
-            if($event['member_adults'] > 0){
-                $member_adults=array(//"Übernachtung Genossenschafter:in"
-                    'amount' => $event['total_days'] * $event['member_adults'],
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 1,
-                    'unit_price' => config('pricelist.member_adults'),
-                    'discount_in_percent' => $event['discount'],
-                );
-                array_push($positions, $member_adults);
-            }
-            if($event['other_adults'] > 0){
-                $other_adults = array(//"Übernachtung Erwachsene"
-                    'amount' => $event['total_days'] * $event['other_adults'],
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 2,
-                    'unit_price' => config('pricelist.other_adults'),
-                    'discount_in_percent' => $event['discount'],
-                );
-                array_push($positions, $other_adults);
-            }            
-            if($event['member_kids'] > 0){
-                $member_kids = array(//"Übernachtung Kind Genossenschafter:in"
-                    'amount' => $event['total_days'] * $event['member_kids'],
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 3,
-                    'unit_price' => config('pricelist.member_kids'),
-                    'discount_in_percent' => $event['discount'],
-                );
-                array_push($positions, $member_kids);
-            }            
-            if($event['other_kids'] > 0){
-                $other_kids = array(//"Übernachtung Kind"
-                    'amount' => $event['total_days'] * $event['other_kids'],
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 4,
-                    'unit_price' => config('pricelist.other_kids'),
-                    'discount_in_percent' => $event['discount'],
-                );
-                array_push($positions, $other_kids);
-            }
-            if($event['parking']>3){
-                $parkings= array(//"Parkplätze"
-                    'amount' => $event['total_days'] * max($event['parking'] - 3, 0),
-                    'type' => 'KbPositionArticle' ,
-                    'tax_id' => 16,    
-                    'article_id' => 7,
-                    'unit_price' => config('pricelist.parking'),
-                    'discount_in_percent' => $event['discount'],
-                );
-                array_push($positions, $parkings);
+            $positions = Position::with('pricelist_position')->where('event_id',$id)->get()->sortBy('pricelist_position.bexio_code');
+            $positions_array = [];
+            foreach($positions as $position){
+                $amount = $position->pricelist_position['bexio_code'] > 200 ? max($position['amount']-3,0) : $position['amount'];
+                if($amount > 0){
+                    array_push($positions_array,
+                        array(
+                            'amount' => $position->pricelist_position['bexio_code'] < 100 ? $amount : $event['total_days'] * $amount,
+                            'type' => 'KbPositionArticle' ,
+                            'tax_id' => 16,    
+                            'article_id' => $position->pricelist_position['bexio_id'],
+                            'unit_price' => $position->pricelist_position['price'],
+                            'discount_in_percent' => $event['discount'],
+                        )
+                    );
+                }
             }
             $offer = Curl::to('https://api.bexio.com/2.0/kb_offer')
                 ->withHeader('Accept: application/json')
@@ -224,12 +167,11 @@ class AdminEventController extends Controller
                         'is_valid_from' => now(),
                         'is_valid_until' => Carbon::create($event->start_date)->addDays(-14),
                         'api_reference' => $event['id'],
-                        'positions' => $positions
+                        'positions' => $positions_array
                     ) 
                 )
                 ->asJson(true)
                 ->post();
-
 
             if(!isset($offer['error_code'])){
                 $event->update(['bexio_offer_id' => $offer['id'],
@@ -403,7 +345,7 @@ class AdminEventController extends Controller
                 ),
                 array( 
                     'field' => 'name_2',
-                    'value' => $event->firstname
+                    'value' => $event->firstname ? $event->firstname  : ''
                 ),
                 array( 
                     'field' => 'address',
@@ -443,8 +385,9 @@ class AdminEventController extends Controller
                     ->asJson(true)
                     ->post();
             }  
+        
             if(!isset($person->error)){
-            $event->update(['bexio_user_id' => $person[0]['id']]);   
+                $event->update(['bexio_user_id' => $person[0]['id']]);   
             }
         }
         return $event;

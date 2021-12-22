@@ -174,8 +174,8 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th scope="col" style="width: 10%">Anzahl</th>
-                                                                <th scope="col" style="width: 65%">Artikel</th>
+                                                                <th scope="col" style="width: 15%">Anzahl</th>
+                                                                <th scope="col" style="width: 60%">Artikel</th>
                                                                 <th scope="col" style="width: 10%">Kosten</th>
                                                                 <th scope="col" style="width: 15%">Total</th>
                                                             </tr>
@@ -196,42 +196,18 @@
                                                         </tr>
                                                         </tfoot>
                                                         <tbody>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Buchung</td>
-                                                                <td>{{config('pricelist.booking')}}.-</td>
-                                                                <td>{{config('pricelist.booking')}}.-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Reinigung</td>
-                                                                <td>{{config('pricelist.cleaning')}}.-</td>
-                                                                <td>{{config('pricelist.cleaning')}}.-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">{!! Form::number('other_adults', null, [ 'class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}</th>
-                                                                <td>Erwachsene</td>
-                                                                <td>{{config('pricelist.other_adults')}}.-</td>
-                                                                <td><span id="other_adults_total"></span>.-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">   {!! Form::number('member_adults', null, ['class' => 'form-control', 'id' => 'member_adults', 'onchange' => "Total_Change()"]) !!}</th>
-                                                                <td>Erwachsene (G)</td>
-                                                                <td>{{config('pricelist.member_adults')}}.-</td>
-                                                                <td><span id="member_adult_total"></span>.-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">{!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}</th>
-                                                                <td>Kinder (bis 16 Jahre)</td>
-                                                                <td>{{config('pricelist.other_kids')}}.-</td>
-                                                                <td><span id="other_kids_total"></span>.-</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">{!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}</th>
-                                                                <td>Kinder (G)</td>
-                                                                <td>{{config('pricelist.member_kids')}}.-</td>
-                                                                <td><span id="member_kids_total"></span>.-</td>
-                                                            </tr>
+                                                            @foreach ($positions as $position)
+                                                                <tr>
+                                                                    @if ($position['bexio_code']<100)
+                                                                        <th scope="row" id={{'position_'.$position['bexio_code']}}>1</th>
+                                                                    @else  
+                                                                        <th scope="row">{!! Form::number('positions[]', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th> 
+                                                                    @endif
+                                                                    <td>{{$position['name']}}</td>
+                                                                    <td>{{$position['price']}}.-</td>
+                                                                    <td><span id="position_{{$position['bexio_code']}}_total"></span>.-</td>
+                                                                </tr>
+                                                            @endforeach
                                                         </tbody>
                                                     </table>
                                                 </div>

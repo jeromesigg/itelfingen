@@ -17,6 +17,7 @@ class Event extends Model
 
     protected $casts =  [
         'terms' => 'boolean',
+        'cleaning_mail' => 'boolean',
     ];
     
     public function event_status(){
@@ -29,5 +30,9 @@ class Event extends Model
 
     public function user(){
         return $this->belongsTo('App\User');
+    }
+
+    public function positions(){
+        return $this->hasMany(Position::class);
     }
 }

@@ -22,6 +22,6 @@ class Team
 
             }
         }
-        return redirect(404);
+        return redirect('login');
     }
 }

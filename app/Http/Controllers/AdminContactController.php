@@ -16,7 +16,7 @@ class AdminContactController extends Controller
     public function index()
     {
         //
-        $contacts = Contact::orderBy('done')->paginate(10);
+        $contacts = Contact::orderBy('done')->orderBy('created_at', 'DESC')->paginate(10);
         return view('admin.contacts.index', compact('contacts'));
     }
 

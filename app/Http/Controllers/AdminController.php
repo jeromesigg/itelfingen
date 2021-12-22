@@ -22,7 +22,7 @@ class AdminController extends Controller
         $events_all = Event::where('event_status_id','<',config('status.event_eigene'))->count();
         $events_new = Event::where('event_status_id',config('status.event_neu'))->orderBy('start_date')->get();
         $contract_open = Event::where('contract_status_id',config('status.contract_versendet'))->count();
-        $contacts_new = Contact::where('done',false)->orderBy('created_at')->get();
+        $contacts_new = Contact::where('done',false)->orderBy('created_at', 'DESC')->get();
 
         $icon_array = collect([
             (object) [

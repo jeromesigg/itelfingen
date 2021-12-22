@@ -8,7 +8,7 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($faqchapter, ['method' => 'PATCH', 'action'=>['AdminFAQChapterController@update', $faqchapter->id], 'files' => true]) !!}
+                    {!! Form::model($faqchapter, ['method' => 'PATCH', 'action'=>['AdminFaqChapterController@update', $faqchapter->id], 'files' => true]) !!}
                     <div class="form-group">
                         {!! Form::label('name', 'Titel:') !!}
                         {!! Form::text('name', null, ['class' => 'form-control']) !!}

@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Event;
+use Validator;
+use App\Helper\Helper;
+use App\PricelistPosition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
-use Validator;
 
 class EventController extends Controller
 { 
@@ -29,20 +30,22 @@ class EventController extends Controller
         }
 
         $input = $request->all();
-        $input['other_adults'] = max($input['other_adults'], 0);
-        $input['member_adults'] = max($input['member_adults'], 0);
-        $input['other_kids'] = max($input['other_kids'], 0);
-        $input['member_kids'] = max($input['member_kids'], 0);
-        $input['total_people'] = $input['other_adults'] + $input['member_adults'] + $input['other_kids'] + $input['member_kids'];
+
+        array_unshift($input['positions'],1,1);
+        array_push($input['positions'],0);
+
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
         $input['contract_status_id'] = config('status.contract_offen');
         $input['discount'] = 0;
-        $input['parking'] = 0;
         $name = $input['firstname'] . ' ' . $input['name'];
         $email = $input['email'];
-        Event::create($input); 
+        $event = Event::create($input); 
+        $plpositions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+        foreach($plpositions as $index => $plposition){
+            Helper::CreateRePos($input['positions'][$index], $plposition['id'], $event);
+        }
 
         Mail::send('emails.send_event',  $input, function($message) use($email, $name){
             $message

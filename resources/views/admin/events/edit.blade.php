@@ -7,10 +7,10 @@
             </header>
             <div class="row">
                 <div class="form-row">
-                    <div class="form-group col-md-9">
+                    <div class="form-group col-md-10">
                         {!! Form::model($event, ['method' => 'PATCH', 'action'=>['AdminEventController@update', $event->id], 'files' => true]) !!}
                             <div class="form-row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             {!! Form::label('start_date', 'Start:') !!}
@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-6" style="padding-left:30px">
+                                <div class="form-group col-md-8" style="padding-left:30px">
                                     <div class="form-group">
                                         {!! Form::label('comment', 'Bemerkung:') !!}
                                         {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
@@ -74,7 +74,7 @@
                                             {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
                                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                                     </div>
-                                    <div class="form-row">
+                                    {{-- <div class="form-row">
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('other_adults', 'Erw:') !!}
                                             {!! Form::number('other_adults', null, ['class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}
@@ -91,8 +91,20 @@
                                             {!! Form::label('member_kids', 'Kinder (G):') !!}
                                             {!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-row">
+                                        @foreach ($positions as $index => $position)
+                                            @if ($position->pricelist_position['bexio_code']<100)
+                                                {!! Form::hidden('positions[]', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position->pricelist_position['bexio_code']]) !!}     
+                                            @else
+                                                <div class="col-md-3 form-group">
+                                                    {!! Form::label('positions[]', $position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)') !!}
+                                                    {!! Form::number('positions[]', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position->pricelist_position['bexio_code'], 'onchange' => "Total_Change()"]) !!}
+                                                
+                                                    {{-- <th scope="row">{!! Form::number('positions[]', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th>  --}}
+                                                </div>
+                                            @endif
+                                        @endforeach
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('total_days', 'Tage:') !!}
                                             {!! Form::number('total_days', null, ['class' => 'form-control', 'required', 'id' => 'total_days']) !!}
@@ -100,10 +112,6 @@
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('discount', 'Rabatt [%]:') !!}
                                             {!! Form::number('discount', null, ['class' => 'form-control', 'id' => 'discount', 'onchange' => "Total_Change()"]) !!}
-                                        </div>
-                                        <div class="col-md-3 form-group">
-                                            {!! Form::label('parking', 'Anz. Parkplätze:') !!}
-                                            {!! Form::number('parking', null, ['class' => 'form-control', 'id' => 'parking', 'onchange' => "Total_Change()"]) !!}
                                         </div>
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('', 'Total [CHF]:') !!}<br>
@@ -128,7 +136,7 @@
                             </div>
                         {!! Form::close()!!}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         @switch($event['contract_status_id'])
                             @case(config('status.contract_offen'))
                                 <div class="form-group">
@@ -214,11 +222,15 @@
           
         start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
         end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
-        other_adults_total = parseInt(document.getElementById("other_adults").value) || 0;
-        member_adult_total = parseInt(document.getElementById("member_adults").value) || 0;
-        other_kids_total = parseInt(document.getElementById("other_kids").value) || 0;
-        member_kids_total = parseInt(document.getElementById("member_kids").value) || 0;
-        total = other_adults_total + member_adult_total + other_kids_total + member_kids_total;
+        var total = 0, subtotal = 0, id = 0;
+	    var positions = @json($positions);
+        positions.forEach(position => {
+            id = 'position_' + position.pricelist_position['bexio_code'];
+            if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
+                subtotal =  parseInt(document.getElementById(id).value) || 0;
+                total += subtotal;
+            }
+        });
         text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis " 
         + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für " 
         + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
@@ -227,26 +239,29 @@
     }
 
     function Total_Change() {
-        start_date = new Date(document.getElementById('start_date').value);
-        end_date = new Date(document.getElementById('end_date').value);
-        days = (end_date - start_date)/(24*3600*1000);
-        other_adults = @json(config('pricelist.other_adults'));
-        member_adults = @json(config('pricelist.member_adults'));
-        other_kids = @json(config('pricelist.other_kids'));
-        member_kids = @json(config('pricelist.member_kids'));
-        booking = @json(config('pricelist.booking'));
-        cleaning = @json(config('pricelist.cleaning'));
-        parking = @json(config('pricelist.parking'));
-        parking_amount = Math.max(parseInt(document.getElementById("parking").value) - 3, 0);
-        parking_total = parking_amount * parking * days || 0;
-        other_adults_total = parseInt(document.getElementById("other_adults").value) * other_adults * days || 0;
-        member_adult_total = parseInt(document.getElementById("member_adults").value)* member_adults * days || 0;
-        other_kids_total = parseInt(document.getElementById("other_kids").value) * other_kids * days || 0;
-        member_kids_total = parseInt(document.getElementById("member_kids").value) * member_kids * days || 0;
-        discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
-        total_amount = (booking + cleaning + other_adults_total + member_adult_total + other_kids_total + member_kids_total + parking_total)* discount;
-        $("#total_days").val(days);
+        var start_date = new Date(document.getElementById('start_date').value);
+        var end_date = new Date(document.getElementById('end_date').value);
+        var days = (end_date - start_date)/(24*3600*1000);
+	    var positions = @json($positions);
+        var total_amount = 0, id = 0;
+        positions.forEach(position => {
+            id = 'position_' + position.pricelist_position['bexio_code'];
+            var subtotal = 0
+            if( position.pricelist_position['bexio_code']<100){
+                subtotal = position.pricelist_position['price'];
+            }
+            else if(position.pricelist_position['bexio_code']<200){
+                subtotal =  parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days || 0;
+            }
+            else{
+                subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * days || 0;
+            }	
+            total_amount += subtotal;
+        });
+        var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
+        total_amount = total_amount * discount;
         $("#total").text(total_amount);
+        $("#total_days").val(days);
     }
 </script>
 @endsection

@@ -9,7 +9,9 @@ use App\History;
 use App\Picture;
 use App\Homepage;
 use App\Person;
+use App\Position;
 use App\Pricelist;
+use App\PricelistPosition;
 use App\Testimonial;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -39,6 +41,7 @@ class HomeController extends Controller
         $testimonials = Testimonial::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
         $people = Person::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
         $histories = History::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        $positions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
         $events = Event::where('event_status_id','<',config('status.event_storniert'))->get();
         $event_type = 'guest';
 
@@ -76,7 +79,7 @@ class HomeController extends Controller
             'data-callback' => 'enable_EventBtn'
         ];
         return view('home', compact('homepage', 'pictures', 'events_json', 'testimonials', 'people', 
-            'histories', 'event_type', 'event_attributes', 'contact_attributes'));
+            'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions'));
     }
 
     public function impressum()

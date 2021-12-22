@@ -11,7 +11,7 @@
         
             <div class="row">
                 <div class="col-sm-6">
-                    {!! Form::open(['method' => 'POST', 'action'=>'AdminFAQController@store', 'files' => true]) !!}
+                    {!! Form::open(['method' => 'POST', 'action'=>'AdminFaqController@store', 'files' => true]) !!}
                         <div class="form-group">
                             {!! Form::label('name', 'Titel:') !!}
                             {!! Form::text('name', null, ['class' => 'form-control']) !!}

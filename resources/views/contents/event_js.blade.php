@@ -12,21 +12,14 @@ function wizard_step(i) {
 
 function Total_Change() {
 	var days = (Agenda.end - Agenda.start)/(24*3600*1000);
-	var other_adults = @json(config('pricelist.other_adults'));
-	var member_adults = @json(config('pricelist.member_adults'));
-	var other_kids = @json(config('pricelist.other_kids'));
-	var member_kids = @json(config('pricelist.member_kids'));
-	var booking = @json(config('pricelist.booking'));
-	var cleaning = @json(config('pricelist.cleaning'));
-	var other_adults_total = parseInt(document.getElementById("other_adults").value) * other_adults * days || 0;
-	var member_adult_total = parseInt(document.getElementById("member_adults").value)* member_adults * days || 0;
-	var other_kids_total = parseInt(document.getElementById("other_kids").value) * other_kids * days|| 0;
-	var member_kids_total = parseInt(document.getElementById("member_kids").value) * member_kids * days || 0;
-	var total_amount = booking + cleaning + other_adults_total + member_adult_total + other_kids_total + member_kids_total;
-	$('#other_adults_total').text(other_adults_total);
-	$('#member_adult_total').text(member_adult_total);
-	$('#other_kids_total').text(other_kids_total);
-	$('#member_kids_total').text(member_kids_total);
+	var positions = @json($positions);
+	var total_amount = 0, subtotal = 0, id = 0;
+	positions.forEach(position => {
+		id = 'position_' + position['bexio_code'];
+		subtotal = position['bexio_code']<100 ? position['price'] : parseInt(document.getElementById(id).value) * position['price'] * days || 0;	
+		$('#' + id + '_total').text(subtotal);
+		total_amount += subtotal;
+	});
 	$('#total_amount_show').text(total_amount);
 	$("#total_amount").val(total_amount);
 	$("#total_days").val(days);

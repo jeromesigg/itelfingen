@@ -60,48 +60,17 @@
                             {!! Form::text('city', null, ['class' => 'form-control', 'required']) !!}
                         </div>
                     </div>
+                </div>
+                <div class="form-group col-md-6" style="padding-left:30px">
                     <div class="form-group">
                         {!! Form::label('comment', 'Bemerkung:') !!}
                         {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
                     </div>
-                </div>
-                <div class="form-group col-md-6" style="padding-left:30px">
                     <div class="form-group">
                             {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                     </div>
-                    <div class="form-row">
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('other_adults', 'Erw:') !!}
-                            {!! Form::number('other_adults', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('member_adults', 'Erw (G):') !!}
-                            {!! Form::number('member_adults', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('other_kids', 'Kinder:') !!}
-                            {!! Form::number('other_kids', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('member_kids', 'Kinder (G):') !!}
-                            {!! Form::number('member_kids', null, ['class' => 'form-control']) !!}
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-4 form-group">
-                            {!! Form::label('total_people', 'Total Personen:') !!}
-                            {!! Form::number('total_people', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="col-md-4 form-group">
-                            {!! Form::label('total_days', 'Nächte:') !!}
-                            {!! Form::number('total_days', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="col-md-4 form-group">
-                            {!! Form::label('total_amount', 'Total:') !!}
-                            {!! Form::number('total_amount', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                    </div>
+                   
                     <div class="form-row">
                         <div class="col-md-6 form-group">
                             {!! Form::label('event_status_id', 'Status:') !!}

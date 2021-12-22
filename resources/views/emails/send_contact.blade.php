@@ -15,6 +15,10 @@
                 <td>{{$name}}</td>
             </tr>
             <tr>
+                <th scope="row" style="text-align:left">E-Mail</th>
+                <td>{{$email}}</td>
+            </tr>
+            <tr>
                 <th scope="row" style="text-align:left">Betreff</th>
                 <td>{{$subject}}</td>
             </tr>
