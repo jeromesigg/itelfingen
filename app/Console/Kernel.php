@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        Commands\DailyTask::class,
+        Commands\WeeklyTask::class,
         //
     ];
 
@@ -24,7 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('task:daily')->daily();
+        $schedule->command('task:weekly')->weekly();
     }
 
     /**

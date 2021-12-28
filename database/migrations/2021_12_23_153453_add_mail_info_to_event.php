@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCleaingMailAndResponsibleToEvent extends Migration
+class AddMailInfoToEvent extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,7 @@ class AddCleaingMailAndResponsibleToEvent extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             //
-            $table->boolean('cleaning_mail')->default(false);  
-            $table->bigInteger('user_id')->index()->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users');      
+            $table->boolean('last_info')->default(false);  
         });
     }
 
@@ -30,9 +28,7 @@ class AddCleaingMailAndResponsibleToEvent extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             //
-            $table->dropForeign(['user_id']);
-            $table->dropColumn('user_id');
-            $table->dropColumn('cleaning_mail');
+            $table->dropColumn('last_info');
         });
     }
 }

@@ -10,7 +10,7 @@
                     <div class="form-group col-md-10">
                         {!! Form::model($event, ['method' => 'PATCH', 'action'=>['AdminEventController@update', $event->id], 'files' => true]) !!}
                             <div class="form-row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-5">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             {!! Form::label('start_date', 'Start:') !!}
@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-8" style="padding-left:30px">
+                                <div class="form-group col-md-7" style="padding-left:30px">
                                     <div class="form-group">
                                         {!! Form::label('comment', 'Bemerkung:') !!}
                                         {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
@@ -74,24 +74,6 @@
                                             {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
                                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                                     </div>
-                                    {{-- <div class="form-row">
-                                        <div class="col-md-3 form-group">
-                                            {!! Form::label('other_adults', 'Erw:') !!}
-                                            {!! Form::number('other_adults', null, ['class' => 'form-control', 'id' => 'other_adults', 'onchange' => "Total_Change()"]) !!}
-                                        </div>
-                                        <div class="col-md-3 form-group">
-                                            {!! Form::label('member_adults', 'Erw (G):') !!}
-                                            {!! Form::number('member_adults', null, ['class' => 'form-control', 'id' => 'member_adults', 'onchange' => "Total_Change()"]) !!}
-                                        </div>
-                                        <div class="col-md-3 form-group">
-                                            {!! Form::label('other_kids', 'Kinder:') !!}
-                                            {!! Form::number('other_kids', null, ['class' => 'form-control', 'id' => 'other_kids', 'onchange' => "Total_Change()"]) !!}
-                                        </div>
-                                        <div class="col-md-3 form-group">
-                                            {!! Form::label('member_kids', 'Kinder (G):') !!}
-                                            {!! Form::number('member_kids', null, ['class' => 'form-control', 'id' => 'member_kids', 'onchange' => "Total_Change()"]) !!}
-                                        </div>
-                                    </div> --}}
                                     <div class="form-row">
                                         @foreach ($positions as $index => $position)
                                             @if ($position->pricelist_position['bexio_code']<100)
