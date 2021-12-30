@@ -396,7 +396,7 @@ class AdminEventController extends Controller
     public function SendCleaningMail(Request $request, $id){
         $input = $request->all();
         Mail::raw($input['cleaning_mail_text'],  function($message) use($input){
-          $message->to($input['cleaning_mail_address'])->subject('Reiningungsanfrage Ferienhaus Itelfingen');
+          $message->to($input['cleaning_mail_address'])->bcc(config('mail.from.address'), config('mail.from.name'))->subject('Reiningungsanfrage Ferienhaus Itelfingen');
         });
         $event = Event::findOrFail($id);
         $event->update(['cleaning_mail' => true]);
