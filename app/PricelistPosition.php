@@ -15,6 +15,11 @@ class PricelistPosition extends Model
         'show' => 'boolean'
     ];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(fn ($query) => $query->orderBy('bexio_code'));
+    }
+
     public function archive_status(){
         return $this->belongsTo('App\ArchiveStatus');
     }

@@ -43,18 +43,17 @@ class WeeklyTask extends Command
     {
         $date = Carbon::today()->addMonths(2);
         $events_new = Event::where('event_status_id','=', config('status.event_neu'))->get();
-        $events_open_offers = Event::where('start_date','<=', $date )->where('contract_status_id','<=', config('status.contract_angebot_versendet'))->get();
-        $events_no_cleaning_mail = Event::where('start_date','<=', $date )->where('cleaning_mail',false)->get();
+        $events_open_offers = Event::where('start_date','<=', $date )
+            ->where('contract_status_id','<=', config('status.contract_angebot_versendet'))
+            ->where('event_status_id','<=', config('status.event_bestaetigt'))->get();
+        $events_no_cleaning_mail = Event::where('start_date','<=', $date )
+            ->where('cleaning_mail',false)->get();
         $contacts_new = Contact::where('done',false)->get();
 
-        $data["email"] = "jerome.sigg@gmail.com";
         $data["title"] = "Wöchentliches Errinerungsmail";
-
-        // $this->info($data);
-        // return $data;
   
         Mail::send('emails.weekly_reminder', compact('data', 'contacts_new', 'events_new', 'events_open_offers', 'events_no_cleaning_mail'), function($message)use($data) {
-            $message->to($data["email"], $data["email"])
+            $message->to(config('mail.from.address'), config('mail.from.name'))
                     ->subject($data["title"]);
         });
 

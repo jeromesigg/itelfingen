@@ -100,8 +100,12 @@ class AdminEventController extends Controller
     public function edit($id)
     {
         //
-        $positions = Position::with('pricelist_position')->where('event_id',$id)->get()->sortBy('pricelist_position.bexio_code');
-
+        $positions = Position::with('pricelist_position')
+            ->where('event_id',$id)
+            ->orderBy(PricelistPosition::select('bexio_code')
+            ->whereColumn('pricelist_positions.id', 'positions.pricelist_position_id')
+            )->get();
+        
         $event_statuses = EventStatus::pluck('name','id')->all();
         $contract_statuses = ContractStatus::pluck('name','id')->all();
         $event = Event::findOrFail($id);
@@ -121,7 +125,9 @@ class AdminEventController extends Controller
         //
         $event = Event::findOrFail($id);
         $input = $request->all();
-        $plpositions = PricelistPosition::where([['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+
+        $plpositions = PricelistPosition::where([['archive_status_id', config('status.aktiv')]])->
+            where([['bexio_code', '<', 300]])->orderby('bexio_code')->get();
         foreach($plpositions as $index => $plposition){
             Helper::CreateRePos($input['positions'][$index], $plposition['id'], $event);
         }

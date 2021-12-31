@@ -50,6 +50,7 @@ class DailyTask extends Command
 
          foreach($events as $event){
             $this->GetLastInfoPDF($event);
+            // $event->update(['last_info' => true]);
          }
          $this->info(count($events) . ' Emails versendet.');
     }
@@ -65,7 +66,7 @@ class DailyTask extends Command
         $data["code"] = "4315";
   
         Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath) {
-            $message->to($data["email"], $data["email"])
+            $message->to($data["email"], $data['firstname'] . ' ' . $data["name"])
                     ->subject($data["title"])
                     ->attach($PdfPath, [
                         'as'    => 'Infos_vor_Buchung.pdf',
