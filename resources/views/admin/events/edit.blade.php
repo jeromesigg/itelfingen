@@ -226,6 +226,7 @@
         var days = (end_date - start_date)/(24*3600*1000);
 	    var positions = @json($positions);
         var total_amount = 0, id = 0;
+        var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
         positions.forEach(position => {
             id = 'position_' + position.pricelist_position['bexio_code'];
             var subtotal = 0
@@ -233,15 +234,13 @@
                 subtotal = position.pricelist_position['price'];
             }
             else if(position.pricelist_position['bexio_code']<200){
-                subtotal =  parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days || 0;
+                subtotal =  parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
             }
             else{
                 subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * days || 0;
             }	
             total_amount += subtotal;
         });
-        var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
-        total_amount = total_amount * discount;
         $("#total").text(total_amount);
         $("#total_days").val(days);
     }

@@ -31,9 +31,14 @@
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
-                            <div id="reservation_error" style="display: none" class="error">
-                                An diesem Datum kann nicht reserviert werden
-                                <br><br>
+                            <div id="reservation_error" style="display: none" class="alert alert-danger">
+                                An diesem Datum kann nicht reserviert werden.
+                            </div>
+                            <div id="discount_message" style="display: none" class="alert alert-dismissable alert-success">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                Sie profitieren von 20% Buchungs-Rabatt.
                             </div>
         
                             <div class="hk-agenda">
@@ -155,19 +160,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-12 col-xl-8 hk-dateselect" >
-                                                <div id="reservation_error_2" style="display: none" class="error">
-                                                    An diesem Datum kann nicht reserviert werden
-                                                    <br><br>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-md-6 form-group">
-                                                    {!! Form::label('start_date', 'Start Datum:') !!}
-                                                    {!! Form::date('start_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
-                                                    </div>
-                                                    <div class="col-md-6 form-group">
-                                                    {!! Form::label('end_date', 'End Datum:') !!}
-                                                    {!! Form::date('end_date', null, ['class' => 'form-control', 'required', 'onchange' => "Agenda.change()"]) !!}
-                                                    </div>
+                                                <div class="h5" style="text-align: end">
+                                                    Buchung von <span id="start_date_text"></span> bis <span id="end_date_text"></span>
+                                                    {!! Form::hidden('start_date', null, ['class' => 'form-control','id' => 'start_date']) !!}
+                                                    {!! Form::hidden('end_date', null, ['class' => 'form-control','id' => 'end_date']) !!}
                                                     {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
                                                 </div>
                                                 <div class="table-responsive">
@@ -187,6 +183,7 @@
                                                                 <th></th>
                                                                 <th><span id="total_amount_show"></span>.-</th>
                                                                 {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
+                                                                {!! Form::hidden('discount', null, ['class' => 'form-control', 'id' => 'discount']) !!}
                                                             </tr>
                                                             <tr>
                                                                 <th colspan="4">
@@ -201,7 +198,7 @@
                                                                     @if ($position['bexio_code']<100)
                                                                         <th scope="row" id={{'position_'.$position['bexio_code']}}>1</th>
                                                                     @else  
-                                                                        <th scope="row">{!! Form::number('positions[]', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th> 
+                                                                        <th scope="row">{!! Form::number('positions['.$position['bexio_code'].']', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th> 
                                                                     @endif
                                                                     <td>{{$position['name']}}</td>
                                                                     <td>{{$position['price']}}.-</td>

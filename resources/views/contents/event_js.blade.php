@@ -14,9 +14,10 @@ function Total_Change() {
 	var days = (Agenda.end - Agenda.start)/(24*3600*1000);
 	var positions = @json($positions);
 	var total_amount = 0, subtotal = 0, id = 0;
+	var discount = document.getElementById('discount').value;
 	positions.forEach(position => {
 		id = 'position_' + position['bexio_code'];
-		subtotal = position['bexio_code']<100 ? position['price'] : parseInt(document.getElementById(id).value) * position['price'] * days || 0;	
+		subtotal = position['bexio_code']<100 ? position['price'] : parseInt(document.getElementById(id).value) * position['price'] * days * ((100-discount) / 100) || 0;	
 		$('#' + id + '_total').text(subtotal);
 		total_amount += subtotal;
 	});
@@ -25,18 +26,6 @@ function Total_Change() {
 	$("#total_days").val(days);
 }
 
-if(document.getElementById('start_date') == undefined){
-	start_date_init = null;
-}
-else{
-	start_date_init = document.getElementById('start_date').value == "" ? null : new Date(document.getElementById('start_date').value);
-}
-if(document.getElementById('end_date') == undefined){
-	end_date_init = null;
-}
-else{
-	end_date_init = document.getElementById('start_date').value == "" ? null : new Date(document.getElementById('end_date').value);
-}
 window.onload = function() { 
     Agenda.load(@json($events_json), @json($event_type))
 	if(document.getElementById('total_amount') != undefined){
@@ -89,10 +78,9 @@ var undefined;
 Agenda = {
 	monate: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
 	date: new Date(new Date().getFullYear(), new Date().getMonth() - new Date().getMonth() % 3, 1),
-	// start: new Date(document.getElementById("start_date").value),
-	// end: new Date(document.getElementById("end_date").value),
-	start: start_date_init == undefined ? null : new Date(start_date_init.getFullYear(), start_date_init.getMonth(), start_date_init.getDate()),
-	end: end_date_init == undefined ? null : new Date(end_date_init.getFullYear(), end_date_init.getMonth(), end_date_init.getDate()),
+	today: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+	start: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+4),
+	end: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+4),
 	reserved: {},
 	matrix: [],
 	// initial calendar setup
@@ -152,28 +140,23 @@ Agenda = {
 		this.apply();
 	},
 	change: function() {
-		start_date = new Date(document.getElementById('start_date').value);
-		this.start = new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate());
-		end_date = new Date(document.getElementById('end_date').value);
-		this.end = new Date(end_date.getFullYear(), end_date.getMonth(), end_date.getDate());
-		var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 		if (Date.parse(this.start) > Date.parse(this.end)) {
-			this.end = new Date(today);
+			this.end = new Date(this.today);
 			$('#reservation_error').show();
 			setTimeout(function() { $('#reservation_error').hide(); }, 5000);
 			$('#reservation_error_2').show();
 			setTimeout(function() { $('#reservation_error_2').hide(); }, 5000);
 		}
-		if (Date.parse(today) > Date.parse(this.start) || Date.parse(today) > Date.parse(this.end)) {
-			this.end = new Date(today);
-			this.start = new Date(today);
+		if (Date.parse(this.today) > Date.parse(this.start) || Date.parse(this.today) > Date.parse(this.end)) {
+			this.end = new Date(this.today);
+			this.start = new Date(this.today);
 			$('#reservation_error').show();
 			setTimeout(function() { $('#reservation_error').hide(); }, 5000);
 			$('#reservation_error_2').show();
 			setTimeout(function() { $('#reservation_error_2').hide(); }, 5000);
 		}
 		this.apply();
-		this.getDays()
+		this.getDays();
 	},
 	// after clicking a date in the calendar
 	select: function(i, j, k) {
@@ -194,10 +177,9 @@ Agenda = {
 						this.start = tmp;
 					}
 				}
-				var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-				if (Date.parse(today) >= Date.parse(this.start) || Date.parse(today) >= Date.parse(this.end)) {
-					this.end = new Date(today);
-					this.start = new Date(today);
+				if (Date.parse(this.today) >= Date.parse(this.start) || Date.parse(this.today) >= Date.parse(this.end)) {
+					this.end = new Date(this.today);
+					this.start = new Date(this.today);
 					$('#reservation_error').show();
 					setTimeout(function() { $('#reservation_error').hide(); }, 5000);
 					$('#reservation_error_2').show();
@@ -221,7 +203,21 @@ Agenda = {
 		var days = (this.end - this.start)/(24*3600*1000);
 		if(days > 0){
 			var text = days == 1 ? 'Nacht' : 'Nächte';
+			var discount = this.start < addDays(this.today, +8) && @json($discount) ? 20 : 0;
+			$("#discount").val(discount);
+			if(discount > 0){
+				$('#discount_message').show();
+				text += ' inkl. 20% Rabatt';
+			}
+			else{
+				$('#discount_message').hide();
+			}
 			$('#days').text('(' + days + ' ' + text+')');
+			var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+			$("#start_date_text").text(this.start.toLocaleDateString('de-CH', options));
+			$("#end_date_text").text(this.end.toLocaleDateString('de-CH', options));
+			$("#start_date").val(this.start.toLocaleString());
+			$("#end_date").val(this.end.toLocaleString());
 		}
 		Total_Change();
 	},
@@ -287,26 +283,13 @@ Agenda = {
 					this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state
 						= 'S' + this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state.charAt(1);
 			}
-			if (this.mode === 'guest') {
-				start_date = addDays(this.start, +1);
-				end_date = addDays(date, +1);
-				$("#start_date").val(start_date.toISOString().split('T')[0]);
-				$("#end_date").val(end_date.toISOString().split('T')[0]);
-			}
-		} else if (this.mode === 'guest') {
-			start_date = addDays(new Date(), +1);
-			end_date = addDays(new Date(), +1);
-			$("#start_date").val(start_date.toISOString().split('T')[0]);
-			$("#end_date").val(end_date.toISOString().split('T')[0]);
 		}
-		var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-		today = addDays(today, +7);
 		for (date in this.index) {
 			this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].node.className = 'hk-agenda__day--' + this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].state;
 			if (this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].state == 'FF') {
 				this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].node.className += (this.index[date].k == 5 ? ' hk-agenda__day--sat' : '') + (this.index[date].k == 6 ? ' hk-agenda__day--sun' : '');
 			}
-			if (this.mode == 'guest' && today > date) {
+			if (this.mode == 'guest' && addDays(this.today, +4) > date) {
 				this.matrix[this.index[date].i][this.index[date].j][this.index[date].k].node.className += ' hk-agenda__day--past';
 			}
 			try {

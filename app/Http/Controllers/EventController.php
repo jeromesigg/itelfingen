@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Event;
 use Validator;
+use Carbon\Carbon;
 use App\Helper\Helper;
 use App\PricelistPosition;
 use Illuminate\Http\Request;
@@ -31,18 +32,19 @@ class EventController extends Controller
 
         $input = $request->all();
 
-        array_unshift($input['positions'],1,1);
+        array_unshift($input['positions'],1);
         array_push($input['positions'],0);
 
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
         $input['contract_status_id'] = config('status.contract_offen');
-        $input['discount'] = 0;
         $name = $input['firstname'] . ' ' . $input['name'];
         $email = $input['email'];
+        $input['start_date'] = new Carbon($input['start_date']);
+        $input['end_date'] = new Carbon($input['end_date']);
         $event = Event::create($input); 
-        $plpositions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+        $plpositions = PricelistPosition::where([['archive_status_id', config('status.aktiv')], ['bexio_code','<',300]])->orderby('bexio_code')->get();
         foreach($plpositions as $index => $plposition){
             Helper::CreateRePos($input['positions'][$index], $plposition['id'], $event);
         }

@@ -18,34 +18,6 @@
         </div>
       </section>
   
-      {{-- <section class="inner-page contact">
-        <div class="container">
-          @foreach ($faq_chapters as $chapter)
-            <div id="recent-activities-wrapper-{{$chapter['sort-index']}}" class="card updates activities">
-              <a data-toggle="collapse" data-parent="#recent-activities-wrapper-{{$chapter['sort-index']}}" href="#activities-box-{{$chapter['sort-index']}}" aria-expanded="true" aria-controls="activities-box">
-                <div id="activites-header" class="card-header d-flex justify-content-between align-items-center">
-                    <h2 class="h5 display">
-                      {{$chapter['name']}}
-                    </h2>
-                    <i class="fa fa-angle-down"></i>
-                </div> 
-              </a>
-              <div id="activities-box-{{$chapter['sort-index']}}" role="tabpanel" class="collapse">
-                @foreach ($chapter->faqs as $faq)  
-                    <table class="table" >
-                        <tbody>
-                          <tr class="">
-                              <td width="25%">{{$faq['name']}}<td>
-                              <td width="75%">{{$faq['description']}}</td>
-                          </tr>
-                        </tbody>
-                    </table>
-                @endforeach       
-              </div>
-            </div> 
-          @endforeach       
-        </div>
-      </section> --}}
       <div class="cd-faq js-cd-faq container max-width-md margin-top-lg margin-bottom-lg">
         <ul class="cd-faq__categories">
           @foreach ($faq_chapters as $chapter)

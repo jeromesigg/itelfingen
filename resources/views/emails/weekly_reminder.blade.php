@@ -33,90 +33,35 @@
         </table>
     @endif
 
-    @if (count($events_new)>0)
-    <h3>Folgende Buchungen wurden noch nicht bearbeitet:</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="row" style="text-align:left">Datum</th>
-                    <th scope="row" style="text-align:left">Name</th>
-                    <th scope="row" style="text-align:left">E-Mail</th>
-                    <th scope="row" style="text-align:left">Anlass / Gruppe</th>
-                    <th scope="row" style="text-align:left">Strasse</th>
-                    <th scope="row" style="text-align:left">PlZ / Ort</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($events_new as $event)
+    @foreach ($event_array as $event_element)   
+        @if (count($event_element['events'])>0)
+        <h3>{{$event_element['text']}}:</h3>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
-                        <td><a href="{{route('events.edit', $event->id)}}">{{$event->firstname}} {{$event->name}}</a></td>
-                        <td>{{$event->email}}</td>
-                        <td>{{$event->group_name}}</td>
-                        <td>{{$event->street}}</td>
-                        <td>{{$event->plz}} {{$event->city}}</td>
+                        <th scope="row" style="text-align:left" width="17%">Datum</th>
+                        <th scope="row" style="text-align:left" width="10%">Name</th>
+                        <th scope="row" style="text-align:left" width="25%">E-Mail</th>
+                        <th scope="row" style="text-align:left" width="22%">Anlass / Gruppe</th>
+                        <th scope="row" style="text-align:left" width="10%">Strasse</th>
+                        <th scope="row" style="text-align:left" width="15%">PlZ / Ort</th>
                     </tr>
-                @endforeach
-            </tbody>   
-        </table>
-    @endif
-
-    @if (count($events_open_offers)>0)
-    <h3>Folgende Offerten wurden noch nicht angenommen:</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="row" style="text-align:left">Datum</th>
-                    <th scope="row" style="text-align:left">Name</th>
-                    <th scope="row" style="text-align:left">E-Mail</th>
-                    <th scope="row" style="text-align:left">Anlass / Gruppe</th>
-                    <th scope="row" style="text-align:left">Strasse</th>
-                    <th scope="row" style="text-align:left">PlZ / Ort</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($events_open_offers as $event)
-                    <tr>
-                        <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
-                        <td><a href="{{route('events.edit', $event->id)}}">{{$event->firstname}} {{$event->name}}</a></td>
-                        <td>{{$event->email}}</td>
-                        <td>{{$event->group_name}}</td>
-                        <td>{{$event->street}}</td>
-                        <td>{{$event->plz}} {{$event->city}}</td>
-                    </tr>
-                @endforeach
-            </tbody>   
-        </table>
-    @endif
-
-    @if (count($events_no_cleaning_mail)>0)
-    <h3>Folgende Buchungen haben noch kein Reiningungs-Mail versendet:</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="row" style="text-align:left">Datum</th>
-                    <th scope="row" style="text-align:left">Name</th>
-                    <th scope="row" style="text-align:left">E-Mail</th>
-                    <th scope="row" style="text-align:left">Anlass / Gruppe</th>
-                    <th scope="row" style="text-align:left">Strasse</th>
-                    <th scope="row" style="text-align:left">PlZ / Ort</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($events_no_cleaning_mail as $event)
-                    <tr>
-                        <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
-                        <td><a href="{{route('events.edit', $event->id)}}">{{$event->firstname}} {{$event->name}}</a></td>
-                        <td>{{$event->email}}</td>
-                        <td>{{$event->group_name}}</td>
-                        <td>{{$event->street}}</td>
-                        <td>{{$event->plz}} {{$event->city}}</td>
-                    </tr>
-                @endforeach
-            </tbody>   
-        </table>
-    @endif
-
+                </thead>
+                <tbody>
+                    @foreach ($event_element['events'] as $event)
+                        <tr>
+                            <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
+                            <td><a href="{{route('events.edit', $event->id)}}">{{$event->firstname}} {{$event->name}}</a></td>
+                            <td>{{$event->email}}</td>
+                            <td>{{$event->group_name}}</td>
+                            <td>{{$event->street}}</td>
+                            <td>{{$event->plz}} {{$event->city}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>   
+            </table>
+        @endif
+    @endforeach
     <p>Freundliche Grüsse,<p>
     <p>Das Ferienhaus Itelfingen<p>
 </body>

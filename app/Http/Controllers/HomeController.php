@@ -44,6 +44,7 @@ class HomeController extends Controller
         $positions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
         $events = Event::where('event_status_id','<',config('status.event_storniert'))->get();
         $event_type = 'guest';
+        $discount = config('app.discount_enabled');
 
         
         $events_json = [];
@@ -79,7 +80,7 @@ class HomeController extends Controller
             'data-callback' => 'enable_EventBtn'
         ];
         return view('home', compact('homepage', 'pictures', 'events_json', 'testimonials', 'people', 
-            'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions'));
+            'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount'));
     }
 
     public function impressum()

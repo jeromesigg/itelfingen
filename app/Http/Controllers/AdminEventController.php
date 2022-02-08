@@ -33,6 +33,7 @@ class AdminEventController extends Controller
         $event_type = 'admin';
         $events_all = Event::all();
         $positions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+        $discount = config('app.discount_enabled');
         
         $events_json = [];
         foreach ($events_all as $event)
@@ -59,7 +60,7 @@ class AdminEventController extends Controller
             ];
         }
 
-        return view('admin.events.index', compact('events', 'event_type', 'events_json', 'positions'));
+        return view('admin.events.index', compact('events', 'event_type', 'events_json', 'positions', 'discount'));
     }
 
     /**
@@ -156,7 +157,7 @@ class AdminEventController extends Controller
                             'tax_id' => 16,    
                             'article_id' => $position->pricelist_position['bexio_id'],
                             'unit_price' => $position->pricelist_position['price'],
-                            'discount_in_percent' => $event['discount'],
+                            'discount_in_percent' =>  $position->pricelist_position['bexio_code'] < 100 ? 0 : $event['discount'],
                         )
                     );
                 }

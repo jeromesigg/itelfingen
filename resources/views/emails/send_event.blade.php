@@ -43,20 +43,20 @@
                 <td>{{$telephone}}<td>
             </tr>
             <tr>
+                <th scope="row" style="text-align:left">Übernachtungen Erwachsene (Genossenschafter)</th>
+                <td>{{$positions[1]}}<td>
+            </tr>
+            <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Erwachsene</th>
                 <td>{{$positions[2]}}<td>
             </tr>
             <tr>
-                <th scope="row" style="text-align:left">Übernachtungen Erwachsene (Genossenschafter)</th>
+                <th scope="row" style="text-align:left">Übernachtungen Kind (Genossenschafter)</th>
                 <td>{{$positions[3]}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Übernachtungen Kind (bis 16 Jahre)</th>
                 <td>{{$positions[4]}}<td>
-            </tr>
-            <tr>
-                <th scope="row" style="text-align:left">Übernachtungen Kind (Genossenschafter)</th>
-                <td>{{$positions[5]}}<td>
             </tr>
             <tr>
                 <th scope="row" style="text-align:left">Voraussichtliches Total:</th>
