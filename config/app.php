@@ -29,6 +29,7 @@ return [
     'env' => env('APP_ENV', 'production'),
     'version' => env('VERSION', '1.0'),
     'discount_enabled' => env('DISCOUNT_ENABLED', 'false'),
+    'sharing_enabled' => env('SHARING_ENABLED', 'false'),
 
     /*
     |--------------------------------------------------------------------------

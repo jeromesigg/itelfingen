@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use function PHPUnit\Framework\isNull;
 use Illuminate\Support\Facades\Storage;
 use Spatie\GoogleCalendar\Event as Event_API;
+use jeremykenedy\Slack\Laravel\Facade as Slack;
 
 class AdminEventController extends Controller
 {
@@ -328,6 +329,7 @@ class AdminEventController extends Controller
             }
 
             if(config('app.env') == 'production'){
+                Slack::send('Es hat eine neue Buchung gegeben.\n Vom ' . $start_date . ' bis ' . $end_date .'\n Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
                 $event_api = new Event_API;
                 $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
                 $event_api->startDate = Carbon::parse($event->start_date);

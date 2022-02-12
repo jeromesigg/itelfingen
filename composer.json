@@ -16,6 +16,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.5",
         "ixudra/curl": "^6.21",
+        "jeremykenedy/slack-laravel": "^2.6",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
