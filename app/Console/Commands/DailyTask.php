@@ -46,11 +46,11 @@ class DailyTask extends Command
     {
 
         $date = Carbon::today()->addweeks(2);
-        $events = Event::where('last_info', false)->where('start_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt')) ->get();
+        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt')) ->get();
 
          foreach($events as $event){
             $this->GetLastInfoPDF($event);
-            // $event->update(['last_info' => true]);
+            $event->update(['last_info' => true]);
          }
          $this->info(count($events) . ' Emails versendet.');
     }
@@ -63,7 +63,7 @@ class DailyTask extends Command
         $data["title"] = "Die letzten Infos zu ihrem Aufenthalt.";
         $data["firstname"] = $event['firstname'];
         $data["name"] = $event['name'];
-        $data["code"] = "4315";
+        $data["code"] = $event['code'];
   
         Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath) {
             $message->to($data["email"], $data['firstname'] . ' ' . $data["name"])

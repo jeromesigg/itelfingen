@@ -266,10 +266,20 @@ class AdminEventController extends Controller
             if(!isset($invoice['error_code'])){ 
                 $event->update([
                     'bexio_invoice_id' => $invoice['id']]); 
+                Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'])
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->withData( 
+                        array( 
+                            'is_valid_to' => Carbon::create($event->end_date)->addDays(14)
+                        ) 
+                    )
+                    ->post(); 
+
                 Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/issue')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->post(); 
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->post(); 
 
             }
         }
@@ -329,7 +339,7 @@ class AdminEventController extends Controller
             }
 
             if(config('app.env') == 'production'){
-                Slack::send('Es hat eine neue Buchung gegeben.\n Vom ' . $start_date . ' bis ' . $end_date .'\n Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
+                Slack::send('Es hat eine neue Buchung gegeben. Vom ' . $start_date . ' bis ' . $end_date .' Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
                 $event_api = new Event_API;
                 $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
                 $event_api->startDate = Carbon::parse($event->start_date);

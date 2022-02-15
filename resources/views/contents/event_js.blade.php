@@ -203,7 +203,7 @@ Agenda = {
 		var days = (this.end - this.start)/(24*3600*1000);
 		if(days > 0){
 			var text = days == 1 ? 'Nacht' : 'Nächte';
-			var discount = this.start < addDays(this.today, +8) && @json($discount) ? 20 : 0;
+			var discount = (this.start < addDays(this.today, +8)) && @json($discount)? 20 : 0;
 			$("#discount").val(discount);
 			if(discount > 0){
 				$('#discount_message').show();

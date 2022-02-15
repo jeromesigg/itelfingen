@@ -53,12 +53,15 @@ class WeeklyTask extends Command
             ->where('event_status_id','<=', config('status.event_bestaetigt'))->get();
         $events_no_cleaning_mail = Event::where('start_date','<=', $date )
             ->where('cleaning_mail',false)->get();
+        $events_no_code = Event::where('start_date','<=', $date )
+            ->whereNull('code')->get();
         $contacts_new = Contact::where('done',false)->get();
 
         $event_array =collect([
             ['text' => "Folgende Buchungen wurden noch nicht bearbeitet",'events'=>$events_new], 
             ['text' => "Folgende Offerten wurden noch nicht angenommen",'events'=>$events_open_offers], 
-            ['text' => "Folgende Buchungen haben noch kein Reiningungs-Mail versendet",'events'=>$events_no_cleaning_mail]
+            ['text' => "Folgende Buchungen haben noch kein Reiningungs-Mail versendet",'events'=>$events_no_cleaning_mail],
+            ['text' => "Folgende Buchungen haben noch keinen Tür-Code.",'events'=>$events_no_code]
         ]);
 
  

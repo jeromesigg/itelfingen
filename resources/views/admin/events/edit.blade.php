@@ -110,9 +110,15 @@
                                             {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        {!! Form::label('user_id', 'Verantwortlicher:') !!}
-                                        {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                                    <div class="form-row">
+                                        <div class="col-md-6 form-group">
+                                            {!! Form::label('user_id', 'Verantwortlicher:') !!}
+                                            {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            {!! Form::label('code', 'Tür-Code:') !!}
+                                            {!! Form::number('code', null, ['class' => 'form-control']) !!}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
