@@ -54,6 +54,7 @@ class WeeklyTask extends Command
         $events_no_cleaning_mail = Event::where('start_date','<=', $date )
             ->where('cleaning_mail',false)->get();
         $events_no_code = Event::where('start_date','<=', $date )
+            ->where('start_date','>', Carbon::today())
             ->whereNull('code')->get();
         $contacts_new = Contact::where('done',false)->get();
 
@@ -68,7 +69,7 @@ class WeeklyTask extends Command
 
         $data["title"] = "Wöchentliches Errinerungsmail";
           
-        Mail::send('emails.weekly_reminder', compact('data', 'contacts_new', 'events_new', 'events_open_offers', 'events_no_cleaning_mail'), function($message)use($data) {
+        Mail::send('emails.weekly_reminder', compact('data', 'contacts_new', 'event_array'), function($message)use($data) {
             $message->to(config('mail.from.address'), config('mail.from.name'))
                     ->subject($data["title"]);
         });

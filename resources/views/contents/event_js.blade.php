@@ -1,28 +1,38 @@
 <script>
 function wizard_step(i) {
 	if(i===1){
-  		document.getElementById("wizard_calendar").style.display = "block";
+		document.getElementById("wizard_calendar").style.display = "block";
 		document.getElementById("wizard_formular").style.display = "none";
 	}
 	if(i===2){
+		if(Agenda.start < addDays(Agenda.today,4)){
+			$('#reservation_error_date').show();
+			setTimeout(function() { $('#reservation_error_date').hide(); }, 5000);
+		}
+		else{
   		document.getElementById("wizard_formular").style.display = "block";
 		document.getElementById("wizard_calendar").style.display = "none";
+		}
 	}
 }
 
 function Total_Change() {
 	var days = (Agenda.end - Agenda.start)/(24*3600*1000);
 	var positions = @json($positions);
-	var total_amount = 0, subtotal = 0, id = 0;
+	var total_amount = 0, subtotal = 0, id = 0, person = 0, total_person = 0;
 	var discount = document.getElementById('discount').value;
 	positions.forEach(position => {
 		id = 'position_' + position['bexio_code'];
-		subtotal = position['bexio_code']<100 ? position['price'] : parseInt(document.getElementById(id).value) * position['price'] * days * ((100-discount) / 100) || 0;	
+		person = position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
+		person = person || 0;
+		subtotal = position['bexio_code'] < 100 ? position['price'] : parseInt(document.getElementById(id).value) * position['price'] * days * ((100-discount) / 100) || 0;	
 		$('#' + id + '_total').text(subtotal);
 		total_amount += subtotal;
+		total_person += person;
 	});
 	$('#total_amount_show').text(total_amount);
 	$("#total_amount").val(total_amount);
+	$("#total_person").val(total_person);
 	$("#total_days").val(days);
 }
 
@@ -79,8 +89,8 @@ Agenda = {
 	monate: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
 	date: new Date(new Date().getFullYear(), new Date().getMonth() - new Date().getMonth() % 3, 1),
 	today: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
-	start: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+4),
-	end: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+4),
+	start: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+	end: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
 	reserved: {},
 	matrix: [],
 	// initial calendar setup

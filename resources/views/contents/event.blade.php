@@ -31,6 +31,9 @@
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
+                            <div id="reservation_error_date" style="display: none" class="alert alert-danger">
+                                Es muss ein Datum gewählt werden.
+                            </div>
                             <div id="reservation_error" style="display: none" class="alert alert-danger">
                                 An diesem Datum kann nicht reserviert werden.
                             </div>
@@ -183,6 +186,7 @@
                                                                 <th></th>
                                                                 <th><span id="total_amount_show"></span>.-</th>
                                                                 {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
+                                                                {!! Form::hidden('total_person', null, ['class' => 'form-control', 'id' => 'total_person']) !!}
                                                                 {!! Form::hidden('discount', null, ['class' => 'form-control', 'id' => 'discount']) !!}
                                                             </tr>
                                                             <tr>
