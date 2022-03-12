@@ -50,11 +50,14 @@ class WeeklyTask extends Command
         $events_new = Event::where('event_status_id','=', config('status.event_neu'))->get();
         $events_open_offers = Event::where('start_date','<=', $date )
             ->where('contract_status_id','<=', config('status.contract_angebot_versendet'))
-            ->where('event_status_id','<=', config('status.event_bestaetigt'))->get();
+            ->where('event_status_id','<=', config('status.event_bestaetigt'))
+            ->where('event_status_id','<>', config('status.event_storniert'))->get();
         $events_no_cleaning_mail = Event::where('start_date','<=', $date )
-            ->where('cleaning_mail',false)->get();
+            ->where('cleaning_mail',false)
+            ->where('event_status_id','<>', config('status.event_storniert'))->get();
         $events_no_code = Event::where('start_date','<=', $date )
             ->where('start_date','>', Carbon::today())
+            ->where('event_status_id','<>', config('status.event_storniert'))
             ->whereNull('code')->get();
         $contacts_new = Contact::where('done',false)->get();
 

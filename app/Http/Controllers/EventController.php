@@ -32,8 +32,6 @@ class EventController extends Controller
                         ->withInput();
         }
 
-        return $request;
-
         $input = $request->all();
 
         array_unshift($input['positions'],1);
