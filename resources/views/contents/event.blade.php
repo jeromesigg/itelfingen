@@ -1,5 +1,5 @@
 <section id="booking" class="calendar section">
-  
+
     <div class="container" data-aos="fade-up">
         <div class="section-title">
             <p>Jetzt das Ferienhaus buchen</p>
@@ -23,11 +23,10 @@
                 </ul>
             </div>
         @endif
-  
+
         <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container container-fluid">
                 {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform']) !!}
-                    <br>
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
@@ -43,7 +42,7 @@
                                 </button>
                                 Sie profitieren von 20% Buchungs-Rabatt.
                             </div>
-        
+
                             <div class="hk-agenda">
                                 <div class="d-none d-sm-block">
                                     <a class="hk-agenda__prev" onclick="Agenda.prev(3); return false" href="#">
@@ -51,9 +50,9 @@
                                     </a>
                                 </div>
                                 <div class="row">
-                                    @for ($i = 0; $i <= 9; $i++)
+                                    @for ($i = 0; $i <= 6; $i++)
                                         <div class="col-md-4 col-sm-6 {{($i>1)?'d-none d-sm-block':''}}">
-                                            <h4 id="agendaTitel{{$i}}" class="hk-agenda__title"> </h4>
+                                            <h5 id="agendaTitel{{$i}}" class="hk-agenda__title"> </h5>
                                             <table class="hk-agenda__month">
                                                 <tbody id="agendaMonat{{$i}}"> </tbody>
                                             </table>
@@ -79,32 +78,35 @@
                                     </div>
                                 </div>
                             </div>
-        
-                            <br>
-                            <div class="hk-agenda__legend">
-                                <h5>Legende</h5>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6">
-                                        <span class="hk-agenda__legend-block hk-agenda__day--FF"></span>
-                                        <span class="hk-agenda__legend-label">Frei</span>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6">
-                                        <span class="hk-agenda__legend-block hk-agenda__day--PP"></span>
-                                        <span class="hk-agenda__legend-label">Provisorisch besetzt</span>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6">
-                                        <span class="hk-agenda__legend-block hk-agenda__day--BB"></span>
-                                        <span class="hk-agenda__legend-label">Besetzt</span>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6">
-                                        <span class="hk-agenda__legend-block hk-agenda__day--BF"></span>
-                                        <span class="hk-agenda__legend-label">Halbtage</span>
+                            <div class="row">
+                                <div class="col-md-10 col-sm-12">
+                                    <div class="hk-agenda__legend">
+                                        <h5>Legende</h5>
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-6">
+                                                <span class="hk-agenda__legend-block hk-agenda__day--FF"></span>
+                                                <span class="hk-agenda__legend-label">Frei</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6">
+                                                <span class="hk-agenda__legend-block hk-agenda__day--PP"></span>
+                                                <span class="hk-agenda__legend-label">Provisorisch besetzt</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6">
+                                                <span class="hk-agenda__legend-block hk-agenda__day--BB"></span>
+                                                <span class="hk-agenda__legend-label">Besetzt</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6">
+                                                <span class="hk-agenda__legend-block hk-agenda__day--BF"></span>
+                                                <span class="hk-agenda__legend-label">Halbtage</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-frontpage" onclick="wizard_step(2)">Weiter</button>
+                                <div class="col-md-2 col-sm-12">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-frontpage" onclick="wizard_step(2)">Weiter</button>
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <br>
@@ -162,12 +164,15 @@
                                                     {!! Form::checkbox('terms', '1', null) !!}
                                                 </div>
                                             </div>
-                                            <div class="col-md-12 col-xl-8 hk-dateselect" >
-                                                <div class="h5" style="text-align: end">
+                                            <div class="col-md-12 col-xl-8">
+                                                <div class="h5" style="text-align: end" id="multiday_text">
                                                     Buchung von <span id="start_date_text"></span> bis <span id="end_date_text"></span>
                                                     {!! Form::hidden('start_date', null, ['class' => 'form-control','id' => 'start_date']) !!}
                                                     {!! Form::hidden('end_date', null, ['class' => 'form-control','id' => 'end_date']) !!}
-                                                    {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
+                                                </div>
+                                                <div class="h5" style="text-align: end" id="oneday_text">
+                                                    Buchung vom <span id="date_text"></span></span>
+                                                    {!! Form::hidden('date', null, ['class' => 'form-control','id' => 'date']) !!}
                                                 </div>
                                                 <div class="table-responsive">
                                                     <table class="table">
@@ -188,21 +193,26 @@
                                                                 {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
                                                                 {!! Form::hidden('total_person', null, ['class' => 'form-control', 'id' => 'total_person']) !!}
                                                                 {!! Form::hidden('discount', null, ['class' => 'form-control', 'id' => 'discount']) !!}
+                                                                {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
                                                             </tr>
                                                             <tr>
                                                                 <th colspan="4">
-                                                            <span style="font-size: small">G = Genossenschafter <br>
-                                                                Alle Preise in CHF. Die definitiven Preise werden im Mietvertrag festgelegt.</span> 
-                                                        </th>
-                                                        </tr>
+                                                                    <span style="font-size: small" id="multiday_comment">
+                                                                        G = Genossenschafter<br>
+                                                                    </span>
+                                                                    <span style="font-size: small">
+                                                                        Alle Preise in CHF. Die definitiven Preise werden im Mietvertrag festgelegt.
+                                                                    </span>
+                                                                </th>
+                                                            </tr>
                                                         </tfoot>
                                                         <tbody>
                                                             @foreach ($positions as $position)
-                                                                <tr>
+                                                                <tr id="row_{{$position['bexio_code']}}">
                                                                     @if ($position['bexio_code']<100)
-                                                                        <th scope="row" id={{'position_'.$position['bexio_code']}}>1</th>
-                                                                    @else  
-                                                                        <th scope="row">{!! Form::number('positions['.$position['bexio_code'].']', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th> 
+                                                                        <th scope="row" id={{'position_'.$position['bexio_code']}}><span id="position_{{$position['bexio_code']}}_amount"></span></th>
+                                                                    @else
+                                                                        <th scope="row">{!! Form::number('positions['.$position['bexio_code'].']', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th>
                                                                     @endif
                                                                     <td>{{$position['name']}}</td>
                                                                     <td>{{$position['price']}}.-</td>
@@ -219,19 +229,19 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>    
-                                <tr>   
+                                </tr>
+                                <tr>
                                     <td>
-                                        <div class="form-row">   
-                                            <div class="col-md-4"> 
+                                        <div class="form-row">
+                                            <div class="col-md-4">
                                                 <button type="button" class="btn btn-frontpage" onclick="wizard_step(1)">Zurück</button>
                                             </div>
-                                            <div class="col-md-4"> 
+                                            <div class="col-md-4">
                                                 {!! Form::submit('Reservieren', ['class' => 'btn btn-frontpage'])!!}
                                             </div>
-                                        </div>  
+                                        </div>
                                     </td>
-                                </tr>   
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -239,5 +249,5 @@
             </div>
         </div>
     </div>
-   
+
   </section>

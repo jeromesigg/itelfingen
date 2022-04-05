@@ -10,14 +10,51 @@ function wizard_step(i) {
 			setTimeout(function() { $('#reservation_error_date').hide(); }, 5000);
 		}
 		else{
-  		document.getElementById("wizard_formular").style.display = "block";
-		document.getElementById("wizard_calendar").style.display = "none";
+            document.getElementById("wizard_formular").style.display = "block";
+            document.getElementById("wizard_calendar").style.display = "none";
+            var days = (Agenda.end - Agenda.start)/(24*3600*1000);
+            var positions = @json($positions);
+            if(days === 0 || Agenda.end === null){
+                document.getElementById("oneday_text").style.display = "block";
+                document.getElementById("multiday_text").style.display = "none";
+                document.getElementById("multiday_comment").style.display = "none";
+                positions.forEach(position => {
+                    id = 'row_' + position['bexio_code'];
+                    position_id = '#position_' + position['bexio_code'] + '_amount';
+                    if(position['bexio_code'] > 100) {
+                        document.getElementById(id).style.display = "none";
+                    }else if(position['bexio_code'] === 50){
+                        document.getElementById(id).style.display = "";
+                        $(position_id).text(1);
+                    }else{
+                        $(position_id).text(0.5);
+                    }
+                });
+            }
+            else {
+                document.getElementById("oneday_text").style.display = "none";
+                document.getElementById("multiday_text").style.display = "block";
+                document.getElementById("multiday_comment").style.display = "block";
+                positions.forEach(position => {
+                    id = 'row_' + position['bexio_code'];
+                    position_id = '#position_' + position['bexio_code'] + '_amount';
+                    if(position['bexio_code'] > 100) {
+                        document.getElementById(id).style.display = "";
+                    }else if(position['bexio_code'] === 50){
+                        document.getElementById(id).style.display = "none";
+                    }else{
+                        $(position_id).text('1');
+                    }
+                });
+            }
+
 		}
 	}
 }
 
 function Total_Change() {
 	var days = (Agenda.end - Agenda.start)/(24*3600*1000);
+    days = Math.ceil(days);
 	var positions = @json($positions);
 	var total_amount = 0, subtotal = 0, id = 0, person = 0, total_person = 0;
 	var discount = document.getElementById('discount').value;
@@ -25,7 +62,24 @@ function Total_Change() {
 		id = 'position_' + position['bexio_code'];
 		person = position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
 		person = person || 0;
-		subtotal = position['bexio_code'] < 100 ? position['price'] : parseInt(document.getElementById(id).value) * position['price'] * days * ((100-discount) / 100) || 0;	
+        subtotal = 0;
+        if(days === 0 || Agenda.end === null){
+            if(position['bexio_code'] < 50){
+                subtotal = position['price'] / 2;
+                person = 1;
+            }
+            else if(position['bexio_code'] < 100) {
+                subtotal =position['price']
+            }
+        }
+        else {
+            if(position['bexio_code'] < 50){
+                subtotal = position['price'];
+            }
+            else if(position['bexio_code'] > 100) {
+                subtotal = parseInt(document.getElementById(id).value) * position['price'] * days * ((100 - discount) / 100) || 0;
+            }
+        }
 		$('#' + id + '_total').text(subtotal);
 		total_amount += subtotal;
 		total_person += person;
@@ -36,7 +90,7 @@ function Total_Change() {
 	$("#total_days").val(days);
 }
 
-window.onload = function() { 
+window.onload = function() {
     Agenda.load(@json($events_json), @json($event_type))
 	if(document.getElementById('total_amount') != undefined){
 		Total_Change()
@@ -83,7 +137,6 @@ function bind(callback) {
 		callback.apply({}, cpy);
 	}
 }
-var undefined;
 
 Agenda = {
 	monate: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
@@ -211,7 +264,9 @@ Agenda = {
 	},
 	getDays: function(){
 		var days = (this.end - this.start)/(24*3600*1000);
-		if(days > 0){
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        var text = '';
+        if(days > 0){
 			var text = days == 1 ? 'Nacht' : 'Nächte';
 			var discount = (this.start < addDays(this.today, +8)) && @json($discount)? 20 : 0;
 			$("#discount").val(discount);
@@ -223,12 +278,16 @@ Agenda = {
 				$('#discount_message').hide();
 			}
 			$('#days').text('(' + days + ' ' + text+')');
-			var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-			$("#start_date_text").text(this.start.toLocaleDateString('de-CH', options));
+            $("#start_date_text").text(this.start.toLocaleDateString('de-CH', options));
+            $("#start_date").val(this.start.toLocaleString());
 			$("#end_date_text").text(this.end.toLocaleDateString('de-CH', options));
-			$("#start_date").val(this.start.toLocaleString());
 			$("#end_date").val(this.end.toLocaleString());
 		}
+        else{
+            $("#date_text").text(this.start.toLocaleDateString('de-CH', options));
+            $("#date").val(this.start.toLocaleString());
+            $('#days').text('1 Tag');
+        }
 		Total_Change();
 	},
 	// reset selection
@@ -274,7 +333,7 @@ Agenda = {
 					if (this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state.charAt(0) == 'F')
 						this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state = 'SS';
 					else
-						this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state = 
+						this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state =
 							this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state.charAt(0) + 'S';
 				}
 			} else if (date < end) {

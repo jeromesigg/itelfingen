@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ArchiveStatus;
-use App\PricelistPosition;
+use App\Models\ArchiveStatus;
+use App\Models\PricelistPosition;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 
@@ -33,21 +33,21 @@ class AdminPricelistPositionController extends Controller
 
         foreach ($positions as $position) {
             $position_db = PricelistPosition::where('bexio_id',$position['id']);
-            if($position_db->count() > 0){                
+            if($position_db->count() > 0){
                 $position_db->update([
-                    'name' => $position['deliverer_name'], 
+                    'name' => $position['deliverer_name'],
                     'price' => $position['sale_price']]);
             }
             else{
                 PricelistPosition::create([
-                    'name' => $position['deliverer_name'], 
-                    'bexio_id' => $position['id'], 
-                    'bexio_code' => $position['intern_code'], 
-                    'price' => $position['sale_price'], 
-                    'archive_status_id' => config('status.aktiv'), 
+                    'name' => $position['deliverer_name'],
+                    'bexio_id' => $position['id'],
+                    'bexio_code' => $position['intern_code'],
+                    'price' => $position['sale_price'],
+                    'archive_status_id' => config('status.aktiv'),
                     'show' => true]);
             }
-            
+
         }
         return redirect()->back();
     }

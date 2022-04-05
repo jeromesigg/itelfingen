@@ -4,10 +4,10 @@
 <section>
     <div class="container-fluid">
 
-        <header> 
+        <header>
             <h3>Buchungen</h3>
         </header>
-    
+
         <div class="row">
             <div class="table-responsive">
                 <table class="table table-striped ">
@@ -19,7 +19,6 @@
                             <th scope="col">Vorname</th>
                             <th scope="col">E-Mail</th>
                             <th scope="col">Gruppe</th>
-                            <th scope="col">Personen</th>
                             <th scope="col">Total</th>
                             <th scope="col">Bemerkung</th>
                             <th scope="col">Bemerkung Intern</th>
@@ -38,14 +37,13 @@
                                 <td>{{$event->firstname}}</td>
                                 <td>{{$event->email}}</td>
                                 <td>{{$event->group_name}}</td>
-                                <td>{{$event->total_people}}</td>
                                 <td>{{$event->total_amount}}.-</td>
                                 <td>{{$event->comment}}</td>
                                 <td>{{$event->comment_intern}}</td>
                                 <td>{{$event->user ? $event->user['username'] : ""}}</td>
                                 <td>{{$event->contract_status['name']}}</td>
                                 <td>{{$event->event_status['name']}}</td>
-                            </tr>   
+                            </tr>
                         @endforeach
                         @endif
                     </tbody>
@@ -59,7 +57,7 @@
             <div class="hk-reservation hk-reservation__step1">
                 <div class="hk-reservation__container container-fluid">
                     <div class="row">
-                        <div class="col-lg-12 hk-calendar">            
+                        <div class="col-lg-12 hk-calendar">
                             <div class="hk-agenda">
                                 <div class="d-none d-sm-block">
                                     <a class="hk-agenda__prev" onclick="Agenda.prev(3); return false" href="#">
@@ -100,7 +98,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 @endsection
 

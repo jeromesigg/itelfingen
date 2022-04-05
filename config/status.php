@@ -18,7 +18,8 @@ return [
     'contract_offen' => 5,
     'contract_angebot_erstellt' => 7,
     'contract_angebot_versendet' => 10,
-    'contract_rechnung_gestellt' => 20,
+    'contract_rechnung_erstellt' => 20,
+    'contract_rechnung_versendet' => 30,
     'contract_storniert' => 50,
 ]
 ?>

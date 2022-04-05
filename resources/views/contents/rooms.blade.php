@@ -1,6 +1,6 @@
 <section id="rooms" class="rooms section-green">
     <div class="container" data-aos="fade-up">
-  
+
       <div class="section-title">
         <p>Was dich erwartet</p>
       </div>
@@ -11,11 +11,11 @@
               <div class="card_content">
                 <span class="card_title card_title-line">Das Haus</span>
                 <p class="card_text">
-                  Ein moderner zweistöckter Ersatzneubau.
+                  Ein moderner zweistöckter Ersatzneubau für bis zu 19 Personen.
                   <ul class="card_list">
-                    <li>Aufentshaltsraum für bis zu 20 Personen</li>
-                    <li>kleinere Zimmer</li>
-                    <li>Gruppenzimmer</li>
+                    <li>Aufentshaltsraum</li>
+                    <li>kleinere Zimmer(2x 2er)</li>
+                    <li>Gruppenzimmer(5er und 10er)</li>
                     <li>offene Küche</li>
                     <li>zwei Bäder</li>
                     <li>zwei WC's</li>
@@ -23,7 +23,7 @@
                 </p>
               </div>
             </div>
-        
+
             <div class="card">
               <div class="card_content">
             <span class="card_title card_title-line">Einrichtung</span>
@@ -37,7 +37,7 @@
             </p>
           </div>
         </div>
-    
+
         <div class="card">
           <div class="card_content">
             <span class="card_title card_title-line">Aussenbereich</span>
@@ -57,9 +57,9 @@
               Wir planen den Garten zu gestalten, sowie eine kleine Wellnessoase zu erstellen. Bald also im HotTub relaxen und sich eine Auszeit in der Sauna gönnen.
             </p>
           </div>
-      </div>     
-  
-</div> 
+      </div>
+
+</div>
       <br>
       {{-- Zum {!! Html::link('files/Hausplan.pdf', 'Hausplan', ['target' => 'blank']) !!} --}}
     </div>

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Photo;
-use App\History;
-use App\ArchiveStatus;
-use Illuminate\Support\Str;
+use App\Models\ArchiveStatus;
+use App\Models\History;
+use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminHistoryController extends Controller
 {
@@ -46,7 +46,7 @@ class AdminHistoryController extends Controller
         if($file = $request->file('photo_id')){
             $name = time() . str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]); 
+            $photo = Photo::create(['file'=>$name]);
             $input['photo_id'] = $photo->id;
         }
         $input['shorttitle'] = Str::slug($input['title'],'_');
@@ -98,7 +98,7 @@ class AdminHistoryController extends Controller
             $name = time() . str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['photo_id'] = $photo->id;
         }
         $input['shorttitle'] = Str::slug($input['title'],'_');

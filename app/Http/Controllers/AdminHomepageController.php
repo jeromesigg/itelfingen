@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Photo;
-use App\Homepage;
+use App\Models\Homepage;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 
 class AdminHomepageController extends Controller
@@ -87,35 +87,35 @@ class AdminHomepageController extends Controller
             $name = 'hero-bg.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['main_photo_id'] = $photo->id;
         }
         if($file = $request->file('background_top_photo_id')){
             $name = 'about-bg.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['background_top_photo_id'] = $photo->id;
         }
         if($file = $request->file('background_bottom_photo_id')){
             $name = 'events-bg.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['background_bottom_photo_id'] = $photo->id;
         }
         if($file = $request->file('big_login_photo_id')){
             $name = 'login.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['big_login_photo_id'] = $photo->id;
         }
         if($file = $request->file('small_login_photo_id')){
             $name = 'logo.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['small_login_photo_id'] = $photo->id;
         }
         Homepage::findOrFail($id)->update($input);

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ArchiveStatus;
-use App\Pricelist;
+use App\Models\ArchiveStatus;
+use App\Models\Pricelist;
 use Illuminate\Http\Request;
 
 class AdminPricelistController extends Controller

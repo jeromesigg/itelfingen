@@ -16,7 +16,6 @@ class CreateEventsTable extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('title')->nullable();
             $table->bigInteger('event_status_id')->index()->unsigned()->nullable();
             $table->date('start_date');
             $table->date('end_date');
@@ -29,6 +28,25 @@ class CreateEventsTable extends Migration
             $table->string('city');
             $table->string('telephone')->nullable();
             $table->text('comment')->nullable();
+            $table->bigInteger('contract_status_id')->index()->unsigned()->nullable();
+            $table->text('comment_intern')->nullable();
+            $table->text('marketing_comment')->nullable();
+            $table->boolean('terms')->nullable();
+            $table->integer('total_amount')->nullable();
+            $table->integer('total_days')->nullable();
+            $table->integer('bexio_user_id')->nullable();
+            $table->integer('bexio_invoice_id')->nullable();
+            $table->integer('bexio_file_id')->nullable();
+            $table->boolean('cleaning_mail')->default(false);
+            $table->bigInteger('user_id')->index()->unsigned()->nullable();
+            $table->integer('bexio_offer_id')->nullable();
+            $table->integer('discount')->nullable();
+            $table->boolean('last_info')->default(false);
+            $table->integer('code')->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('contract_status_id')->references('id')->on('contract_statuses');
+            $table->foreign('event_status_id')->references('id')->on('event_statuses');
         });
     }
 

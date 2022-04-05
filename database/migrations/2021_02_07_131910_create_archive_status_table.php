@@ -19,14 +19,6 @@ class CreateArchiveStatusTable extends Migration
             $table->timestamps();
             $table->string('name');
         });
-        DB::table('archive_statuses')->insert( 
-            array(
-                ['id' => config('status.aktiv'),
-                'name' => 'Aktiv'],
-                ['id' => config('status.archiviert'),
-                'name' => 'Archiviert'],
-            )
-        );
     }
 
     /**

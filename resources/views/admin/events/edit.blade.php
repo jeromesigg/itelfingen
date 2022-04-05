@@ -2,7 +2,7 @@
 @section('content')
     <section>
         <div class="container-fluid">
-            <header> 
+            <header>
                 <h3 class="display">Buchung bearbeiten</h3>
             </header>
             <div class="row">
@@ -76,14 +76,12 @@
                                     </div>
                                     <div class="form-row">
                                         @foreach ($positions as $index => $position)
-                                            @if ($position->pricelist_position['bexio_code']<100)
-                                                {!! Form::hidden('positions[]', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position->pricelist_position['bexio_code']]) !!}     
+                                            @if ($position->pricelist_position['bexio_code']<50)
+                                                {!! Form::hidden('positions['.$position['id'].']', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position['id']]) !!}
                                             @else
                                                 <div class="col-md-3 form-group">
-                                                    {!! Form::label('positions[]', $position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)') !!}
-                                                    {!! Form::number('positions[]', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position->pricelist_position['bexio_code'], 'onchange' => "Total_Change()"]) !!}
-                                                
-                                                    {{-- <th scope="row">{!! Form::number('positions[]', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th>  --}}
+                                                    {!! Form::label('positions['.$position['id'].']', $position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)') !!}
+                                                    {!! Form::number('positions['.$position['id'].']', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position['id'], 'onchange' => "Total_Change()"]) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -97,6 +95,7 @@
                                         </div>
                                         <div class="col-md-3 form-group">
                                             {!! Form::label('', 'Total [CHF]:') !!}<br>
+                                            {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
                                             <span id="total"></span>.-
                                         </div>
                                     </div>
@@ -132,9 +131,9 @@
                                         @if(config('mail.direct_send'))
                                             Angebot erstellen & versenden
                                         @else
-                                            Angebot erstellen    
+                                            Angebot erstellen
                                         @endif
-                                    </a> 
+                                    </a>
                                 </div>
                                 @break
                             @case(config('status.contract_angebot_erstellt'))
@@ -150,17 +149,25 @@
                                     <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                 </div>
                                 <div class="form-group">
-                                    <a type='submit' class = 'btn btn-primary' href="{{ route('events.createinvoice', $event->id) }}">Rechnung versenden</a>
+                                    <a type='submit' class = 'btn btn-primary' href="{{ route('events.createinvoice', $event->id) }}">Rechnung erstellen</a>
                                 </div>
                                 @break
-                            @case(config('status.contract_rechnung_gestellt'))
+                            @case(config('status.contract_rechnung_erstellt'))
                                 <div class="form-group">
                                     <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                 </div>
                                 <div class="form-group">
-                                    <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
+                                    <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendinvoice', $event->id) }}">Rechnung versenden</a>
                                 </div>
                                 @break
+                            @case(config('status.contract_rechnung_versendet'))
+                            <div class="form-group">
+                                <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                            </div>
+                            <div class="form-group">
+                                <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
+                            </div>
+                            @break
                             @default
                         @endswitch
                         <br>
@@ -194,9 +201,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row"> 
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
     </section>
 @endsection
@@ -207,20 +214,20 @@
     });
     function PrepareMail() {
   		document.getElementById("cleaning_mail").style.display = "block";
-          
+
         start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
         end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
         var total = 0, subtotal = 0, id = 0;
 	    var positions = @json($positions);
         positions.forEach(position => {
-            id = 'position_' + position.pricelist_position['bexio_code'];
+            id = 'position_' + position['id'];
             if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
                 subtotal =  parseInt(document.getElementById(id).value) || 0;
                 total += subtotal;
             }
         });
-        text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis " 
-        + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für " 
+        text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis "
+        + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für "
         + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
 	    $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
 	    $('#cleaning_mail_text').val(text);
@@ -230,25 +237,37 @@
         var start_date = new Date(document.getElementById('start_date').value);
         var end_date = new Date(document.getElementById('end_date').value);
         var days = (end_date - start_date)/(24*3600*1000);
+        console.log(days)
 	    var positions = @json($positions);
         var total_amount = 0, id = 0;
         var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
         positions.forEach(position => {
-            id = 'position_' + position.pricelist_position['bexio_code'];
+            id = 'position_' + position['id'];
             var subtotal = 0
-            if( position.pricelist_position['bexio_code']<100){
-                subtotal = position.pricelist_position['price'];
+            if(days === 0){
+                if(position.pricelist_position['bexio_code'] < 50){
+                    subtotal = position.pricelist_position['price'] / 2;
+                }
+                else if(position.pricelist_position['bexio_code'] < 100) {
+                    subtotal =position.pricelist_position['price']
+                }
             }
-            else if(position.pricelist_position['bexio_code']<200){
-                subtotal =  parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
+            else {
+                if(position.pricelist_position['bexio_code'] < 50){
+                    subtotal = position.pricelist_position['price'];
+                }
+                else if(position.pricelist_position['bexio_code'] > 100) {
+                    subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
+                }
             }
-            else{
-                subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * days || 0;
-            }	
+            if( position.pricelist_position['bexio_code']>200){
+                subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
+            }
             total_amount += subtotal;
         });
         $("#total").text(total_amount);
         $("#total_days").val(days);
+        $("#total_amount").val(total_amount);
     }
 </script>
 @endsection

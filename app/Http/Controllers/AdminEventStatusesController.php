@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\EventStatus;
+use App\Models\EventStatus;
 use Illuminate\Http\Request;
 
 class AdminEventStatusesController extends Controller

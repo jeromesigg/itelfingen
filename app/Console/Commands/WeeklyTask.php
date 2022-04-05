@@ -2,16 +2,12 @@
 
 namespace App\Console\Commands;
 
-use DateTime;
-use App\Event;
-use App\Contact;
-use App\Helper\Helper;
+use App\Models\Contact;
+use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Spatie\IcalendarGenerator\Components\Calendar;
-use Spatie\IcalendarGenerator\Components\Event as Event_ICS;
 
 class WeeklyTask extends Command
 {
@@ -62,16 +58,16 @@ class WeeklyTask extends Command
         $contacts_new = Contact::where('done',false)->get();
 
         $event_array =collect([
-            ['text' => "Folgende Buchungen wurden noch nicht bearbeitet",'events'=>$events_new], 
-            ['text' => "Folgende Offerten wurden noch nicht angenommen",'events'=>$events_open_offers], 
+            ['text' => "Folgende Buchungen wurden noch nicht bearbeitet",'events'=>$events_new],
+            ['text' => "Folgende Offerten wurden noch nicht angenommen",'events'=>$events_open_offers],
             ['text' => "Folgende Buchungen haben noch kein Reiningungs-Mail versendet",'events'=>$events_no_cleaning_mail],
             ['text' => "Folgende Buchungen haben noch keinen Tür-Code.",'events'=>$events_no_code]
         ]);
 
- 
+
 
         $data["title"] = "Wöchentliches Errinerungsmail";
-          
+
         Mail::send('emails.weekly_reminder', compact('data', 'contacts_new', 'event_array'), function($message)use($data) {
             $message->to(config('mail.from.address'), config('mail.from.name'))
                     ->subject($data["title"]);

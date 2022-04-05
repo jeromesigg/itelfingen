@@ -3,10 +3,22 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        Artisan::call('migrate --seed');
+    }
+
+    public function tearDown(): void
+    {
+        Artisan::call('migrate:reset');
+        parent::tearDown();
+    }
     /**
      * A basic test example.
      *

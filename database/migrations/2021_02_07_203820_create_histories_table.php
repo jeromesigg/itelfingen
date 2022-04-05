@@ -22,6 +22,9 @@ class CreateHistoriesTable extends Migration
             $table->text('description');
             $table->integer('sort-index');
             $table->bigInteger('archive_status_id')->index()->unsigned()->nullable();
+            $table->bigInteger('photo_id')->index()->unsigned()->nullable();
+
+            $table->foreign('photo_id')->references('id')->on('photos')->onDelete('set Null');
             $table->foreign('archive_status_id')->references('id')->on('archive_statuses');
         });
     }
@@ -33,10 +36,6 @@ class CreateHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            //
-            $table->dropForeign(['archive_status_id']);
-        });
         Schema::dropIfExists('histories');
     }
 }

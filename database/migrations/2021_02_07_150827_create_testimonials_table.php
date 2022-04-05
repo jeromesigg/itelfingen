@@ -32,10 +32,6 @@ class CreateTestimonialsTable extends Migration
      */
     public function down()
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            //
-            $table->dropForeign(['archive_status_id']);
-        });
         Schema::dropIfExists('testimonials');
     }
 }

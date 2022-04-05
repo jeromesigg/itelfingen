@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ihre Buchung für das Ferienhaus Itelfingen</title>
-</head>    
+</head>
 <body>
     <h1>Ihre Buchung für das Ferienhaus Itelfingen</h1>
     <table class="table">
@@ -42,22 +42,14 @@
                 <th scope="row" style="text-align:left">Telefon</th>
                 <td>{{$telephone}}<td>
             </tr>
-            <tr>
-                <th scope="row" style="text-align:left">Übernachtungen Erwachsene (Genossenschafter)</th>
-                <td>{{$positions[1]}}<td>
-            </tr>
-            <tr>
-                <th scope="row" style="text-align:left">Übernachtungen Erwachsene</th>
-                <td>{{$positions[2]}}<td>
-            </tr>
-            <tr>
-                <th scope="row" style="text-align:left">Übernachtungen Kind (Genossenschafter)</th>
-                <td>{{$positions[3]}}<td>
-            </tr>
-            <tr>
-                <th scope="row" style="text-align:left">Übernachtungen Kind (bis 16 Jahre)</th>
-                <td>{{$positions[4]}}<td>
-            </tr>
+            @foreach ($positions as $position)
+                @if($position['bexio_code'] >= 50 && $position['amount'] >= 1)
+                    <tr>
+                        <th scope="row" style="text-align:left">{{$position['name']}}</th>
+                        <td>{{$position['amount']}}<td>
+                    </tr>
+                @endif
+            @endforeach
             <tr>
                 <th scope="row" style="text-align:left">Voraussichtliches Total:</th>
                 <td>CHF {{$total_amount}}.-<td>

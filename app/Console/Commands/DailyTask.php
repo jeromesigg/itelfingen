@@ -2,14 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\User;
-use App\Event;
+use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Mail;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 class DailyTask extends Command
 {
@@ -57,14 +53,14 @@ class DailyTask extends Command
 
     public function GetLastInfoPDF(Event $event)
     {
-        $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');      
+        $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
 
-        $data["email"] = "jerome.sigg@gmail.com";
+        $data["email"] = $event['email'];
         $data["title"] = "Die letzten Infos zu ihrem Aufenthalt.";
         $data["firstname"] = $event['firstname'];
         $data["name"] = $event['name'];
         $data["code"] = $event['code'];
-  
+
         Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath) {
             $message->to($data["email"], $data['firstname'] . ' ' . $data["name"])
                     ->subject($data["title"])
@@ -73,6 +69,14 @@ class DailyTask extends Command
                         'mime'   => 'application/pdf',
                     ]);
         });
+        Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath) {
+        $message->to(config('mail.from.address'), config('mail.from.name'))
+            ->subject($data["title"])
+            ->attach($PdfPath, [
+                'as'    => 'Infos_vor_Buchung.pdf',
+                'mime'   => 'application/pdf',
+            ]);
+    });
 
     }
 }

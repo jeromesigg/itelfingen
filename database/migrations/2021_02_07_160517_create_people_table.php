@@ -33,11 +33,6 @@ class CreatePeopleTable extends Migration
      */
     public function down()
     {
-        Schema::table('people', function (Blueprint $table) {
-            //
-            $table->dropForeign(['archive_status_id']);
-            $table->dropForeign(['photo_id']);
-        });
         Schema::dropIfExists('people');
     }
 }

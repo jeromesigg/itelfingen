@@ -28,6 +28,11 @@
                         <li>FAQ</li>
                         <li>kleinere Layout-Anpassungen</li>
                     </ul>
+                    <h3>V2.3</h3>
+                    <ul>
+                        <li>Tagesaufenthalte abbilden</li>
+                        <li>Login für Vorstand</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -41,8 +46,6 @@
                 <div id="roadmap-box" role="tabpanel" class="card-body collapse show">
                     <h3>Nächste Versionen</h3>
                     <ul>
-                        <li>Tagesaufenthalte abbilden</li>
-                        <li>Login für Vorstand</li>
                         <li>ics-Datei mit Mail versenden</li>
                     </ul>
                 </div>

@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Event;
-use App\Faq;
-use App\FaqChapter;
-use App\History;
-use App\Picture;
-use App\Homepage;
-use App\Person;
-use App\Position;
-use App\Pricelist;
-use App\PricelistPosition;
-use App\Testimonial;
+use App\Models\Event;
+use App\Models\Faq;
+use App\Models\FaqChapter;
+use App\Models\History;
+use App\Models\Homepage;
+use App\Models\Person;
+use App\Models\Picture;
+use App\Models\PricelistPosition;
+use App\Models\Testimonial;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -46,7 +42,7 @@ class HomeController extends Controller
         $event_type = 'guest';
         $discount = config('app.discount_enabled');
 
-        
+
         $events_json = [];
         foreach ($events as $event)
         {
@@ -79,14 +75,14 @@ class HomeController extends Controller
             'data-theme' => 'light',
             'data-callback' => 'enable_EventBtn'
         ];
-        return view('home', compact('homepage', 'pictures', 'events_json', 'testimonials', 'people', 
+        return view('home', compact('homepage', 'pictures', 'events_json', 'testimonials', 'people',
             'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount'));
     }
 
     public function impressum()
     {
         $homepage = Homepage::FindOrFail(1);
-        
+
         return view('contents.impressum', compact('homepage'));
     }
 
@@ -95,7 +91,7 @@ class HomeController extends Controller
         $homepage = Homepage::FindOrFail(1);
         $faqs = Faq::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
         $faq_chapters = FaqChapter::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
-        
+
         return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs'));
     }
 }

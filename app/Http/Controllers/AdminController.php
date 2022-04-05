@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Contact;
-use App\Event;
-use Illuminate\Http\Request;
+use App\Models\Contact;
+use App\Models\Event;
 
 class AdminController extends Controller
 {
@@ -17,7 +16,7 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index(){
         $events_all = Event::where('event_status_id','<',config('status.event_eigene'))->count();
         $events_new = Event::where('event_status_id',config('status.event_neu'))->orderBy('start_date')->get();
@@ -34,14 +33,14 @@ class AdminController extends Controller
                 'icon' => 'icon-padnote',
                 'name' => 'Offene Buchungen',
                 'number' => count($events_new)
-            ], 
+            ],
             (object) [
                 'icon' => 'icon-ios-email-outline',
                 'name' => 'Offene Anfragen',
                 'number' => count($contacts_new)
-            ],     
+            ],
         ]);
-        
+
         return view('admin/index', compact('icon_array', 'contacts_new', 'events_new'));
     }
 

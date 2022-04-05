@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\FaqChapter;
-use App\ArchiveStatus;
+use App\Models\ArchiveStatus;
+use App\Models\FaqChapter;
 use Illuminate\Http\Request;
 
 class AdminFaqChapterController extends Controller

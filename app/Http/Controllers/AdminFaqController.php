@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Faq;
-use App\Photo;
-use App\FaqChapter;
-use App\ArchiveStatus;
+use App\Models\ArchiveStatus;
+use App\Models\Faq;
+use App\Models\FaqChapter;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 
 class AdminFaqController extends Controller
@@ -47,7 +47,7 @@ class AdminFaqController extends Controller
         if($file = $request->file('photo_id')){
             $name = time() . str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]); 
+            $photo = Photo::create(['file'=>$name]);
             $input['photo_id'] = $photo->id;
         }
         $index = FAQ::all()->count();
@@ -98,7 +98,7 @@ class AdminFaqController extends Controller
             $name = time() . str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['photo_id'] = $photo->id;
         }
 

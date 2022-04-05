@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Testimonial;
-use App\ArchiveStatus;
+use App\Models\ArchiveStatus;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class AdminTestimonialController extends Controller

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Photo;
-use App\Picture;
+use App\Models\Photo;
+use App\Models\Picture;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -48,7 +48,7 @@ class AdminPicturesController extends Controller
             $photo = Photo::create(['file'=>$name]);
             $input['photo_id'] = $photo->id;
 
-            if($input['cropped_photo_id']){ 
+            if($input['cropped_photo_id']){
                 $name = time() . '_cropped_' .$file->getClientOriginalName();
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
@@ -102,10 +102,10 @@ class AdminPicturesController extends Controller
             $name = time() . $file->getClientOriginalName();
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['photo_id'] = $photo->id;
 
-            if($input['cropped_photo_id']){ 
+            if($input['cropped_photo_id']){
                 $name = time() . '_cropped_' .$file->getClientOriginalName();
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 

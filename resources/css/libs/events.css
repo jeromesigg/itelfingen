@@ -1,5 +1,5 @@
 /* Agenda */
-  
+
 .hk-agenda__month {
 	border-collapse: separate;
 	border-spacing: 3px;
@@ -170,7 +170,7 @@
 }
 
 .hk-agenda__title {
-	padding: 15px 0 10px 3px;
+	padding: 5px 0 5px 3px;
 }
 
 .hk-agenda__legend-block {

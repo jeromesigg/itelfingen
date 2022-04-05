@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Photo;
-use App\Person;
-use App\ArchiveStatus;
+use App\Models\ArchiveStatus;
+use App\Models\Person;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 
 class AdminPersonController extends Controller
@@ -47,7 +47,7 @@ class AdminPersonController extends Controller
             $name = $input['name'].'.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['photo_id'] = $photo->id;
         }
         $index = Person::all()->count();
@@ -98,7 +98,7 @@ class AdminPersonController extends Controller
             $name = $input['name']+'.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file'=>$name]);
-            
+
             $input['photo_id'] = $photo->id;
         }
         Person::whereId($id)->first()->update($input);

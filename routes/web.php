@@ -30,7 +30,7 @@ Route::get('event/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'EventControl
 Route::post('/contacts', 'ContactController@store');
 
 Route::group(['middleware' => 'admin'], function(){
-    
+
     Route::get('/admin','AdminController@index');
     Route::get('/admin/changes','AdminController@changes');
     Route::resource('admin/homepages','AdminHomepageController');
@@ -45,6 +45,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::get('admin/events/{event}/createoffer', 'AdminEventController@CreateOffer')->name('events.createoffer');
     Route::get('admin/events/{event}/sendoffer', 'AdminEventController@SendOffer')->name('events.sendoffer');
     Route::get('admin/events/{event}/createinvoice', 'AdminEventController@CreateInvoice')->name('events.createinvoice');
+    Route::get('admin/events/{event}/sendinvoice', 'AdminEventController@SendInvoice')->name('events.sendinvoice');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendcleaningmail');
     Route::resource('admin/contacts', 'AdminContactController');
     Route::resource('admin/faqs', 'AdminFaqController');

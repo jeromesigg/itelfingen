@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Role;
-use App\User;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +17,7 @@ class AdminUserController extends Controller
      */
     public function index()
     {
-        //       
+        //
         $user = Auth::user();
         if($user->isTeam() && !$user->isAdmin()){
             $users =  User::whereId($user->id)->paginate(10);
@@ -64,7 +64,7 @@ class AdminUserController extends Controller
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
         }
-        
+
         if($file = $request->file('signature')){
             $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
             $input['signature'] = $path;
@@ -155,5 +155,5 @@ class AdminUserController extends Controller
         /**this will force download your file**/
         return Storage::download($user->signature);
     }
-    
+
 }

@@ -19,8 +19,13 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->bigInteger('role_id')->index()->unsigned()->nullable();
             $table->bigInteger('is_active')->default(0);
+            $table->string('fullname')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('signature')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('role_id')->references('id')->on('roles');
         });
     }
 
