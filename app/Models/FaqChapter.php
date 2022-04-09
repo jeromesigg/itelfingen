@@ -9,7 +9,9 @@ class FaqChapter extends Model
     protected $fillable = [
         'name',
         'sort-index',
-        'archive_status_id'
+        'archive_status_id',
+        'photo_id',
+        'symbol'
     ];
 
     public function archive_status(){
@@ -18,5 +20,9 @@ class FaqChapter extends Model
 
     public function faqs(){
         return $this->hasMany(Faq::class);
+    }
+
+    public function photo(){
+        return $this->belongsTo(Photo::class);
     }
 }

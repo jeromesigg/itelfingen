@@ -63,20 +63,12 @@ class DailyTask extends Command
 
         Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath) {
             $message->to($data["email"], $data['firstname'] . ' ' . $data["name"])
+                    ->bcc(config('mail.from.address'), config('mail.from.name'))
                     ->subject($data["title"])
                     ->attach($PdfPath, [
                         'as'    => 'Infos_vor_Buchung.pdf',
                         'mime'   => 'application/pdf',
                     ]);
         });
-        Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath) {
-        $message->to(config('mail.from.address'), config('mail.from.name'))
-            ->subject($data["title"])
-            ->attach($PdfPath, [
-                'as'    => 'Infos_vor_Buchung.pdf',
-                'mime'   => 'application/pdf',
-            ]);
-    });
-
     }
 }

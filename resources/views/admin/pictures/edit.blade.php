@@ -7,14 +7,14 @@
 @section('content')
     <section>
         <div class="container-fluid">
-            <header> 
+            <header>
                 <h3 class="display">Albumbild bearbeiten</h3>
             </header>
             <div class="row">
                 <div class="col-sm-3" >
-        
+
                     <img src="{{$picture->photo ? $picture->photo->file : 'http://placehold.it/350x350'}}" alt="" class="img-responsive" style="max-width: -webkit-fill-available;">
-                </div> 
+                </div>
                 <div class="col-sm-9">
                     {!! Form::model($picture, ['method' => 'PATCH', 'action'=>['AdminPicturesController@update', $picture->id], 'files' => true]) !!}
                     <div class="form-group">
@@ -26,7 +26,7 @@
                             {!! Form::file('photo_id', ['class' => 'photo_id', 'required']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::hidden('cropped_photo_id', null, ['class' => 'form-control', 'required', 'id' => 'cropped_photo_id']) !!}
+                        {!! Form::hidden('new_photo_id', null, ['class' => 'form-control', 'required', 'id' => 'new_photo_id']) !!}
                     </div>
 
                     <div class="form-group">
@@ -38,11 +38,11 @@
                             {!! Form::submit('Albumbild löschen', ['class' => 'btn btn-danger col-sm-6'])!!}
                         </div>
                     {!! Form::close()!!}
-                </div>   
-            </div>   
-            <div class="row"> 
+                </div>
+            </div>
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">

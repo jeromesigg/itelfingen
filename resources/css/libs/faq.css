@@ -75,7 +75,7 @@
 }
 @media (min-width: 80rem) {
     .cd-faq__categories {
-        width: 200px;
+        width: 250px;
 }
 
 }.cd-faq__category {
@@ -210,12 +210,22 @@ li:last-child .cd-faq__category {
 .cd-faq__title {
     margin: var(--space-md) 0;
 }
+
 .cd-faq__title h2 {
     text-transform: uppercase;
     font-size: var(--text-md);
     font-weight: 700;
     color: hsl(var(--color-contrast-low-h),  var(--color-contrast-low-s),  calc(var(--color-contrast-low-l)*0.9));
+    background: rgba(256,256,256,0.5);
+    padding: 10px;
 }
+
+.cd-faq__title-image {
+    position: relative;
+    margin-bottom: -40px;
+    z-index: -1;
+}
+
 @media (min-width: 64rem) {
     .cd-faq__title {
         margin-bottom: var(--space-sm);

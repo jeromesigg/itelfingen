@@ -50,18 +50,23 @@ class WeeklyTask extends Command
             ->where('event_status_id','<>', config('status.event_storniert'))->get();
         $events_no_cleaning_mail = Event::where('start_date','<=', $date )
             ->where('cleaning_mail',false)
+            ->where('event_status_id','<>', config('status.event_eigene'))
             ->where('event_status_id','<>', config('status.event_storniert'))->get();
         $events_no_code = Event::where('start_date','<=', $date )
             ->where('start_date','>', Carbon::today())
             ->where('event_status_id','<>', config('status.event_storniert'))
             ->whereNull('code')->get();
+        $events_no_invoice = Event::where('end_date','<', Carbon::today())
+            ->where('event_status_id','<>', config('status.event_storniert'))
+            ->where('contract_status_id','=', config('status.contract_rechnung_erstellt'))->get();
         $contacts_new = Contact::where('done',false)->get();
 
         $event_array =collect([
             ['text' => "Folgende Buchungen wurden noch nicht bearbeitet",'events'=>$events_new],
             ['text' => "Folgende Offerten wurden noch nicht angenommen",'events'=>$events_open_offers],
             ['text' => "Folgende Buchungen haben noch kein Reiningungs-Mail versendet",'events'=>$events_no_cleaning_mail],
-            ['text' => "Folgende Buchungen haben noch keinen Tür-Code.",'events'=>$events_no_code]
+            ['text' => "Folgende Buchungen haben noch keinen Tür-Code.",'events'=>$events_no_code],
+            ['text' => "Folgende Buchungen haben noch keine Rechnung erhalten.",'events'=>$events_no_invoice],
         ]);
 
 

@@ -4,7 +4,7 @@
     @include('includes.tinyeditor')
     <section>
         <div class="container-fluid">
-            <header> 
+            <header>
                 <h3 class="display">FAQ bearbeiten</h3>
             </header>
             <div class="row">
@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('description', 'Beschreibung:') !!}
-                        {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 3]) !!}
+                        {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 15]) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('photo_id', 'Photo:') !!}
@@ -30,11 +30,11 @@
                         {!! Form::submit('FAQ updaten', ['class' => 'btn btn-primary'])!!}
                     </div>
                     {!! Form::close()!!}
-                </div>   
-            </div>   
-            <div class="row"> 
+                </div>
+            </div>
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
     </section>
 @endsection

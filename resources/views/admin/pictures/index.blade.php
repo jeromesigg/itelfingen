@@ -5,12 +5,12 @@
 <section>
     <div class="container-fluid">
 
-        <header> 
+        <header>
             <h3>Albumbilder</h3>
         </header>
 
         <div class="row">
-        
+
             <table class="table">
                 <thead>
                     <tr>
@@ -23,10 +23,10 @@
                     @if($pictures)
                         @foreach ($pictures as $picture)
                             <tr>
-                                <td><img height="50" src="{{$picture->photo ? $picture->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
-                                <td><img height="50" src="{{$picture->cropped_photo ? $picture->cropped_photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
+                                <td><img height="50" src="{{$picture->photo ? $picture->photo->file : 'https://placehold.it/50x50'}}" alt=""></td>
+                                <td><img height="50" src="{{$picture->cropped_photo ? $picture->cropped_photo->file : 'https://placehold.it/50x50'}}" alt=""></td>
                                 <td><a href="{{route('pictures.edit', $picture->id)}}">{{$picture->name}}</a></td>
-                            </tr>   
+                            </tr>
                         @endforeach
                     @endif
                 </tbody>
@@ -36,7 +36,7 @@
                     {{$pictures->render()}}
                 </div>
             </div>
-        </div>  
-    </div>  
+        </div>
+    </div>
 </section>
 @endsection

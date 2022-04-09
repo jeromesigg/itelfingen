@@ -59,6 +59,10 @@ Route::get('admin/run-migrations', function () {
     return Artisan::call('migrate', ["--force" => true ]);
 });
 
+Route::get('admin/run-migrations-seed', function () {
+    return Artisan::call('migrate --seed', ["--force" => true ]);
+});
+
 Route::get('admin/run-deployment', function () {
     echo 'config:cache <br>';
     Artisan::call('config:cache');

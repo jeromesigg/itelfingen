@@ -5,10 +5,10 @@
     <section>
         <div class="container-fluid">
 
-            <header> 
+            <header>
                 <h3>FAQ</h3>
             </header>
-        
+
             <div class="row">
                 <div class="col-sm-6">
                     {!! Form::open(['method' => 'POST', 'action'=>'AdminFaqController@store', 'files' => true]) !!}
@@ -18,7 +18,7 @@
                         </div>
                         <div class="form-group">
                             {!! Form::label('description', 'Beschreibung:') !!}
-                            {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 3]) !!}
+                            {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 15]) !!}
                         </div>
                         <div class="form-group">
                             {!! Form::label('photo_id', 'Photo:') !!}
@@ -32,7 +32,7 @@
                             {!! Form::submit('FAQ erstellen', ['class' => 'btn btn-primary'])!!}
                         </div>
                     {!! Form::close()!!}
-                </div>    
+                </div>
                 <div class="col-sm-6">
                     <table class="table">
                         <thead>
@@ -55,13 +55,13 @@
                                     <td>{{$faq->faq_chapter['name']}}</td>
                                     <td>{{$faq->archive_status['name']}}</td>
                                     <td>{{$faq['sort-index']}}</td>
-                                    </tr>   
+                                    </tr>
                             @endforeach
                             @endif
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>  
+        </div>
     </section>
 @endsection
