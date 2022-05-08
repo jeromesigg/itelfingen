@@ -7,6 +7,7 @@ use App\Models\ContractStatus;
 use App\Models\EventStatus;
 use App\Models\Homepage;
 use App\Models\Role;
+use App\Models\Salutation;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -95,5 +96,10 @@ class BasisdatenSeeder extends Seeder
             'role_id' => config('status.role_Administrator'),
             'is_active' => true,
         ]);
+
+        Salutation::create([
+            'name' => 'Herr']);
+        Salutation::create([
+            'name' => 'Frau']);
     }
 }

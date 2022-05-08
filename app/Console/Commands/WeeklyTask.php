@@ -64,14 +64,14 @@ class WeeklyTask extends Command
         $event_array =collect([
             ['text' => "Folgende Buchungen wurden noch nicht bearbeitet",'events'=>$events_new],
             ['text' => "Folgende Offerten wurden noch nicht angenommen",'events'=>$events_open_offers],
-            ['text' => "Folgende Buchungen haben noch kein Reiningungs-Mail versendet",'events'=>$events_no_cleaning_mail],
+            ['text' => "Folgende Buchungen haben noch kein Reinigungs-Mail versendet",'events'=>$events_no_cleaning_mail],
             ['text' => "Folgende Buchungen haben noch keinen Tür-Code.",'events'=>$events_no_code],
             ['text' => "Folgende Buchungen haben noch keine Rechnung erhalten.",'events'=>$events_no_invoice],
         ]);
 
 
 
-        $data["title"] = "Wöchentliches Errinerungsmail";
+        $data["title"] = "Wöchentliches Erinnerungsmail";
 
         Mail::send('emails.weekly_reminder', compact('data', 'contacts_new', 'event_array'), function($message)use($data) {
             $message->to(config('mail.from.address'), config('mail.from.name'))

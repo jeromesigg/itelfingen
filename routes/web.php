@@ -42,6 +42,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/users', 'AdminUserController');
     Route::get('admin/users/download/{user}', ['as'=>'download_signature','uses'=>'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController');
+    Route::get('events/createDataTables', ['as'=>'events.CreateDataTables','uses'=>'AdminEventController@createDataTables']);
     Route::get('admin/events/{event}/createoffer', 'AdminEventController@CreateOffer')->name('events.createoffer');
     Route::get('admin/events/{event}/sendoffer', 'AdminEventController@SendOffer')->name('events.sendoffer');
     Route::get('admin/events/{event}/createinvoice', 'AdminEventController@CreateInvoice')->name('events.createinvoice');

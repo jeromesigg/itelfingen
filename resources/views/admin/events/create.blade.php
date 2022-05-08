@@ -1,8 +1,9 @@
 @extends('layouts.admin')
+@section('pageTitle', 'Buchungen')
 @section('content')
 <section>
     <div class="container-fluid">
-        <header> 
+        <header>
             <h3 class="display">Buchung erstellen</h3>
         </header>
         <div>
@@ -70,7 +71,7 @@
                             {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
                             {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                     </div>
-                   
+
                     <div class="form-row">
                         <div class="col-md-6 form-group">
                             {!! Form::label('event_status_id', 'Status:') !!}
@@ -85,9 +86,9 @@
             </div>
             {!! Form::submit('Buchung erstellen', ['class' => 'btn btn-primary'])!!}
         {!! Form::close()!!}
-        <div class="row"> 
+        <div class="row">
             @include('includes.form_error')
-        </div>   
+        </div>
     </div>
 </section>
 @endsection

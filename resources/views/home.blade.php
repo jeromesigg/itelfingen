@@ -4,11 +4,11 @@
 
   @include('includes.header')
 
-  @include('includes.title') 
+  @include('includes.title')
 
   <div id="app">
-        
-    @include('contents.main')   
+
+    @include('contents.main')
         <!-- ======= Footer ======= -->
     <footer id="footer">
 
@@ -20,7 +20,7 @@
     </footer><!-- End Footer -->
     <div id="preloader"></div>
     <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
-    
+
     @include('cookieConsent::index')
   </div>
 @endsection
@@ -41,9 +41,9 @@
   $(document).on('focus','.autocomplete_txt',function(){
   type = $(this).attr('name');
 
-  if(type =='city')autoType='name'; 
-  if(type =='zipcode')autoType='plz'; 
-  if(type =='city_id')autoType='id'; 
+  if(type =='city')autoType='name';
+  if(type =='zipcode')autoType='plz';
+  if(type =='city_id')autoType='id';
 
   $(this).autocomplete({
       minLength: 2,
@@ -69,14 +69,14 @@
               });
       },
       select: function( event, ui ) {
-          var data = ui.item.data;         
+          var data = ui.item.data;
           $("[name='city']").val(data.name);
           $("[name='zipcode']").val(data.plz);
           $("[name='city_id']").val(data.id);
       }
   });
-  
-  
+
+
   });
 </script>
 

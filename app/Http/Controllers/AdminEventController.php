@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Ixudra\Curl\Facades\Curl;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
 use Spatie\GoogleCalendar\Event as Event_API;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminEventController extends Controller
 {
@@ -28,11 +29,11 @@ class AdminEventController extends Controller
     public function index()
     {
         //
-        $events = Event::where('end_date','>',Carbon::today())->orderBy('start_date')->paginate(5);
         $event_type = 'admin';
         $events_all = Event::all();
-        $positions = PricelistPosition::where([['show', true],['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
-        $discount = config('app.discount_enabled');
+        $positions = [];
+        $discount = false;
+        $contract_statuses = ContractStatus::pluck('name');
 
         $events_json = [];
         foreach ($events_all as $event)
@@ -58,8 +59,52 @@ class AdminEventController extends Controller
                 'id' => $event->id
             ];
         }
+        $title = "Buchungen";
 
-        return view('admin.events.index', compact('events', 'event_type', 'events_json', 'positions', 'discount'));
+        return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title'));
+
+    }
+
+    public function createDataTables(Request $request)
+    {
+        $input = $request->all();
+        $contract_status = ContractStatus::where('name','=',$input['status'])->first();
+        $date = $input['date'] <> "Alle" ? Carbon::today() : NULL;
+        $events = Event::
+            when($contract_status, function($query, $contract_status){
+                $query->where('contract_status_id','=',$contract_status['id']);})
+            ->when($date, function($query, $date){
+                $query->where('start_date','>=',$date);})
+            ->get();
+
+        return DataTables::of($events)
+            ->addColumn('name', function (Event $event) {
+                return '<a href='.\URL::route('events.edit',$event).'>'.$event['name'].'</a>';
+            })
+            ->editColumn('start_date', function (Event $event) {
+                return [
+                    'display' => Carbon::parse($event['start_date'])->format('d.m.Y'),
+                    'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021')
+                ];
+            })
+            ->editColumn('end_date', function (Event $event) {
+                return [
+                    'display' => Carbon::parse($event['end_date'])->format('d.m.Y'),
+                    'sort' => Carbon::parse($event['end_date'])->diffInDays('01.01.2021')
+                ];
+            })
+            ->addColumn('user', function (Event $event) {
+                return $event->user ? $event->user['username'] : '';
+            })
+            ->addColumn('event_status', function (Event $event) {
+                return $event->event_status ? $event->event_status['name'] : '';
+            })
+            ->addColumn('contract_status', function (Event $event) {
+                return $event->contract_status ? $event->contract_status['name'] : '';
+            })
+            ->rawColumns(['name'])
+            ->make(true);
+
     }
 
     /**
@@ -431,7 +476,7 @@ class AdminEventController extends Controller
                     ->post();
             }
             if(!isset($person->error)){
-                $event->update(['bexio_user_id' => $person[0]['id']]);
+                $event->update(['bexio_user_id' => $person['id']]);
             }
         }
         return $event;

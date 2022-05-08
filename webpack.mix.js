@@ -40,12 +40,13 @@ mix.scripts([
     'resources/js/libs/main.js',
     'resources/js/libs/custom.js',
     'resources/js/libs/faq.js',
- ], 'public/js/main.js');  
+ ], 'public/js/main.js');
 
  //   Admin
 mix.styles([
     'resources/css/libs/fonts.css',
     'resources/css/libs/font-awesome.css',
+    'resources/css/admin/datatables.css',
     'resources/css/admin/jquery-ui.css',
     'resources/css/admin/fontastic.css',
     'resources/css/admin/jquery.mCustomScrollbar.css',
@@ -54,8 +55,9 @@ mix.styles([
     'resources/css/libs/custom.css',
 ], 'public/css/admin.css');
 mix.scripts([
- 'resources/js/admin/jquery-ui.min.js',
- 'resources/js/admin/jquery.mCustomScrollbar.js',
- 'resources/js/admin/front.js',
- 'resources/js/admin/jqBootstrapValidation.js',
-], 'public/js/admin.js');  
+    'resources/js/admin/jquery-ui.min.js',
+    'resources/js/admin/datatables.js',
+    'resources/js/admin/jquery.mCustomScrollbar.js',
+    'resources/js/admin/front.js',
+    'resources/js/admin/jqBootstrapValidation.js',
+], 'public/js/admin.js');

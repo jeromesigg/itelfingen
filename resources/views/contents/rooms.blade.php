@@ -14,8 +14,8 @@
                   Ein moderner zweistöckter Ersatzneubau für bis zu 19 Personen.
                   <ul class="card_list">
                     <li>Aufentshaltsraum</li>
-                    <li>kleinere Zimmer(2x 2er)</li>
-                    <li>Gruppenzimmer(5er und 10er)</li>
+                    <li>kleinere Zimmer (2x 2er)</li>
+                    <li>Gruppenzimmer (5er und 10er)</li>
                     <li>offene Küche</li>
                     <li>zwei Bäder</li>
                     <li>zwei WC's</li>

@@ -1,32 +1,33 @@
 <main>
     <!-- ======= About Section ======= -->
-    @include('contents.about')  
+    @include('contents.about')
 
     <!-- ======= Why Us Section ======= -->
-    @include('contents.rooms')  
-    
-    <!-- ======= Gallery Section ======= -->
-    @include('contents.gallery') 
+    @include('contents.rooms')
 
-    <!-- ======= Menu Section ======= -->
-    @include('contents.pricelist')  
-
-    <!-- ======= Booking Section ======= -->
-    @include('contents.event')  
+    <!-- ======= Plan Section ======= -->
+    @include('contents.plan')
 
 
     <!-- ======= Events Section ======= -->
-    @include('contents.locations')  
+    @include('contents.locations')
 
-    <!-- ======= History Section ======= -->
-    @include('contents.history') 
+
+<!-- ======= Gallery Section ======= -->
+    @include('contents.gallery')
+
+    <!-- ======= Menu Section ======= -->
+    @include('contents.pricelist')
+
+    <!-- ======= Booking Section ======= -->
+    @include('contents.event')
 
     <!-- ======= Testimonials Section ======= -->
     @include('contents.testimonials')
-  
+
     <!-- ======= About us Section ======= -->
-    @include('contents.about_us')  
+    @include('contents.about_us')
 
     <!-- ======= Contact Section ======= -->
-    @include('contents.contacts')  
+    @include('contents.contacts')
   </main>

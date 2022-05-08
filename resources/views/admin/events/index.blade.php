@@ -5,55 +5,55 @@
     <div class="container-fluid">
 
         <header>
-            <h3>Buchungen</h3>
+            <h3>{{$title}}</h3>
         </header>
 
-        <div class="row">
-            <div class="table-responsive">
-                <table class="table table-striped ">
-                    <thead>
-                        <tr>
-                            <th scope="col">Datum von</th>
-                            <th scope="col">Datum bis</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Vorname</th>
-                            <th scope="col">E-Mail</th>
-                            <th scope="col">Gruppe</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Bemerkung</th>
-                            <th scope="col">Bemerkung Intern</th>
-                            <th scope="col">Verantwortlich</th>
-                            <th scope="col">Vertrag</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if($events)
-                        @foreach ($events as $event)
-                            <tr>
-                                <td>{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} </td>
-                                <td> {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</td>
-                                <td><a href="{{route('events.edit', $event->id)}}">{{$event->name}}</a></td>
-                                <td>{{$event->firstname}}</td>
-                                <td>{{$event->email}}</td>
-                                <td>{{$event->group_name}}</td>
-                                <td>{{$event->total_amount}}.-</td>
-                                <td>{{$event->comment}}</td>
-                                <td>{{$event->comment_intern}}</td>
-                                <td>{{$event->user ? $event->user['username'] : ""}}</td>
-                                <td>{{$event->contract_status['name']}}</td>
-                                <td>{{$event->event_status['name']}}</td>
-                            </tr>
+            <div id="filter_btns">
+                <div id="date_btn">
+                    <div class="row" style="width: 20%">
+                        <div class="col-md-6">
+                             <button class="btn btn-primary">Alle</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-primary active">Ab Heute</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="status_btn">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-1">
+                            <button class="btn btn-secondary active">Alle</button>
+                        </div>
+                        @foreach ($contract_statuses as $contract_status)
+                            <div class="col-md-1">
+                                <button class="btn btn-secondary">{{$contract_status}}</button>
+                            </div>
                         @endforeach
-                        @endif
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-5">
-                    {{$events->render()}}
+                    </div>
                 </div>
             </div>
+            <input type="hidden" value="Ab Heute" id="date_btn_value">
+            <input type="hidden" value="Alle" id="status_btn_value">
+            <br>
+            <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+                <thead>
+                    <tr>
+                        <th scope="col">Datum von</th>
+                        <th scope="col">Datum bis</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Vorname</th>
+                        <th scope="col">E-Mail</th>
+                        <th scope="col">Gruppe</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Bemerkung</th>
+                        <th scope="col">Bemerkung Intern</th>
+                        <th scope="col">Verantwortlich</th>
+                        <th scope="col">Vertrag</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+            </table>
             <div class="hk-reservation hk-reservation__step1">
                 <div class="hk-reservation__container container-fluid">
                     <div class="row">
@@ -97,7 +97,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </section>
 @endsection
@@ -106,5 +105,103 @@
 
   <!-- ======= Javascript Section ======= -->
   @include('contents.event_js')
+  <script>
+      $(function () {
+          var table = $('#datatable').DataTable({
+              responsive: true,
+              processing: true,
+              serverSide: true,
+              pageLength: 10,
+              language: {
+                "url": "/lang/Datatables.json"
+              },
+              ajax: {
+                  url: "{!! route('events.CreateDataTables') !!}",
+                  data: function(d) {
+                      d.date = $('#date_btn_value').val()
+                      d.status = $('#status_btn_value').val()
+                  }
+              },
+              order: [[ 0, "asc" ]],
+              columns: [
+                  {
+                      data: {
+                          _: 'start_date.display',
+                          sort: 'start_date'
+                      },
+                      name: 'start_date.sort'
+                  },
+                  {
+                      data: {
+                          _: 'end_date.display',
+                          sort: 'end_date'
+                      },
+                      name: 'end_date.sort'
+                  },
+                  { data: 'name', name: 'name' },
+                  { data: 'firstname', name: 'firstname' },
+                  { data: 'email', name: 'email' },
+                  { data: 'group_name', name: 'group_name' },
+                  { data: 'total_amount', name: 'total_amount' },
+                  { data: 'comment', name: 'comment' },
+                  { data: 'comment_intern', name: 'comment_intern' },
+                  { data: 'user', name: 'user' },
+                  { data: 'contract_status', name: 'contract_status' },
+                  { data: 'event_status', name: 'event_status' },
+              ]
+          });
 
+          // Get the container element
+          var btnContainer_date = document.getElementById("date_btn");
+          var btnContainer_status = document.getElementById("status_btn");
+
+          // Get all buttons with class="btn" inside the container
+          var btns_date = btnContainer_date.getElementsByClassName("btn");
+          var btns_status = btnContainer_status.getElementsByClassName("btn");
+
+          // Loop through the buttons and add the active class to the current/clicked button
+          for (var i = 0; i < btns_date.length; i++) {
+              btns_date[i].addEventListener("click", function () {
+                  var current = btnContainer_date.getElementsByClassName("active");
+                  // If there's no active class
+                  if (current.length > 0) {
+                    current[0].className = current[0].className.replace(" active", "");
+                  }
+
+                  // Add the active class to the current/clicked button
+                  this.className += " active";
+                  var active_btn = this.textContent;
+                  $('#date_btn_value').val(active_btn);
+              });
+          }
+
+          // Loop through the buttons and add the active class to the current/clicked button
+          for (var i = 0; i < btns_status.length; i++) {
+              btns_status[i].addEventListener("click", function () {
+                  var current = btnContainer_status.getElementsByClassName("active");
+                  // If there's no active class
+                  if (current.length > 0) {
+                      current[0].className = current[0].className.replace(" active", "");
+                  }
+
+                  // Add the active class to the current/clicked button
+                  this.className += " active";
+                  var active_btn = this.textContent;
+                  $('#status_btn_value').val(active_btn);
+              });
+          }
+
+          var btnsContainer = document.getElementById("filter_btns");
+
+          // Get all buttons with class="btn" inside the container
+          var btns = btnsContainer.getElementsByClassName("btn");
+
+          // Loop through the buttons and add the active class to the current/clicked button
+          for (var i = 0; i < btns.length; i++) {
+              btns[i].addEventListener("click", function() {
+                  table.draw();
+              });
+          }
+      });
+  </script>
 @endsection
