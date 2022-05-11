@@ -26,11 +26,12 @@ class CreateApplicationsTable extends Migration
             $table->string('city');
             $table->string('email');
             $table->string('telephone')->nullable();
-            $table->text('why');
+            $table->text('why')->nullable();
             $table->text('comment')->nullable();
             $table->integer('bexio_user_id')->nullable();
             $table->integer('bexio_invoice_id')->nullable();
             $table->boolean('invoice_send')->default(false);
+            $table->boolean('refuse')->default(false);
         });
     }
 

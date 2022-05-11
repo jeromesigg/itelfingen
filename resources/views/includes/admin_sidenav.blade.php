@@ -90,6 +90,9 @@
             </li>
         </ul>
         <li>
+            <a  href="{{route('applications.index')}}" ><i class="fa-solid fa-user-check"></i> Bewerbungen</a>
+        </li>
+        <li>
             <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i> Benutzer</a>
         </li>
         <li><a href="/admin/changes"><i class="fas fa-clipboard-list"></i> Änderungen</a></li>

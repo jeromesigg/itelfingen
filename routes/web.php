@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::get('/impressum', 'HomeController@impressum')->name('impressum');
-Route::get('/faq', 'HomeController@faq')->name('faq');
+Route::get('impressum', 'HomeController@impressum')->name('impressum');
+Route::get('faq', 'HomeController@faq')->name('faq');
+Route::get('applications', 'ApplicationController@index')->name('applications');
+Route::post('applications/store', 'ApplicationController@store');
 Route::get('/', 'HomeController@index')->name('home');
 
 Auth::routes();
@@ -27,7 +29,7 @@ Auth::routes();
 Route::post('event/create','EventController@create');
 Route::get('event/searchajaxcity', ['as'=>'searchajaxcity','uses'=>'EventController@searchResponseCity']);
 
-Route::post('/contacts', 'ContactController@store');
+Route::post('contacts', 'ContactController@store');
 
 Route::group(['middleware' => 'admin'], function(){
 
@@ -52,8 +54,8 @@ Route::group(['middleware' => 'admin'], function(){
     Route::resource('admin/faqs', 'AdminFaqController');
     Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
     Route::resource('admin/positions', 'AdminPricelistPositionController');
-
-
+    Route::resource('admin/applications', 'AdminApplicationController');
+    Route::get('applications/createDataTables', ['as'=>'applications.CreateDataTables','uses'=>'AdminApplicationController@createDataTables']);
 });
 
 Route::get('admin/run-migrations', function () {

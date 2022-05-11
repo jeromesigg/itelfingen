@@ -4,11 +4,11 @@
 <section>
     <div class="container-fluid">
 
-        <header> 
+        <header>
             <h3>Anfragen</h3>
         </header>
-    
-        <div class="row">            
+
+        <div class="row">
             <div class="table-responsive">
                 <table class="table table-striped ">
                     <thead>
@@ -38,7 +38,7 @@
                                         {!! Form::submit('Bearbeitet', ['class' => 'btn btn-primary'])!!}
                                     {!! Form::close()!!}
                                 </td>
-                            </tr>   
+                            </tr>
                         @endforeach
                         @endif
                     </tbody>
@@ -51,6 +51,6 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 @endsection

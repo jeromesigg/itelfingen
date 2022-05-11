@@ -41,6 +41,7 @@ class HomeController extends Controller
         $events = Event::where('event_status_id','<',config('status.event_storniert'))->get();
         $event_type = 'guest';
         $discount = config('app.discount_enabled');
+        $application_enabled = config('app.application_enabled');
 
 
         $events_json = [];
@@ -76,7 +77,7 @@ class HomeController extends Controller
             'data-callback' => 'enable_EventBtn'
         ];
         return view('home', compact('homepage', 'pictures', 'events_json', 'testimonials', 'people',
-            'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount'));
+            'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount', 'application_enabled'));
     }
 
     public function impressum()
@@ -89,9 +90,10 @@ class HomeController extends Controller
     public function faq()
     {
         $homepage = Homepage::FindOrFail(1);
+        $title = "FAQ";
         $faqs = Faq::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
         $faq_chapters = FaqChapter::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
 
-        return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs'));
+        return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs', 'title'));
     }
 }
