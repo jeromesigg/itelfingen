@@ -19,4 +19,8 @@ class Application extends Model
         'invoice_send' => 'boolean',
         'refuse' => 'boolean',
     ];
+
+    public function salutations(){
+        return $this->belongsTo(Salutation::class);
+    }
 }

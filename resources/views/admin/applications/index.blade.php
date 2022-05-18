@@ -17,6 +17,8 @@
                             <th scope="col">Name</th>
                             <th scope="col">Vorname</th>
                             <th scope="col">E-Mail</th>
+                            <th scope="col">Strasse</th>
+                            <th scope="col">PLZ / Ort</th>
                             <th scope="col">Organisation</th>
                             <th scope="col">Wieso</th>
                             <th scope="col">Bemerkung</th>
@@ -60,6 +62,8 @@
                     { data: 'name', name: 'name' },
                     { data: 'firstname', name: 'firstname' },
                     { data: 'email', name: 'email' },
+                    { data: 'street', name: 'street' },
+                    { data: 'city', name: 'city' },
                     { data: 'organisation', name: 'organisation' },
                     { data: 'why', name: 'why' },
                     { data: 'comment', name: 'comment' },

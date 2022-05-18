@@ -8,6 +8,7 @@ use App\Models\Salutation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Ixudra\Curl\Facades\Curl;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
 use Spatie\GoogleCalendar\Event as Event_API;
 
@@ -52,9 +53,9 @@ class ApplicationController extends Controller
         $name = $input['firstname'] . ' ' . $input['name'];
         $email = $input['email'];
         $application = Application::create($input);
+        $application = $this->CreateContact($application);
 
         if (config('app.env') == 'production') {
-            $application = CreateContact($application);
             Slack::to('#5_genossenschaft')->send('Es hat eine neue Bewerbung gegeben. '.$application['firstname'] . ' ' . $application['name'] . ' würde gerne Genossenschafter/in werden. Grund: ' . $application['why']);
         }
 
@@ -118,6 +119,9 @@ class ApplicationController extends Controller
                     ) )
                     ->asJson(true)
                     ->post();
+            }
+            else{
+                $person = $person[0];
             }
             if(!isset($person->error)){
                 $application->update(['bexio_user_id' => $person['id']]);

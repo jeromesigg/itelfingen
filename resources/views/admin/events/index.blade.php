@@ -127,16 +127,16 @@
                   {
                       data: {
                           _: 'start_date.display',
-                          sort: 'start_date'
+                          sort: 'start_date.sort'
                       },
-                      name: 'start_date.sort'
+                      name: 'start_date'
                   },
                   {
                       data: {
                           _: 'end_date.display',
-                          sort: 'end_date'
+                          sort: 'end_date.sort'
                       },
-                      name: 'end_date.sort'
+                      name: 'end_date'
                   },
                   { data: 'name', name: 'name' },
                   { data: 'firstname', name: 'firstname' },

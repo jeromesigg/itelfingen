@@ -2,10 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Application;
 use App\Models\Event;
+use App\Models\Position;
+use App\Models\PricelistPosition;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Ixudra\Curl\Facades\Curl;
 
 class DailyTask extends Command
 {
@@ -40,15 +44,28 @@ class DailyTask extends Command
      */
     public function handle()
     {
+        $this->SendEventLastInfos();
+        $this->SendApplicationInvoices();
+    }
 
+    public function SendEventLastInfos(){
         $date = Carbon::today()->addweeks(2);
-        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt')) ->get();
+        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt'))->get();
 
-         foreach($events as $event){
+        foreach($events as $event){
             $this->GetLastInfoPDF($event);
-            $event->update(['last_info' => true]);
-         }
-         $this->info(count($events) . ' Emails versendet.');
+        }
+        $this->info(count($events) . ' Emails versendet.');
+    }
+
+    public function SendApplicationInvoices(){
+        $date = Carbon::today()->addweeks(-2);
+        $applications = Application::where('invoice_send', false)->whereNotNull('bexio_user_id')->where('created_at','<=', $date )->where('refuse', false)->get();
+
+        foreach($applications as $application){
+            $this->SendInvoice($application);
+        }
+        $this->info(count($applications) . ' Rechnungen versendet.');
     }
 
     public function GetLastInfoPDF(Event $event)
@@ -70,5 +87,77 @@ class DailyTask extends Command
                         'mime'   => 'application/pdf',
                     ]);
         });
+
+        $event->update(['last_info' => true]);
+    }
+
+    public function SendInvoice( Application $application)
+    {
+
+        $pl_position = PricelistPosition::where('bexio_code','=',300)->first();
+
+        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->withData(
+                array(
+                    'title' => 'Dein Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen',
+                    'contact_id' => $application->bexio_user_id,
+                    'user_id' => 1,
+                    'is_valid_from' => now(),
+                    'is_valid_to' => Carbon::today()->addDays(30),
+                    'api_reference' => $application['id'],
+                    'positions' => array(
+                        array(
+                            'amount' => 1,
+                            'type' => 'KbPositionArticle',
+                            'tax_id' => 16,
+                            'article_id' => $pl_position['bexio_id'],
+                            'unit_price' => $pl_position['price'],
+                            'discount_in_percent' =>  0,
+                        )
+                    )
+                )
+            )
+            ->asJson(true)
+            ->post();
+        if(isset($invoice['id'])){
+
+            $title = 'Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen';
+
+            $message = 'Guten Tag ' . $application['firstname'] . ' ' . $application['name'] .',
+
+            Vielen Dank für dein Interesse an der Genossenschaft Ferienhaus Itelfingen und deiner Bewerbung als Genossenschafter:in.
+
+            Unter folgendem Link kannst Du Deine Rechnung für Deinen Genossenschaftsschein über CHF ' . $invoice['total'] .  ' ansehen:
+            [Network Link]
+
+            Wir bitten um Bezahlung über einer der zur Verfügung stehenden Zahlungsmöglichkeiten.
+            Für Rückfragen zu dieser Rechnung stehen wir jederzeit gerne zur Verfügung.
+
+            Freundliche Grüsse,
+            Das Ferienhaus Itelfingen';
+
+            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/send')
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->withData(
+                    array(
+                        'recipient_email' => $application['email'],
+                        'subject' => $title,
+                        'message' => $message,
+                        'mark_as_open' => true
+                    )
+                )
+                ->asJson(true)
+                ->post();
+
+
+            $application->update([
+                'invoice_send' => true,
+                'bexio_invoice_id' => $invoice['id']
+                ]
+            );
+        }
     }
 }

@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('pageTitle', 'Buchungen')
 @section('content')
     <section>
         <div class="container-fluid">

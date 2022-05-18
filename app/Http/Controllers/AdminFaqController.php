@@ -7,6 +7,7 @@ use App\Models\Faq;
 use App\Models\FaqChapter;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminFaqController extends Controller
 {
@@ -18,9 +19,35 @@ class AdminFaqController extends Controller
     public function index()
     {
         //
-        $faqs = Faq::orderBy('sort-index')->paginate(10);
         $faq_chapters = FaqChapter::pluck('name','id')->all();
-        return view('admin.faqs.index', compact('faqs', 'faq_chapters'));
+        return view('admin.faqs.index', compact('faq_chapters'));
+    }
+
+    public function createDataTables()
+    {
+        $faqs = Faq::get();
+
+        return DataTables::of($faqs)
+            ->addColumn('image', function(Faq $faq){
+               $url = $faq->photo ? $faq->photo['file'] : 'https://via.placeholder.com/50';
+//               return $url;
+               return '<img height="50" src="' . $url .'" alt="" class="img-fluid">';
+            })
+            ->addColumn('name', function(Faq $faq){
+                return '<a href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
+            })
+            ->addColumn('description', function(Faq $faq){
+                return substr($faq->description,0,500);
+            })
+
+            ->addColumn('chapter', function(Faq $faq){
+                return $faq->faq_chapter->name;
+            })
+            ->addColumn('archive_status', function(Faq $faq){
+                return $faq->archive_status->name;
+            })
+            ->rawColumns(['image', 'name'])
+            ->make(true);
     }
 
     /**
@@ -79,8 +106,9 @@ class AdminFaqController extends Controller
     {
         //
         $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $faq_chapters = FaqChapter::pluck('name','id')->all();
         $faq = FAQ::findOrFail($id);
-        return view('admin.faqs.edit', compact('archive_statuses','faq'));
+        return view('admin.faqs.edit', compact('archive_statuses','faq', 'faq_chapters'));
     }
 
     /**

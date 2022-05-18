@@ -21,10 +21,11 @@
                   Fr. {{config('pricelist.other_kids')}}.- pro Nacht und Person (bis 16 Jahren)
                 </p>
               </div>
+                @if($application_enabled)
+                    <a type="button" class="btn btn-dark" href="{{route('applications')}}">Genossenschafter:in werden</a>
+                    <br>
+                @endif
             </div>
-            @if($application_enabled)
-                <a type="button" class="btn btn-dark" href="{{route('applications')}}">Genossenschafter:in <br> werden</a>
-            @endif
           </div>
           <div class="col-lg-6">
             <div class="card card_title-line_white">

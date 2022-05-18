@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\Contact;
+use App\Models\ContractStatus;
+use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminContactController extends Controller
 {
@@ -16,78 +21,45 @@ class AdminContactController extends Controller
     public function index()
     {
         //
-        $contacts = Contact::orderBy('done')->orderBy('created_at', 'DESC')->paginate(10);
-        return view('admin.contacts.index', compact('contacts'));
+        return view('admin.contacts.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function createDataTables(Request $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
         $input = $request->all();
-        $input['done'] = true;
-        $input['user_id'] = Auth::user()->id;
-        Contact::whereId($id)->first()->update($input);
-        return redirect('/admin/contacts');
+        $done = $input['done'] <> "Alle" ? false : true;
+        $contacts = Contact::where('done',$done)->orderby('created_at', 'DESC')->get();
+
+        return DataTables::of($contacts)
+            ->editColumn('created_at', function (Contact $contact) {
+                return [
+                    'display' => Carbon::parse($contact['created_at'])->format('d.m.Y'),
+                    'sort' => Carbon::parse($contact['created_at'])->diffInDays('01.01.2021')
+                ];
+            })
+            ->editColumn('user', function (Contact $contact) {
+                return $contact->user ? $contact->user['username'] : '';
+            })
+            ->editColumn('done', function (Contact $contact) {
+                return $contact->done ? 'Ja' : 'Nein';
+            })
+            ->addColumn('Actions', function(Contact $contact) {
+                $buttons = '<form action="'.\URL::route('contacts.done', $contact).'" method="POST">' . csrf_field();
+                if(!$contact['done']){
+                    $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Bearbeitet</button>';
+                };
+                $buttons .= '</form>';
+                return $buttons;
+            })
+            ->rawColumns(['name', 'Actions'])
+            ->make(true);
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function done(Contact $contact)
     {
         //
+        $contact->update(['user_id' => Auth::user()->id, 'done' => true]);
+        return redirect('/admin/contacts');
     }
 }

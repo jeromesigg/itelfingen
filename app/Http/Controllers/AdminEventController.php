@@ -75,7 +75,7 @@ class AdminEventController extends Controller
                 $query->where('contract_status_id','=',$contract_status['id']);})
             ->when($date, function($query, $date){
                 $query->where('start_date','>=',$date);})
-            ->get();
+            ->orderby('start_date')->get();
 
         return DataTables::of($events)
             ->addColumn('name', function (Event $event) {
@@ -93,13 +93,13 @@ class AdminEventController extends Controller
                     'sort' => Carbon::parse($event['end_date'])->diffInDays('01.01.2021')
                 ];
             })
-            ->addColumn('user', function (Event $event) {
+            ->editColumn('user', function (Event $event) {
                 return $event->user ? $event->user['username'] : '';
             })
-            ->addColumn('event_status', function (Event $event) {
+            ->editColumn('event_status', function (Event $event) {
                 return $event->event_status ? $event->event_status['name'] : '';
             })
-            ->addColumn('contract_status', function (Event $event) {
+            ->editColumn('contract_status', function (Event $event) {
                 return $event->contract_status ? $event->contract_status['name'] : '';
             })
             ->rawColumns(['name'])
@@ -190,11 +190,20 @@ class AdminEventController extends Controller
             $positions = Position::with('pricelist_position')->where('event_id',$id)->get()->sortBy('pricelist_position.bexio_code');
             $positions_array = [];
             foreach($positions as $position){
-                $amount = $position->pricelist_position['bexio_code'] > 200 ? max($position['amount']-3,0) : $position['amount'];
+                $amount = $position['amount'];
+                if($position->pricelist_position['bexio_code'] > 200){
+                    $amount = max($position['amount']-3,0) * $event['total_days'];
+                }
+                elseif($position->pricelist_position['bexio_code'] == 20 && $event['total_days']==0){
+                    $amount = $position['amount'] / 2;
+                }
+                else{
+                    $amount = $event['total_days'] * $position['amount'];
+                }
                 if($amount > 0){
                     array_push($positions_array,
                         array(
-                            'amount' => $position->pricelist_position['bexio_code'] < 100 ? $amount : $event['total_days'] * $amount,
+                            'amount' => $amount,
                             'type' => 'KbPositionArticle' ,
                             'tax_id' => 16,
                             'article_id' => $position->pricelist_position['bexio_id'],
@@ -474,6 +483,9 @@ class AdminEventController extends Controller
                         ) )
                     ->asJson(true)
                     ->post();
+            }
+            else{
+                $person = $person[0];
             }
             if(!isset($person->error)){
                 $event->update(['bexio_user_id' => $person['id']]);

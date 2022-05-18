@@ -48,8 +48,8 @@
             <h5>Bist du einverstanden mit den folgenden AGB's?</h5>
             <ul>
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
-                <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
-                <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innerhalb von zwei Wochen und vergibt den Genossenschafter-Status.</li>
+                <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
+                <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innerhalb von zwei Wochen und vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
             </ul>
 
             {!! Form::open(['method' => 'POST', 'action'=>'ApplicationController@store']) !!}
@@ -98,7 +98,7 @@
                 </div>
                 <div class="form-row">
                     <div class="col-md-6 form-group">
-                        {!! Form::label('why', 'Warum willst Du Genossenschafter/in werden?') !!}
+                        {!! Form::label('why', 'Warum willst Du Genossenschafter:in werden?') !!}
                         {!! Form::textarea('why', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?']) !!}
                     </div>
                     <div class="col-md-6 form-group">

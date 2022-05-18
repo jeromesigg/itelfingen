@@ -27,31 +27,28 @@
           <!-- Recent Updates Widget          -->
           <div id="new-events" class="card updates recent-updated">
             <div id="updates-header" class="card-header d-flex justify-content-between align-items-center">
-              <h2 class="h5 display"><a data-toggle="collapse" data-parent="#new-events" href="#events-box" aria-expanded="true" aria-controls="events-box">Offene Buchungen</a></h2>
+              <h2 class="h5 display"><a data-toggle="collapse" data-parent="#new-events" href="#events-box" aria-expanded="true" aria-controls="events-box">Die nächsten Buchungen</a></h2>
               <a data-toggle="collapse" data-parent="#new-events" href="#events-box" aria-expanded="true" aria-controls="events-box"><i class="fa fa-angle-down"></i></a>
             </div>
             <div id="events-box" role="tabpanel" class="collapse show">
               <ul class="news list-unstyled">
                 <!-- Item-->
-                @foreach ($events_new as $event)
+                @foreach ($events as $event)
                     <li class="d-flex justify-content-between">
-                    <div class="left-col d-flex">
-                        <div class="title"><strong>
-                                @if (Auth::user()->isManager())
-                                    <a href="{{route('events.edit', $event->id)}}">{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
-                                @else
-                                    {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
-                                @endif
-                            </strong>
-                        <p>{{$event->firstname}} {{$event->name}}@if($event->group_name), {{$event->group_name}}@endif
-                            @if($event->comment) - {{$event->comment}}@endif
-                            @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}</a>@endif
-                            </p>
+                        <div class="left-col d-flex">
+                            <div class="title"><strong>
+                                    @if (Auth::user()->isManager())
+                                        <a href="{{route('events.edit', $event->id)}}">{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
+                                    @else
+                                        {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
+                                    @endif
+                                </strong>
+                            <p>{{$event->firstname}} {{$event->name}}@if($event->group_name), {{$event->group_name}}@endif
+                                @if($event->comment) - {{$event->comment}}@endif
+                                @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}</a>@endif
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="right-col text-right">
-                        <div class="update-date">{{$event->created_at->format('d')}}<span class="month">{{$event->created_at->format('M')}}</span></div>
-                    </div>
                     </li>
                 @endforeach
               </ul>

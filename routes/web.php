@@ -51,11 +51,15 @@ Route::group(['middleware' => 'admin'], function(){
     Route::get('admin/events/{event}/sendinvoice', 'AdminEventController@SendInvoice')->name('events.sendinvoice');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendcleaningmail');
     Route::resource('admin/contacts', 'AdminContactController');
+    Route::post('contacts/{contact}/done', ['as'=>'contacts.done','uses'=>'AdminContactController@done']);
+    Route::get('contacts/createDataTables', ['as'=>'contacts.CreateDataTables','uses'=>'AdminContactController@createDataTables']);
     Route::resource('admin/faqs', 'AdminFaqController');
+    Route::get('faqs/createDataTables', ['as'=>'faqs.CreateDataTables','uses'=>'AdminFaqController@createDataTables']);
     Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
     Route::resource('admin/positions', 'AdminPricelistPositionController');
     Route::resource('admin/applications', 'AdminApplicationController');
     Route::get('applications/createDataTables', ['as'=>'applications.CreateDataTables','uses'=>'AdminApplicationController@createDataTables']);
+    Route::post('applications/{application}/refuse', ['as'=>'applications.refuse','uses'=>'AdminApplicationController@refuse']);
 });
 
 Route::get('admin/run-migrations', function () {

@@ -10,7 +10,7 @@
             </header>
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     {!! Form::open(['method' => 'POST', 'action'=>'AdminFaqController@store', 'files' => true]) !!}
                         <div class="form-group">
                             {!! Form::label('name', 'Titel:') !!}
@@ -33,35 +33,56 @@
                         </div>
                     {!! Form::close()!!}
                 </div>
-                <div class="col-sm-6">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col" width="10%">Photo</th>
-                                <th scope="col" width="10%">Titel</th>
-                                <th scope="col" width="55%">Beschreibung</th>
-                                <th scope="col" width="55%">Kapitel</th>
-                                <th scope="col" width="5%">Archiv-Status</th>
-                                <th scope="col" width="5%">Sort-Index</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if($faqs)
-                            @foreach ($faqs as $faq)
+                <div class="col-sm-8">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+                            <thead>
                                 <tr>
-                                    <td><img height="50" src="{{$faq->photo ? $faq->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
-                                    <td><a href="{{route('faqs.edit', $faq->id)}}">{{$faq->name}}</a></td>
-                                    <td>{{$faq->description}}</td>
-                                    <td>{{$faq->faq_chapter['name']}}</td>
-                                    <td>{{$faq->archive_status['name']}}</td>
-                                    <td>{{$faq['sort-index']}}</td>
-                                    </tr>
-                            @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                    <th scope="col" >Photo</th>
+                                    <th scope="col">Titel</th>
+                                    <th scope="col">Beschreibung</th>
+                                    <th scope="col">Kapitel</th>
+                                    <th scope="col" >Archiv-Status</th>
+                                    <th scope="col">Sort-Index</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+
+    <!-- ======= Javascript Section ======= -->
+    <script>
+        $(function () {
+            var table = $('#datatable').DataTable({
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                pageLength: 25,
+                language: {
+                    "url": "/lang/Datatables.json"
+                },
+                ajax: {
+                    url: "{!! route('faqs.CreateDataTables') !!}",
+                },
+                order: [[ 5, "asc" ]],
+                columns: [
+                    { data: 'image', name: 'image' },
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' },
+                    { data: 'chapter', name: 'chapter' },
+                    { data: 'archive_status', name: 'archive_status' },
+                    { data: 'sort-index', name: 'sort-index' },
+                ]
+                {{--                                        <td><img height="50" src="{{$faq->photo ? $faq->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>--}}
+                {{--                                        <td><a href="{{route('faqs.edit', $faq->id)}}">{{$faq->name}}</a></td>--}}
+
+            });
+        });
+    </script>
 @endsection

@@ -22,10 +22,16 @@
                         {!! Form::label('photo_id', 'Photo:') !!}
                         {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('archive_status_id', 'Archiv Status:') !!}
-                        {!! Form::select('archive_status_id', $archive_statuses, null, ['class' => 'form-control', 'required']) !!}
-                    </div>
+                     <div class="form-row">
+                         <div class="col-md-6 form-group">
+                             {!! Form::label('faq_chapter_id', 'Kapitel:') !!}
+                             {!! Form::select('faq_chapter_id', $faq_chapters, null, ['class' => 'form-control', 'required']) !!}
+                         </div>
+                        <div class="col-md-6 form-group">
+                            {!! Form::label('archive_status_id', 'Archiv Status:') !!}
+                            {!! Form::select('archive_status_id', $archive_statuses, null, ['class' => 'form-control', 'required']) !!}
+                        </div>
+                     </div>
                     <div class="form-group">
                         {!! Form::submit('FAQ updaten', ['class' => 'btn btn-primary'])!!}
                     </div>

@@ -35,7 +35,7 @@
                 <td>{{$telephone}}<td>
             </tr>
             <tr>
-                <th scope="row" style="text-align:left">Wieso willst du Genossenschafter werden?:</th>
+                <th scope="row" style="text-align:left">Wieso willst du Genossenschafter:in werden?</th>
                 <td>{{$why}}<td>
             </tr>
             <tr>
@@ -44,6 +44,6 @@
             </tr>
         </tbody>
     </table>
-    Sobald deine Bewerbung überprüft wurde, erhälst Du von Deine Rechnung per E-Mail.
+    Sobald deine Bewerbung überprüft wurde, erhälst Du von uns Deine Rechnung für deinen Genossenschaftsschein über CHF 100.- per E-Mail.
 </body>
 </html>
