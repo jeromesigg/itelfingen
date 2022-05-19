@@ -50,14 +50,14 @@
                 ajax: {
                     url: "{!! route('applications.CreateDataTables') !!}",
                 },
-                order: [[ 0, "asc" ]],
+                order: [[ 0, "desc" ]],
                 columns: [
                     {
                         data: {
                             _: 'created_at.display',
-                            sort: 'created_at'
+                            sort: 'created_at.sort'
                         },
-                        name: 'created_at.sort'
+                        name: 'created_at'
                     },
                     { data: 'name', name: 'name' },
                     { data: 'firstname', name: 'firstname' },

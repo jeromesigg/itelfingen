@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Application;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Revolution\Google\Sheets\Facades\Sheets;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminApplicationController extends Controller
@@ -114,7 +115,9 @@ class AdminApplicationController extends Controller
     {
         //
         $input['refuse'] = true;
+
         $application->update($input);
+
         return redirect('/admin/applications');
     }
 

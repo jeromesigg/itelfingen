@@ -25,6 +25,7 @@
         "nao-pon/flysystem-google-drive": "~1.1",
         "nicolaslopezj/searchable": "^1.13",
         "phpoffice/phpword": "^0.18.2",
+        "revolution/laravel-google-sheets": "^5.8",
         "spatie/laravel-cookie-consent": "^2.12",
         "spatie/laravel-google-calendar": "^3.3",
         "yajra/laravel-datatables-oracle": "^9.19"

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Ixudra\Curl\Facades\Curl;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class DailyTask extends Command
 {
@@ -152,12 +153,34 @@ class DailyTask extends Command
                 ->asJson(true)
                 ->post();
 
+//
+//            $application->update([
+//                    'invoice_send' => true,
+//                    'bexio_invoice_id' => $invoice['id']
+//                ]
+//            );
 
-            $application->update([
-                'invoice_send' => true,
-                'bexio_invoice_id' => $invoice['id']
-                ]
-            );
+            // Write to Google Sheet
+            $array = [[
+                'ID' => $application['id'],
+                'Datum' =>  Carbon::parse($application['created_at'])->format('d.m.Y'),
+                'Anrede' => $application->salutation['name'],
+                'Name' => $application['name'],
+                'Vorname' => $application['firstname'],
+                'Organisation' => $application['organisation'],
+                'E-Mail' => $application['email'],
+                'Strasse' => $application['street'],
+                'PLZ' => $application['plz'],
+                'Ort' => $application['city'],
+                'Telefon' => $application['telephone'],
+                'Grund' => $application['why'],
+                'Bemerkung' => $application['comment'],
+                'Bexio User' => $application['bexio_user_id'],
+                'Bexio Rechnung' => $application['bexio_invoice_id'],
+            ]];
+            // Add new sheet to the configured google spreadsheet
+            Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
+
         }
     }
 }

@@ -20,7 +20,7 @@ class Application extends Model
         'refuse' => 'boolean',
     ];
 
-    public function salutations(){
+    public function salutation(){
         return $this->belongsTo(Salutation::class);
     }
 }
