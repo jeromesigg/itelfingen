@@ -49,6 +49,7 @@ Route::group(['middleware' => 'admin'], function(){
     Route::get('admin/events/{event}/sendoffer', 'AdminEventController@SendOffer')->name('events.sendoffer');
     Route::get('admin/events/{event}/createinvoice', 'AdminEventController@CreateInvoice')->name('events.createinvoice');
     Route::get('admin/events/{event}/sendinvoice', 'AdminEventController@SendInvoice')->name('events.sendinvoice');
+
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendcleaningmail');
     Route::resource('admin/contacts', 'AdminContactController');
     Route::post('contacts/{contact}/done', ['as'=>'contacts.done','uses'=>'AdminContactController@done']);

@@ -3,7 +3,7 @@
 
     <section>
         <div class="container-fluid">
-            <header> 
+            <header>
                 <h3 class="display">Homepage bearbeiten</h3>
             </header>
             <div class="row">
@@ -15,12 +15,16 @@
                     </div>
                     <div class="form-group">
                         {!! Form::label('subtitle', 'Beschreibung:') !!}
-                        {!! Form::text('subtitle', null, ['class' => 'form-control', 'required']) !!}
+                        {!! Form::text('subtitle', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-group">
                         {!! Form::label('address', 'Adresse:') !!}
                         {!! Form::textarea('address', null, ['class' => 'form-control', 'required', 'rows' =>3]) !!}
                     </div>
+                     <div class="form-group">
+                         {!! Form::label('postaddress', 'Post-Adresse:') !!}
+                         {!! Form::textarea('postaddress', null, ['class' => 'form-control', 'required', 'rows' =>3]) !!}
+                     </div>
                     <div class="form-group">
                         {!! Form::label('mail', 'E-Mail:') !!}
                         {!! Form::text('mail', null, ['class' => 'form-control']) !!}
@@ -49,16 +53,16 @@
                         {!! Form::label('small_login_photo_id', 'Kleines Photo Login:') !!}
                         {!! Form::file('small_login_photo_id', null, ['class' => 'form-control']) !!}
                     </div>
-  
+
                     <div class="form-group">
                         {!! Form::submit('Homepage Updaten', ['class' => 'btn btn-primary'])!!}
                     </div>
                     {!! Form::close()!!}
-                </div>   
-            </div>   
-            <div class="row"> 
+                </div>
+            </div>
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
     </section>
 @endsection

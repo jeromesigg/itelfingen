@@ -4,7 +4,7 @@
 
   @include('includes.header')
   <div id="app">
-        
+
     <main id="main">
       <section class="breadcrumbs">
         <div class="container">
@@ -17,8 +17,49 @@
           </div>
         </div>
       </section>
-  
-      <section class="inner-page contact">
+        @if(count($people)>0)
+            <section id="about_us" class="about_us">
+                <div class="container" data-aos="fade-up">
+
+                    <div class="section-title">
+                        <h2>Über uns</h2>
+                        <p>Was macht die Genossenschaft Ferienhaus Itelfingen</p>
+                    </div>
+
+                    <div class="row">
+                         <p>
+                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                             sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+                             At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                         </p>
+                    </div>
+                    <br>
+                    <div class="section-title">
+                        <p>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</p>
+                    </div>
+
+                    <div class="row">
+
+                        @foreach ($people as $person)
+                            <div class="col-lg-4 col-md-6">
+                                <div class="member" data-aos="zoom-in" data-aos-delay="100">
+                                    <img src="{{$person->photo ? $person->photo->file : 'https://loremflickr.com/350/400/face?random='. $person->id}}" class="img-fluid" alt="">
+                                    <div class="member-info">
+                                        <div class="member-info-content">
+                                            <h4>{{$person->name}}</h4>
+                                            <span>{{$person->function}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
+
+        <section class="inner-page contact">
         <div class="container">
           <div class="row mt-5">
 
@@ -36,19 +77,19 @@
                   <h4>Postadresse:</h4>
                   <p>{!! nl2br($homepage->postaddress) !!}</p>
                 </div>
-      
+
                 <div class="email">
                   <i class="icofont-envelope"></i>
                   <h4>Email:</h4>
                   <p>{{$homepage->mail}}</p>
                 </div>
-      
-                <div class="phone">
-                  <i class="icofont-phone"></i>
-                  <h4>Tel. P (abends):</h4>
-                  <p>{{$homepage->phone}}</p>
-                </div>
-      
+
+{{--                <div class="phone">--}}
+{{--                  <i class="icofont-phone"></i>--}}
+{{--                  <h4>Tel. P (abends):</h4>--}}
+{{--                  <p>{{$homepage->phone}}</p>--}}
+{{--                </div>--}}
+
               </div>
             </div>
               <div class="col-lg-8 mt-5 mt-lg-0">
@@ -57,8 +98,8 @@
           </div>
         </div>
       </section>
-  
-    </main><!-- End #main --> 
+
+    </main><!-- End #main -->
         <!-- ======= Footer ======= -->
     <footer id="footer">
 
@@ -70,7 +111,7 @@
     </footer><!-- End Footer -->
     <div id="preloader"></div>
     <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
-    
+
     {{-- @include('cookieConsent::index') --}}
   </div>
 @endsection

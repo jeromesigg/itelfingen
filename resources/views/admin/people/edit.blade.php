@@ -3,7 +3,7 @@
 
     <section>
         <div class="container-fluid">
-            <header> 
+            <header>
                 <h3 class="display">Person bearbeiten</h3>
             </header>
             <div class="row">
@@ -21,15 +21,19 @@
                         {!! Form::label('photo_id', 'Photo:') !!}
                         {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
                     </div>
+                     <div class="form-group">
+                         {!! Form::label('sort-index', 'Sort-Index:') !!}
+                         {!! Form::number('sort-index', null, ['class' => 'form-control']) !!}
+                     </div>
                     <div class="form-group">
                         {!! Form::submit('Person Updaten', ['class' => 'btn btn-primary'])!!}
                     </div>
                     {!! Form::close()!!}
-                </div>   
-            </div>   
-            <div class="row"> 
+                </div>
+            </div>
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
     </section>
 </div>

@@ -15,10 +15,10 @@
                   Reinigungsspauschale {{config('pricelist.cleaning')}}.-
                   <span class="card_subtitle">Genossenschafter:innen</span>
                   Fr. {{config('pricelist.member_adults')}}.- pro Nacht und Person (ab 16 Jahren) <br>
-                  Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (bis 16 Jahren)
+                  Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (6-16 Jahren)
                   <span class="card_subtitle">Privatpersonen</span>
                   Fr. {{config('pricelist.other_adults')}}.- pro Nacht und Person (ab 16 Jahren) <br>
-                  Fr. {{config('pricelist.other_kids')}}.- pro Nacht und Person (bis 16 Jahren)
+                  Fr. {{config('pricelist.other_kids')}}.- pro Nacht und Person (6-16 Jahren)
                 </p>
               </div>
                 @if($application_enabled)

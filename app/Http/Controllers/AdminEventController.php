@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Ixudra\Curl\Facades\Curl;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
+use setasign\Fpdi\Fpdi;
 use Spatie\GoogleCalendar\Event as Event_API;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -72,7 +73,9 @@ class AdminEventController extends Controller
         $date = $input['date'] <> "Alle" ? Carbon::today() : NULL;
         $events = Event::
             when($contract_status, function($query, $contract_status){
-                $query->where('contract_status_id','=',$contract_status['id']);})
+                $query->where('contract_status_id','=',$contract_status['id']);
+            },  function($query){
+                $query->where('contract_status_id','<',config('status.contract_storniert'));})
             ->when($date, function($query, $date){
                 $query->where('start_date','>=',$date);})
             ->orderby('start_date')->get();
@@ -170,9 +173,10 @@ class AdminEventController extends Controller
         //
         $event = Event::findOrFail($id);
         $input = $request->all();
-
-        foreach($input['positions'] as $index => $plposition){
-            Position::where('id', $index)->update(['amount' => $plposition]);
+        if(isset($input['positions'])) {
+            foreach ($input['positions'] as $index => $plposition) {
+                Position::where('id', $index)->update(['amount' => $plposition]);
+            }
         }
         $event->update($input);
         return redirect()->back();
@@ -503,6 +507,7 @@ class AdminEventController extends Controller
         $event->update(['cleaning_mail' => true]);
         return redirect()->back();
     }
+
 
     /**
      * Remove the specified resource from storage.

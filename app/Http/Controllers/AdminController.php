@@ -20,7 +20,7 @@ class AdminController extends Controller
     public function index(){
         $events_all = Event::where('event_status_id','<',config('status.event_eigene'))->count();
         $events_new = Event::where('event_status_id',config('status.event_neu'))->orderBy('start_date')->get();
-        $events = Event::where('start_date','>=',today())->orderBy('start_date')->get();
+        $events = Event::where('start_date','>=',today())->where('event_status_id','<>',config('status.event_storniert'))->orderBy('start_date')->get();
         $contract_open = Event::where('contract_status_id',config('status.contract_versendet'))->count();
         $contacts_new = Contact::where('done',false)->orderBy('created_at', 'DESC')->get();
 

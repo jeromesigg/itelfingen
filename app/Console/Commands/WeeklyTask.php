@@ -43,22 +43,27 @@ class WeeklyTask extends Command
     public function handle()
     {
         $date = Carbon::today()->addMonths(2);
-        $events_new = Event::where('event_status_id','=', config('status.event_neu'))->get();
+        $events_new = Event::where('event_status_id','=', config('status.event_neu'))
+            ->orderby('start_date')->get();
         $events_open_offers = Event::where('start_date','<=', $date )
             ->where('contract_status_id','<=', config('status.contract_angebot_versendet'))
             ->where('event_status_id','<=', config('status.event_bestaetigt'))
-            ->where('event_status_id','<>', config('status.event_storniert'))->get();
+            ->where('event_status_id','<>', config('status.event_storniert'))
+            ->orderby('start_date')->get();;
         $events_no_cleaning_mail = Event::where('start_date','<=', $date )
             ->where('cleaning_mail',false)
             ->where('event_status_id','<>', config('status.event_eigene'))
-            ->where('event_status_id','<>', config('status.event_storniert'))->get();
+            ->where('event_status_id','<>', config('status.event_storniert'))
+            ->orderby('start_date')->get();;
         $events_no_code = Event::where('start_date','<=', $date )
             ->where('start_date','>', Carbon::today())
             ->where('event_status_id','<>', config('status.event_storniert'))
-            ->whereNull('code')->get();
+            ->whereNull('code')
+            ->orderby('start_date')->get();;
         $events_no_invoice = Event::where('end_date','<', Carbon::today())
             ->where('event_status_id','<>', config('status.event_storniert'))
-            ->where('contract_status_id','=', config('status.contract_rechnung_erstellt'))->get();
+            ->where('contract_status_id','=', config('status.contract_rechnung_erstellt'))
+            ->orderby('start_date')->get();;
         $contacts_new = Contact::where('done',false)->get();
 
         $event_array =collect([
