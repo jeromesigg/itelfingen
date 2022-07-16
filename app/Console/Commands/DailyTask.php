@@ -237,12 +237,12 @@ class DailyTask extends Command
                 ->asJson(true)
                 ->post();
 
-//
-//            $application->update([
-//                    'invoice_send' => true,
-//                    'bexio_invoice_id' => $invoice['id']
-//                ]
-//            );
+
+            $application->update([
+                    'invoice_send' => true,
+                    'bexio_invoice_id' => $invoice['id']
+                ]
+            );
 
             // Write to Google Sheet
             $array = [[

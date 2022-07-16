@@ -80,12 +80,11 @@ class EventController extends Controller
         Mail::send('emails.send_event',  $input, function($message) use($email, $name){
             $message
                 ->to($email, $name)
+                ->bcc(config('mail.from.address'), config('mail.from.name'))
                 ->replyto(config('mail.from.address'), config('mail.from.name'))
                 ->subject('Ihre Buchung für das Ferienhaus Itelfingen');
         });
-        Mail::send('emails.send_event',  $input, function($message){
-          $message->to(config('mail.from.address'), config('mail.from.name'))->subject('Buchung für das Ferienhaus Itelfingen');
-        });
+
         return redirect()->to(url()->previous() . '#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden.');
     }
 
