@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\WeeklyMail;
 use App\Models\Contact;
 use App\Models\Event;
 use Carbon\Carbon;
@@ -74,14 +75,6 @@ class WeeklyTask extends Command
             ['text' => "Folgende Buchungen haben noch keine Rechnung erhalten.",'events'=>$events_no_invoice],
         ]);
 
-
-
-        $data["title"] = "Wöchentliches Erinnerungsmail";
-
-        Mail::send('emails.weekly_reminder', compact('data', 'contacts_new', 'event_array'), function($message)use($data) {
-            $message->to(config('mail.from.address'), config('mail.from.name'))
-                    ->subject($data["title"]);
-        });
-
+        Mail::send(new WeeklyMail($event_array, $contacts_new));
     }
 }

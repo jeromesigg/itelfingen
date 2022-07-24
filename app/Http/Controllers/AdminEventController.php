@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Helper;
+use App\Mail\CleaningSent;
+use App\Mail\SendEventInvoiceMail;
+use App\Mail\SendOffersMail;
 use App\Models\ContractStatus;
 use App\Models\Event;
 use App\Models\EventStatus;
@@ -325,7 +328,8 @@ class AdminEventController extends Controller
                     ->withBearer(config('app.bexio_token'))
                     ->withData(
                         array(
-                            'is_valid_to' => Carbon::create($event->end_date)->addDays(14)
+                            'is_valid_to' => Carbon::create($event->end_date)->addDays(30),
+                            'api_reference' => $event['id'],
                         )
                     )
                     ->post();
@@ -352,27 +356,27 @@ class AdminEventController extends Controller
         if(isset($invoice['id'])) {
 
 
-            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
-            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-
-            $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->asJson(true)
-                ->get();
-
-            if (!isset($invoice_pdf['error_code'])) {
-                $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
-                $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
-                $name_pdf = 'Rechnung_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
-                Storage::disk('google')->put($name_pdf, base64_decode($invoice_pdf['content']));
-
-            }
-            else{
-                abort($invoice_pdf['error_code'], $invoice_pdf['message']);
-            }
-
             if (config('app.env') == 'production') {
+                $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
+                $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
+
+                $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
+                    ->withHeader('Accept: application/json')
+                    ->withBearer(config('app.bexio_token'))
+                    ->asJson(true)
+                    ->get();
+
+                if (!isset($invoice_pdf['error_code'])) {
+                    $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
+                    $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
+                    $name_pdf = 'Rechnung_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
+                    Storage::disk('google')->put($name_pdf, base64_decode($invoice_pdf['content']));
+
+                }
+                else{
+                    abort($invoice_pdf['error_code'], $invoice_pdf['message']);
+                }
+
                 Slack::send('Es hat eine neue Buchung gegeben. Vom ' . $start_date . ' bis ' . $end_date . ' Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
                 $event_api = new Event_API;
                 $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
@@ -430,10 +434,10 @@ class AdminEventController extends Controller
                 )
                 ->asJson(true)
                 ->post();
-        }
 
-        $event->update([
-            'contract_status_id' => config('status.contract_rechnung_versendet')]);
+            $event->update([
+                'contract_status_id' => config('status.contract_rechnung_versendet')]);
+        }
 
         return redirect()->back();
     }
@@ -500,9 +504,8 @@ class AdminEventController extends Controller
 
     public function SendCleaningMail(Request $request, $id){
         $input = $request->all();
-        Mail::raw($input['cleaning_mail_text'],  function($message) use($input){
-          $message->to($input['cleaning_mail_address'])->bcc(config('mail.from.address'), config('mail.from.name'))->subject('Reiningungsanfrage Ferienhaus Itelfingen');
-        });
+//        return (new CleaningCreated($input['cleaning_mail_address'], $input['cleaning_mail_text']));
+        Mail::send(new CleaningSent($input['cleaning_mail_address'], $input['cleaning_mail_text']));
         $event = Event::findOrFail($id);
         $event->update(['cleaning_mail' => true]);
         return redirect()->back();

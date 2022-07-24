@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ApplicationCreated;
 use App\Models\Application;
 use App\Models\Homepage;
 use App\Models\Salutation;
@@ -50,8 +51,6 @@ class ApplicationController extends Controller
         $input = $request->all();
 
         $input['plz'] = $input['zipcode'];
-        $name = $input['firstname'] . ' ' . $input['name'];
-        $email = $input['email'];
         $application = Application::create($input);
         $application = $this->CreateContact($application);
 
@@ -59,13 +58,8 @@ class ApplicationController extends Controller
             Slack::to('#5_genossenschaft')->send('Es hat eine neue Bewerbung gegeben. '.$application['firstname'] . ' ' . $application['name'] . ' würde gerne Genossenschafter/in werden. Grund: ' . $application['why']);
         }
 
-        Mail::send('emails.send_application',  $input, function($message) use($email, $name){
-            $message
-                ->to($email, $name)
-                ->replyto(config('mail.from.address_application'), config('mail.from.name'))
-                ->subject('Deine Bewerbung für die Genossenschaft Ferienhaus Itelfingen');
-        });
-
+//        return (new ApplicationCreated($contact));
+        Mail::send(new ApplicationCreated($application));
 
         return redirect()->to(url()->previous())->with('success', 'Vielen Dank für deine Bewerbung. Wir werden sie überprüfen und melden uns in zwei Wochen.');
     }

@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Helper\Helper;
+use App\Mail\ApplicationInvoiceMail;
+use App\Mail\FeedbackMail;
+use App\Mail\LastInfosSent;
 use App\Models\Application;
 use App\Models\Event;
 use App\Models\Position;
@@ -12,7 +16,6 @@ use Illuminate\Support\Facades\Mail;
 use Ixudra\Curl\Facades\Curl;
 use Revolution\Google\Sheets\Facades\Sheets;
 use setasign\Fpdi\Fpdi;
-use Illuminate\Support\Facades\Storage;
 
 class DailyTask extends Command
 {
@@ -49,6 +52,7 @@ class DailyTask extends Command
     {
         $this->SendEventLastInfos();
         $this->SendApplicationInvoices();
+        $this->SendFeedbackMails();
     }
 
     public function SendEventLastInfos(){
@@ -56,129 +60,39 @@ class DailyTask extends Command
         $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt'))->get();
 
         foreach($events as $event){
-            $this->GetLastInfoPDF($event);
-        }
-        if(count($events)>0) {
-            $this->info(count($events) . ' Emails versendet.');
+            Mail::send(new LastInfosSent($event));
+            $event->update(['last_info' => true]);
+        }        if(count($events)>0) {
+            $this->info(count($events) . ' Letzte Infos-Emails versendet.');
         }
     }
 
-    public function SendApplicationInvoices(){
-        $date = Carbon::today()->addweeks(-2);
-        $applications = Application::where('invoice_send', false)->whereNotNull('bexio_user_id')->where('created_at','<=', $date )->where('refuse', false)->get();
+    public function SendFeedbackMails(){
+        $date = Carbon::today()->addweeks(-1);
+        $events = Event::where('feedback_mail', false)->where('end_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt'))->get();
 
-        foreach($applications as $application){
-            $this->SendInvoice($application);
+        foreach($events as $event){
+            Mail::send(new FeedbackMail($event));
+            $event->update(['feedback_mail' => true]);
+        }        if(count($events)>0) {
+            $this->info(count($events) . ' Feedback-Mails versendet.');
         }
-        if(count($applications)>0) {
+    }
+
+    public function SendApplicationInvoices()
+    {
+        $date = Carbon::today()->addweeks(-2);
+        $applications = Application::where('invoice_send', false)->whereNotNull('bexio_user_id')->where('created_at', '<=', $date)->where('refuse', false)->get();
+
+        foreach ($applications as $application) {
+            $this->SendApplicationInvoice($application);
+        }
+        if (count($applications) > 0) {
             $this->info(count($applications) . ' Rechnungen versendet.');
         }
     }
 
-    public function GetLastInfoPDF(Event $event)
-    {
-        $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
-
-        $data["email"] = $event['email'];
-        $data["title"] = "Die letzten Infos zu ihrem Aufenthalt im Ferienhaus Itelfingen";
-        $data["firstname"] = $event['firstname'];
-        $data["name"] = $event['name'];
-        $data["code"] = $event['code'];
-        $outputFile = $this->PrintParking($event);
-        Mail::send('emails.last_infos', $data, function($message)use($data, $PdfPath, $outputFile) {
-            $message->to($data["email"], $data['firstname'] . ' ' . $data["name"])
-                    ->bcc(config('mail.from.address'), config('mail.from.name'))
-                    ->subject($data["title"])
-                    ->attach($PdfPath, [
-                        'as'    => 'Infos_vor_Buchung.pdf',
-                        'mime'   => 'application/pdf',
-                    ])
-                    ->attach($outputFile, [
-                        'as'    => 'Parkkarte.pdf',
-                        'mime'   => 'application/pdf',
-                    ]);
-        });
-
-        $event->update(['last_info' => true]);
-    }
-
-    public function PrintParking(Event $event){
-        $outputFile = Storage::disk('local')->path('files/Parkkarten/'.$event['id'].'.pdf');
-        // fill data
-        $this->fillPDF(storage_path('app/files/Parkkarte.pdf'), $outputFile, $event);
-        //output to browser
-        return $outputFile;
-    }
-
-    public function fillPDF($file, $outputFile, Event $event)
-    {
-        define('FPDF_FONTPATH',public_path('fonts'));
-        $fpdi = new FPDI;
-        $fpdi->AddFont("TitilliumWeb-Light");
-        // merger operations
-        $count = $fpdi->setSourceFile($file);
-
-        $first_row = 28;
-        $row_height = 10;
-
-        $pl_position = PricelistPosition::where('bexio_code','=',210)->first();
-        $positions = Position::where('pricelist_position_id',$pl_position['id'])->where('event_id',$event['id'])->first();
-        $parking = $positions['amount']<=3 ? 3 : $positions['amount'];
-        $parking .=  ' Parkplätze';
-
-        $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
-        $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-
-        $write_array = array(
-            array(
-                'text' =>   $event['firstname'] . ' ' . $event['name']
-            ),
-            array(
-                'text' => $parking
-            ),
-            array(
-                'text' => $start_date  . ' bis ' . $end_date
-            ),
-        );
-
-        $phone_array = array(
-            array(
-                'text' => 'Vermieter: verwalter@itelfingen.ch'
-            ),
-            array(
-                'text' => 'Mieter: ' . $event['telephone']
-            )
-        );
-
-
-        for ($i=1; $i<=$count; $i++) {
-            $template   = $fpdi->importPage($i);
-            $size = $fpdi->getTemplateSize($template);
-            $fpdi->AddPage($size['orientation'], array($size['width'], $size['height']));
-            $fpdi->useTemplate($template);
-            $fpdi->SetFont("TitilliumWeb-Light", "", 16);
-            $fpdi->SetTextColor(0, 0, 0);
-            $fpdi->Ln($first_row);
-            foreach ($write_array as $write) {
-                $fpdi->Ln($row_height);
-
-                $write['text'] = iconv('utf-8', 'cp1252', $write['text']);
-                $fpdi->Cell(0,10, $write['text'], 0,1,"C");
-            }
-            $fpdi->Ln(29);
-            $fpdi->Cell(20);
-            foreach ($phone_array as $phone) {
-
-                $phone['text'] = iconv('utf-8', 'cp1252', $phone['text']);
-                $fpdi->Cell(100,0, $phone['text']);
-            }
-        }
-        return $fpdi->Output($outputFile, 'F');
-    }
-
-    public function SendInvoice( Application $application)
-    {
-
+    public function SendApplicationInvoice($application){
         $pl_position = PricelistPosition::where('bexio_code','=',300)->first();
 
         $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
@@ -244,26 +158,26 @@ class DailyTask extends Command
                 ]
             );
 
-            // Write to Google Sheet
-            $array = [[
-                'ID' => $application['id'],
-                'Datum' =>  Carbon::parse($application['created_at'])->format('d.m.Y'),
-                'Anrede' => $application->salutation['name'],
-                'Name' => $application['name'],
-                'Vorname' => $application['firstname'],
-                'Organisation' => $application['organisation'],
-                'E-Mail' => $application['email'],
-                'Strasse' => $application['street'],
-                'PLZ' => $application['plz'],
-                'Ort' => $application['city'],
-                'Telefon' => $application['telephone'],
-                'Grund' => $application['why'],
-                'Bemerkung' => $application['comment'],
-                'Bexio User' => $application['bexio_user_id'],
-                'Bexio Rechnung' => $application['bexio_invoice_id'],
-            ]];
-            // Add new sheet to the configured google spreadsheet
-            Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
+        // Write to Google Sheet
+        $array = [[
+            'ID' => $application['id'],
+            'Datum' =>  Carbon::parse($application['created_at'])->format('d.m.Y'),
+            'Anrede' => $application->salutation['name'],
+            'Name' => $application['name'],
+            'Vorname' => $application['firstname'],
+            'Organisation' => $application['organisation'],
+            'E-Mail' => $application['email'],
+            'Strasse' => $application['street'],
+            'PLZ' => $application['plz'],
+            'Ort' => $application['city'],
+            'Telefon' => $application['telephone'],
+            'Grund' => $application['why'],
+            'Bemerkung' => $application['comment'],
+            'Bexio User' => $application['bexio_user_id'],
+            'Bexio Rechnung' => $application['bexio_invoice_id'],
+        ]];
+        // Add new sheet to the configured google spreadsheet
+        Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
 
         }
     }

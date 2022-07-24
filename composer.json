@@ -22,6 +22,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.1",
+        "magarrent/laravel-currency-formatter": "^1.0",
         "nao-pon/flysystem-google-drive": "~1.1",
         "nicolaslopezj/searchable": "^1.13",
         "phpoffice/phpword": "^0.18.2",

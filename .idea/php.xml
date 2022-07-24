@@ -146,6 +146,7 @@
       <path value="$PROJECT_DIR$/vendor/pulkitjalan/google-apiclient" />
       <path value="$PROJECT_DIR$/vendor/setasign/fpdf" />
       <path value="$PROJECT_DIR$/vendor/setasign/fpdi" />
+      <path value="$PROJECT_DIR$/vendor/magarrent/laravel-currency-formatter" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

@@ -153,6 +153,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/pulkitjalan/google-apiclient" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdf" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/magarrent/laravel-currency-formatter" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
