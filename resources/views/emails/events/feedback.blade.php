@@ -4,6 +4,8 @@
     <br><br>
     Du konntest letzte Woche einen Aufenthalt in unserem Ferienhaus Itelfingen geniessen. Wir hoffen, dass alles funktioniert hat und du wunderbare Tage verbringen konntest.
     <br>
+    Sollte sich etwas an den Anzahl Übernachtung gegenüber der Offerte geändert haben, kannst du und dies gerne noch melden.
+    <br>
     Bitte fülle noch die Rückmeldung aus, damit wir uns in Zukunft noch weiter verbessern können.
     @component('mail::button', ['url' => 'https://forms.gle/RMWyPzs8wauakQam9', 'color' => 'success'])
         Zum Feedback-Formular
