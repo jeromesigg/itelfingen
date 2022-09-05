@@ -22,15 +22,17 @@ class ApplicationInvoiceMail extends Mailable
      * @var \App\Models\Application
      */
     protected $application;
+    protected $invoice;
     /**
      * Create a new message instance.
      *
      * @param  \App\Models\Application  $application
      * @return void
      */
-    public function __construct(Application $application)
+    public function __construct(Application $application, $invoice)
     {
         $this->application = $application;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -42,46 +44,20 @@ class ApplicationInvoiceMail extends Mailable
     {
         $application = $this->application;
 
-        if(isset($invoice['id'])){
-
-            $title = 'Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen';
-
-            $message = 'Guten Tag ' . $application['firstname'] . ' ' . $application['name'] .',
-
-            Vielen Dank für dein Interesse an der Genossenschaft Ferienhaus Itelfingen und deiner Bewerbung als Genossenschafter:in.
-
-            Unter folgendem Link kannst Du Deine Rechnung für Deinen Genossenschaftsschein über CHF ' . $invoice['total'] .  ' ansehen:
-            [Network Link]
-
-            Wir bitten um Bezahlung über einer der zur Verfügung stehenden Zahlungsmöglichkeiten.
-            Für Rückfragen zu dieser Rechnung stehen wir jederzeit gerne zur Verfügung.
-
-            Freundliche Grüsse,
-            Das Ferienhaus Itelfingen';
-
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/send')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    array(
-                        'recipient_email' => $application['email'],
-                        'subject' => $title,
-                        'message' => $message,
-                        'mark_as_open' => true
-                    )
-                )
-                ->asJson(true)
-                ->post();
+        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $this->invoice['id'] . '/pdf')
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->asJson(true)
+            ->get();
 
 
-            $application->update([
-                    'invoice_send' => true,
-                    'bexio_invoice_id' => $invoice['id']
-                ]
-            );
+        return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link']])
+            ->to($application['email'], $application['firstname'] . ' ' . $application['name'])
+            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->subject('Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen')
+            ->attachData(base64_decode($invoice_pdf['content']), 'Rechnung.pdf', [
+                'mime' => 'application/pdf',
+            ]);
 
-
-        }
-        return $this->markdown('emails.applications.invoice');
     }
 }
