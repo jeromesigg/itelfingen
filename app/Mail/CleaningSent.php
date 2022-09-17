@@ -13,7 +13,7 @@ class CleaningSent extends Mailable
 
 
     protected $email;
-    protected $this;
+    protected $text;
     /**
      * Create a new message instance.
      *

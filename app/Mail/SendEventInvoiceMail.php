@@ -20,15 +20,18 @@ class SendEventInvoiceMail extends Mailable
      * @var \App\Models\Event
      */
     protected $event;
+
+    protected $invoice;
     /**
      * Create a new message instance.
      *
      * @param  \App\Models\Event  $event
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, $invoice)
     {
         $this->event = $event;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -44,19 +47,13 @@ class SendEventInvoiceMail extends Mailable
         $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
         $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
 
-        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'])
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->get();
-        $invoice = json_decode($invoice, true);
-
         $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
             ->asJson(true)
             ->get();
 
-        return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $invoice['network_link']])
+        return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link']])
             ->to($event['email'], $name)
             ->bcc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zur Buchung vom ' . $start_date . ' bis ' . $end_date . ' im Ferienhaus Itelfingen')

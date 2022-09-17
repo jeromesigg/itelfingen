@@ -8,6 +8,7 @@ use App\Models\PricelistPosition;
 use Carbon\Carbon;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Facades\Storage;
+use Spatie\GoogleCalendar\Event as Event_API;
 
 class Helper
 {
@@ -106,6 +107,15 @@ class Helper
             }
         }
         return $fpdi->Output($outputFile, 'F');
+    }
+
+    static function EventToGoogleCalendar(Event $event)
+    {
+        $event_api = new Event_API;
+        $event_api->name = $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name'] . ' - ' . $event['telephone'];
+        $event_api->startDate = Carbon::parse($event->start_date);
+        $event_api->endDate = Carbon::parse($event->end_date)->addDay();
+        $event_api->save();
     }
 
 }

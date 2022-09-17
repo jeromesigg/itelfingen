@@ -8,7 +8,6 @@ Unter folgendem Link kannst du deine Rechnung für deinen Aufenthalt vom {{Carbo
 @component('mail::button', ['url' => $link, 'color' => 'success'])
 Zur Rechnung
 @endcomponent
-{{$link}}
 
 Wir bitten um Bezahlung über einer der zur Verfügung stehenden Zahlungsmöglichkeiten.
 <br>

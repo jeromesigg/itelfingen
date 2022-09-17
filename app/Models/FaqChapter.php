@@ -19,7 +19,7 @@ class FaqChapter extends Model
     }
 
     public function faqs(){
-        return $this->hasMany(Faq::class);
+        return $this->hasMany(Faq::class)->where('archive_status_id', '=', config('status.aktiv'));
     }
 
     public function photo(){

@@ -88,7 +88,6 @@ class EventController extends Controller
     {
         // $query = $request->get('term','');
         $cities = City::search($request->get('term'))->get();
-        return $cities;
         foreach ($cities as $city) {
                 $data[]=array('name'=>$city->name,'plz'=>$city->plz,'id'=>$city->id);
         }
