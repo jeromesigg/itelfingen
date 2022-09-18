@@ -12,5 +12,5 @@
         | Wieso willst du Genossenschafter:in werden? | {{$application->why}} |
         | Bemerkung |  {{$application->comment}} |
     @endcomponent
-    Sobald deine Bewerbung überprüft wurde, erhälst Du von uns Deine Rechnung für deinen Genossenschaftsschein über CHF 100.- per E-Mail.
+    Sobald deine Bewerbung überprüft wurde, erhältst du von uns nach spätestens zwei Wochen die Rechnung für deinen Genossenschaftsanteil über CHF 100.- per E-Mail.
 @endcomponent

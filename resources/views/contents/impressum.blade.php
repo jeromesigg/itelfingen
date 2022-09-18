@@ -17,30 +17,32 @@
           </div>
         </div>
       </section>
-        @if(count($people)>0)
-            <section id="about_us" class="about_us">
-                <div class="container" data-aos="fade-up">
+        <section id="about_us" class="about_us">
+            <div class="container" data-aos="fade-up">
 
-                    <div class="section-title">
-                        <h2>Über uns</h2>
-                        <p>Was macht die Genossenschaft Ferienhaus Itelfingen</p>
-                    </div>
+                <div class="section-title">
+                    <h2>Über uns</h2>
+                    <p>Was macht die Genossenschaft Ferienhaus Itelfingen</p>
+                </div>
 
-                    <div class="row">
-                         <p>
-                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                             sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-                             At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                         </p>
-                    </div>
-                    <br>
+                <div class="row">
+                     <p>
+                         Die Genossenschaft Ferienhaus Itelfingen bezweckt, in Itelfingen, Gemeinde Meierskappel, auf gemeinnütziger Grundlage ein Ferienhaus
+                         zu betreiben. Sie stellt es hauptsächlich Jugendlichen und Erwachsenen für Ferien und Freizeit zur Benützung zur Verfügung.
+                         Die Genossenschaft pachtet das Ferienhaus von der Reformierten Kirche Zürich. Der Vorstand der Genossenschaft kümmert sich um
+                         Betrieb und Instandhaltung des Ferienhauses. Genossenschafter können sich aktiv beteiligen und das schöne Haus mitprägen und
+                         mitunterhalten, zudem profitieren Sie von reduzierten Mietpreisen. Die Genossenschaft möchte Gemeinschaft und fruchtbare Begegnungen
+                         schaffen und wünscht sich, dass an diesem Ort grosse Ideen entstehen dürfen.
+                     </p>
+                </div>
+
+
+                @if(count($people)>0)
                     <div class="section-title">
                         <p>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</p>
                     </div>
 
                     <div class="row">
-
                         @foreach ($people as $person)
                             <div class="col-lg-4 col-md-6">
                                 <div class="member" data-aos="zoom-in" data-aos-delay="100">
@@ -55,9 +57,10 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
-            </section>
-        @endif
+
+                @endif
+            </div>
+          </section>
 
         <section class="inner-page contact">
         <div class="container">
@@ -68,19 +71,19 @@
               <div class="info">
                 <div class="address">
                   <i class="icofont-google-map"></i>
-                  <h4>Hausadresse:</h4>
+                  <h4>Hausadresse</h4>
                   <p>{!! nl2br($homepage->address) !!}</p>
                 </div>
 
                 <div class="address">
                   <i class="icofont-google-map"></i>
-                  <h4>Postadresse:</h4>
+                  <h4>Postadresse</h4>
                   <p>{!! nl2br($homepage->postaddress) !!}</p>
                 </div>
 
                 <div class="email">
                   <i class="icofont-envelope"></i>
-                  <h4>Email:</h4>
+                  <h4>Email</h4>
                   <p>{{$homepage->mail}}</p>
                 </div>
 

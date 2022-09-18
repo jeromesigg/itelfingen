@@ -67,19 +67,24 @@
                         {!! Form::label('comment', 'Bemerkung:') !!}
                         {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
                     </div>
-                    <div class="form-group">
-                            {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
-                            {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
-                    </div>
-
                     <div class="form-row">
                         <div class="col-md-6 form-group">
                             {!! Form::label('event_status_id', 'Status:') !!}
                             {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
                         </div>
+                        <div class="form-group">
+                                {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
+                                {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                        </div>
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-6 form-group">
                             {!! Form::label('user_id', 'Verantwortlicher:') !!}
                             {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            {!! Form::label('code', 'Tür-Code:') !!}
+                            {!! Form::number('code', null, ['class' => 'form-control']) !!}
                         </div>
                     </div>
                 </div>
@@ -103,6 +108,7 @@
 	    $('#total_people').val("0");
 	    $('#total_days').val("0");
 	    $('#total_amount').val("0");
+        $('#code').val("290393");
 	    $('#event_status_id').val(@json(config('status.event_eigene')));
     }
 </script>

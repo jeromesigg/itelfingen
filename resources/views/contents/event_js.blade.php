@@ -140,7 +140,7 @@ function bind(callback) {
 
 Agenda = {
 	monate: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-	date: new Date(new Date().getFullYear(), new Date().getMonth() - new Date().getMonth() % 3, 1),
+	date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
 	today: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
 	start: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
 	end: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
