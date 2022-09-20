@@ -29,6 +29,8 @@
         "revolution/laravel-google-sheets": "^5.8",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.3",
+        "simonschaufi/laravel-dkim": "*",
+        "spatie/icalendar-generator": "^2.4",
         "spatie/laravel-cookie-consent": "^2.12",
         "spatie/laravel-google-calendar": "^3.3",
         "yajra/laravel-datatables-oracle": "^9.19"
