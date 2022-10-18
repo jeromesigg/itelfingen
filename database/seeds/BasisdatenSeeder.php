@@ -23,22 +23,22 @@ class BasisdatenSeeder extends Seeder
     {
         //
         Role::create([
-            'id' => config('role_Administrator'),
+            'id' => config('status.role_Administrator'),
             'name' => 'Administrator',
             'is_admin' => true,
             'is_team' => false]);
         Role::create([
-            'id' => config('role_Team'),
+            'id' => config('status.role_Team'),
             'name' => 'Team',
             'is_admin' => false,
             'is_team' => true]);
         Role::create([
-            'id' => config('role_Gast'),
+            'id' => config('status.role_Gast'),
             'name' => 'Gast',
             'is_admin' => false,
             'is_team' => false]);
         Role::create([
-            'id' => config('role_Verwalter'),
+            'id' => config('status.role_Verwalter'),
             'name' => 'Verwalter',
             'is_admin' => false,
             'is_team' => true]);

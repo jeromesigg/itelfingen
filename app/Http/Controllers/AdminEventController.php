@@ -339,23 +339,6 @@ class AdminEventController extends Controller
                 if (config('app.env') == 'production') {
                     $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
                     $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-
-                    $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
-                        ->withHeader('Accept: application/json')
-                        ->withBearer(config('app.bexio_token'))
-                        ->asJson(true)
-                        ->get();
-
-                    if (!isset($invoice_pdf['error_code'])) {
-                        $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
-                        $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
-                        $name_pdf = 'Rechnung_' . $event['name'] . '_' . $start_date_file . '_' . $end_date_file;
-                        Storage::disk('google')->put($name_pdf, base64_decode($invoice_pdf['content']));
-
-                    } else {
-                        abort($invoice_pdf['error_code'], $invoice_pdf['message']);
-                    }
-
                     Slack::send('Es hat eine neue Buchung gegeben. Vom ' . $start_date . ' bis ' . $end_date . ' Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
                     Helper::EventToGoogleCalendar($event);
                 }
@@ -378,6 +361,18 @@ class AdminEventController extends Controller
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
             $title = "Rechnung vom " . $start_date . " bis " . $end_date;
+
+            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'])
+                ->withHeader('Accept: application/json')
+                ->withHeader('Content-Type: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->withData(
+                    array(
+                        'is_valid_to' => now()->addDays(30)->toDateString(),
+                    )
+                )
+                ->asJson(true)
+                ->post();
 
             Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/issue')
                 ->withHeader('Accept: application/json')
@@ -406,6 +401,29 @@ class AdminEventController extends Controller
             $invoice = json_decode($invoice, true);
 
             Mail::send(new SendEventInvoiceMail($event, $invoice));
+
+
+//            if (config('app.env') == 'production') {
+//                $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
+//                    ->withHeader('Accept: application/json')
+//                    ->withBearer(config('app.bexio_token'))
+//                    ->asJson(true)
+//                    ->get();
+//
+//                if (isset($invoice_pdf['error_code'])) {
+//                    abort($invoice_pdf['error_code'], $invoice_pdf['message']);
+//                }
+//
+//                if (!isset($invoice_pdf['error_code'])) {
+//                    $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
+//                    $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
+//                    $name_pdf = 'Rechnung_' . $start_date_file . '_' . $end_date_file . '_' . $event['name'];
+//                    Storage::disk('google')->put($name_pdf, base64_decode($invoice_pdf['content']));
+//
+//                } else {
+//                    abort($invoice_pdf['error_code'], $invoice_pdf['message']);
+//                }
+//            }
 
             $event->update([
                 'contract_status_id' => config('status.contract_rechnung_versendet')]);

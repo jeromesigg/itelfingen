@@ -161,7 +161,7 @@ class DailyTask extends Command
                 ]
             );
 
-            if (config('app.env') == 'production') {
+//            if (config('app.env') == 'production') {
                 // Write to Google Sheet
                 $array = [[
                     'ID' => $application['id'],
@@ -182,7 +182,7 @@ class DailyTask extends Command
                 ]];
                 // Add new sheet to the configured google spreadsheet
                 Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
-            }
+//            }
 
         }
     }

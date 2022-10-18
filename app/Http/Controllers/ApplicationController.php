@@ -55,10 +55,9 @@ class ApplicationController extends Controller
         $application = $this->CreateContact($application);
 
         if (config('app.env') == 'production') {
-            Slack::to('#5_genossenschaft')->send('Es hat eine neue Bewerbung gegeben. '.$application['firstname'] . ' ' . $application['name'] . ' würde gerne Genossenschafter/in werden. Grund: ' . $application['why']);
+            Slack::to(config('slack.application_channel'))->send('Es hat eine neue Bewerbung gegeben. '.$application['firstname'] . ' ' . $application['name'] . ' würde gerne Genossenschafter/in werden. Grund: ' . $application['why']);
         }
 
-//        return (new ApplicationCreated($contact));
         Mail::send(new ApplicationCreated($application));
 
         return redirect()->to(url()->previous())->with('success', 'Vielen Dank für deine Bewerbung. Wir werden sie überprüfen und melden uns in zwei Wochen.');

@@ -49,6 +49,6 @@ class User extends Authenticatable
     }
 
     public function isManager(){
-        return ($this->role['id'] == config('status.role_Verwalter')) && ($this->is_active == 1);
+        return (($this->role['id'] == config('status.role_Verwalter')) && ($this->is_active));
     }
 }
