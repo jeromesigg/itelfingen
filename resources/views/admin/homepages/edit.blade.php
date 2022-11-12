@@ -33,6 +33,10 @@
                         {!! Form::label('phone', 'Telefon:') !!}
                         {!! Form::text('phone', null, ['class' => 'form-control']) !!}
                     </div>
+                     <div class="form-group">
+                         {!! Form::label('green_text', 'Banner-Text:') !!}
+                         {!! Form::text('green_text', null, ['class' => 'form-control']) !!}
+                     </div>
                     <div class="form-group">
                         {!! Form::label('main_photo_id', 'Haupt-Photo:') !!}
                         {!! Form::file('main_photo_id', null, ['class' => 'form-control']) !!}

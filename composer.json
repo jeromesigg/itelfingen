@@ -18,6 +18,7 @@
         "ixudra/curl": "^6.21",
         "jeremykenedy/slack-laravel": "^2.6",
         "laravel/framework": "^9.0",
+        "laravel/slack-notification-channel": "^2.4",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.1",

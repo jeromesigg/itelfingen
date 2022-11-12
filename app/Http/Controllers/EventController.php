@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\Helper;
-use App\Mail\EventCreated;
+use App\Events\EventCreated;
 use App\Models\City;
 use App\Models\Event;
-use App\Models\PricelistPosition;
+use App\Models\User;
+use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Validator;
+use Notification;
 
 class EventController extends Controller
 {
@@ -53,33 +53,8 @@ class EventController extends Controller
             $input['end_date'] = new Carbon($input['end_date']);
         }
         $event = Event::create($input);
-        $keys = array_keys($input['positions']);
-        $positions = [];
-
-        if ($one_day){
-            $positions[sizeof($positions)] = ['bexio_code' => 20, 'amount' => 0.5];
-            $positions[sizeof($positions)] = ['bexio_code' => 50, 'amount' => 1];
-
-        }
-        else {
-            $positions[sizeof($positions)] = ['bexio_code' => 20, 'amount' => 1];
-            foreach ($keys  as $index => $key)
-            {
-                $positions[sizeof($positions)] = ['bexio_code' => $key, 'amount' => $input['positions'][$key]];
-            }
-        }
-        $positions[sizeof($positions)] = ['bexio_code' => 210, 'amount' => 0];
-
-        foreach ($positions as $index => $position) {
-            $plposition = PricelistPosition::where('bexio_code','=', $position['bexio_code'])->first();
-            $position['id'] = $plposition['id'];
-            $position['name'] = $plposition['name'];
-            $positions[$index] = $position;
-        }
-        Helper::CreateRePos($positions, $event);
-
-//        return (new EventCreated($event));
-        Mail::send(new EventCreated($event));
+        EventCreated::dispatch($event, $one_day, $input['positions']);
+        Notification::send($event, new EventCreatedNotification($event));
 
         return redirect()->to(url()->previous() . '#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden.');
     }

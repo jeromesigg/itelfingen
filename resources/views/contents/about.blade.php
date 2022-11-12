@@ -2,10 +2,10 @@
 
     <div class="container" data-aos="fade-up">
 
-        @if($discount)
+        @if($homepage['green_text'])
             <div class="alert alert-dismissable alert-success section-title">
                 <p>
-                    Jetzt mit 20% Last Minute Rabatt bei Buchungen innerhalb 7 Tagen.
+                    {{$homepage['green_text']}}
                 </p>
             </div>
             <br>

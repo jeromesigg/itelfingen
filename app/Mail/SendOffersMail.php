@@ -48,7 +48,7 @@ class SendOffersMail extends Mailable
         $PdfPath = public_path('files/Hausordnung.pdf');
 
         return $this->markdown('emails.events.offers', ['event' => $event, 'link' => $this->link, 'total' => Currency::currency("CHF")->format($this->total)])
-            ->to($event['email'], $name)
+            ->to($event['external'] ? config('mail.from.address') : $event['email'], $name)
             ->bcc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Ihr Angebot zur Buchung für das Ferienhaus Itelfingen')
             ->attach($PdfPath, [

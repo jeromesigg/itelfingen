@@ -2,12 +2,23 @@
 
 namespace App\Providers;
 
-use App\Listeners\MessageSigningListener;
+use App\Events\ApplicationCreatedEvent;
+use App\Events\EventCreated;
+use App\Events\EventInvoiceCreate;
+use App\Events\EventInvoiceSend;
+use App\Events\EventOfferCreate;
+use App\Events\EventOfferSend;
+use App\Listeners\ApplicationCreatedListener;
+use App\Listeners\EventContactCreateListener;
+use App\Listeners\EventCreatedListener;
+use App\Listeners\EventInvoiceCreateListener;
+use App\Listeners\EventInvoiceSendListener;
+use App\Listeners\EventOfferCreateListener;
+use App\Listeners\EventOfferSendListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,6 +30,25 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        EventCreated::class => [
+            EventCreatedListener::class,
+        ],
+        EventOfferCreate::class => [
+            EventContactCreateListener::class,
+            EventOfferCreateListener::class,
+        ],
+        EventOfferSend::class => [
+            EventOfferSendListener::class,
+        ],
+        EventInvoiceCreate::class => [
+            EventInvoiceCreateListener::class,
+        ],
+        EventInvoiceSend::class => [
+            EventInvoiceSendListener::class,
+        ],
+        ApplicationCreatedEvent::class => [
+            ApplicationCreatedListener::class,
         ],
     ];
 

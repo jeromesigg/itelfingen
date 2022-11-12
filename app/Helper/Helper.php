@@ -12,17 +12,6 @@ use Spatie\GoogleCalendar\Event as Event_API;
 
 class Helper
 {
-    static function CreateRePos($positions, Event $event){
-        foreach ($positions as $position) {
-            $new_position = Position::FirstOrCreate([
-                'event_id' => $event['id'],
-                'pricelist_position_id' => $position['id']
-            ]);
-
-            $new_position->update(['amount' => $position['amount']]);
-        }
-    }
-
     static function PrintParking(Event $event){
         $outputFile = Storage::disk('local')->path('files/Parkkarten/'.$event['id'].'.pdf');
         // fill data

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventInvoiceCreate;
+use App\Events\EventInvoiceSend;
+use App\Events\EventOfferCreate;
+use App\Events\EventOfferSend;
 use App\Helper\Helper;
 use App\Mail\CleaningSent;
-use App\Mail\SendEventConfirmation;
-use App\Mail\SendEventInvoiceMail;
-use App\Mail\SendOffersMail;
 use App\Models\ContractStatus;
 use App\Models\Event;
 use App\Models\EventStatus;
@@ -14,14 +15,13 @@ use App\Models\Homepage;
 use App\Models\Position;
 use App\Models\PricelistPosition;
 use App\Models\User;
+use App\Notifications\EventInvoiceCreatedNotification;
+use App\Notifications\EventInvoiceSendNotification;
+use App\Notifications\EventOfferSendNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Ixudra\Curl\Facades\Curl;
-use jeremykenedy\Slack\Laravel\Facade as Slack;
-use setasign\Fpdi\Fpdi;
-use Spatie\GoogleCalendar\Event as Event_API;
+use Notification;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminEventController extends Controller
@@ -180,6 +180,7 @@ class AdminEventController extends Controller
         //
         $event = Event::findOrFail($id);
         $input = $request->all();
+        $input['external'] = $request->has('external');
         if(isset($input['positions'])) {
             foreach ($input['positions'] as $index => $plposition) {
                 Position::where('id', $index)->update(['amount' => $plposition]);
@@ -189,241 +190,45 @@ class AdminEventController extends Controller
         return redirect()->back();
     }
 
-    public function CreateOffer($id)
+    public function CreateOffer(Event $event)
     {
-        $event = Event::findOrFail($id);
-        $event = $this->CreateContact($event);
-        if (is_null($event['bexio_offer_id'])){
-
-            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
-            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-            $title = "Buchung vom " . $start_date . " bis " . $end_date;
-            $positions = Position::with('pricelist_position')->where('event_id',$id)->get()->sortBy('pricelist_position.bexio_code');
-            $positions_array = [];
-            foreach($positions as $position){
-                $amount = $position['amount'];
-                if($position->pricelist_position['bexio_code'] > 200){
-                    $amount = max($position['amount']-3,0) * $event['total_days'];
-                }
-                elseif($position->pricelist_position['bexio_code'] == 20 && $event['total_days']==0){
-                    $amount = $position['amount'] / 2;
-                }
-                else{
-                    $amount = $event['total_days'] * $position['amount'];
-                }
-                if($amount > 0){
-                    array_push($positions_array,
-                        array(
-                            'amount' => $amount,
-                            'type' => 'KbPositionArticle' ,
-                            'tax_id' => 16,
-                            'article_id' => $position->pricelist_position['bexio_id'],
-                            'unit_price' => $position->pricelist_position['price'],
-                            'discount_in_percent' =>  $position->pricelist_position['bexio_code'] < 100 ? 0 : $event['discount'],
-                        )
-                    );
-                }
-            }
-            $offer = Curl::to('https://api.bexio.com/2.0/kb_offer')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withContentType('application/json')
-                ->withData(
-                    array(
-                        'title' => $title,
-                        'contact_id' => $event->bexio_user_id,
-                        'user_id' => 1,
-                        'is_valid_from' => now(),
-                        'is_valid_until' => Carbon::create($event->start_date)->addDays(-14),
-                        'api_reference' => $event['id'],
-                        'positions' => $positions_array
-                    )
-                )
-                ->asJson(true)
-                ->post();
-
-            if(!isset($offer['error_code'])){
-                $event->update(['bexio_offer_id' => $offer['id'],
-                'contract_status_id' => config('status.contract_angebot_erstellt')]);
-                if(config('mail.direct_send')){
-                    $this->SendOfferEx($event);
-                }
-
-            }
-        }
+        EventOfferCreate::dispatch($event);
         return redirect()->back();
     }
 
-    public function SendOffer($id)
-    {
-        $event = Event::findOrFail($id);
-        if (!is_null($event['bexio_offer_id'])){
-             $event = $this->SendOfferEx($event);
-        }
-        return redirect()->back();
-    }
-
-    public function SendOfferEx(Event $event)
+    public function SendOffer(Event $event)
     {
         if (!is_null($event['bexio_offer_id'])){
-            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
-            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-            $title = "Angebot vom " . $start_date . " bis " . $end_date;
-
-            Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'] . '/issue')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->post();
-            Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'] . '/send')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    array(
-                        'recipient_email' => config('mail.invoice_mail'),
-                        'subject' => $title,
-                        'message' => $event['firstname'] . ' ' . $event['name'] .': [Network Link]' ,
-                        'mark_as_open' => true
-                    )
-                )
-                ->asJson(true)
-                ->post();
-
-            $offer = Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $offer = json_decode($offer, true);
-
-            Mail::send(new SendOffersMail($event, $offer['network_link'], $offer['total']));
+            EventOfferSend::dispatch($event);
+            Notification::send($event, new EventOfferSendNotification($event));
 
             $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);
         }
-        return true;
+        return redirect()->back();
 
     }
 
-    public function CreateInvoice($id)
+    public function CreateInvoice(Event $event)
     {
-        $event = Event::findOrFail($id);
-        $event = $this->CreateContact($event);
+
         if (is_null($event['bexio_invoice_id']) && !is_null($event['bexio_offer_id'])) {
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'] . '/invoice')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->post();
+            EventInvoiceCreate::dispatch($event);
+            Notification::send($event, new EventInvoiceCreatedNotification($event));
 
-            $invoice = json_decode($invoice, true);
-            if (!isset($invoice['error_code'])) {
-                $event->update([
-                    'bexio_invoice_id' => $invoice['id']]);
-
-            } else {
-                abort($invoice['error_code'], $invoice['message']);
-            }
-
-            if (isset($invoice['id'])){
-                $response = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'])
-                    ->withHeader('Accept: application/json')
-                    ->withHeader('Content-Type: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->withData(
-                        array(
-                            'is_valid_from' => Carbon::create($event->end_date)->toDateString(),
-                            'is_valid_to' => Carbon::create($event->end_date)->addDays(30)->toDateString(),
-                            'api_reference' => $event['id'],
-                        )
-                    )
-                    ->asJson(true)
-                    ->post();
-
-                if (config('app.env') == 'production') {
-                    $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
-                    $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-                    Slack::send('Es hat eine neue Buchung gegeben. Vom ' . $start_date . ' bis ' . $end_date . ' Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
-                    Helper::EventToGoogleCalendar($event);
-                }
-//                Mail::send(new SendEventConfirmation($event));
-                $event->update([
-                    'event_status_id' => config('status.event_bestaetigt'),
-                    'contract_status_id' => config('status.contract_rechnung_erstellt')]);
-            }
+            $event->update([
+                'event_status_id' => config('status.event_bestaetigt'),
+                'contract_status_id' => config('status.contract_rechnung_erstellt')]);
         }
 
         return redirect()->back();
     }
 
-    public function SendInvoice($id): \Illuminate\Http\RedirectResponse
+    public function SendInvoice(Event $event)
     {
-        $event = Event::findOrFail($id);
 
         if(isset($event['bexio_invoice_id'])){
-
-            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
-            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
-            $title = "Rechnung vom " . $start_date . " bis " . $end_date;
-
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'])
-                ->withHeader('Accept: application/json')
-                ->withHeader('Content-Type: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    array(
-                        'is_valid_to' => now()->addDays(30)->toDateString(),
-                    )
-                )
-                ->asJson(true)
-                ->post();
-
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/issue')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->post();
-
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/send')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    array(
-                        'recipient_email' => config('mail.invoice_mail'),
-                        'subject' => $title,
-                        'message' => $event['firstname'] . ' ' . $event['name'] .': [Network Link]' ,
-                        'mark_as_open' => true
-                    )
-                )
-                ->asJson(true)
-                ->post();
-
-
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $invoice = json_decode($invoice, true);
-
-            Mail::send(new SendEventInvoiceMail($event, $invoice));
-
-
-//            if (config('app.env') == 'production') {
-//                $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
-//                    ->withHeader('Accept: application/json')
-//                    ->withBearer(config('app.bexio_token'))
-//                    ->asJson(true)
-//                    ->get();
-//
-//                if (isset($invoice_pdf['error_code'])) {
-//                    abort($invoice_pdf['error_code'], $invoice_pdf['message']);
-//                }
-//
-//                if (!isset($invoice_pdf['error_code'])) {
-//                    $start_date_file = Carbon::create($event['start_date'])->locale('de_CH')->format('dm');
-//                    $end_date_file = Carbon::create($event['end_date'])->locale('de_CH')->format('dm');
-//                    $name_pdf = 'Rechnung_' . $start_date_file . '_' . $end_date_file . '_' . $event['name'];
-//                    Storage::disk('google')->put($name_pdf, base64_decode($invoice_pdf['content']));
-//
-//                } else {
-//                    abort($invoice_pdf['error_code'], $invoice_pdf['message']);
-//                }
-//            }
+            EventInvoiceSend::dispatch($event);
+            Notification::send($event, new EventInvoiceSendNotification($event));
 
             $event->update([
                 'contract_status_id' => config('status.contract_rechnung_versendet')]);
@@ -432,69 +237,8 @@ class AdminEventController extends Controller
         return redirect()->back();
     }
 
-    public function CreateContact(Event $event)
-    {
-        if(is_null($event['bexio_user_id'])){
-            $query = array(
-                array(
-                    'field' => 'name_1',
-                    'value' => $event->name
-                ),
-                array(
-                    'field' => 'name_2',
-                    'value' => $event->firstname ? $event->firstname  : ''
-                ),
-                array(
-                    'field' => 'address',
-                    'value' => $event->street
-                ),
-                array(
-                    'field' => 'postcode',
-                    'value' => $event->plz
-                ),);
-            $person = Curl::to('https://api.bexio.com/2.0/contact/search')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->withContentType('application/json')
-                    ->withData($query)
-                    ->asJson(true)
-                    ->post();
-
-            if(count($person) === 0){
-                $person = Curl::to('https://api.bexio.com/2.0/contact')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->withContentType('application/json')
-                    ->withData( array(
-                        'contact_type_id' => '2',
-                        'name_1' => $event->name,
-                        'name_2' => $event->firstname,
-                        'address' => $event->street,
-                        'postcode' => $event->plz,
-                        'city' => $event->city,
-                        'country_id' => 1,
-                        'mail' => $event->email,
-                        'phone_mobile' => $event->telephone,
-                        'remarks' => $event->comment,
-                        'user_id' => 1,
-                        'owner_id' => 1,
-                        ) )
-                    ->asJson(true)
-                    ->post();
-            }
-            else{
-                $person = $person[0];
-            }
-            if(!isset($person->error)){
-                $event->update(['bexio_user_id' => $person['id']]);
-            }
-        }
-        return $event;
-    }
-
     public function SendCleaningMail(Request $request, $id){
         $input = $request->all();
-//        return (new CleaningCreated($input['cleaning_mail_address'], $input['cleaning_mail_text']));
         Mail::send(new CleaningSent($input['cleaning_mail_address'], $input['cleaning_mail_text']));
         $event = Event::findOrFail($id);
         $event->update(['cleaning_mail' => true]);
@@ -518,5 +262,11 @@ class AdminEventController extends Controller
         $event->delete();
 
         return redirect('/admin/events');
+    }
+
+    public function api()
+    {
+        //
+        return Event::select('id', 'start_date', 'end_date', 'event_status_id')->get();
     }
 }
