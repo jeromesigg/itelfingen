@@ -14,6 +14,7 @@ class AdminFaqChapterController extends Controller
     {
         //
         $faq_chapters = FaqChapter::orderBy('sort-index')->paginate(10);
+
         return view('admin.faq_chapters.index', compact('faq_chapters'));
     }
 
@@ -42,12 +43,11 @@ class AdminFaqChapterController extends Controller
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');
 
-
-        if(($file = $request->file('old_photo_id')) && $input['new_photo_id']){
-            $name = time() . $file->getClientOriginalName();
+        if (($file = $request->file('old_photo_id')) && $input['new_photo_id']) {
+            $name = time().$file->getClientOriginalName();
             Image::make($input['new_photo_id'])->save('images/'.$name);
 
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
         }
         FaqChapter::create($input);
@@ -75,9 +75,10 @@ class AdminFaqChapterController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $faqchapter = FaqChapter::findOrFail($id);
-        return view('admin.faq_chapters.edit', compact('archive_statuses','faqchapter'));
+
+        return view('admin.faq_chapters.edit', compact('archive_statuses', 'faqchapter'));
     }
 
     /**
@@ -92,14 +93,15 @@ class AdminFaqChapterController extends Controller
         //
         $input = $request->all();
         $file = $request->file('old_photo_id');
-        if($file && $input['new_photo_id']){
-            $name = time() . '_' . $file->getClientOriginalName();
+        if ($file && $input['new_photo_id']) {
+            $name = time().'_'.$file->getClientOriginalName();
             Image::make($input['new_photo_id'])->save('images/'.$name);
 
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
         }
         FaqChapter::whereId($id)->first()->update($input);
+
         return redirect('/admin/faq_chapters');
     }
 

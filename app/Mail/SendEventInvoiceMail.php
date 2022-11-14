@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Ixudra\Curl\Facades\Curl;
@@ -22,6 +21,7 @@ class SendEventInvoiceMail extends Mailable
     protected $event;
 
     protected $invoice;
+
     /**
      * Create a new message instance.
      *
@@ -43,20 +43,20 @@ class SendEventInvoiceMail extends Mailable
     {
         $event = $this->event;
 
-        $name = $event['firstname'] . ' ' . $event['name'];
+        $name = $event['firstname'].' '.$event['name'];
         $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
         $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
 
-        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'] . '/pdf')
+        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$event['bexio_invoice_id'].'/pdf')
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
             ->asJson(true)
             ->get();
 
         return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link']])
-            ->to($event['email'], $name)
+            ->to($event['external'] ? config('mail.from.address') : $event['email'], $name)
             ->bcc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Deine Rechnung zur Buchung vom ' . $start_date . ' bis ' . $end_date . ' im Ferienhaus Itelfingen')
+            ->subject('Deine Rechnung zur Buchung vom '.$start_date.' bis '.$end_date.' im Ferienhaus Itelfingen')
             ->attachData(base64_decode($invoice_pdf['content']), 'Rechnung.pdf', [
                 'mime' => 'application/pdf',
             ]);

@@ -13,6 +13,7 @@ class AdminPricelistPositionController extends Controller
     {
         //
         $positions = PricelistPosition::orderby('bexio_code')->paginate(10);
+
         return view('admin.positions.index', compact('positions'));
     }
 
@@ -32,23 +33,22 @@ class AdminPricelistPositionController extends Controller
         ->get();
 
         foreach ($positions as $position) {
-            $position_db = PricelistPosition::where('bexio_id',$position['id']);
-            if($position_db->count() > 0){
+            $position_db = PricelistPosition::where('bexio_id', $position['id']);
+            if ($position_db->count() > 0) {
                 $position_db->update([
                     'name' => $position['deliverer_name'],
-                    'price' => $position['sale_price']]);
-            }
-            else{
+                    'price' => $position['sale_price'], ]);
+            } else {
                 PricelistPosition::create([
                     'name' => $position['deliverer_name'],
                     'bexio_id' => $position['id'],
                     'bexio_code' => $position['intern_code'],
                     'price' => $position['sale_price'],
                     'archive_status_id' => config('status.aktiv'),
-                    'show' => true]);
+                    'show' => true, ]);
             }
-
         }
+
         return redirect()->back();
     }
 
@@ -83,9 +83,10 @@ class AdminPricelistPositionController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $position = PricelistPosition::findOrFail($id);
-        return view('admin.positions.edit', compact('archive_statuses','position'));
+
+        return view('admin.positions.edit', compact('archive_statuses', 'position'));
     }
 
     /**
@@ -98,11 +99,12 @@ class AdminPricelistPositionController extends Controller
     public function update(Request $request, $id)
     {
         //
-        if($request['show']===null){
+        if ($request['show'] === null) {
             $request['show'] = 0;
-          }
+        }
         $input = $request->all();
         PricelistPosition::whereId($id)->first()->update($input);
+
         return redirect('/admin/positions');
     }
 

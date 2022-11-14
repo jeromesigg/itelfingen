@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class PricelistPosition extends Model
 {
-
     protected $fillable = [
-    'name', 'bexio_id', 'bexio_code','price', 'archive_status_id', 'show'
+        'name', 'bexio_id', 'bexio_code', 'price', 'archive_status_id', 'show',
     ];
 
-    protected $casts =  [
-        'show' => 'boolean'
+    protected $casts = [
+        'show' => 'boolean',
     ];
 
     protected static function booted()
@@ -20,8 +19,8 @@ class PricelistPosition extends Model
         static::addGlobalScope(fn ($query) => $query->orderBy('bexio_code'));
     }
 
-    public function archive_status(){
+    public function archive_status()
+    {
         return $this->belongsTo(ArchiveStatus::class);
     }
-
 }

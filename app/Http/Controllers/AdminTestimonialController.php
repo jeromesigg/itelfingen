@@ -17,6 +17,7 @@ class AdminTestimonialController extends Controller
     {
         //
         $testimonials = Testimonial::orderBy('sort-index')->paginate(10);
+
         return view('admin.testimonials.index', compact('testimonials'));
     }
 
@@ -69,9 +70,10 @@ class AdminTestimonialController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $testimonial = Testimonial::findOrFail($id);
-        return view('admin.testimonials.edit', compact('archive_statuses','testimonial'));
+
+        return view('admin.testimonials.edit', compact('archive_statuses', 'testimonial'));
     }
 
     /**
@@ -86,6 +88,7 @@ class AdminTestimonialController extends Controller
         //
         $input = $request->all();
         Testimonial::whereId($id)->first()->update($input);
+
         return redirect('/admin/testimonials');
     }
 

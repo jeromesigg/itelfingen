@@ -11,18 +11,21 @@ class FaqChapter extends Model
         'sort-index',
         'archive_status_id',
         'photo_id',
-        'symbol'
+        'symbol',
     ];
 
-    public function archive_status(){
+    public function archive_status()
+    {
         return $this->belongsTo(ArchiveStatus::class);
     }
 
-    public function faqs(){
+    public function faqs()
+    {
         return $this->hasMany(Faq::class)->where('archive_status_id', '=', config('status.aktiv'));
     }
 
-    public function photo(){
+    public function photo()
+    {
         return $this->belongsTo(Photo::class);
     }
 }

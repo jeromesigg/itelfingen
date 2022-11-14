@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ApplicationCreated;
+use App\Events\ApplicationCreatedEvent;
 use App\Models\Application;
 use App\Models\Homepage;
 use App\Models\Salutation;
-use Carbon\Carbon;
+use App\Notifications\ApplicationCreatedNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Ixudra\Curl\Facades\Curl;
-use jeremykenedy\Slack\Laravel\Facade as Slack;
-use Spatie\GoogleCalendar\Event as Event_API;
+use Notification;
 
 class ApplicationController extends Controller
 {
@@ -24,8 +21,8 @@ class ApplicationController extends Controller
     {
         //
         $homepage = Homepage::FindOrFail(1);
-        $salutations = Salutation::pluck('name','id');
-        $title = "Bewerbung Genossenschaft";
+        $salutations = Salutation::pluck('name', 'id');
+        $title = 'Bewerbung Genossenschaft';
 
         return view('contents.applications', compact('homepage', 'title', 'salutations'));
     }
@@ -52,76 +49,11 @@ class ApplicationController extends Controller
 
         $input['plz'] = $input['zipcode'];
         $application = Application::create($input);
-        $application = $this->CreateContact($application);
 
-        if (config('app.env') == 'production') {
-            Slack::to('#5_genossenschaft')->send('Es hat eine neue Bewerbung gegeben. '.$application['firstname'] . ' ' . $application['name'] . ' würde gerne Genossenschafter/in werden. Grund: ' . $application['why']);
-        }
-
-//        return (new ApplicationCreated($contact));
-        Mail::send(new ApplicationCreated($application));
+        ApplicationCreatedEvent::dispatch($application);
+        Notification::send($application, new ApplicationCreatedNotification($application));
 
         return redirect()->to(url()->previous())->with('success', 'Vielen Dank für deine Bewerbung. Wir werden sie überprüfen und melden uns in zwei Wochen.');
-    }
-
-    public function CreateContact(Application $application)
-    {
-        if(is_null($application['bexio_user_id'])){
-            $query = array(
-                array(
-                    'field' => 'name_1',
-                    'value' => $application->name
-                ),
-                array(
-                    'field' => 'name_2',
-                    'value' => $application->firstname ? $application->firstname  : ''
-                ),
-                array(
-                    'field' => 'address',
-                    'value' => $application->street
-                ),
-                array(
-                    'field' => 'postcode',
-                    'value' => $application->plz
-                ),);
-            $person = Curl::to('https://api.bexio.com/2.0/contact/search')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withContentType('application/json')
-                ->withData($query)
-                ->asJson(true)
-                ->post();
-
-            if(count($person) === 0){
-                $person = Curl::to('https://api.bexio.com/2.0/contact')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->withContentType('application/json')
-                    ->withData( array(
-                        'contact_type_id' => '2',
-                        'name_1' => $application->name,
-                        'name_2' => $application->firstname,
-                        'address' => $application->street,
-                        'postcode' => $application->plz,
-                        'city' => $application->city,
-                        'country_id' => 1,
-                        'mail' => $application->email,
-                        'phone_mobile' => $application->telephone,
-                        'remarks' => $application->comment,
-                        'user_id' => 1,
-                        'owner_id' => 1,
-                    ) )
-                    ->asJson(true)
-                    ->post();
-            }
-            else{
-                $person = $person[0];
-            }
-            if(!isset($person->error)){
-                $application->update(['bexio_user_id' => $person['id']]);
-            }
-        }
-        return $application;
     }
 
     /**

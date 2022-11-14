@@ -20,8 +20,6 @@
     </footer><!-- End Footer -->
     <div id="preloader"></div>
     <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
-
-    @include('cookieConsent::index')
   </div>
 @endsection
 

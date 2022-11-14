@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -18,6 +17,7 @@ class EventCreated extends Mailable
      * @var \App\Models\Event
      */
     protected $event;
+
     /**
      * Create a new message instance.
      *
@@ -37,8 +37,7 @@ class EventCreated extends Mailable
     public function build()
     {
         $event = $this->event;
-        $name = $event['firstname'] . ' ' . $event['name'];
-
+        $name = $event['firstname'].' '.$event['name'];
 
         return $this->markdown('emails.events.created', ['event' => $event])
             ->to($event['email'], $name)

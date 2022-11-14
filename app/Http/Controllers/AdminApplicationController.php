@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Application;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Revolution\Google\Sheets\Facades\Sheets;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminApplicationController extends Controller
@@ -18,7 +17,8 @@ class AdminApplicationController extends Controller
     public function index()
     {
         //
-        $title = "Bewerbungen";
+        $title = 'Bewerbungen';
+
         return view('admin.applications.index', compact('title'));
     }
 
@@ -28,7 +28,7 @@ class AdminApplicationController extends Controller
 
         return DataTables::of($applications)
             ->addColumn('name', function (Application $applications) {
-                return '<a href='.\URL::route('applications.show',$applications).'>'.$applications['name'].'</a>';
+                return '<a href='.\URL::route('applications.show', $applications).'>'.$applications['name'].'</a>';
             })
             ->addColumn('refuse', function (Application $application) {
                 return $application['refuse'] ? 'Ja' : 'Nein';
@@ -40,20 +40,21 @@ class AdminApplicationController extends Controller
                 return $application['invoice_send'] ? 'Ja' : 'Nein';
             })
             ->addColumn('city', function (Application $application) {
-                return $application['plz'] . ' '. $application['city'] ;
+                return $application['plz'].' '.$application['city'];
             })
-            ->addColumn('Actions', function(Application $application) {
-                $buttons = '<form action="'.\URL::route('applications.refuse', $application).'" method="post">' . csrf_field();
-                if(!$application['invoice_send'] && !$application['refuse']){
+            ->addColumn('Actions', function (Application $application) {
+                $buttons = '<form action="'.\URL::route('applications.refuse', $application).'" method="post">'.csrf_field();
+                if (! $application['invoice_send'] && ! $application['refuse']) {
                     $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Ablehnen</button>';
-                };
+                }
                 $buttons .= '</form>';
+
                 return $buttons;
             })
             ->editColumn('created_at', function (Application $application) {
                 return [
                     'display' => Carbon::parse($application['created_at'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($application['created_at'])->diffInDays('01.01.2022')
+                    'sort' => Carbon::parse($application['created_at'])->diffInDays('01.01.2022'),
                 ];
             })
             ->rawColumns(['Actions', 'name'])
@@ -90,7 +91,8 @@ class AdminApplicationController extends Controller
     public function show(Application $application)
     {
         //
-        $title = "Bewerbung anzeigen";
+        $title = 'Bewerbung anzeigen';
+
         return view('admin.applications.show', compact('application', 'title'));
     }
 
@@ -132,4 +134,3 @@ class AdminApplicationController extends Controller
         //
     }
 }
-

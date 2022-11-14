@@ -19,6 +19,7 @@ class AdminHistoryController extends Controller
     {
         //
         $histories = History::orderBy('sort-index')->paginate(10);
+
         return view('admin.histories.index', compact('histories'));
     }
 
@@ -43,13 +44,13 @@ class AdminHistoryController extends Controller
     {
         //
         $input = $request->all();
-        if($file = $request->file('photo_id')){
-            $name = time() . str_replace(' ', '', $file->getClientOriginalName());
+        if ($file = $request->file('photo_id')) {
+            $name = time().str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
         }
-        $input['shorttitle'] = Str::slug($input['title'],'_');
+        $input['shorttitle'] = Str::slug($input['title'], '_');
         $index = History::all()->count();
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');
@@ -78,9 +79,10 @@ class AdminHistoryController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $history = History::findOrFail($id);
-        return view('admin.histories.edit', compact('archive_statuses','history'));
+
+        return view('admin.histories.edit', compact('archive_statuses', 'history'));
     }
 
     /**
@@ -94,16 +96,17 @@ class AdminHistoryController extends Controller
     {
         //
         $input = $request->all();
-        if($file = $request->file('photo_id')){
-            $name = time() . str_replace(' ', '', $file->getClientOriginalName());
+        if ($file = $request->file('photo_id')) {
+            $name = time().str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
         }
-        $input['shorttitle'] = Str::slug($input['title'],'_');
+        $input['shorttitle'] = Str::slug($input['title'], '_');
 
         History::whereId($id)->first()->update($input);
+
         return redirect('/admin/histories');
     }
 

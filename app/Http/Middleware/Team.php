@@ -16,12 +16,12 @@ class Team
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::check()){
-            if(Auth::user()->isTeam()){
+        if (Auth::check()) {
+            if (Auth::user()->isTeam()) {
                 return $next($request);
-
             }
         }
+
         return redirect('login');
     }
 }

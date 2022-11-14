@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Application;
 use App\Models\Contact;
-use App\Models\ContractStatus;
-use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,14 +24,14 @@ class AdminContactController extends Controller
     public function createDataTables(Request $request)
     {
         $input = $request->all();
-        $done = $input['done'] <> "Alle" ? false : true;
-        $contacts = Contact::where('done',$done)->orderby('created_at', 'DESC')->get();
+        $done = $input['done'] != 'Alle' ? false : true;
+        $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
 
         return DataTables::of($contacts)
             ->editColumn('created_at', function (Contact $contact) {
                 return [
                     'display' => Carbon::parse($contact['created_at'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($contact['created_at'])->diffInDays('01.01.2021')
+                    'sort' => Carbon::parse($contact['created_at'])->diffInDays('01.01.2021'),
                 ];
             })
             ->editColumn('user', function (Contact $contact) {
@@ -43,23 +40,24 @@ class AdminContactController extends Controller
             ->editColumn('done', function (Contact $contact) {
                 return $contact->done ? 'Ja' : 'Nein';
             })
-            ->addColumn('Actions', function(Contact $contact) {
-                $buttons = '<form action="'.\URL::route('contacts.done', $contact).'" method="POST">' . csrf_field();
-                if(!$contact['done']){
+            ->addColumn('Actions', function (Contact $contact) {
+                $buttons = '<form action="'.\URL::route('contacts.done', $contact).'" method="POST">'.csrf_field();
+                if (! $contact['done']) {
                     $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Bearbeitet</button>';
-                };
+                }
                 $buttons .= '</form>';
+
                 return $buttons;
             })
             ->rawColumns(['name', 'Actions'])
             ->make(true);
-
     }
 
     public function done(Contact $contact)
     {
         //
         $contact->update(['user_id' => Auth::user()->id, 'done' => true]);
+
         return redirect('/admin/contacts');
     }
 }

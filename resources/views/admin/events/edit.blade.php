@@ -99,13 +99,17 @@
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="col-md-6 form-group">
+                                    <div class="col-md-4 form-group">
                                         {!! Form::label('event_status_id', 'Status:') !!}
                                         {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
                                     </div>
-                                    <div class="col-md-6 form-group">
+                                    <div class="col-md-4 form-group">
                                         {!! Form::label('contract_status_id', 'Angebot / Rechnung:') !!}
                                         {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        {!! Form::label('external', 'Externe Buchung:') !!}
+                                        {!! Form::checkbox('external', '1', $event['external']) !!}
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -126,7 +130,7 @@
                     @switch($event['contract_status_id'])
                         @case(config('status.contract_offen'))
                             <div class="form-group">
-                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.createoffer', $event->id) }}">
+                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.createoffer', $event) }}">
                                     @if(config('mail.direct_send'))
                                         Angebot erstellen & versenden
                                     @else
@@ -140,7 +144,7 @@
                                 <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                             </div>
                             <div class="form-group">
-                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendoffer', $event->id) }}">Angebot versenden</a>
+                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendoffer', $event) }}">Angebot versenden</a>
                             </div>
                             @break
                         @case(config('status.contract_angebot_versendet'))
@@ -148,7 +152,7 @@
                                 <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                             </div>
                             <div class="form-group">
-                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.createinvoice', $event->id) }}">Rechnung erstellen</a>
+                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.createinvoice', $event) }}">Rechnung erstellen</a>
                             </div>
                             @break
                         @case(config('status.contract_rechnung_erstellt'))
@@ -156,7 +160,7 @@
                                 <a target="_blank" class = 'btn btn-primary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                             </div>
                             <div class="form-group">
-                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendinvoice', $event->id) }}">Rechnung versenden</a>
+                                <a type='submit' class = 'btn btn-primary' href="{{ route('events.sendinvoice', $event) }}">Rechnung versenden</a>
                             </div>
                             @break
                         @case(config('status.contract_rechnung_versendet'))
@@ -210,6 +214,15 @@
     window.addEventListener("load", function(event) {
         Total_Change();
     });
+    $("#external").change(function() {
+        if(this.checked) {
+            $("#discount").val(10);
+        }
+        else{
+            $("#discount").val(0);
+        }
+        Total_Change();
+    });
     function PrepareMail() {
   		document.getElementById("cleaning_mail").style.display = "block";
 
@@ -235,7 +248,6 @@
         var start_date = new Date(document.getElementById('start_date').value);
         var end_date = new Date(document.getElementById('end_date').value);
         var days = (end_date - start_date)/(24*3600*1000);
-        console.log(days)
 	    var positions = @json($positions);
         var total_amount = 0, id = 0;
         var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;

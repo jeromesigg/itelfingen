@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Spatie\IcalendarGenerator\Components\Calendar;
@@ -26,7 +25,7 @@ class SendEventConfirmation extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\Event $event
+     * @param  \App\Models\Event  $event
      * @return void
      */
     public function __construct(Event $event)
@@ -42,15 +41,15 @@ class SendEventConfirmation extends Mailable
     public function build()
     {
         $email = $this->event['email'];
-        $name = $this->event['firstname'] . ' ' . $this->event['name'];
+        $name = $this->event['firstname'].' '.$this->event['name'];
 
         $calendar = Calendar::create()
             ->productIdentifier('Itelfingen.ch')
             ->event(function (Event_ICAL $event) {
-                $event->name("Email with iCal 101")
-                    ->attendee("jerome.sigg@gmail.com")
-                    ->startsAt(Carbon::parse("2022-12-15 08:00:00"))
-                    ->endsAt(Carbon::parse("2022-12-19 17:00:00"))
+                $event->name('Email with iCal 101')
+                    ->attendee('jerome.sigg@gmail.com')
+                    ->startsAt(Carbon::parse('2022-12-15 08:00:00'))
+                    ->endsAt(Carbon::parse('2022-12-19 17:00:00'))
                     ->fullDay()
                     ->address('Online - Google Meet');
             });
@@ -59,7 +58,7 @@ class SendEventConfirmation extends Mailable
         return $this->markdown('emails.events.feedback', ['event' => $this->event])
             ->to($email, $name)
             ->bcc(config('mail.from.address'), config('mail.from.name'))
-            ->subject("Invitation")
+            ->subject('Invitation')
             ->attachData($calendar->get(), 'invite.ics', [
                 'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
             ]);

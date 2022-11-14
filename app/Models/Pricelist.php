@@ -12,10 +12,11 @@ class Pricelist extends Model
         'detail',
         'price',
         'archive_status_id',
-        'sort-index'
+        'sort-index',
     ];
 
-    public function archive_status(){
+    public function archive_status()
+    {
         return $this->belongsTo(ArchiveStatus::class);
     }
 }

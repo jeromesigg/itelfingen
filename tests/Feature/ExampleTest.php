@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
@@ -19,6 +18,7 @@ class ExampleTest extends TestCase
         Artisan::call('migrate:reset');
         parent::tearDown();
     }
+
     /**
      * A basic test example.
      *

@@ -20,7 +20,7 @@ class CreateContactsTable extends Migration
             $table->string('email');
             $table->text('content');
             $table->string('subject');
-            $table->boolean('done');
+            $table->boolean('done')->default(false);
             $table->bigInteger('user_id')->index()->unsigned()->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');

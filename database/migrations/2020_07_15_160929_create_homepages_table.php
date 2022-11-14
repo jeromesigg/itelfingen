@@ -33,7 +33,6 @@ class CreateHomepagesTable extends Migration
             $table->foreign('background_bottom_photo_id')->references('id')->on('photos')->onDelete('set Null');
             $table->foreign('big_login_photo_id')->references('id')->on('photos')->onDelete('set Null');
             $table->foreign('small_login_photo_id')->references('id')->on('photos')->onDelete('set Null');
-
         });
     }
 

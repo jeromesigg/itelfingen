@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Helper\Helper;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -19,6 +18,7 @@ class LastInfosSent extends Mailable
      * @var \App\Models\Event
      */
     protected $event;
+
     /**
      * Create a new message instance.
      *
@@ -38,20 +38,26 @@ class LastInfosSent extends Mailable
     public function build()
     {
         $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
+        $PdfPath_HO = public_path('files/Hausordnung.pdf');
         $email = $this->event['email'];
-        $name = $this->event['firstname'] . ' ' . $this->event['name'];
+        $name = $this->event['firstname'].' '.$this->event['name'];
         $outputFile = Helper::PrintParking($this->event);
+
         return $this->markdown('emails.events.last_infos', ['event' => $this->event])
             ->to($email, $name)
             ->bcc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Buchung für das Ferienhaus Itelfingen')
             ->attach($PdfPath, [
-                'as'    => 'Infos_vor_Buchung.pdf',
-                'mime'   => 'application/pdf',
+                'as' => 'Infos_vor_Buchung.pdf',
+                'mime' => 'application/pdf',
             ])
             ->attach($outputFile, [
-                'as'    => 'Parkkarte.pdf',
-                'mime'   => 'application/pdf',
+                'as' => 'Parkkarte.pdf',
+                'mime' => 'application/pdf',
+            ])
+            ->attach($PdfPath_HO, [
+                'as' => 'Hausordnung.pdf',
+                'mime' => 'application/pdf',
             ]);
     }
 }

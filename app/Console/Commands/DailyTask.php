@@ -2,20 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Helper\Helper;
 use App\Mail\ApplicationInvoiceMail;
 use App\Mail\FeedbackMail;
 use App\Mail\LastInfosSent;
 use App\Models\Application;
 use App\Models\Event;
-use App\Models\Position;
 use App\Models\PricelistPosition;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Ixudra\Curl\Facades\Curl;
 use Revolution\Google\Sheets\Facades\Sheets;
-use setasign\Fpdi\Fpdi;
 
 class DailyTask extends Command
 {
@@ -55,27 +52,29 @@ class DailyTask extends Command
         $this->SendFeedbackMails();
     }
 
-    public function SendEventLastInfos(){
+    public function SendEventLastInfos()
+    {
         $date = Carbon::today()->addweeks(2);
-        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt'))->get();
+        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
-        foreach($events as $event){
+        foreach ($events as $event) {
             Mail::send(new LastInfosSent($event));
             $event->update(['last_info' => true]);
-        }        if(count($events)>0) {
-            $this->info(count($events) . ' Letzte Infos-Emails versendet.');
+        }        if (count($events) > 0) {
+            $this->info(count($events).' Letzte Infos-Emails versendet.');
         }
     }
 
-    public function SendFeedbackMails(){
-        $date = Carbon::today()->addDays(-3);
-        $events = Event::where('feedback_mail', false)->where('end_date','<=', $date )->where('event_status_id','=', config('status.event_bestaetigt'))->get();
+    public function SendFeedbackMails()
+    {
+        $date = Carbon::today();
+        $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
-        foreach($events as $event){
+        foreach ($events as $event) {
             Mail::send(new FeedbackMail($event));
             $event->update(['feedback_mail' => true]);
-        }        if(count($events)>0) {
-            $this->info(count($events) . ' Feedback-Mails versendet.');
+        }        if (count($events) > 0) {
+            $this->info(count($events).' Feedback-Mails versendet.');
         }
     }
 
@@ -88,66 +87,65 @@ class DailyTask extends Command
             $this->SendApplicationInvoice($application);
         }
         if (count($applications) > 0) {
-            $this->info(count($applications) . ' Rechnungen versendet.');
+            $this->info(count($applications).' Rechnungen versendet.');
         }
     }
 
-    public function SendApplicationInvoice($application){
-        $pl_position = PricelistPosition::where('bexio_code','=',300)->first();
+    public function SendApplicationInvoice($application)
+    {
+        $pl_position = PricelistPosition::where('bexio_code', '=', 300)->first();
 
-        if(!isset($application['bexio_invoice_id'])) {
+        if (! isset($application['bexio_invoice_id'])) {
             $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
                 ->withData(
-                    array(
+                    [
                         'title' => 'Dein Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen',
                         'contact_id' => $application->bexio_user_id,
                         'user_id' => 1,
                         'is_valid_from' => now(),
                         'is_valid_to' => Carbon::today()->addDays(30),
                         'api_reference' => $application['id'],
-                        'positions' => array(
-                            array(
+                        'positions' => [
+                            [
                                 'amount' => 1,
                                 'type' => 'KbPositionArticle',
                                 'tax_id' => 16,
                                 'article_id' => $pl_position['bexio_id'],
                                 'unit_price' => $pl_position['price'],
                                 'discount_in_percent' => 0,
-                            )
-                        )
-                    )
+                            ],
+                        ],
+                    ]
                 )
                 ->asJson(true)
                 ->post();
-        }
-        else{
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $application['bexio_invoice_id'])
+        } else {
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
                 ->get();
             $invoice = json_decode($invoice, true);
         }
-        if(isset($invoice['id'])){
-
+        if (isset($invoice['id'])) {
             $title = 'Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen';
 
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'] . '/send')
+            Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'].'/send')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
                 ->withData(
-                    array(
+                    [
                         'recipient_email' => config('mail.invoice_mail'),
                         'subject' => $title,
-                        'message' => $application['firstname'] . ' ' . $application['name'] .': [Network Link]' ,
-                        'mark_as_open' => true
-                    )
+                        'message' => $application['firstname'].' '.$application['name'].': [Network Link]',
+                        'mark_as_open' => true,
+                    ]
                 )
                 ->asJson(true)
                 ->post();
 
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $invoice['id'])
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'])
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
                 ->get();
@@ -156,34 +154,33 @@ class DailyTask extends Command
             Mail::send(new ApplicationInvoiceMail($application, $invoice));
 
             $application->update([
-                    'invoice_send' => true,
-                    'bexio_invoice_id' => $invoice['id']
-                ]
+                'invoice_send' => true,
+                'bexio_invoice_id' => $invoice['id'],
+            ]
             );
 
-            if (config('app.env') == 'production') {
-                // Write to Google Sheet
-                $array = [[
-                    'ID' => $application['id'],
-                    'Datum' => Carbon::parse($application['created_at'])->format('d.m.Y'),
-                    'Anrede' => $application->salutation['name'],
-                    'Vorname' => $application['firstname'],
-                    'Name' => $application['name'],
-                    'Organisation' => $application['organisation'],
-                    'Strasse' => $application['street'],
-                    'PLZ' => $application['plz'],
-                    'Ort' => $application['city'],
-                    'E-Mail' => $application['email'],
-                    'Telefon' => $application['telephone'],
-                    'Grund' => $application['why'],
-                    'Bemerkung' => $application['comment'],
-                    'Bexio User' => $application['bexio_user_id'],
-                    'Bexio Rechnung' => $application['bexio_invoice_id'],
-                ]];
-                // Add new sheet to the configured google spreadsheet
-                Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
-            }
-
+//            if (config('app.env') == 'production') {
+            // Write to Google Sheet
+            $array = [[
+                'ID' => $application['id'],
+                'Datum' => Carbon::parse($application['created_at'])->format('d.m.Y'),
+                'Anrede' => $application->salutation['name'],
+                'Vorname' => $application['firstname'],
+                'Name' => $application['name'],
+                'Organisation' => $application['organisation'],
+                'Strasse' => $application['street'],
+                'PLZ' => $application['plz'],
+                'Ort' => $application['city'],
+                'E-Mail' => $application['email'],
+                'Telefon' => $application['telephone'],
+                'Grund' => $application['why'],
+                'Bemerkung' => $application['comment'],
+                'Bexio User' => $application['bexio_user_id'],
+                'Bexio Rechnung' => $application['bexio_invoice_id'],
+            ]];
+            // Add new sheet to the configured google spreadsheet
+            Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
+//            }
         }
     }
 }

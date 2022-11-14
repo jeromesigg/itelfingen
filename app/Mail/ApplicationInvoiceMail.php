@@ -3,14 +3,10 @@
 namespace App\Mail;
 
 use App\Models\Application;
-use App\Models\PricelistPosition;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Ixudra\Curl\Facades\Curl;
-use Revolution\Google\Sheets\Facades\Sheets;
 
 class ApplicationInvoiceMail extends Mailable
 {
@@ -22,7 +18,9 @@ class ApplicationInvoiceMail extends Mailable
      * @var \App\Models\Application
      */
     protected $application;
+
     protected $invoice;
+
     /**
      * Create a new message instance.
      *
@@ -44,20 +42,18 @@ class ApplicationInvoiceMail extends Mailable
     {
         $application = $this->application;
 
-        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $this->invoice['id'] . '/pdf')
+        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$this->invoice['id'].'/pdf')
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
             ->asJson(true)
             ->get();
 
-
         return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link']])
-            ->to($application['email'], $application['firstname'] . ' ' . $application['name'])
+            ->to($application['email'], $application['firstname'].' '.$application['name'])
             ->bcc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen')
             ->attachData(base64_decode($invoice_pdf['content']), 'Rechnung.pdf', [
                 'mime' => 'application/pdf',
             ]);
-
     }
 }
