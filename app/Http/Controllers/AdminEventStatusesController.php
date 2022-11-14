@@ -16,6 +16,7 @@ class AdminEventStatusesController extends Controller
     {
         //
         $eventstatuses = EventStatus::all();
+
         return view('admin.eventstatuses.index', compact('eventstatuses'));
     }
 
@@ -40,6 +41,7 @@ class AdminEventStatusesController extends Controller
     {
         //
         $eventstatuses = EventStatus::create($request->all());
+
         return redirect()->route('admin.eventstatuses.index');
     }
 

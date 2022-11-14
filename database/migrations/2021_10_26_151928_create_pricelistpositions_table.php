@@ -20,7 +20,7 @@ class CreatePricelistPositionsTable extends Migration
             $table->integer('bexio_id')->nullable();
             $table->integer('bexio_code')->nullable();
             $table->float('price')->nullable();
-            $table->boolean('show')->nullable();  
+            $table->boolean('show')->nullable();
             $table->bigInteger('archive_status_id')->index()->unsigned()->nullable();
             $table->foreign('archive_status_id')->references('id')->on('archive_statuses');
         });

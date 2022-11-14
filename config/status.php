@@ -21,5 +21,4 @@ return [
     'contract_rechnung_erstellt' => 20,
     'contract_rechnung_versendet' => 30,
     'contract_storniert' => 50,
-]
-?>
+];

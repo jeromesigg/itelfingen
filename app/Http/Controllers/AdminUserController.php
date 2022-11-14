@@ -19,15 +19,14 @@ class AdminUserController extends Controller
     {
         //
         $user = Auth::user();
-        if($user->isTeam() && !$user->isAdmin()){
-            $users =  User::whereId($user->id)->paginate(10);
-            $roles =Role::whereId($user->role_id)->pluck('name','id')->all();
-
-        }
-        else{
+        if ($user->isTeam() && ! $user->isAdmin()) {
+            $users = User::whereId($user->id)->paginate(10);
+            $roles = Role::whereId($user->role_id)->pluck('name', 'id')->all();
+        } else {
             $users = User::paginate(10);
-            $roles = Role::pluck('name','id')->all();
+            $roles = Role::pluck('name', 'id')->all();
         }
+
         return view('admin.users.index', compact('users', 'roles'));
     }
 
@@ -39,12 +38,12 @@ class AdminUserController extends Controller
     public function create()
     {
         //
-        if(!Auth::user()->isAdmin()){
-            $roles = Role::where('is_admin', false)->pluck('name','id')->all();
+        if (! Auth::user()->isAdmin()) {
+            $roles = Role::where('is_admin', false)->pluck('name', 'id')->all();
         } else {
-            $roles = Role::pluck('name','id')->all();
-
+            $roles = Role::pluck('name', 'id')->all();
         }
+
         return view('admin.users.create', compact('roles'));
     }
 
@@ -57,15 +56,14 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         //
-        if(trim($request->password) == ''){
+        if (trim($request->password) == '') {
             $input = $request->except('password');
-        }
-        else{
+        } else {
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
         }
 
-        if($file = $request->file('signature')){
+        if ($file = $request->file('signature')) {
             $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
             $input['signature'] = $path;
         }
@@ -95,12 +93,10 @@ class AdminUserController extends Controller
     public function edit($id)
     {
         //
-        if(Auth::user()->isTeam() && !Auth::user()->isAdmin()){
-            $roles =Role::whereId(Auth::user()->role_id)->pluck('name','id')->all();
-
-        }
-        else{
-            $roles = Role::pluck('name','id')->all();
+        if (Auth::user()->isTeam() && ! Auth::user()->isAdmin()) {
+            $roles = Role::whereId(Auth::user()->role_id)->pluck('name', 'id')->all();
+        } else {
+            $roles = Role::pluck('name', 'id')->all();
         }
         $user = User::findOrFail($id);
 
@@ -119,21 +115,20 @@ class AdminUserController extends Controller
         //
         $user = User::findOrFail($id);
 
-
-        if(trim($request->password) == ''){
+        if (trim($request->password) == '') {
             $input = $request->except('password');
-        }
-        else{
+        } else {
             $input = $request->all();
             $input['password'] = bcrypt($request->password);
         }
 
-        if($file = $request->file('signature')){
+        if ($file = $request->file('signature')) {
             $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
             $input['signature'] = $path;
         }
 
         $user->update($input);
+
         return redirect('/admin/users');
     }
 
@@ -147,6 +142,7 @@ class AdminUserController extends Controller
     {
         //
         User::findOrFail($id)->delete();
+
         return redirect('/admin/users');
     }
 
@@ -155,5 +151,4 @@ class AdminUserController extends Controller
         /**this will force download your file**/
         return Storage::download($user->signature);
     }
-
 }

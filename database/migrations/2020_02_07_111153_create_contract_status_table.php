@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateContractStatusTable extends Migration
 {
@@ -19,7 +18,6 @@ class CreateContractStatusTable extends Migration
             $table->timestamps();
             $table->string('name');
         });
-
     }
 
     /**

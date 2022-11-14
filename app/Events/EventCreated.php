@@ -3,11 +3,8 @@
 namespace App\Events;
 
 use App\Models\Event;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -21,8 +18,11 @@ class EventCreated
      * @var \App\Models\Event
      */
     public Event $event;
+
     public bool $one_day;
+
     public array $position_array;
+
     /**
      * Create a new event instance.
      *

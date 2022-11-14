@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\ApplicationCreatedEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Ixudra\Curl\Facades\Curl;
 
 class ApplicationCreatedListener
@@ -29,24 +27,24 @@ class ApplicationCreatedListener
     {
         //
         $application = $event->application;
-        if(is_null($application['bexio_user_id'])){
-            $query = array(
-                array(
+        if (is_null($application['bexio_user_id'])) {
+            $query = [
+                [
                     'field' => 'name_1',
-                    'value' => $application->name
-                ),
-                array(
+                    'value' => $application->name,
+                ],
+                [
                     'field' => 'name_2',
-                    'value' => $application->firstname ?: ''
-                ),
-                array(
+                    'value' => $application->firstname ?: '',
+                ],
+                [
                     'field' => 'address',
-                    'value' => $application->street
-                ),
-                array(
+                    'value' => $application->street,
+                ],
+                [
                     'field' => 'postcode',
-                    'value' => $application->plz
-                ),);
+                    'value' => $application->plz,
+                ], ];
             $person = Curl::to('https://api.bexio.com/2.0/contact/search')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
@@ -55,12 +53,12 @@ class ApplicationCreatedListener
                 ->asJson(true)
                 ->post();
 
-            if(count($person) === 0){
+            if (count($person) === 0) {
                 $person = Curl::to('https://api.bexio.com/2.0/contact')
                     ->withHeader('Accept: application/json')
                     ->withBearer(config('app.bexio_token'))
                     ->withContentType('application/json')
-                    ->withData( array(
+                    ->withData([
                         'contact_type_id' => '2',
                         'name_1' => $application->name,
                         'name_2' => $application->firstname,
@@ -73,14 +71,13 @@ class ApplicationCreatedListener
                         'remarks' => $application->comment,
                         'user_id' => 1,
                         'owner_id' => 1,
-                    ) )
+                    ])
                     ->asJson(true)
                     ->post();
-            }
-            else{
+            } else {
                 $person = $person[0];
             }
-            if(!isset($person->error)){
+            if (! isset($person->error)) {
                 $application->update(['bexio_user_id' => $person['id']]);
             }
         }

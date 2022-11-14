@@ -13,14 +13,16 @@ class Person extends Model
         'function',
         'photo_id',
         'archive_status_id',
-        'sort-index'
+        'sort-index',
     ];
 
-    public function archive_status(){
+    public function archive_status()
+    {
         return $this->belongsTo(ArchiveStatus::class);
     }
 
-    public function photo(){
+    public function photo()
+    {
         return $this->belongsTo(Photo::class);
     }
 }

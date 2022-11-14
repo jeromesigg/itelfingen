@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Mail\ContactCreated;
 use App\Models\Contact;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class ContactCreatedNotification extends Notification
@@ -14,6 +12,7 @@ class ContactCreatedNotification extends Notification
     use Queueable;
 
     public Contact $contact;
+
     /**
      * Create a new notification instance.
      *
@@ -44,7 +43,7 @@ class ContactCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new ContactCreated($this->contact));
+        return new ContactCreated($this->contact);
     }
 
     /**
@@ -56,6 +55,7 @@ class ContactCreatedNotification extends Notification
     public function toArray($notifiable)
     {
         $contact = $this->contact;
+
         return [
             'name' => $contact->name,
             'e-mail' => $contact->email,

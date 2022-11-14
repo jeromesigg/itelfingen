@@ -74,6 +74,7 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         $this->guard()->logout();
+
         return redirect('/login')->with('status', 'Bitte warte, bis du freigeschalten wurdest.');
     }
 }

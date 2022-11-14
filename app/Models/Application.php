@@ -10,18 +10,18 @@ class Application extends Model
 {
     use Notifiable, HasFactory;
 
-
     protected $fillable = [
         'name', 'salutation_id', 'firstname', 'organisation', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'why',
-        'bexio_user_id', 'bexio_invoice_id', 'invoice_send', 'refuse'
+        'bexio_user_id', 'bexio_invoice_id', 'invoice_send', 'refuse',
     ];
 
-    protected $casts =  [
+    protected $casts = [
         'invoice_send' => 'boolean',
         'refuse' => 'boolean',
     ];
 
-    public function salutation(){
+    public function salutation()
+    {
         return $this->belongsTo(Salutation::class);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Photo;
 use App\Models\Picture;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class AdminPicturesController extends Controller
     {
         //
         $pictures = Picture::paginate(10);
+
         return view('admin.pictures.index', compact('pictures'));
     }
 
@@ -42,17 +44,17 @@ class AdminPicturesController extends Controller
         //
         $input = $request->all();
 
-        if($file = $request->file('photo_id')){
-            $name = time() . '_' .$file->getClientOriginalName();
+        if ($file = $request->file('photo_id')) {
+            $name = time().'_'.$file->getClientOriginalName();
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
 
-            if($input['cropped_photo_id']){
-                $name = time() . '_cropped_' .$file->getClientOriginalName();
+            if ($input['cropped_photo_id']) {
+                $name = time().'_cropped_'.$file->getClientOriginalName();
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
-                $photo_cropped = Photo::create(['file'=>$name]);
+                $photo_cropped = Photo::create(['file' => $name]);
                 $input['cropped_photo_id'] = $photo_cropped->id;
             }
         }
@@ -83,6 +85,7 @@ class AdminPicturesController extends Controller
     {
         //
         $picture = Picture::findOrFail($id);
+
         return view('admin.pictures.edit', compact('picture'));
     }
 
@@ -98,22 +101,23 @@ class AdminPicturesController extends Controller
         //
         $input = $request->all();
 
-        if($file = $request->file('photo_id')){
-            $name = time() . $file->getClientOriginalName();
+        if ($file = $request->file('photo_id')) {
+            $name = time().$file->getClientOriginalName();
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
 
-            if($input['cropped_photo_id']){
-                $name = time() . '_cropped_' .$file->getClientOriginalName();
+            if ($input['cropped_photo_id']) {
+                $name = time().'_cropped_'.$file->getClientOriginalName();
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
-                $photo_cropped = Photo::create(['file'=>$name]);
+                $photo_cropped = Photo::create(['file' => $name]);
                 $input['cropped_photo_id'] = $photo_cropped->id;
             }
         }
         Picture::whereId($id)->first()->update($input);
+
         return redirect('/admin/pictures');
     }
 
@@ -127,8 +131,8 @@ class AdminPicturesController extends Controller
     {
         //
         $picture = Picture::findOrFail($id);
-        unlink(public_path() . $picture->photo->file);
-        unlink(public_path() . $picture->cropped_photo->file);
+        unlink(public_path().$picture->photo->file);
+        unlink(public_path().$picture->cropped_photo->file);
 
         $picture->delete();
 

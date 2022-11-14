@@ -14,14 +14,16 @@ class History extends Model
         'description',
         'archive_status_id',
         'sort-index',
-        'photo_id'
+        'photo_id',
     ];
 
-    public function archive_status(){
+    public function archive_status()
+    {
         return $this->belongsTo(ArchiveStatus::class);
     }
 
-    public function photo(){
+    public function photo()
+    {
         return $this->belongsTo(Photo::class);
     }
 }

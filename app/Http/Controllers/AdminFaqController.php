@@ -19,7 +19,8 @@ class AdminFaqController extends Controller
     public function index()
     {
         //
-        $faq_chapters = FaqChapter::pluck('name','id')->all();
+        $faq_chapters = FaqChapter::pluck('name', 'id')->all();
+
         return view('admin.faqs.index', compact('faq_chapters'));
     }
 
@@ -28,22 +29,22 @@ class AdminFaqController extends Controller
         $faqs = Faq::get();
 
         return DataTables::of($faqs)
-            ->addColumn('image', function(Faq $faq){
-               $url = $faq->photo ? $faq->photo['file'] : 'https://via.placeholder.com/50';
+            ->addColumn('image', function (Faq $faq) {
+                $url = $faq->photo ? $faq->photo['file'] : 'https://via.placeholder.com/50';
 //               return $url;
-               return '<img height="50" src="' . $url .'" alt="" class="img-fluid">';
+                return '<img height="50" src="'.$url.'" alt="" class="img-fluid">';
             })
-            ->addColumn('name', function(Faq $faq){
+            ->addColumn('name', function (Faq $faq) {
                 return '<a href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
             })
-            ->addColumn('description', function(Faq $faq){
-                return substr($faq->description,0,500);
+            ->addColumn('description', function (Faq $faq) {
+                return substr($faq->description, 0, 500);
             })
 
-            ->addColumn('chapter', function(Faq $faq){
+            ->addColumn('chapter', function (Faq $faq) {
                 return $faq->faq_chapter->name;
             })
-            ->addColumn('archive_status', function(Faq $faq){
+            ->addColumn('archive_status', function (Faq $faq) {
                 return $faq->archive_status->name;
             })
             ->rawColumns(['image', 'name'])
@@ -71,10 +72,10 @@ class AdminFaqController extends Controller
     {
         //
         $input = $request->all();
-        if($file = $request->file('photo_id')){
-            $name = time() . str_replace(' ', '', $file->getClientOriginalName());
+        if ($file = $request->file('photo_id')) {
+            $name = time().str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
         }
         $index = FAQ::all()->count();
@@ -105,10 +106,11 @@ class AdminFaqController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
-        $faq_chapters = FaqChapter::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
+        $faq_chapters = FaqChapter::pluck('name', 'id')->all();
         $faq = FAQ::findOrFail($id);
-        return view('admin.faqs.edit', compact('archive_statuses','faq', 'faq_chapters'));
+
+        return view('admin.faqs.edit', compact('archive_statuses', 'faq', 'faq_chapters'));
     }
 
     /**
@@ -122,15 +124,16 @@ class AdminFaqController extends Controller
     {
         //
         $input = $request->all();
-        if($file = $request->file('photo_id')){
-            $name = time() . str_replace(' ', '', $file->getClientOriginalName());
+        if ($file = $request->file('photo_id')) {
+            $name = time().str_replace(' ', '', $file->getClientOriginalName());
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
         }
 
         FAQ::whereId($id)->first()->update($input);
+
         return redirect('/admin/faqs');
     }
 

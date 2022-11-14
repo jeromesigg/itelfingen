@@ -12,13 +12,13 @@ class City extends Model
     use SearchableTrait;
 
     protected $fillable = [
-        'name', 'plz'
+        'name', 'plz',
     ];
 
     protected $searchable = [
         'columns' => [
             'name' => 1,
             'plz' => 1,
-        ]
+        ],
     ];
 }

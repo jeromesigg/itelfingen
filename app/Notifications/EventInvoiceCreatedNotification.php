@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
@@ -16,6 +14,7 @@ class EventInvoiceCreatedNotification extends Notification
     use Queueable;
 
     public Event $event;
+
     /**
      * Create a new notification instance.
      *
@@ -26,7 +25,6 @@ class EventInvoiceCreatedNotification extends Notification
         //
         $this->event = $event;
     }
-
 
     /**
      * Get the notification's delivery channels.
@@ -47,8 +45,8 @@ class EventInvoiceCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-
     }
+
     /**
      * Get the Slack representation of the notification.
      *
@@ -63,9 +61,9 @@ class EventInvoiceCreatedNotification extends Notification
 
 //        if (config('app.env') == 'production') {
         return (new SlackMessage)
-            ->from( config('slack.username'),config('slack.icon'))
+            ->from(config('slack.username'), config('slack.icon'))
             ->to(config('slack.channel'))
-            ->content('Es hat eine neue Buchung gegeben. Vom ' . $start_date . ' bis ' . $end_date . ' Von ' . $event['firstname'] . ' ' . $event['name'] . ' - ' . $event['group_name']);
+            ->content('Es hat eine neue Buchung gegeben. Vom '.$start_date.' bis '.$end_date.' Von '.$event['firstname'].' '.$event['name'].' - '.$event['group_name']);
 //        }
     }
 
@@ -79,7 +77,7 @@ class EventInvoiceCreatedNotification extends Notification
     {
         return [
             //
-            'action' => 'Rechnung erstellt'
+            'action' => 'Rechnung erstellt',
         ];
     }
 }

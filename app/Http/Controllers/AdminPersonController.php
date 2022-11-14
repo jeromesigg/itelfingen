@@ -19,6 +19,7 @@ class AdminPersonController extends Controller
     {
         //
         $people = Person::orderBy('sort-index')->paginate(10);
+
         return view('admin.people.index', compact('people'));
     }
 
@@ -43,10 +44,10 @@ class AdminPersonController extends Controller
     {
         //
         $input = $request->all();
-        if($file = $request->file('photo_id')){
+        if ($file = $request->file('photo_id')) {
             $name = $input['name'].'.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
         }
@@ -78,9 +79,10 @@ class AdminPersonController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $person = Person::findOrFail($id);
-        return view('admin.people.edit', compact('archive_statuses','person'));
+
+        return view('admin.people.edit', compact('archive_statuses', 'person'));
     }
 
     /**
@@ -94,14 +96,15 @@ class AdminPersonController extends Controller
     {
         //
         $input = $request->all();
-        if($file = $request->file('photo_id')){
-            $name = $input['name']+'.jpg';
+        if ($file = $request->file('photo_id')) {
+            $name = $input['name'] + '.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
         }
         Person::whereId($id)->first()->update($input);
+
         return redirect('/admin/people');
     }
 
@@ -115,8 +118,8 @@ class AdminPersonController extends Controller
     {
         //
         $person = Person::findOrFail($id);
-        if($person->photo){
-            unlink(public_path() . $person->photo->file);
+        if ($person->photo) {
+            unlink(public_path().$person->photo->file);
         }
         $person->delete();
 

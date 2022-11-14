@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Mail\ApplicationCreated;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
@@ -15,8 +13,8 @@ class ApplicationCreatedNotification extends Notification
 {
     use Queueable;
 
-
     public Application $application;
+
     /**
      * Create a new notification instance.
      *
@@ -47,7 +45,7 @@ class ApplicationCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new ApplicationCreated($this->application));
+        return new ApplicationCreated($this->application);
     }
 
     /**
@@ -59,12 +57,13 @@ class ApplicationCreatedNotification extends Notification
     public function toSlack($notifiable)
     {
 //        if (config('app.env') == 'production') {
-            return (new SlackMessage)
-                ->from( config('slack.username'),config('slack.icon'))
-                ->to(config('slack.application_channel'))
-                ->content('Es hat eine neue Bewerbung gegeben. '.$this->application['firstname'] . ' ' . $this->application['name'] . ' würde gerne Genossenschafter/in werden. Grund: ' . $this->application['why']);
+        return (new SlackMessage)
+            ->from(config('slack.username'), config('slack.icon'))
+            ->to(config('slack.application_channel'))
+            ->content('Es hat eine neue Bewerbung gegeben. '.$this->application['firstname'].' '.$this->application['name'].' würde gerne Genossenschafter/in werden. Grund: '.$this->application['why']);
 //        }
     }
+
     /**
      * Get the array representation of the notification.
      *
@@ -74,12 +73,13 @@ class ApplicationCreatedNotification extends Notification
     public function toArray($notifiable)
     {
         $application = $this->application;
+
         return [
-            'name' => $application->firstname . ' ' . $application->name,
+            'name' => $application->firstname.' '.$application->name,
             'e-mail' => $application->email,
             'gruppe' => $application->organisation,
             'strasse' => $application->street,
-            'ort' => $application->plz . ' ' . $application->city,
+            'ort' => $application->plz.' '.$application->city,
             'telefon' => $application->telephone,
             'wieso' => $application->why,
             'bemerkung' => $application->comment,

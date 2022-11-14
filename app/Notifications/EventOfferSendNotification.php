@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Mail\SendOffersMail;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Ixudra\Curl\Facades\Curl;
 
@@ -15,7 +13,9 @@ class EventOfferSendNotification extends Notification
     use Queueable;
 
     public Event $event;
-    public Array $offer;
+
+    public array $offer;
+
     /**
      * Create a new notification instance.
      *
@@ -25,13 +25,12 @@ class EventOfferSendNotification extends Notification
     {
         //
         $this->event = $event;
-        $offer = Curl::to('https://api.bexio.com/2.0/kb_offer/' . $event['bexio_offer_id'])
+        $offer = Curl::to('https://api.bexio.com/2.0/kb_offer/'.$event['bexio_offer_id'])
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
             ->get();
         $offer = json_decode($offer, true);
         $this->offer = $offer;
-
     }
 
     /**
@@ -53,7 +52,7 @@ class EventOfferSendNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendOffersMail($this->event, $this->offer['network_link'], $this->offer['total']));
+        return new SendOffersMail($this->event, $this->offer['network_link'], $this->offer['total']);
     }
 
     /**
@@ -66,7 +65,7 @@ class EventOfferSendNotification extends Notification
     {
         return [
             //
-            'action' => 'Angebot versendet'
+            'action' => 'Angebot versendet',
         ];
     }
 }

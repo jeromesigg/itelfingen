@@ -23,7 +23,7 @@ return [
     'scopes' => [\Google_Service_Sheets::DRIVE, \Google_Service_Sheets::SPREADSHEETS],
     'access_type' => 'offline',
     'approval_prompt' => 'force',
-    'prompt'           => 'consent',
+    'prompt' => 'consent',
     /*
     |----------------------------------------------------------------------------
     | Google developer key
@@ -69,7 +69,7 @@ return [
     | NOTE: If client id is specified here, it will get over written by the one above.
     |
     */
-    'config'           => [],
+    'config' => [],
     'spreadsheet_id' => env('SPREADSHEET_ID'),
-    'sheet_id'       => env('SHEET_ID'),
+    'sheet_id' => env('SHEET_ID'),
 ];

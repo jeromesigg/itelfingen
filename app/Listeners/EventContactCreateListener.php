@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\EventOfferCreate;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Ixudra\Curl\Facades\Curl;
 
 class EventContactCreateListener
@@ -29,24 +27,24 @@ class EventContactCreateListener
     {
         //
         $event = $eventOffer->event;
-        if(is_null($event['bexio_user_id'])){
-            $query = array(
-                array(
+        if (is_null($event['bexio_user_id'])) {
+            $query = [
+                [
                     'field' => 'name_1',
-                    'value' => $event->name
-                ),
-                array(
+                    'value' => $event->name,
+                ],
+                [
                     'field' => 'name_2',
-                    'value' => $event->firstname ? $event->firstname  : ''
-                ),
-                array(
+                    'value' => $event->firstname ? $event->firstname : '',
+                ],
+                [
                     'field' => 'address',
-                    'value' => $event->street
-                ),
-                array(
+                    'value' => $event->street,
+                ],
+                [
                     'field' => 'postcode',
-                    'value' => $event->plz
-                ),);
+                    'value' => $event->plz,
+                ], ];
             $person = Curl::to('https://api.bexio.com/2.0/contact/search')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))
@@ -55,12 +53,12 @@ class EventContactCreateListener
                 ->asJson(true)
                 ->post();
 
-            if(count($person) === 0){
+            if (count($person) === 0) {
                 $person = Curl::to('https://api.bexio.com/2.0/contact')
                     ->withHeader('Accept: application/json')
                     ->withBearer(config('app.bexio_token'))
                     ->withContentType('application/json')
-                    ->withData( array(
+                    ->withData([
                         'contact_type_id' => '2',
                         'name_1' => $event->name,
                         'name_2' => $event->firstname,
@@ -73,17 +71,15 @@ class EventContactCreateListener
                         'remarks' => $event->comment,
                         'user_id' => 1,
                         'owner_id' => 1,
-                    ) )
+                    ])
                     ->asJson(true)
                     ->post();
-            }
-            else{
+            } else {
                 $person = $person[0];
             }
-            if(!isset($person->error)){
+            if (! isset($person->error)) {
                 $event->update(['bexio_user_id' => $person['id']]);
             }
         }
-
     }
 }

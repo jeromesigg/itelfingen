@@ -17,9 +17,10 @@ class AdminHomepageController extends Controller
     {
         //
         $homepages = Homepage::all();
-        if($homepages->count() === 0){
+        if ($homepages->count() === 0) {
             $homepages = Homepage::create();
         }
+
         return view('admin.homepages.index', compact('homepages'));
     }
 
@@ -65,9 +66,10 @@ class AdminHomepageController extends Controller
     {
         //
         $homepage = Homepage::FindOrFail($id);
-        if($homepage->count() === 0){
+        if ($homepage->count() === 0) {
             $homepage = Homepage::create();
         }
+
         return view('admin.homepages.edit', compact('homepage'));
     }
 
@@ -83,38 +85,38 @@ class AdminHomepageController extends Controller
         //
         $input = $request->all();
 
-        if($file = $request->file('main_photo_id')){
+        if ($file = $request->file('main_photo_id')) {
             $name = 'hero-bg.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['main_photo_id'] = $photo->id;
         }
-        if($file = $request->file('background_top_photo_id')){
+        if ($file = $request->file('background_top_photo_id')) {
             $name = 'about-bg.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['background_top_photo_id'] = $photo->id;
         }
-        if($file = $request->file('background_bottom_photo_id')){
+        if ($file = $request->file('background_bottom_photo_id')) {
             $name = 'events-bg.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['background_bottom_photo_id'] = $photo->id;
         }
-        if($file = $request->file('big_login_photo_id')){
+        if ($file = $request->file('big_login_photo_id')) {
             $name = 'login.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['big_login_photo_id'] = $photo->id;
         }
-        if($file = $request->file('small_login_photo_id')){
+        if ($file = $request->file('small_login_photo_id')) {
             $name = 'logo.jpg';
             $file->move('images', $name);
-            $photo = Photo::create(['file'=>$name]);
+            $photo = Photo::create(['file' => $name]);
 
             $input['small_login_photo_id'] = $photo->id;
         }

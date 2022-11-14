@@ -17,6 +17,7 @@ class AdminPricelistController extends Controller
     {
         //
         $pricelists = Pricelist::orderBy('sort-index')->paginate(10);
+
         return view('admin.pricelists.index', compact('pricelists'));
     }
 
@@ -69,9 +70,10 @@ class AdminPricelistController extends Controller
     public function edit($id)
     {
         //
-        $archive_statuses = ArchiveStatus::pluck('name','id')->all();
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $pricelist = Pricelist::findOrFail($id);
-        return view('admin.pricelists.edit', compact('archive_statuses','pricelist'));
+
+        return view('admin.pricelists.edit', compact('archive_statuses', 'pricelist'));
     }
 
     /**
@@ -86,6 +88,7 @@ class AdminPricelistController extends Controller
         //
         $input = $request->all();
         Pricelist::whereId($id)->first()->update($input);
+
         return redirect('/admin/pricelists');
     }
 

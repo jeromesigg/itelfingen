@@ -2,20 +2,20 @@
 
 namespace App\Notifications;
 
+use App\Mail\EventCreated;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EventCreated;
 
 class EventCreatedNotification extends Notification
 {
     use Queueable;
 
     public Event $event;
+
     /**
      * Create a new notification instance.
      *
@@ -46,7 +46,7 @@ class EventCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new EventCreated($this->event));
+        return new EventCreated($this->event);
     }
 
     /**
@@ -58,18 +58,19 @@ class EventCreatedNotification extends Notification
     public function toArray($notifiable)
     {
         $event = $this->event;
+
         return [
             'datum_start' => Carbon::parse($event->start_date)->format('d.m.Y'),
             'datum_ende' => Carbon::parse($event->end_date)->format('d.m.Y'),
             'anzahl_uebernachtung' => $event->total_days,
-            'name' =>  $event->firstname . ' '. $event->name,
+            'name' => $event->firstname.' '.$event->name,
             'e-mail' => $event->email,
             'gruppe' => $event->group_name,
             'strasse' => $event->street,
-            'ort' => $event->plz . ' ' . $event->city,
+            'ort' => $event->plz.' '.$event->city,
             'telefon' => $event->telephone,
             'total' => $event->total_amount,
-            'bemerkung' => $event->comment
+            'bemerkung' => $event->comment,
         ];
     }
 }

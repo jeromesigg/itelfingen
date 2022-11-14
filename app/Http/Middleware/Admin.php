@@ -16,12 +16,12 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::check()){
-            if(Auth::user()->isAdmin() || Auth::user()->isTeam()){
+        if (Auth::check()) {
+            if (Auth::user()->isAdmin() || Auth::user()->isTeam()) {
                 return $next($request);
-
             }
         }
+
         return redirect()->guest(route('login'));
     }
 }

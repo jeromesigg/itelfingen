@@ -5,16 +5,17 @@ namespace App\Notifications;
 use App\Mail\SendEventInvoiceMail;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Ixudra\Curl\Facades\Curl;
 
 class EventInvoiceSendNotification extends Notification
 {
     use Queueable;
+
     public Event $event;
-    public Array $invoice;
+
+    public array $invoice;
+
     /**
      * Create a new notification instance.
      *
@@ -24,7 +25,7 @@ class EventInvoiceSendNotification extends Notification
     {
         //
         $this->event = $event;
-        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/' . $event['bexio_invoice_id'])
+        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$event['bexio_invoice_id'])
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
             ->get();
@@ -51,7 +52,7 @@ class EventInvoiceSendNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendEventInvoiceMail($this->event, $this->invoice));
+        return new SendEventInvoiceMail($this->event, $this->invoice);
     }
 
     /**
@@ -64,7 +65,7 @@ class EventInvoiceSendNotification extends Notification
     {
         return [
             //
-            'action' => 'Rechnung versendet'
+            'action' => 'Rechnung versendet',
         ];
     }
 }

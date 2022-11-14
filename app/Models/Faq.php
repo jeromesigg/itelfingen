@@ -13,18 +13,21 @@ class Faq extends Model
         'faq_chapter_id',
         'photo_id',
         'sort-index',
-        'archive_status_id'
+        'archive_status_id',
     ];
 
-    public function archive_status(){
+    public function archive_status()
+    {
         return $this->belongsTo(ArchiveStatus::class);
     }
 
-    public function photo(){
+    public function photo()
+    {
         return $this->belongsTo(Photo::class);
     }
 
-    public function faq_chapter(){
+    public function faq_chapter()
+    {
         return $this->belongsTo(FaqChapter::class);
     }
 }

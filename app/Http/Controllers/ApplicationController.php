@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Events\ApplicationCreatedEvent;
-use App\Mail\ApplicationCreated;
 use App\Models\Application;
 use App\Models\Homepage;
 use App\Models\Salutation;
 use App\Notifications\ApplicationCreatedNotification;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Ixudra\Curl\Facades\Curl;
-use jeremykenedy\Slack\Laravel\Facade as Slack;
 use Notification;
-use Spatie\GoogleCalendar\Event as Event_API;
 
 class ApplicationController extends Controller
 {
@@ -27,8 +21,8 @@ class ApplicationController extends Controller
     {
         //
         $homepage = Homepage::FindOrFail(1);
-        $salutations = Salutation::pluck('name','id');
-        $title = "Bewerbung Genossenschaft";
+        $salutations = Salutation::pluck('name', 'id');
+        $title = 'Bewerbung Genossenschaft';
 
         return view('contents.applications', compact('homepage', 'title', 'salutations'));
     }
