@@ -41,7 +41,7 @@ class FeedbackMail extends Mailable
 
         return $this->markdown('emails.events.feedback', ['event' => $this->event])
             ->to($email, $name)
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Dein Feedback für das Ferienhaus Itelfingen');
     }
 }

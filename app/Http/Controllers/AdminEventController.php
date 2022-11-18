@@ -269,7 +269,7 @@ class AdminEventController extends Controller
     public function api()
     {
         //
-        $events = Event::select('id', 'start_date', 'end_date', 'event_status_id')->get();
+        $events = Event::where('end_date','>',now())->where('event_status_id','<',config('status.event_storniert'))->get();
         $events_return = [];
         foreach ($events as $event)
         {
@@ -278,7 +278,7 @@ class AdminEventController extends Controller
                 'id' => $event['id'],
                 'begins_at' => $event['start_date'],
                 'ends_at' => $event['end_date'],
-                'occupancy_type' => $status,
+                'occupancy_type' => $status ? 'occupied' : 'tentative',
             ];
         }
         return $events_return;

@@ -34,7 +34,7 @@ class CleaningSent extends Mailable
     {
         return $this->markdown('emails.events.cleaning', ['text' => $this->text])
             ->to($this->email)
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Reinigungsanfrage Ferienhaus Itelfingen');
     }
 }

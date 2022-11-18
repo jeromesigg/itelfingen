@@ -57,7 +57,7 @@ class SendEventConfirmation extends Mailable
 
         return $this->markdown('emails.events.feedback', ['event' => $this->event])
             ->to($email, $name)
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Invitation')
             ->attachData($calendar->get(), 'invite.ics', [
                 'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',

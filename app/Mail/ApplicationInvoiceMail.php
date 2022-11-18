@@ -50,7 +50,7 @@ class ApplicationInvoiceMail extends Mailable
 
         return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link']])
             ->to($application['email'], $application['firstname'].' '.$application['name'])
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen')
             ->attachData(base64_decode($invoice_pdf['content']), 'Rechnung.pdf', [
                 'mime' => 'application/pdf',

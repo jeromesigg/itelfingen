@@ -41,7 +41,7 @@ class ApplicationCreated extends Mailable
 
         return $this->markdown('emails.applications.created', ['application' => $this->application])
             ->to($this->application['email'], $name)
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Bewerbung für die Genossenschaft Ferienhaus Itelfingen');
     }
 }

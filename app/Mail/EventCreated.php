@@ -41,7 +41,7 @@ class EventCreated extends Mailable
 
         return $this->markdown('emails.events.created', ['event' => $event])
             ->to($event['email'], $name)
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Ihre Buchung für das Ferienhaus Itelfingen');
     }
 }

@@ -55,7 +55,7 @@ class SendEventInvoiceMail extends Mailable
 
         return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link']])
             ->to($event['external'] ? config('mail.from.address') : $event['email'], $name)
-            ->bcc(config('mail.from.address'), config('mail.from.name'))
+            ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zur Buchung vom '.$start_date.' bis '.$end_date.' im Ferienhaus Itelfingen')
             ->attachData(base64_decode($invoice_pdf['content']), 'Rechnung.pdf', [
                 'mime' => 'application/pdf',
