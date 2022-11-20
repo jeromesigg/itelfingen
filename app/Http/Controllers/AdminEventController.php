@@ -238,11 +238,10 @@ class AdminEventController extends Controller
         return redirect()->back();
     }
 
-    public function SendCleaningMail(Request $request, $id)
+    public function SendCleaningMail(Request $request, Event $event)
     {
         $input = $request->all();
-        Mail::send(new CleaningSent($input['cleaning_mail_address'], $input['cleaning_mail_text']));
-        $event = Event::findOrFail($id);
+        Mail::send(new CleaningSent($event, $input['cleaning_mail_address'], $input['cleaning_mail_text']));
         $event->update(['cleaning_mail' => true]);
 
         return redirect()->back();

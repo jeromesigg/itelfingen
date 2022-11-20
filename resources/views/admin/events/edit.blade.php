@@ -186,7 +186,7 @@
                         </div>
                     {!! Form::close()!!}
                     <div id="cleaning_mail" style="display: none">
-                        {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@SendCleaningMail', $event->id]]) !!}
+                        {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@SendCleaningMail', $event]]) !!}
                         <div class="form-group">
                                 {!! Form::label('cleaning_mail_address', 'Mail Adresse:') !!}
                                 {!! Form::text('cleaning_mail_address', null, ['class' => 'form-control']) !!}
