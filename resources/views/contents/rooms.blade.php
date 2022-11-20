@@ -46,16 +46,15 @@
               <ul class="card_list">
                 <li>2 Tische mit je 6 Stühlen</li>
                 <li>3 Festbankgarnituren</li>
-                <li>Von November bis März Hot Pot</li>
               </ul>
             </div>
           </div>
         </div>
         <div class="card">
           <div class="card_content">
-            <span class="card_title card_title-line">In Planung</span>
+            <span class="card_title card_title-line">Wellness</span>
             <p class="card_text">
-              Wir planen den Garten zu gestalten, sowie eine kleine Wellnessoase zu erstellen.
+              Bei einer Buchung im Zeitraum vom 1. November bis 31. März ist der saisonal aufgestellte Hot Tub inklusive. Er bietet Platz für 8 Personen.
             </p>
           </div>
       </div>
