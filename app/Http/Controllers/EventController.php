@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\EventCreated;
 use App\Models\City;
 use App\Models\Event;
+use App\Models\PricelistPosition;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

@@ -3,6 +3,7 @@
 /public/storage
 /public/contracts
 /public/images
+/public/files
 /storage/*.key
 /storage/app/google-calendar
 /vendor

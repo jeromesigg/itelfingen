@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventCreated;
 use App\Events\EventInvoiceCreate;
 use App\Events\EventInvoiceSend;
 use App\Events\EventOfferCreate;
@@ -123,8 +124,9 @@ class AdminEventController extends Controller
         $homepages = Homepage::all();
         $event_statuses = EventStatus::pluck('name', 'id')->all();
         $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
+        $positions = PricelistPosition::where([['show', true], ['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
 
-        return view('admin.events.create', compact('event_statuses', 'homepages', 'users'));
+        return view('admin.events.create', compact('event_statuses', 'homepages', 'users', 'positions'));
     }
 
     /**
@@ -138,7 +140,18 @@ class AdminEventController extends Controller
         //
         $input = $request->all();
         $input['contract_status_id'] = config('status.contract_offen');
+        $one_day = false;
+        if ($input['total_days'] < 1) {
+            $input['start_date'] = new Carbon($input['start_date']);
+            $input['end_date'] = new Carbon($input['start_date']);
+            $input['total_days'] = 1;
+            $one_day = true;
+        } else {
+            $input['start_date'] = new Carbon($input['start_date']);
+            $input['end_date'] = new Carbon($input['end_date']);
+        }
         $event = Event::create($input);
+        EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event['event_status_id'] == config('status.event_eigene')) {
             Helper::EventToGoogleCalendar($event);
         }

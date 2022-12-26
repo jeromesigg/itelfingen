@@ -39,8 +39,10 @@ class EventOfferCreateListener
                 $amount = $position['amount'];
                 if ($position->pricelist_position['bexio_code'] > 200) {
                     $amount = max($position['amount'] - 3, 0) * $event['total_days'];
-                } elseif ($position->pricelist_position['bexio_code'] == 20 && $event['total_days'] == 0) {
-                    $amount = $position['amount'] / 2;
+                } elseif ($position->pricelist_position['bexio_code'] == 20){
+                    if( $event['total_days'] == 0) {
+                        $amount = $position['amount'] / 2;
+                    }
                 } else {
                     $amount = $event['total_days'] * $position['amount'];
                 }
