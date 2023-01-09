@@ -154,6 +154,7 @@
         $('#code').val("");
         $('#event_status_id').val(@json(config('status.event_neu')));
         $('#external')[0].checked = true;
+        $("#discount").val(10);
     }
     function Total_Change() {
         var start_date = new Date(document.getElementById('start_date').value);

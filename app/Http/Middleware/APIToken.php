@@ -12,9 +12,10 @@ class APIToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->api_token != env('API_KEY')) {
-            return response()->json('Unauthorized', 401);
+        if ($request->api_token != config('app.api_token')) {
+            return response()->json('Token ' . $request->api_token . ' is not valid', 401);
         }
+
 
         return $next($request);
     }
