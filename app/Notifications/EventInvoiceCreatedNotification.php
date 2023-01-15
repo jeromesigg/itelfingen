@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Mail\SendEventConfirmation;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -34,17 +35,18 @@ class EventInvoiceCreatedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database', 'slack'];
+        return ['database', 'slack', 'mail'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return SendEventConfirmation
      */
     public function toMail($notifiable)
     {
+        return new SendEventConfirmation($this->event);
     }
 
     /**

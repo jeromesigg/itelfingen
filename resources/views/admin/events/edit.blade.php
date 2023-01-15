@@ -211,16 +211,10 @@
 @endsection
 @section('scripts')
 <script>
-    window.addEventListener("load", function(event) {
+    window.addEventListener("load", function() {
         Total_Change();
     });
     $("#external").change(function() {
-        if(this.checked) {
-            $("#discount").val(10);
-        }
-        else{
-            $("#discount").val(0);
-        }
         Total_Change();
     });
     function PrepareMail() {

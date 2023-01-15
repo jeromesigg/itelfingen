@@ -1,16 +1,12 @@
 @component('mail::message')
-    <h1>Dein Feedback für das Ferienhaus Itelfingen</h1>
+    <h1>Deine Buchung für das Ferienhaus Itelfingen</h1>
     Guten Tag {{$event->firstname}} {{$event->name}},
     <br><br>
-    Du konntest letzte Woche einen Aufenthalt in unserem Ferienhaus Itelfingen geniessen. Wir hoffen, dass alles funktioniert hat und du wunderbare Tage verbringen konntest.
+    Deine Buchung für das Ferienhaus Itelfingen vom {{Carbon\Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y')}} bis {{Carbon\Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y')}} ist definitiv.
     <br>
-    Sollte sich etwas an den Anzahl Übernachtung gegenüber der Offerte geändert haben, kannst du und dies gerne noch melden.
+    Du wirst zwei Wochen vor deinem Aufenthalt noch die letzten Informationen per E-Mail erhalten.
     <br>
-    Bitte fülle noch die Rückmeldung aus, damit wir uns in Zukunft noch weiter verbessern können.
-    @component('mail::button', ['url' => 'https://forms.gle/RMWyPzs8wauakQam9', 'color' => 'success'])
-        Zum Feedback-Formular
-    @endcomponent
-    Wir würden uns freuen, dich wieder einmal im Ferienhaus Itelfingen begrüssen zu dürfen.
+    Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.
     <br><br>
     Freundliche Grüsse,<br>
     Das Ferienhaus Itelfingen

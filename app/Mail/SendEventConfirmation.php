@@ -55,12 +55,12 @@ class SendEventConfirmation extends Mailable
             });
         $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
 
-        return $this->markdown('emails.events.feedback', ['event' => $this->event])
+        return $this->markdown('emails.events.confirmation', ['event' => $this->event])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Invitation')
-            ->attachData($calendar->get(), 'invite.ics', [
-                'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
-            ]);
+            ->subject('Deine Buchung für das Ferienhaus Itelfingen');
+//            ->attachData($calendar->get(), 'invite.ics', [
+//                'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
+//            ]);
     }
 }

@@ -4,8 +4,6 @@
     <br><br>
     Im angehängten PDF findest du die wichtigsten Informationen zu deinem baldigen Aufenthalt im Ferienhaus Itelfingen und die Parkkarte für das Ferienhaus Itelfingen.
     <br>
-    Es hat ein Hornissen Nest im Hausgiebel an der Seite, welche zur Wiese zeigt. Gemäss dem Landwirtschafts- und Walddepartement von Luzern sollen wir sie sein lassen, da Hornissen geschützt und friedlich sind.
-    <br>
     @component('mail::button', ['url' => route('faq'), 'color' => 'success'])
         Besuche auch unsere FAQ-Seite
     @endcomponent
