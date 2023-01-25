@@ -58,7 +58,7 @@ class SendEventConfirmation extends Mailable
         return $this->markdown('emails.events.confirmation', ['event' => $this->event])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Deine Buchung für das Ferienhaus Itelfingen');
+            ->subject('Deine Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen');
 //            ->attachData($calendar->get(), 'invite.ics', [
 //                'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
 //            ]);

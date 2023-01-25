@@ -41,6 +41,7 @@
                     <tr>
                         <th scope="col">Datum von</th>
                         <th scope="col">Datum bis</th>
+                        <th scope="col">Nr.</th>
                         <th scope="col">Name</th>
                         <th scope="col">Vorname</th>
                         <th scope="col">E-Mail</th>
@@ -49,6 +50,7 @@
                         <th scope="col">Bemerkung</th>
                         <th scope="col">Bemerkung Intern</th>
                         <th scope="col">Verantwortlich</th>
+                        <th scope="col">Code</th>
                         <th scope="col">Vertrag</th>
                         <th scope="col">Status</th>
                     </tr>
@@ -138,6 +140,7 @@
                       },
                       name: 'end_date'
                   },
+                  { data: 'number', name: 'number' },
                   { data: 'name', name: 'name' },
                   { data: 'firstname', name: 'firstname' },
                   { data: 'email', name: 'email' },
@@ -146,6 +149,7 @@
                   { data: 'comment', name: 'comment' },
                   { data: 'comment_intern', name: 'comment_intern' },
                   { data: 'user', name: 'user' },
+                  { data: 'code', name: 'code' },
                   { data: 'contract_status', name: 'contract_status' },
                   { data: 'event_status', name: 'event_status' },
               ]

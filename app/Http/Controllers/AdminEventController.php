@@ -88,6 +88,9 @@ class AdminEventController extends Controller
             ->addColumn('name', function (Event $event) {
                 return '<a href='.\URL::route('events.edit', $event).'>'.$event['name'].'</a>';
             })
+            ->addColumn('number', function (Event $event) {
+                return str_pad($event['id'],5,'0', STR_PAD_LEFT);
+            })
             ->editColumn('start_date', function (Event $event) {
                 return [
                     'display' => Carbon::parse($event['start_date'])->format('d.m.Y'),
