@@ -11,13 +11,14 @@
     | Strasse |  {{$event->street}} |
     | PlZ / Ort | {{$event->plz}} {{$event->city}} |
     | Telefon | {{$event->telephone}} |
-    | Voraussichtliches Total | {{$event->total_amount}} |
-    | Bemerkung | {{$event->comment}} |
     @foreach ($event->positions as $position)
         @if($position->pricelist_position['bexio_code'] >= 50 && $position['amount'] >= 1)
             | {{$position->pricelist_position['name']}} | {{$position['amount']}} |
         @endif
     @endforeach
+    | Voraussichtliches Total | {{$event->total_amount}} |
+    | Bemerkung | {{$event->comment}} |
 @endcomponent
+
 Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit dem Vertrag und allen weiteren Dokumenten.
 @endcomponent
