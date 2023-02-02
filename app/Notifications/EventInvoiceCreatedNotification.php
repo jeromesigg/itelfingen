@@ -15,16 +15,18 @@ class EventInvoiceCreatedNotification extends Notification
     use Queueable;
 
     public Event $event;
+    public $additional_text;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, $additional_text)
     {
         //
         $this->event = $event;
+        $this->additional_text = $additional_text;
     }
 
     /**
@@ -46,7 +48,7 @@ class EventInvoiceCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new SendEventConfirmation($this->event);
+        return new SendEventConfirmation($this->event, $this->additional_text);
     }
 
     /**

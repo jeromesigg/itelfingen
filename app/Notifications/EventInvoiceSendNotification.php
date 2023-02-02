@@ -13,6 +13,7 @@ class EventInvoiceSendNotification extends Notification
     use Queueable;
 
     public Event $event;
+    public $additional_text;
 
     public array $invoice;
 
@@ -21,10 +22,11 @@ class EventInvoiceSendNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, $additional_text)
     {
         //
         $this->event = $event;
+        $this->additional_text = $additional_text;
         $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$event['bexio_invoice_id'])
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
@@ -52,7 +54,7 @@ class EventInvoiceSendNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new SendEventInvoiceMail($this->event, $this->invoice);
+        return new SendEventInvoiceMail($this->event, $this->invoice, $this->additional_text);
     }
 
     /**

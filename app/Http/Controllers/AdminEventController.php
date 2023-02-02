@@ -192,10 +192,9 @@ class AdminEventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Event $event)
     {
         //
-        $event = Event::findOrFail($id);
         $input = $request->all();
         $input['external'] = $request->has('external');
         if (isset($input['positions'])) {
@@ -205,50 +204,37 @@ class AdminEventController extends Controller
         }
         $event->update($input);
 
-        return redirect()->back();
-    }
+        switch (substr($input['submit'],0,1)){
+            case '2':
+                EventOfferCreate::dispatch($event);
+                break;
+            case '3':
+                if (! is_null($event['bexio_offer_id'])) {
+                    EventOfferSend::dispatch($event);
+                    Notification::send($event, new EventOfferSendNotification($event, $input['additional_text']));
 
-    public function CreateOffer(Event $event)
-    {
-        EventOfferCreate::dispatch($event);
+                    $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);
+                }
+                break;
+            case '4':
+                if (is_null($event['bexio_invoice_id']) && ! is_null($event['bexio_offer_id'])) {
+                    EventInvoiceCreate::dispatch($event);
+                    Notification::send($event, new EventInvoiceCreatedNotification($event, $input['additional_text']));
 
-        return redirect()->back();
-    }
+                    $event->update([
+                        'event_status_id' => config('status.event_bestaetigt'),
+                        'contract_status_id' => config('status.contract_rechnung_erstellt'), ]);
+                }
+                break;
+            case '5':
+                if (isset($event['bexio_invoice_id'])) {
+                    EventInvoiceSend::dispatch($event);
+                    Notification::send($event, new EventInvoiceSendNotification($event, $input['additional_text']));
 
-    public function SendOffer(Event $event)
-    {
-        if (! is_null($event['bexio_offer_id'])) {
-            EventOfferSend::dispatch($event);
-            Notification::send($event, new EventOfferSendNotification($event));
-
-            $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);
-        }
-
-        return redirect()->back();
-    }
-
-    public function CreateInvoice(Event $event)
-    {
-        if (is_null($event['bexio_invoice_id']) && ! is_null($event['bexio_offer_id'])) {
-            EventInvoiceCreate::dispatch($event);
-            Notification::send($event, new EventInvoiceCreatedNotification($event));
-
-            $event->update([
-                'event_status_id' => config('status.event_bestaetigt'),
-                'contract_status_id' => config('status.contract_rechnung_erstellt'), ]);
-        }
-
-        return redirect()->back();
-    }
-
-    public function SendInvoice(Event $event)
-    {
-        if (isset($event['bexio_invoice_id'])) {
-            EventInvoiceSend::dispatch($event);
-            Notification::send($event, new EventInvoiceSendNotification($event));
-
-            $event->update([
-                'contract_status_id' => config('status.contract_rechnung_versendet'), ]);
+                    $event->update([
+                        'contract_status_id' => config('status.contract_rechnung_versendet'), ]);
+                }
+                break;
         }
 
         return redirect()->back();

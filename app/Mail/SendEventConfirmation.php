@@ -21,6 +21,7 @@ class SendEventConfirmation extends Mailable
      * @var \App\Models\Event
      */
     protected $event;
+    protected $additional_text;
 
     /**
      * Create a new message instance.
@@ -28,9 +29,10 @@ class SendEventConfirmation extends Mailable
      * @param  \App\Models\Event  $event
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, string $additional_text)
     {
         $this->event = $event;
+        $this->additional_text = $additional_text;
     }
 
     /**
@@ -55,7 +57,7 @@ class SendEventConfirmation extends Mailable
             });
         $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
 
-        return $this->markdown('emails.events.confirmation', ['event' => $this->event])
+        return $this->markdown('emails.events.confirmation', ['event' => $this->event, 'additional_text' => $this->additional_text])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen');

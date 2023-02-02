@@ -13,6 +13,7 @@ class EventOfferCreate
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Event $event;
+    public $additional_text;
 
     /**
      * Create a new event instance.

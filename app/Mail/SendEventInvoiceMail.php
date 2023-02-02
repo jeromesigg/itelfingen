@@ -18,9 +18,11 @@ class SendEventInvoiceMail extends Mailable
      *
      * @var \App\Models\Event
      */
-    protected $event;
+    protected Event $event;
 
     protected $invoice;
+
+    protected $additional_text;
 
     /**
      * Create a new message instance.
@@ -28,10 +30,11 @@ class SendEventInvoiceMail extends Mailable
      * @param  \App\Models\Event  $event
      * @return void
      */
-    public function __construct(Event $event, $invoice)
+    public function __construct(Event $event, $invoice, $additional_text)
     {
         $this->event = $event;
         $this->invoice = $invoice;
+        $this->additional_text = $additional_text;
     }
 
     /**
@@ -53,7 +56,7 @@ class SendEventInvoiceMail extends Mailable
             ->asJson(true)
             ->get();
 
-        return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link']])
+        return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link'], 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zur Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' vom '.$start_date.' bis '.$end_date.' im Ferienhaus Itelfingen')

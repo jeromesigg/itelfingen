@@ -8,7 +8,9 @@ Unter folgendem Link kannst Du deine Buchung für Deinen Aufenthalt vom {{Carbon
 @component('mail::button', ['url' => $link, 'color' => 'success'])
 Zum Angebot
 @endcomponent
-
+<br>
+{{$additional_text}}
+<br>
 Wir hoffen, dass die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF.
 <br>
 Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.
