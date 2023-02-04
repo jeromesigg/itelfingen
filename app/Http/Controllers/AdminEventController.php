@@ -203,6 +203,7 @@ class AdminEventController extends Controller
             }
         }
         $event->update($input);
+        $additional_text = $input['additional_text'] ?? '';
 
         switch (substr($input['submit'],0,1)){
             case '2':
@@ -211,7 +212,7 @@ class AdminEventController extends Controller
             case '3':
                 if (! is_null($event['bexio_offer_id'])) {
                     EventOfferSend::dispatch($event);
-                    Notification::send($event, new EventOfferSendNotification($event, $input['additional_text']));
+                    Notification::send($event, new EventOfferSendNotification($event, $additional_text));
 
                     $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);
                 }
@@ -219,7 +220,7 @@ class AdminEventController extends Controller
             case '4':
                 if (is_null($event['bexio_invoice_id']) && ! is_null($event['bexio_offer_id'])) {
                     EventInvoiceCreate::dispatch($event);
-                    Notification::send($event, new EventInvoiceCreatedNotification($event, $input['additional_text']));
+                    Notification::send($event, new EventInvoiceCreatedNotification($event, $additional_text));
 
                     $event->update([
                         'event_status_id' => config('status.event_bestaetigt'),
@@ -229,7 +230,7 @@ class AdminEventController extends Controller
             case '5':
                 if (isset($event['bexio_invoice_id'])) {
                     EventInvoiceSend::dispatch($event);
-                    Notification::send($event, new EventInvoiceSendNotification($event, $input['additional_text']));
+                    Notification::send($event, new EventInvoiceSendNotification($event, $additional_text));
 
                     $event->update([
                         'contract_status_id' => config('status.contract_rechnung_versendet'), ]);
