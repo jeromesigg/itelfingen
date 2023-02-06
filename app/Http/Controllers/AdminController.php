@@ -43,7 +43,8 @@ class AdminController extends Controller
             ],
         ]);
 
-        return view('admin/index', compact('icon_array', 'contacts_new', 'events_new', 'events'));
+        $title='Dashboard';
+        return view('admin/index', compact('icon_array', 'contacts_new', 'events_new', 'events', 'title'));
     }
 
     public function changes()

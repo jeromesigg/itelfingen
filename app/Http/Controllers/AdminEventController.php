@@ -86,14 +86,16 @@ class AdminEventController extends Controller
 
         return DataTables::of($events)
             ->addColumn('name', function (Event $event) {
-                return '<a href='.\URL::route('events.edit', $event).'>'.$event['name'].'</a>';
+                return $event['firstname'] . ' <a href='.\URL::route('events.edit', $event).'>'.$event['name'].'</a>' .
+                    '<br>' . $event['group_name'];
             })
             ->addColumn('number', function (Event $event) {
                 return str_pad($event['id'],5,'0', STR_PAD_LEFT);
             })
             ->editColumn('start_date', function (Event $event) {
                 return [
-                    'display' => Carbon::parse($event['start_date'])->format('d.m.Y'),
+                    'display' => Carbon::parse($event['start_date'])->format('d.m.Y') .' - ' .
+                        Carbon::parse($event['end_date'])->format('d.m.Y'),
                     'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021'),
                 ];
             })
@@ -106,13 +108,18 @@ class AdminEventController extends Controller
             ->editColumn('user', function (Event $event) {
                 return $event->user ? $event->user['username'] : '';
             })
-            ->editColumn('event_status', function (Event $event) {
-                return $event->event_status ? $event->event_status['name'] : '';
+            ->addColumn('status', function (Event $event) {
+                $user =  Helper::GetEventUserCheck($event);
+                $offer =  Helper::GetEventOfferStatus($event);
+                $invoice =  Helper::GetEventInvoiceStatus($event);
+                $cleaning_mail =  Helper::GetEventCleaningMailCheck($event);
+                $code =  Helper::GetEventCodeCheck($event);
+                return  $user .  $offer . $invoice . $cleaning_mail . $code;
             })
             ->editColumn('contract_status', function (Event $event) {
                 return $event->contract_status ? $event->contract_status['name'] : '';
             })
-            ->rawColumns(['name'])
+            ->rawColumns(['name', 'status'])
             ->make(true);
     }
 
@@ -128,8 +135,9 @@ class AdminEventController extends Controller
         $event_statuses = EventStatus::pluck('name', 'id')->all();
         $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
         $positions = PricelistPosition::where([['show', true], ['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+        $title ="Buchung erstellen";
 
-        return view('admin.events.create', compact('event_statuses', 'homepages', 'users', 'positions'));
+        return view('admin.events.create', compact('event_statuses', 'homepages', 'users', 'positions', 'title'));
     }
 
     /**
@@ -181,8 +189,9 @@ class AdminEventController extends Controller
         $contract_statuses = ContractStatus::pluck('name', 'id')->all();
         $event = Event::findOrFail($id);
         $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
+        $title = "Buchung bearbeiten";
 
-        return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions'));
+        return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'title'));
     }
 
     /**
@@ -201,6 +210,9 @@ class AdminEventController extends Controller
             foreach ($input['positions'] as $index => $plposition) {
                 Position::where('id', $index)->update(['amount' => $plposition]);
             }
+        }
+        if ($input['contract_status_id'] == config('status.contract_storniert')) {
+            $input['event_status_id'] = config('status.event_storniert');
         }
         $event->update($input);
         $additional_text = $input['additional_text'] ?? '';

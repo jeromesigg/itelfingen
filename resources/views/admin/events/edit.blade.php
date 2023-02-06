@@ -80,28 +80,26 @@
                                 <span id="total"></span>.-
                             </div>
                             <div class="col-xl-2 col-4 form-group">
-                                {!! Form::label('user_id', 'Verantwortlicher:') !!}
-                                {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="col-xl-2 col-4 form-group">
-                                {!! Form::label('code', 'Tür-Code:') !!}
-                                {!! Form::number('code', null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="col-xl-2 col-4 form-group">
                                 <br>
                                 {!! Form::label('external', 'Externe Buchung:') !!}
                                 {!! Form::checkbox('external', '1', $event['external']) !!}
                             </div>
-                        </div>
-                    <hr>
-                        <div class="form-row">
                             <div class="col-xl-2 col-6 form-group">
                                 {!! Form::label('contract_status_id', 'Angebot / Rechnung:') !!}
                                 {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
                             </div>
+                        </div>
+                    <hr>
+                        <div class="form-row">
                             <div class="col-xl-2 col-6 form-group">
-                                {!! Form::label('event_status_id', 'Status:') !!}
-                                {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                {!! Form::label('user_id', 'Verantwortlicher:') !!}
+                                {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                            </div>
+                            <div class="col-xl-2 col-6 form-group">
+                                {!! Form::label('code', 'Tür-Code:') !!}
+                                {!! Form::number('code', null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="form-group col-xl-4">
                                 {!! Form::label('comment', 'Bemerkung:') !!}

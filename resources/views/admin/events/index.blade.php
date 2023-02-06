@@ -39,20 +39,14 @@
             <table class="table table-striped table-bordered" style="width:100%" id="datatable">
                 <thead>
                     <tr>
-                        <th scope="col">Datum von</th>
-                        <th scope="col">Datum bis</th>
-                        <th scope="col">Nr.</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Vorname</th>
-                        <th scope="col">E-Mail</th>
-                        <th scope="col">Gruppe</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Bemerkung</th>
-                        <th scope="col">Bemerkung Intern</th>
-                        <th scope="col">Verantwortlich</th>
-                        <th scope="col">Code</th>
-                        <th scope="col">Vertrag</th>
-                        <th scope="col">Status</th>
+                        <th scope="col" width="8%">Datum</th>
+                        <th scope="col" width="7%">Nr.</th>
+                        <th scope="col" width="10%">Name</th>
+                        <th scope="col" width="15%">E-Mail</th>
+                        <th scope="col" width="5%">Total</th>
+                        <th scope="col" width="25%">Bemerkung</th>
+                        <th scope="col" width="15%">Bemerkung Intern</th>
+                        <th scope="col" width="15%">Status</th>
                     </tr>
                 </thead>
             </table>
@@ -133,25 +127,13 @@
                       },
                       name: 'start_date'
                   },
-                  {
-                      data: {
-                          _: 'end_date.display',
-                          sort: 'end_date.sort'
-                      },
-                      name: 'end_date'
-                  },
                   { data: 'number', name: 'number' },
                   { data: 'name', name: 'name' },
-                  { data: 'firstname', name: 'firstname' },
                   { data: 'email', name: 'email' },
-                  { data: 'group_name', name: 'group_name' },
                   { data: 'total_amount', name: 'total_amount' },
                   { data: 'comment', name: 'comment' },
                   { data: 'comment_intern', name: 'comment_intern' },
-                  { data: 'user', name: 'user' },
-                  { data: 'code', name: 'code' },
-                  { data: 'contract_status', name: 'contract_status' },
-                  { data: 'event_status', name: 'event_status' },
+                  { data: 'status', name: 'status' },
               ]
           });
 
