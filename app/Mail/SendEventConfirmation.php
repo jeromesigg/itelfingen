@@ -42,27 +42,29 @@ class SendEventConfirmation extends Mailable
      */
     public function build()
     {
-        $email = $this->event['email'];
-        $name = $this->event['firstname'].' '.$this->event['name'];
+        $event = $this->event;
+        $email = $event['email'];
+        $name = $event['firstname'].' '. $event['name'];
 
-        $calendar = Calendar::create()
+        $calendar = Calendar::create(config('app.name'))
             ->productIdentifier('Itelfingen.ch')
-            ->event(function (Event_ICAL $event) {
-                $event->name('Email with iCal 101')
-                    ->attendee('jerome.sigg@gmail.com')
-                    ->startsAt(Carbon::parse('2022-12-15 08:00:00'))
-                    ->endsAt(Carbon::parse('2022-12-19 17:00:00'))
-                    ->fullDay()
-                    ->address('Online - Google Meet');
+            ->event(function (Event_ICAL $event_ical) use ($event, $email, $name) {
+                $event_ical
+                    ->name('Deine Buchung im Ferienhaus Itelfingen')
+                    ->organizer(config('mail.from.address'), config('mail.from.name'))
+                    ->attendee($email, $name)
+                    ->startsAt(Carbon::parse($event->start_date))
+                    ->endsAt(Carbon::parse($event->end_date)->addDay(1))
+                    ->fullDay();
             });
         $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
 
-        return $this->markdown('emails.events.confirmation', ['event' => $this->event, 'additional_text' => $this->additional_text])
+        return $this->markdown('emails.events.confirmation', ['event' => $event, 'additional_text' => $this->additional_text])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Deine Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen');
-//            ->attachData($calendar->get(), 'invite.ics', [
-//                'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
-//            ]);
+            ->subject('Deine Buchung ' . str_pad($event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen')
+            ->attachData($calendar->get(), 'invite.ics', [
+                'mime' => 'text/calendar; charset=UTF-8; method=REQUEST',
+            ]);
     }
 }

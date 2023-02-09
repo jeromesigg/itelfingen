@@ -64,10 +64,10 @@ class EventInvoiceCreatedNotification extends Notification
         $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
 
 //        if (config('app.env') == 'production') {
-        return (new SlackMessage)
-            ->from(config('slack.username'), config('slack.icon'))
-            ->to(config('slack.channel'))
-            ->content('Es hat eine neue Buchung gegeben. Vom '.$start_date.' bis '.$end_date.' Von '.$event['firstname'].' '.$event['name'].' - '.$event['group_name']);
+            return (new SlackMessage)
+                ->from(config('slack.username'), config('slack.icon'))
+                ->to(config('slack.channel'))
+                ->content('Es hat eine neue Buchung gegeben. Vom '.$start_date.' bis '.$end_date.' Von '.$event['firstname'].' '.$event['name'].' - '.$event['group_name']);
 //        }
     }
 
