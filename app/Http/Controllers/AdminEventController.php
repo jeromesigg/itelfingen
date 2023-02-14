@@ -90,7 +90,7 @@ class AdminEventController extends Controller
                     '<br>' . $event['group_name'];
             })
             ->addColumn('number', function (Event $event) {
-                return str_pad($event['id'],5,'0', STR_PAD_LEFT);
+                return $event->number();
             })
             ->editColumn('start_date', function (Event $event) {
                 return [
@@ -109,12 +109,7 @@ class AdminEventController extends Controller
                 return $event->user ? $event->user['username'] : '';
             })
             ->addColumn('status', function (Event $event) {
-                $user =  Helper::GetEventUserCheck($event);
-                $offer =  Helper::GetEventOfferStatus($event);
-                $invoice =  Helper::GetEventInvoiceStatus($event);
-                $cleaning_mail =  Helper::GetEventCleaningMailCheck($event);
-                $code =  Helper::GetEventCodeCheck($event);
-                return  $user .  $offer . $invoice . $cleaning_mail . $code;
+                return $event->status();
             })
             ->editColumn('contract_status', function (Event $event) {
                 return $event->contract_status ? $event->contract_status['name'] : '';

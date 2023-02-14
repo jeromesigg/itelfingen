@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helper\Helper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
@@ -47,5 +48,18 @@ class Event extends Model
     public function routeNotificationForSlack($notification)
     {
         return config('slack.endpoint');
+    }
+
+    public function number(){
+        return str_pad($this->id,5,'0', STR_PAD_LEFT);
+    }
+
+    public function status(){
+        $user =  Helper::GetEventUserCheck($this);
+        $offer =  Helper::GetEventOfferStatus($this);
+        $invoice =  Helper::GetEventInvoiceStatus($this);
+        $cleaning_mail =  Helper::GetEventCleaningMailCheck($this);
+        $code =  Helper::GetEventCodeCheck($this);
+        return  $user .  $offer . $invoice . $cleaning_mail . $code;
     }
 }

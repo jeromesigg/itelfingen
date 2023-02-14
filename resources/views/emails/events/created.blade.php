@@ -17,8 +17,10 @@
         @endif
     @endforeach
     | Voraussichtliches Total | {{$event->total_amount}} |
-    | Bemerkung | {{$event->comment}} |
 @endcomponent
-
+Bemerkung <br>
+{{$event->comment}}
+<br>
+<br>
 Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit dem Vertrag und allen weiteren Dokumenten.
 @endcomponent

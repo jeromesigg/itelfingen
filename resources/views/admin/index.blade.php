@@ -34,22 +34,28 @@
               <ul class="news list-unstyled">
                 <!-- Item-->
                 @foreach ($events as $event)
-                    <li class="d-flex justify-content-between">
-                        <div class="left-col d-flex">
-                            <div class="title"><strong>
+                    <li class="justify-content-between">
+                        <div class="left-col row">
+                            <div class="title col-8">
+                                <strong>
                                     @if (Auth::user()->isManager())
-                                        <a href="{{route('events.edit', $event->id)}}">{{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
+                                        <a href="{{route('events.edit', $event->id)}}">{{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
                                     @else
-                                        {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
+                                        {{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
                                     @endif
                                 </strong>
-                            <p>{{$event->firstname}} {{$event->name}}@if($event->group_name), {{$event->group_name}}@endif
-                                @if($event->comment) - {{$event->comment}}@endif
-                                @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}</a>@endif
+                                <p>
+                                    {{$event->firstname}} {{$event->name}}@if($event->group_name), {{$event->group_name}}@endif
+                                    @if($event->comment) - {{$event->comment}}@endif
+                                    @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}</a>@endif
                                 </p>
+                            </div>
+                            <div class="title col-4">
+                                {!! $event->status() !!}
                             </div>
                         </div>
                     </li>
+                    <hr>
                 @endforeach
               </ul>
             </div>
@@ -85,6 +91,7 @@
                         <div class="date"><small>{{ \Carbon\Carbon::parse($contact->created_at)->diffForHumans() }} </small></div>
                         </div>
                     </li>
+                    <hr>
                     @endforeach
                 </ul>
               </div>
