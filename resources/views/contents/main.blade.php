@@ -23,7 +23,7 @@
     @include('contents.event')
 
     <!-- ======= Testimonials Section ======= -->
-    @include('contents.testimonials')
+{{--    @include('contents.testimonials')--}}
 
 {{--    <!-- ======= About us Section ======= -->--}}
 {{--    @include('contents.about_us')--}}

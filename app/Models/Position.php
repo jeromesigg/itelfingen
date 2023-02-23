@@ -17,4 +17,9 @@ class Position extends Model
     {
         return $this->belongsTo(PricelistPosition::class);
     }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

@@ -34,11 +34,8 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $pictures = Picture::all();
-        $testimonials = Testimonial::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
-        $people = Person::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
-        $histories = History::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
         $positions = PricelistPosition::where([['show', true], ['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
-        $events = Event::where('event_status_id', '<', config('status.event_storniert'))->get();
+        $events = Event::where('event_status_id', '<', config('status.event_storniert'))->where('end_date', '>=', Carbon::now())->get();
         $event_type = 'guest';
         $discount = config('app.discount_enabled');
         $application_enabled = config('app.application_enabled');
@@ -75,8 +72,7 @@ class HomeController extends Controller
             'data-callback' => 'enable_EventBtn',
         ];
 
-        return view('home', compact('homepage', 'pictures', 'events_json', 'testimonials', 'people',
-            'histories', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount', 'application_enabled'));
+        return view('home', compact('homepage', 'pictures', 'events_json', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount', 'application_enabled'));
     }
 
     public function impressum()

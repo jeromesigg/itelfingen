@@ -93,6 +93,7 @@
                                 </div>
                             @endif
                         @endforeach
+                        {!! Form::hidden('total_person', null, ['class' => 'form-control', 'id' => 'total_person']) !!}
                         <div class="col-md-3 form-group">
                             {!! Form::label('total_days', 'Tage:') !!}
                             {!! Form::number('total_days', null, ['class' => 'form-control', 'required', 'id' => 'total_days', 'onchange' => "Total_Change()"]) !!}
@@ -160,10 +161,12 @@
         var end_date = new Date(document.getElementById('end_date').value);
         var days = (end_date - start_date)/(24*3600*1000);
         var positions = @json($positions);
-        var total_amount = 0, id = 0;
+        var total_amount = 0, id = 0, total_person = 0;
         var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
         positions.forEach(position => {
             id = 'position_' + position['id'];
+            person = position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
+            person = person || 0;
             var subtotal = 0
             if(days === 0){
                 if(position['bexio_code'] < 50){
@@ -185,10 +188,12 @@
                 subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position['price'] * Math.max(days,1) || 0;
             }
             total_amount += subtotal;
+            total_person += person;
         });
         $("#total").text(total_amount);
         $("#total_days").val(days);
         $("#total_amount").val(total_amount);
+        $("#total_person").val(total_person);
     }
 </script>
 @endsection

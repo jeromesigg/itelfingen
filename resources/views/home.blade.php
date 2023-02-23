@@ -56,12 +56,12 @@
                   },
                   success: function(data) {
                       var array = $.map(data, function (item) {
-                      return {
-                          label: item['plz'] + ' ' + item['name'],
-                          value: item[autoType],
-                          data : item
-                      }
-                  });
+                          return {
+                              label: item['plz'] + ' ' + item['name'],
+                              value: item[autoType],
+                              data : item
+                          }
+                      });
                       response(array)
                   }
               });

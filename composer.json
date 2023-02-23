@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.1",
         "biscolab/laravel-recaptcha": "^5.0",
+        "consoletvs/charts": "6.*",
         "doctrine/dbal": "^3.3",
         "eduardokum/laravel-mail-auto-embed": "^2.0",
         "fakerphp/faker": "^1.15.0",
