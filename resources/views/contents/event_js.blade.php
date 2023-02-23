@@ -86,7 +86,7 @@ function Total_Change() {
 	});
 	$('#total_amount_show').text(total_amount);
 	$("#total_amount").val(total_amount);
-	$("#total_person").val(total_person);
+	$("#total_people").val(total_person);
 	$("#total_days").val(days);
 }
 

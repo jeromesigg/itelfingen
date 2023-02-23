@@ -191,7 +191,7 @@
                                                                 <th></th>
                                                                 <th><span id="total_amount_show"></span>.-</th>
                                                                 {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
-                                                                {!! Form::hidden('total_person', null, ['class' => 'form-control', 'id' => 'total_person']) !!}
+                                                                {!! Form::hidden('total_people', null, ['class' => 'form-control', 'id' => 'total_people']) !!}
                                                                 {!! Form::hidden('discount', null, ['class' => 'form-control', 'id' => 'discount']) !!}
                                                                 {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
                                                             </tr>

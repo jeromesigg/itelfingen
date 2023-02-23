@@ -93,7 +93,7 @@
                                 </div>
                             @endif
                         @endforeach
-                        {!! Form::hidden('total_person', null, ['class' => 'form-control', 'id' => 'total_person']) !!}
+                        {!! Form::hidden('total_people', null, ['class' => 'form-control', 'id' => 'total_people']) !!}
                         <div class="col-md-3 form-group">
                             {!! Form::label('total_days', 'Tage:') !!}
                             {!! Form::number('total_days', null, ['class' => 'form-control', 'required', 'id' => 'total_days', 'onchange' => "Total_Change()"]) !!}
@@ -193,7 +193,7 @@
         $("#total").text(total_amount);
         $("#total_days").val(days);
         $("#total_amount").val(total_amount);
-        $("#total_person").val(total_person);
+        $("#total_people").val(total_person);
     }
 </script>
 @endsection

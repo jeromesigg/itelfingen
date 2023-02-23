@@ -64,7 +64,7 @@
                                     </div>
                                 @endif
                             @endforeach
-                            {!! Form::hidden('total_person', null, ['class' => 'form-control', 'id' => 'total_person']) !!}
+                            {!! Form::hidden('total_people', null, ['class' => 'form-control', 'id' => 'total_people']) !!}
                         </div>
                         <div class="form-row">
                             <div class="col-xl-2 col-4 form-group">
@@ -282,7 +282,7 @@
         $("#total").text(total_amount);
         $("#total_days").val(days);
         $("#total_amount").val(total_amount);
-        $("#total_person").val(total_person);
+        $("#total_people").val(total_person);
     }
 </script>
 @endsection
