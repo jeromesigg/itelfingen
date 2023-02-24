@@ -22,10 +22,6 @@
   <!-- Updates Section -->
   <section class="mt-30px mb-30px">
     <div class="container-fluid">
-      <div class="area-chart">
-        {!! $bookingChart->container() !!}
-      </div>
-      <br>
       <div class="row">
         <div class="col-lg-6 col-md-12">
           <!-- Recent Updates Widget          -->
@@ -109,7 +105,5 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    {{isset($bookingChart) ? $bookingChart->script() : ''}}
 @endsection
 

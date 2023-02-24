@@ -204,7 +204,7 @@ section header {
 * ==========================================================
 */
 nav.navbar {
-  background: #393836;
+  background: var(--norway);
   padding: .8rem 0;
   /* Navbar Brand --------- */
   /*  Dropdowns ------------ */
@@ -331,7 +331,7 @@ nav.navbar a.menu-btn {
   width: 40px;
   height: 40px;
   line-height: 40px;
-  background: #292929;
+  background: var(--gladegreen);
   color: #fff;
   text-align: center;
   padding: 0 !important;
@@ -343,7 +343,7 @@ nav.navbar a.menu-btn i[class*='icon-'] {
 }
 
 nav.navbar a.menu-btn:hover {
-  background: #33b35a;
+  background: var(--gladegreen);
 }
 
 /*  NAVBAR MEDIAQUERIES ---------------------------------- */
@@ -387,8 +387,8 @@ nav.navbar a.menu-btn:hover {
   height: 100%;
   width: 200px;
   text-align: left;
-  background: #393836;
-  color: #fff;
+  background: var(--norway);
+  color: black;
   z-index: 999;
   overflow-y: auto;
   -webkit-transition: all 0.3s;
@@ -427,15 +427,15 @@ nav.navbar a.menu-btn:hover {
   position: relative;
   font-size: .9rem;
   font-weight: 300;
-  color: #fff;
+  color: black;
   text-decoration: none;
   width: 100%;
   padding: 12px;
 }
 
 .side-navbar li a:focus, .side-navbar li a:hover, .side-navbar li a[aria-expanded="true"] {
-  background: #33b35a;
-  color: #fff;
+    background: var(--gladegreen);
+  color: black;
   text-decoration: none;
 }
 
@@ -467,7 +467,7 @@ nav.navbar a.menu-btn:hover {
 }
 
 .side-navbar li ul {
-  background: #292929;
+  background: var(--norway);
   position: relative;
   min-width: 100%;
   left: 0;
@@ -480,15 +480,15 @@ nav.navbar a.menu-btn:hover {
 }
 
 .side-navbar li ul.collapse a {
-  border-left: 2px solid #33b35a;
+  border-left: 2px solid var(--norway);
 }
 
 .side-navbar li ul.collapse a:hover {
-  background: #121212;
+  background:var(--norway);
 }
 
 .side-navbar .sidenav-header {
-  background: #292929;
+  background: var(--norway);
   padding: 14px;
   margin-bottom: 10px;
 }
@@ -500,7 +500,7 @@ nav.navbar a.menu-btn:hover {
 
 .side-navbar .sidenav-header span {
   font-size: 0.8em;
-  color: #666;
+  color: var(--norway);
 }
 
 .side-navbar .sidenav-header h2 {
@@ -511,7 +511,7 @@ nav.navbar a.menu-btn:hover {
 
 .side-navbar .sidenav-heading {
   font-weight: 700;
-  color: #adb5bd;
+  color: black;
   font-size: .9rem;
   text-transform: uppercase;
   letter-spacing: .1em;
@@ -1172,13 +1172,13 @@ footer.main-footer {
   position: absolute;
   width: 100%;
   bottom: 0;
-  background: #222;
+  background: var(--grannysmith);
   padding: 10px 0;
 }
 
 footer.main-footer p {
   font-size: 0.7em;
-  color: #777;
+  color: black;
   margin: 0;
 }
 
@@ -3128,7 +3128,7 @@ ul.messenger-theme-flat .messenger-spinner {
 
 /*
 * ==========================================================
-*     GOOGLE MAPS 
+*     GOOGLE MAPS
 * ==========================================================
 */
 .map {
@@ -4249,8 +4249,8 @@ STYLE SWITCHER FOR DEMO
   color: #495057;
 }
 
-/* ========================================= 
-   THEMING OF BOOTSTRAP COMPONENTS           
+/* =========================================
+   THEMING OF BOOTSTRAP COMPONENTS
    ========================================= */
 /*
  * 1. NAVBAR
@@ -4935,7 +4935,7 @@ STYLE SWITCHER FOR DEMO
 }
 
 /*
- * 3. TYPE  
+ * 3. TYPE
  */
 body {
   font-family: "Roboto", sans-serif;
@@ -5619,7 +5619,7 @@ img {
 }
 .preview {
   overflow: hidden;
-  width: 160px; 
+  width: 160px;
   height: 160px;
   margin: 10px;
   border: 1px solid red;

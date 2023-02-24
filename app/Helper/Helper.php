@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Charts\BookingChart;
 use App\Models\Event;
 use App\Models\Position;
 use App\Models\PricelistPosition;
@@ -191,6 +192,24 @@ public static function GetEventCodeCheck(Event $event)
         $invoice .= '<br>';
         }
         return $invoice;
+    }
+
+    public static function GetChart($events_nights){
+        $timeframe = $events_nights->pluck('timeframe');
+        $days = $events_nights->pluck('days');
+        $stays = $events_nights->pluck('stays');
+
+        $bookingChart = new BookingChart;
+        $bookingChart->minimalist(true);
+        $bookingChart->labels($timeframe);
+        $bookingChart->dataset('Anzahl Tage', 'line', $days)
+            ->color('#92D1C3')
+            ->backgroundColor('#92D1C3');
+        $bookingChart->dataset('Anzahl Übernachtungen', 'line', $stays)
+            ->color('#B47EB3')
+            ->backgroundColor('#B47EB3');
+
+        return $bookingChart;
     }
 
 }

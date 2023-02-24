@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Charts\BookingChart;
+use App\Helper\Helper;
 use App\Models\Contact;
 use App\Models\Event;
 use DB;
@@ -27,28 +28,6 @@ class AdminController extends Controller
 
         $contacts_new = Contact::where('done', false)->orderBy('created_at', 'DESC')->get();
 
-        $events_nights = Event::select(
-            DB::raw('sum(total_days) as days'),
-            DB::raw('sum(total_people*total_days) as stays'),
-            DB::raw("DATE_FORMAT(start_date, '%Y') as years"),
-        )
-            ->groupBy('years')
-            ->orderBy('start_date', 'ASC');
-
-        $years = $events_nights->pluck('years');
-        $days = $events_nights->pluck('days');
-        $stays = $events_nights->pluck('stays');
-
-        $bookingChart = new BookingChart;
-        $bookingChart->minimalist(true);
-        $bookingChart->labels($years);
-        $bookingChart->dataset('Anzahl Tage', 'line', $days)
-            ->color( '#92D1C3')
-            ->backgroundColor( '#92D1C3');
-        $bookingChart->dataset('Anzahl Übernachtungen', 'line', $stays)
-            ->color('#B47EB3')
-            ->backgroundColor('#B47EB3');
-
 
         $icon_array = collect([
             (object) [
@@ -69,11 +48,38 @@ class AdminController extends Controller
         ]);
 
         $title='Dashboard';
-        return view('admin/index', compact('icon_array', 'contacts_new', 'events', 'title', 'bookingChart'));
+        return view('admin/index', compact('icon_array', 'contacts_new', 'events', 'title'));
     }
 
     public function changes()
     {
         return view('admin/changes');
+    }
+
+    public function bookings()
+    {
+
+        $events_nights_year = Event::select(
+            DB::raw('sum(total_days) as days'),
+            DB::raw('sum(total_people*total_days) as stays'),
+            DB::raw("DATE_FORMAT(start_date, '%Y') as timeframe"),
+        )
+            ->groupBy('timeframe')
+            ->orderBy('start_date', 'ASC');
+
+        $bookingChartYear = Helper::getChart($events_nights_year);
+
+
+        $events_nights_quarter = Event::select(
+            DB::raw('sum(total_days) as days'),
+            DB::raw('sum(total_people*total_days) as stays'),
+            DB::raw("concat(DATE_FORMAT(start_date, '%Y'),'-Q', QUARTER(start_date)) as timeframe"),
+        )
+            ->groupBy('timeframe')
+            ->orderBy('start_date', 'ASC');
+        $bookingChartQuarter = Helper::getChart($events_nights_quarter);
+
+        $title='Auslastung';
+        return view('admin/bookings', compact( 'bookingChartYear', 'bookingChartQuarter','title'));
     }
 }

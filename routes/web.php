@@ -33,7 +33,8 @@ Route::post('contacts', 'ContactController@store');
 
 Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin', 'AdminController@index');
-    Route::get('/admin/changes', 'AdminController@changes');
+    Route::get('/admin/changes', ['as' => 'admin.changes', 'uses' => 'AdminController@changes']);
+    Route::get('/admin/bookings', ['as' => 'admin.bookings', 'uses' => 'AdminController@bookings']);
     Route::resource('admin/homepages', 'AdminHomepageController');
     Route::resource('admin/pictures', 'AdminPicturesController');
     Route::resource('admin/eventstatuses', 'AdminEventStatusesController');

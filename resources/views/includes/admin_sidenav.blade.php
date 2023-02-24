@@ -80,6 +80,9 @@
                 <a  href="{{route('histories.index')}}" ><i class="fas fa-history"></i> Geschichte</a>
             </li>
         @endif
+        <li>
+            <a  href="{{route('admin.bookings')}}" ><i class="fa-solid fa-chart-line"></i> Auslastung</a>
+        </li>
         <li><a href="#FAQDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-list-ul"></i> FAQs</a></li>
         <ul id="FAQDropdown" class="collapse list-unstyled ">
             <li>
@@ -95,7 +98,7 @@
         <li>
             <a  href="{{route('users.index')}}" ><i class="fas fa-user"></i> Benutzer</a>
         </li>
-        <li><a href="/admin/changes"><i class="fas fa-clipboard-list"></i> Änderungen</a></li>
+        <li><a href="{{route('admin.changes')}}"><i class="fas fa-clipboard-list"></i> Änderungen</a></li>
         </ul>
 
         </div>
