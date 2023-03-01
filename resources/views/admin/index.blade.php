@@ -36,7 +36,7 @@
                 @foreach ($events as $event)
                     <li class="justify-content-between">
                         <div class="left-col row">
-                            <div class="title col-8">
+                            <div class="title col-xl-8">
                                 <strong>
                                     @if (Auth::user()->isManager())
                                         <a href="{{route('events.edit', $event->id)}}">{{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
@@ -50,7 +50,7 @@
                                     @if($event->telephone) - <a href="tel:{{$event->telephone}}">{{$event->telephone}}</a>@endif
                                 </p>
                             </div>
-                            <div class="title col-4">
+                            <div class="title col-xl-4">
                                 {!! $event->status() !!}
                             </div>
                         </div>

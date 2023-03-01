@@ -11,6 +11,8 @@ Zum Angebot
 <br>
 {{$additional_text}}
 <br>
+Die Schlussrechnung erhalten Sie nach der Buchung, somit können allfällige Anpassungen an den Übernachtungen noch berücksichtigt werden.
+<br>
 Wir hoffen, dass die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF.
 <br>
 Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.

@@ -85,7 +85,7 @@
                     <div class="form-row">
                         @foreach ($positions as $index => $position)
                             @if ($position['bexio_code']<50)
-                                {!! Form::hidden('positions['.$position['bexio_code'].']', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position['id'], 'onchange' => "Total_Change()"]) !!}
+                                {!! Form::hidden('positions['.$position['bexio_code'].']', 1, ['class' => 'form-control', 'id' =>'position_'.$position['id'], 'onchange' => "Total_Change()"]) !!}
                             @else
                                 <div class="col-md-3 form-group">
                                     {!! Form::label('positions['.$position['bexio_code'].']', $position['name'] . ' ('. $position['price'] . ' CHF)') !!}

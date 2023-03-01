@@ -37,44 +37,42 @@
 
   //autocomplete script
   $(document).on('focus','.autocomplete_txt',function(){
-  type = $(this).attr('name');
+      type = $(this).attr('name');
 
-  if(type =='city')autoType='name';
-  if(type =='zipcode')autoType='plz';
-  if(type =='city_id')autoType='id';
+      if(type =='city')autoType='name';
+      if(type =='zipcode')autoType='plz';
+      if(type =='city_id')autoType='id';
 
-  $(this).autocomplete({
-      minLength: 2,
-      highlight: true,
-      source: function( request, response ) {
-              $.ajax({
-                  url: "{{ route('searchajaxcity') }}",
-                  dataType: "json",
-                  data: {
-                      term : request.term,
-                      type : type,
-                  },
-                  success: function(data) {
-                      var array = $.map(data, function (item) {
-                          return {
-                              label: item['plz'] + ' ' + item['name'],
-                              value: item[autoType],
-                              data : item
-                          }
-                      });
-                      response(array)
-                  }
-              });
-      },
-      select: function( event, ui ) {
-          var data = ui.item.data;
-          $("[name='city']").val(data.name);
-          $("[name='zipcode']").val(data.plz);
-          $("[name='city_id']").val(data.id);
-      }
-  });
-
-
+      $(this).autocomplete({
+          minLength: 2,
+          highlight: true,
+          source: function( request, response ) {
+                  $.ajax({
+                      url: "{{ route('searchajaxcity') }}",
+                      dataType: "json",
+                      data: {
+                          term : request.term,
+                          type : type,
+                      },
+                      success: function(data) {
+                          var array = $.map(data, function (item) {
+                              return {
+                                  label: item['plz'] + ' ' + item['name'],
+                                  value: item[autoType],
+                                  data : item
+                              }
+                          });
+                          response(array)
+                      }
+                  });
+          },
+          select: function( event, ui ) {
+              var data = ui.item.data;
+              $("[name='city']").val(data.name);
+              $("[name='zipcode']").val(data.plz);
+              $("[name='city_id']").val(data.id);
+          }
+      });
   });
 </script>
 
