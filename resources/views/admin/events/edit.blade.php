@@ -94,21 +94,25 @@
                         </div>
                     <hr>
                         <div class="form-row">
-                            <div class="col-xl-2 col-6 form-group">
-                                {!! Form::label('user_id', 'Verantwortlicher:') !!}
-                                {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                            <div class="col-xl-2 col-12">
+                                <div class="form-row">
+                                    <div class="col-xl-12 col-6 form-group">
+                                        {!! Form::label('user_id', 'Verantwortlicher:') !!}
+                                        {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
+                                    </div>
+                                    <div class="col-xl-12 col-6 form-group">
+                                        {!! Form::label('code', 'Tür-Code:') !!}
+                                        {!! Form::number('code', null, ['class' => 'form-control']) !!}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-xl-2 col-6 form-group">
-                                {!! Form::label('code', 'Tür-Code:') !!}
-                                {!! Form::number('code', null, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="form-group col-xl-4">
+                            <div class="form-group col-xl-6">
                                 {!! Form::label('comment', 'Bemerkung:') !!}
-                                {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                                {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>5]) !!}
                             </div>
                             <div class="form-group col-xl-4">
                                 {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
-                                {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                                {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>5]) !!}
                             </div>
                         </div>
                         <hr>

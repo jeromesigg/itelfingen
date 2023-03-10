@@ -162,7 +162,7 @@ class AdminEventController extends Controller
             Helper::EventToGoogleCalendar($event);
         }
 
-        return redirect('/admin/events');
+        return redirect()->route('events.edit', [$event]);
     }
 
     /**

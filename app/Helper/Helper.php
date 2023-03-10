@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Position;
 use App\Models\PricelistPosition;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use jeremykenedy\Slack\Laravel\ServiceProvider;
 use setasign\Fpdi\Fpdi;
@@ -194,14 +195,35 @@ public static function GetEventCodeCheck(Event $event)
         return $invoice;
     }
 
-    public static function GetChart($events_nights){
+    public static function GetChart($time_frame){
+        switch ($time_frame){
+            case 'quarter':
+                $time_frame_SQL = "concat(DATE_FORMAT(start_date, '%Y'),'-Q', QUARTER(start_date)) as timeframe";
+                break;
+            case 'monthly':
+                $time_frame_SQL = "concat(LEFT(DATE_FORMAT(start_date, '%M'),3), ' ', DATE_FORMAT(start_date, '%Y')) as timeframe";
+                break;
+            default:
+                $time_frame_SQL = "DATE_FORMAT(start_date, '%Y') as timeframe";
+                break;
+        }
+
+        $events_nights = Event::select(
+            DB::raw('sum(total_days) as days'),
+            DB::raw('sum(total_people*total_days) as stays'),
+            DB::raw($time_frame_SQL),
+        )
+            ->where('event_status_id','<=',config('status.event_bestaetigt'))
+            ->groupBy('timeframe')
+            ->orderBy('start_date', 'ASC');
+
         $timeframe = $events_nights->pluck('timeframe');
         $days = $events_nights->pluck('days');
         $stays = $events_nights->pluck('stays');
 
         $bookingChart = new BookingChart;
-        $bookingChart->minimalist(true);
         $bookingChart->labels($timeframe);
+        $bookingChart->height(900);
         $bookingChart->dataset('Anzahl Tage', 'line', $days)
             ->color('#92D1C3')
             ->backgroundColor('#92D1C3');

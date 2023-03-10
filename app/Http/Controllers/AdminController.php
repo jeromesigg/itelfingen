@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Charts\BookingChart;
 use App\Helper\Helper;
 use App\Models\Contact;
 use App\Models\Event;
-use DB;
 
 class AdminController extends Controller
 {
@@ -59,27 +57,11 @@ class AdminController extends Controller
     public function bookings()
     {
 
-        $events_nights_year = Event::select(
-            DB::raw('sum(total_days) as days'),
-            DB::raw('sum(total_people*total_days) as stays'),
-            DB::raw("DATE_FORMAT(start_date, '%Y') as timeframe"),
-        )
-            ->groupBy('timeframe')
-            ->orderBy('start_date', 'ASC');
-
-        $bookingChartYear = Helper::getChart($events_nights_year);
-
-
-        $events_nights_quarter = Event::select(
-            DB::raw('sum(total_days) as days'),
-            DB::raw('sum(total_people*total_days) as stays'),
-            DB::raw("concat(DATE_FORMAT(start_date, '%Y'),'-Q', QUARTER(start_date)) as timeframe"),
-        )
-            ->groupBy('timeframe')
-            ->orderBy('start_date', 'ASC');
-        $bookingChartQuarter = Helper::getChart($events_nights_quarter);
+        $bookingChartYear = Helper::getChart('yearly');
+        $bookingChartQuarter = Helper::getChart('quarter');
+        $bookingChartMonthly = Helper::getChart('monthly');
 
         $title='Auslastung';
-        return view('admin/bookings', compact( 'bookingChartYear', 'bookingChartQuarter','title'));
+        return view('admin/bookings', compact( 'bookingChartYear', 'bookingChartQuarter','title', 'bookingChartMonthly'));
     }
 }
