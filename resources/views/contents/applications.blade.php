@@ -45,7 +45,7 @@
                 <li>Möglichkeit zur Teilnahme an Genossenschafts-Wochenenden bei denen man kostenlos übernachten und beim Unterhalt oder
                     der Erweiterung der Hauses und Angebotes mitarbeiten kann.</li>
             </ul>
-            <h5>Bist du einverstanden mit den folgenden AGB's?</h5>
+            <h5>Bist du einverstanden mit den folgenden Punkten?</h5>
             <ul>
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
                 <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
