@@ -203,6 +203,9 @@ public static function GetEventCodeCheck(Event $event)
             case 'monthly':
                 $time_frame_SQL = "concat(LEFT(DATE_FORMAT(start_date, '%M'),3), ' ', DATE_FORMAT(start_date, '%Y')) as timeframe";
                 break;
+            case 'daily':
+                $time_frame_SQL = "start_date as timeframe";
+                break;
             default:
                 $time_frame_SQL = "DATE_FORMAT(start_date, '%Y') as timeframe";
                 break;

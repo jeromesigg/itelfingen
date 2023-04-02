@@ -78,9 +78,16 @@ class HomeController extends Controller
     public function impressum()
     {
         $homepage = Homepage::FindOrFail(1);
+
+        return view('contents.impressum', compact('homepage'));
+    }
+
+    public function about_us()
+    {
+        $homepage = Homepage::FindOrFail(1);
         $people = Person::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
 
-        return view('contents.impressum', compact('homepage', 'people'));
+        return view('contents.about_us', compact('homepage', 'people'));
     }
 
     public function faq()

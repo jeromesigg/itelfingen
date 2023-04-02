@@ -20,6 +20,7 @@ Route::get('faq', 'HomeController@faq')->name('faq');
 Route::get('applications', 'ApplicationController@index')->name('applications');
 Route::post('applications/store', 'ApplicationController@store');
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('about_us', 'HomeController@about_us')->name('about_us');
 
 Auth::routes();
 
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin', 'AdminController@index');
     Route::get('/admin/changes', ['as' => 'admin.changes', 'uses' => 'AdminController@changes']);
     Route::get('/admin/bookings', ['as' => 'admin.bookings', 'uses' => 'AdminController@bookings']);
+    Route::get('/admin/bookings/export-csv', ['as' => 'admin.exportcsv', 'uses' => 'AdminController@exportCSV']);
     Route::resource('admin/homepages', 'AdminHomepageController');
     Route::resource('admin/pictures', 'AdminPicturesController');
     Route::resource('admin/eventstatuses', 'AdminEventStatusesController');

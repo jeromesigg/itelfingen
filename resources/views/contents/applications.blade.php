@@ -54,11 +54,7 @@
 
             {!! Form::open(['method' => 'POST', 'action'=>'ApplicationController@store']) !!}
                 <div class="form-row">
-                    <div class="col-md-2 form-group">
-                        {!! Form::label('salutation_id', 'Anrede:') !!}
-                        {!! Form::select('salutation_id', $salutations, null, ['class' => 'form-control', 'placeholder' => 'Anrede', 'required']) !!}
-                    </div>
-                    <div class="col-md-3 form-group">
+                    <div class="col-md-4 form-group">
                         {!! Form::label('firstname', 'Vorname:') !!}
                         {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
                     </div>
@@ -66,7 +62,7 @@
                         {!! Form::label('name', 'Nachname*:') !!}
                         {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
                     </div>
-                    <div class="col-md-3 form-group">
+                    <div class="col-md-4 form-group">
                         {!! Form::label('organisation', 'Organisation:') !!}
                         {!! Form::text('organisation', null, ['class' => 'form-control']) !!}
                     </div>
@@ -98,10 +94,10 @@
                 </div>
                 <div class="form-row">
                     <div class="col-md-6 form-group">
-                        {!! Form::label('why', 'Warum willst Du Genossenschafter:in werden?') !!}
-                        {!! Form::textarea('why', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?']) !!}
+                        {!! Form::label('why', 'Warum willst Du Genossenschafter:in werden?*') !!}
+                        {!! Form::textarea('why', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?', 'required']) !!}
                     </div>
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-6 form-group">,
                         {!! Form::label('comment', 'Hast du noch Fragen oder Bemerkungen?') !!}
                         {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3]) !!}
                     </div>
@@ -119,14 +115,7 @@
         </div>
     </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-    <footer id="footer">
-
-      <div class="container">
-        <div class="credits">
-          <a href="{{route('impressum')}}">Impressum</a>
-        </div>
-      </div>
-    </footer><!-- End Footer -->
+      @include('includes.footer')
 
     {{-- @include('cookieConsent::index') --}}
   </div>

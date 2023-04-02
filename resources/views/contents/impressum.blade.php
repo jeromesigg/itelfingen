@@ -17,52 +17,7 @@
           </div>
         </div>
       </section>
-        <section id="about_us" class="about_us">
-            <div class="container" data-aos="fade-up">
-
-                <div class="section-title">
-                    <h2>Über uns</h2>
-                    <p>Was macht die Genossenschaft Ferienhaus Itelfingen</p>
-                </div>
-
-                <div class="row">
-                     <p>
-                         Die Genossenschaft Ferienhaus Itelfingen bezweckt, in Itelfingen, Gemeinde Meierskappel, auf gemeinnütziger Grundlage ein Ferienhaus
-                         zu betreiben. Sie stellt es hauptsächlich Jugendlichen und Erwachsenen für Ferien und Freizeit zur Benützung zur Verfügung.
-                         Die Genossenschaft pachtet das Ferienhaus von der Reformierten Kirche Zürich. Der Vorstand der Genossenschaft kümmert sich um
-                         Betrieb und Instandhaltung des Ferienhauses. Genossenschafter können sich aktiv beteiligen und das schöne Haus mitprägen und
-                         mitunterhalten, zudem profitieren Sie von reduzierten Mietpreisen. Die Genossenschaft möchte Gemeinschaft und fruchtbare Begegnungen
-                         schaffen und wünscht sich, dass an diesem Ort grosse Ideen entstehen dürfen.
-                     </p>
-                </div>
-
-
-                @if(count($people)>0)
-                    <div class="section-title">
-                        <p>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</p>
-                    </div>
-
-                    <div class="row">
-                        @foreach ($people as $person)
-                            <div class="col-lg-4 col-md-6">
-                                <div class="member" data-aos="zoom-in" data-aos-delay="100">
-                                    <img src="{{$person->photo ? $person->photo->file : 'https://loremflickr.com/350/400/face?random='. $person->id}}" class="img-fluid" alt="">
-                                    <div class="member-info">
-                                        <div class="member-info-content">
-                                            <h4>{{$person->name}}</h4>
-                                            <span>{{$person->function}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                @endif
-            </div>
-          </section>
-
-        <section class="inner-page contact">
+      <section class="inner-page contact">
         <div class="container">
           <div class="row mt-5">
 
@@ -104,14 +59,7 @@
 
     </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-    <footer id="footer">
-
-      <div class="container">
-        <div class="credits">
-          <a href="{{route('impressum')}}">Impressum</a>
-        </div>
-      </div>
-    </footer><!-- End Footer -->
+      @include('includes.footer')
     <div id="preloader"></div>
     <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
 

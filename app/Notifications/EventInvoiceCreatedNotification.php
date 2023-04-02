@@ -62,12 +62,19 @@ class EventInvoiceCreatedNotification extends Notification
         $event = $this->event;
         $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
         $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
+        $total_amount = $event->total_amount;
+        $total_people = $event->total_people;
+        $total_days = $event->total_days;
+
 
 //        if (config('app.env') == 'production') {
             return (new SlackMessage)
                 ->from(config('slack.username'), config('slack.icon'))
                 ->to(config('slack.channel'))
-                ->content('Es hat eine neue Buchung gegeben. Vom '.$start_date.' bis '.$end_date.' Von '.$event['firstname'].' '.$event['name'].' - '.$event['group_name']);
+                ->content("Es hat eine neue Buchung gegeben:\n".
+                    $total_amount . " Nächte, vom ".$start_date." bis ".$end_date.".\n
+                    Von ".$event['firstname']." ".$event['name']." - ".$event['group_name']."\n
+                    Anzahl Personen:".$total_people.", Total: ".$total_amount. " CHF.");
 //        }
     }
 

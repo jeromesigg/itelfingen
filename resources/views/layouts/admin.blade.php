@@ -33,7 +33,7 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-sm-6">
-                  <p>Jérôme &copy; 2021</p>
+                  <p>Jérôme &copy; {{ date('Y') }}</p>
                 </div>
                 <div class="col-sm-6 text-right">
                   <p>Version {{config('app.version')}}</p>

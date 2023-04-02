@@ -52,14 +52,14 @@
                       <div class="row">
                         @if($faq->photo)
                           <div class="col-lg-6 order-1 order-lg-1">
-                            <p>{!! nl2br($faq->description) !!}</p>
+                              <p>{{$faq->description}}</p>
                           </div>
                           <div class="col-lg-6 text-center order-2 order-lg-2">
                             <img src="{{$faq->photo ? $faq->photo->file : ''}}" alt="" class="img-fluid">
                           </div>
                         @else
                           <div class="col-lg-12 order-1 order-lg-1">
-                            <p>{!! nl2br($faq->description) !!}</p>
+                            <p>{{$faq->description}}</p>
                           </div>
                         @endif
                       </div>

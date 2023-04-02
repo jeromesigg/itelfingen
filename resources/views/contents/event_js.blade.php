@@ -268,11 +268,11 @@ Agenda = {
         var text = '';
         if(days > 0){
 			var text = days == 1 ? 'Nacht' : 'Nächte';
-			var discount = (this.start < addDays(this.today, +8)) && @json($discount)? 20 : 0;
+			var discount = (this.start < addDays(this.today, +8)) && @json($discount)? 50 : 0;
 			$("#discount").val(discount);
 			if(discount > 0){
 				$('#discount_message').show();
-				text += ' inkl. 20% Rabatt';
+				text += ' inkl. 50% Rabatt';
 			}
 			else{
 				$('#discount_message').hide();

@@ -64,4 +64,37 @@ class AdminController extends Controller
         $title='Auslastung';
         return view('admin/bookings', compact( 'bookingChartYear', 'bookingChartQuarter','title', 'bookingChartMonthly'));
     }
+
+    public function exportCSV(Request $request)
+    {
+        $fileName = 'export.csv';
+        $bookingChart = Helper::getChart('daily');
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('Datum', '# Nächte', '# Übernachtungen');
+
+        $callback = function() use($bookingChart, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($bookingChart as $chart) {
+                $row['date']  = $chart->time_frage;
+                $row['days']    = $chart->days;
+                $row['stays']    = $chart->stays;
+
+                fputcsv($file, array($row['date'], $row['days'], $row['stays']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

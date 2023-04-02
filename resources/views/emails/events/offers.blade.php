@@ -4,7 +4,7 @@ Guten Tag {{$event['firstname'] . ' ' . $event['name']}},
 <br><br>
 Vielen Dank für Dein Interesse an das Ferienhaus Itelfingen und die Buchung vom {{Carbon\Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y')}} bis {{Carbon\Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y')}}
 
-Unter folgendem Link kannst Du deine Buchung für Deinen Aufenthalt vom {{Carbon\Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y')}} über {{$total}} ansehen:
+Unter folgendem Link kannst Du deine Buchung und die Hausordnung für Deinen Aufenthalt vom {{Carbon\Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y')}} über {{$total}} ansehen:
 @component('mail::button', ['url' => $link, 'color' => 'success'])
 Zum Angebot
 @endcomponent

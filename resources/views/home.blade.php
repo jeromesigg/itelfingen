@@ -10,14 +10,7 @@
 
     @include('contents.main')
         <!-- ======= Footer ======= -->
-    <footer id="footer">
-
-      <div class="container">
-        <div class="credits">
-          <a href="{{route('impressum')}}">Impressum</a> | <a href="{{ route('login') }}">Login</a>
-        </div>
-      </div>
-    </footer><!-- End Footer -->
+    @include('includes.footer')
     <div id="preloader"></div>
     <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
   </div>
