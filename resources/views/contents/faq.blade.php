@@ -52,14 +52,14 @@
                       <div class="row">
                         @if($faq->photo)
                           <div class="col-lg-6 order-1 order-lg-1">
-                              <p>{{$faq->description}}</p>
+                              <p>{!! $faq->description !!}</p>
                           </div>
                           <div class="col-lg-6 text-center order-2 order-lg-2">
                             <img src="{{$faq->photo ? $faq->photo->file : ''}}" alt="" class="img-fluid">
                           </div>
                         @else
                           <div class="col-lg-12 order-1 order-lg-1">
-                            <p>{{$faq->description}}</p>
+                            <p>{!! $faq->description !!}</p>
                           </div>
                         @endif
                       </div>
@@ -78,14 +78,7 @@
 
     </main><!-- End #main -->
         <!-- ======= Footer ======= -->
-    <footer id="footer">
-
-      <div class="container">
-        <div class="credits">
-          <a href="{{route('impressum')}}">Impressum</a>
-        </div>
-      </div>
-    </footer><!-- End Footer -->
+      @include('includes.footer')
 
     {{-- @include('cookieConsent::index') --}}
   </div>

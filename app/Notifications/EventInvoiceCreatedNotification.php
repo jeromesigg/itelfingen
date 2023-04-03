@@ -72,9 +72,9 @@ class EventInvoiceCreatedNotification extends Notification
                 ->from(config('slack.username'), config('slack.icon'))
                 ->to(config('slack.channel'))
                 ->content("Es hat eine neue Buchung gegeben:\n".
-                    $total_amount . " Nächte, vom ".$start_date." bis ".$end_date.".\n
-                    Von ".$event['firstname']." ".$event['name']." - ".$event['group_name']."\n
-                    Anzahl Personen:".$total_people.", Total: ".$total_amount. " CHF.");
+                    $total_days . " Nächte, vom ".$start_date." bis ".$end_date.".\n".
+                    "Von ".$event['firstname']." ".$event['name']." - ".$event['group_name']."\n".
+                    "Anzahl Personen: ".$total_people.", Total: ".$total_amount. " CHF.");
 //        }
     }
 

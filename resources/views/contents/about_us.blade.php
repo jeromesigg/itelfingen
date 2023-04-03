@@ -19,9 +19,7 @@
             </section>
             <section id="about_us" class="about_us">
                 <div class="container" data-aos="fade-up">
-
                     <div class="section-title">
-                        <h2>Über uns</h2>
                         <p>Was macht die Genossenschaft Ferienhaus Itelfingen</p>
                     </div>
 
@@ -41,6 +39,9 @@
                     </div>
 
                     @if(count($people)>0)
+                        <br>
+                        <hr>
+                        <br>
                         <div class="section-title">
                             <p>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</p>
                         </div>
@@ -80,5 +81,3 @@
 
     <script src="{{ asset('js/main.js') }}"></script>
 @endsection
-
-@endif

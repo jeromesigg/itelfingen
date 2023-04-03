@@ -97,7 +97,7 @@
                         {!! Form::label('why', 'Warum willst Du Genossenschafter:in werden?*') !!}
                         {!! Form::textarea('why', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?', 'required']) !!}
                     </div>
-                    <div class="col-md-6 form-group">,
+                    <div class="col-md-6 form-group">
                         {!! Form::label('comment', 'Hast du noch Fragen oder Bemerkungen?') !!}
                         {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3]) !!}
                     </div>

@@ -40,7 +40,7 @@
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                                Sie profitieren von 20% Buchungs-Rabatt.
+                                Sie profitieren von 50% Buchungs-Rabatt.
                             </div>
 
                             <div class="hk-agenda">
