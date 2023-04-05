@@ -54,7 +54,7 @@
           <div class="card_content">
             <span class="card_title card_title-line">Wellness</span>
             <p class="card_text">
-              Bei einer Buchung im Zeitraum vom 1. November bis 31. März ist der saisonal aufgestellte Hot Tub inklusive. Er bietet Platz für 8 Personen.
+              Der aufgestellte Hot Tub ist inklusive. Er bietet Platz für 8 Personen.
             </p>
           </div>
       </div>

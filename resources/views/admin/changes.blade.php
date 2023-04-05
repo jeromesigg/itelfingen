@@ -8,6 +8,31 @@
                     <h2 class="h5 display"><a data-toggle="collapse" data-parent="#features-wrapper" href="#features-box" aria-expanded="true" aria-controls="features-box">Änderungen und Anpassungen</a></h2><a data-toggle="collapse" data-parent="#features-wrapper" href="#features-box" aria-expanded="true" aria-controls="features-box"><i class="fa fa-angle-down"></i></a>
                 </div>
                 <div id="features-box" role="tabpanel" class="card-body collapse show">
+                    <h3>V2.5</h3>
+                    <ul>
+                        <li>
+                            <h4>Features:</h4>
+                            <ul>
+                                <li>Bessere Übersicht der Buchungen</li>
+                                <li>Mehr Informationen an Slack übermittelt</li>
+                                <li>ics-Kalender-Anfrage in Buchungsbestätigung</li>
+                                <li>Buchungsübersicht inkl. csv-Download</li>
+                                <li>"Impressum" und "Über uns" aufgetrennt</li>
+                                <li>Footer mit Impressum, Über uns, FAQ und Login vereinheitlicht</li>
+                                <li>Möglichkeit eigener Text für Mail-Verkehr</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4>Bug-Fix:</h4>
+                            <ul>
+                                <li>FAQ ohne übermässige Abstände</li>
+                                <li>Bewerbungen ohne Anrede und mit Grund als Pflicht</li>
+                                <li>Nur zukünftige Buchungen werden auf Homepage geladen</li>
+                                <li>50% Last-Minute Rabatt</li>
+                                <li>Anpassung HotTub Text</li>
+                            </ul>
+                        </li>
+                    </ul>
                     <h3>V2.4</h3>
                     <ul>
                         <li>Alle E-Mails aus der Applikation</li>
@@ -51,7 +76,9 @@
                 <div id="roadmap-box" role="tabpanel" class="card-body collapse show">
                     <h3>Nächste Versionen</h3>
                     <ul>
-                        <li>ics-Datei mit Mail versenden</li>
+                        <li>Buchungs-Rabatt an Wochen-Tagen</li>
+                        <li>Facebook Conversion API</li>
+                        <li>Testing</li>
                     </ul>
                 </div>
             </div>
