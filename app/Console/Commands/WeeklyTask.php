@@ -42,7 +42,7 @@ class WeeklyTask extends Command
      */
     public function handle()
     {
-        $date = Carbon::today()->addMonths(2);
+        $date = Carbon::today()->addMonths(4);
         $events_new = Event::where('event_status_id', '=', config('status.event_neu'))
             ->orderby('start_date')->get();
         $events_open_offers = Event::where('start_date', '<=', $date)
