@@ -6,6 +6,7 @@ use App\Models\ArchiveStatus;
 use App\Models\Person;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminPersonController extends Controller
 {
@@ -45,7 +46,7 @@ class AdminPersonController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = $input['name'].'.jpg';
+            $name = Str::uuid() . '_' . $input['name'].'.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
@@ -97,7 +98,7 @@ class AdminPersonController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = $input['name'] + '.jpg';
+            $name = Str::uuid() . '_' . $input['name'].'.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
