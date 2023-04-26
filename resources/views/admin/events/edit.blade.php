@@ -26,8 +26,8 @@
                                 {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="form-group col-xl-2">
-                                {!! Form::label('groupname', 'Gruppe/Anlass:') !!}
-                                {!! Form::text('groupname', null, ['class' => 'form-control']) !!}
+                                {!! Form::label('group_name', 'Gruppe/Anlass:') !!}
+                                {!! Form::text('group_name', null, ['class' => 'form-control']) !!}
                             </div>
                         </div>
                         <div class="form-row">

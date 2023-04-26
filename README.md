@@ -1,5 +1,5 @@
 <p align="center"><img src="https://itelfingen.ch/img/logo.png" width="400"></p>
-<p align="center"><img src="https://itelfingen.ch/images/hero-bg.jpg"></p>
+<p align="center"><img src="https://itelfingen.ch/images/hero-bg.webp"></p>
 
 ## Buchungstool für Ferienhäuser
 

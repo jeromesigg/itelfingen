@@ -35,8 +35,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('groupname', 'Gruppe/Anlass:') !!}
-                        {!! Form::text('groupname', null, ['class' => 'form-control']) !!}
+                        {!! Form::label('group_name', 'Gruppe/Anlass:') !!}
+                        {!! Form::text('group_name', null, ['class' => 'form-control']) !!}
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">

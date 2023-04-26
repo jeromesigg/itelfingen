@@ -380,7 +380,7 @@ h1, h2, h3, h4, h5, h6 {
 #hero {
   width: 100%;
   height: 100vh;
-  background: url("../images/hero-bg.jpg") top center;
+  background: url("../images/hero-bg.webp") top center;
   background-size: cover;
   position: relative;
   padding: 0;
@@ -885,7 +885,7 @@ section {
 # Locations
 --------------------------------------------------------------*/
 .locations {
-  background: url(../images/events-bg.jpg) center center no-repeat;
+  background: url(../images/events-bg.webp) center center no-repeat;
   background-size: cover;
   position: relative;
   height: 750px;

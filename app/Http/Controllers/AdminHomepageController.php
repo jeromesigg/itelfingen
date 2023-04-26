@@ -86,35 +86,35 @@ class AdminHomepageController extends Controller
         $input = $request->all();
 
         if ($file = $request->file('main_photo_id')) {
-            $name = 'hero-bg.jpg';
+            $name = 'hero-bg.webp';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
             $input['main_photo_id'] = $photo->id;
         }
         if ($file = $request->file('background_top_photo_id')) {
-            $name = 'about-bg.jpg';
+            $name = 'about-bg.webp';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
             $input['background_top_photo_id'] = $photo->id;
         }
         if ($file = $request->file('background_bottom_photo_id')) {
-            $name = 'events-bg.jpg';
+            $name = 'events-bg.webp';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
             $input['background_bottom_photo_id'] = $photo->id;
         }
         if ($file = $request->file('big_login_photo_id')) {
-            $name = 'login.jpg';
+            $name = 'login.webp';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
             $input['big_login_photo_id'] = $photo->id;
         }
         if ($file = $request->file('small_login_photo_id')) {
-            $name = 'logo.jpg';
+            $name = 'logo.png';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 

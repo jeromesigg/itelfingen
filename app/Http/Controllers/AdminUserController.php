@@ -20,10 +20,10 @@ class AdminUserController extends Controller
         //
         $user = Auth::user();
         if ($user->isTeam() && ! $user->isAdmin()) {
-            $users = User::whereId($user->id)->paginate(10);
+            $users = User::whereId($user->id)->all();
             $roles = Role::whereId($user->role_id)->pluck('name', 'id')->all();
         } else {
-            $users = User::paginate(10);
+            $users = User::all();
             $roles = Role::pluck('name', 'id')->all();
         }
 

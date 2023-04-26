@@ -28,7 +28,7 @@
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
-                @enderror 
+                @enderror
             </div>
             <div class="form-group row">
               <div class="col-md-6">
@@ -48,7 +48,7 @@
       </div>
       <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
         <!-- Image-->
-        <div style="background-image: url(images/login.jpg); background-size:cover;" class="bg-cover h-100 mr-n3"></div>
+        <div style="background-image: url(images/login.webp); background-size:cover;" class="bg-cover h-100 mr-n3"></div>
       </div>
     </div>
   </div>

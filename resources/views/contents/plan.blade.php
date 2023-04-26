@@ -17,10 +17,10 @@
         <div class="col-lg-9 mt-4 mt-lg-0">
           <div class="tab-content">
             <div class="tab-pane active show" id="Erdgeschoss">
-                <img src="images/Erdgeschoss.jpg" alt="" class="img-fluid">
+                <img src="images/Erdgeschoss.webp" alt="" class="img-fluid">
             </div>
             <div class="tab-pane" id="Obergeschoss">
-                <img src="images/Obergeschoss.jpg" alt="" class="img-fluid">
+                <img src="images/Obergeschoss.webp" alt="" class="img-fluid">
             </div>
           </div>
         </div>

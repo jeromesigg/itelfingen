@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-lg-8 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="100">
                 <div class="about-img">
-                    <img src="images/about-bg.jpg" alt="">
+                    <img src="images/about-bg.webp" alt="">
                 </div>
             </div>
 
