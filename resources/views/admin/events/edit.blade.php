@@ -81,6 +81,11 @@
                                 <span id="total"></span>.-
                             </div>
                             <div class="col-xl-2 col-4 form-group">
+                                <br>
+                                {!! Form::label('early_checkin', 'Early Check-In:') !!}
+                                {!! Form::checkbox('early_checkin', '1', $event['early_checkin']) !!}
+                                {!! Form::label('late_checkout', 'Late Check-Out:') !!}
+                                {!! Form::checkbox('late_checkout', '1', $event['late_checkout']) !!}
                             </div>
                             <div class="col-xl-2 col-4 form-group">
                                 <br>

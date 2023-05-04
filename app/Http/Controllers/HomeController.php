@@ -48,13 +48,13 @@ class HomeController extends Controller
                 'y' => $start_date->year,
                 'm' => $start_date->month - 1,
                 'd' => $start_date->day,
-                'h' => true,
+                'h' => !$event['early_checkin'],
             ];
             $end = [
                 'y' => $end_date->year,
                 'm' => $end_date->month - 1,
                 'd' => $end_date->day,
-                'h' => true,
+                'h' => !$event['late_checkout'],
             ];
             $events_json[] = [
                 'start' => $start,

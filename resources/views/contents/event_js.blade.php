@@ -163,7 +163,7 @@ Agenda = {
 					for (; Date.parse(date) != Date.parse(end); date.setDate(date.getDate() + 1))
 						this.reserved[Date.parse(date)] = { lState: records[i].state, rState: records[i].state, id: records[i].id };
 					if (Date.parse(date) == Date.parse(end) && records[i].end.h)
-						this.reserved[Date.parse(date)] = { lState: records[i].state, rState: (this.reserved[Date.parse(date)] || {}).rState, id: records[i].id };
+						this.reserved[Date.parse(date)] = { lState: records[i].state + (records[i].state === null ? null: 'D'), rState: (this.reserved[Date.parse(date)] || {}).rState, id: records[i].id };
 					else
 						this.reserved[Date.parse(date)] = { lState: records[i].state, rState: records[i].state, id: records[i].id };
 				}

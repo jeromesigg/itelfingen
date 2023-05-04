@@ -63,6 +63,13 @@
 
 }
 
+.hk-agenda__day--PDP {
+    border: 1px solid #7e967e;
+    background: var(--norway) url(/img/calendar/provisorisch-doppelt.svg) 10%;
+    background-size: 110%;
+    color: #333;
+}
+
 .hk-agenda__day--FP {
 	border: 1px solid #ccc;
 	border-bottom: 1px solid #7e967e;
@@ -72,7 +79,7 @@
 
 }
 
-.hk-agenda__day--PF {
+.hk-agenda__day--PDF {
 	border: 1px solid #ccc;
 	border-top: 1px solid #7e967e;
 	border-left: 1px solid #7e967e;
@@ -87,6 +94,13 @@
 	color: #333;
 }
 
+.hk-agenda__day--BDB {
+    border: 1px solid #aa7679;
+    background: var(--orientalpink) url(/img/calendar/provisorisch-doppelt.svg) 10%;
+    background-size: 110%;
+    color: #333;
+}
+
 .hk-agenda__day--FB {
 	border: 1px solid #ccc;
 	border-bottom: 1px solid #aa7679;
@@ -95,7 +109,7 @@
 	color: #333;
 }
 
-.hk-agenda__day--BF {
+.hk-agenda__day--BDF {
 	border: 1px solid #ccc;
 	border-top: 1px solid #aa7679;
 	border-left: 1px solid #aa7679;
@@ -103,7 +117,7 @@
 	color: #333;
 }
 
-.hk-agenda__day--PB {
+.hk-agenda__day--PDB {
 	border-top: 1px solid #7e967e;
 	border-left: 1px solid #7e967e;
 	border-bottom: 1px solid #aa7679;
@@ -112,7 +126,7 @@
 	color: #333;
 }
 
-.hk-agenda__day--BP {
+.hk-agenda__day--BDP {
 	border: 1px solid #7e967e;
 	border-right: 1px solid #7e967e;
 	border-top: 1px solid #aa7679;

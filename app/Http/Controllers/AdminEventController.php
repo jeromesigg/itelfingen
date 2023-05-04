@@ -49,13 +49,13 @@ class AdminEventController extends Controller
                 'y' => $start_date->year,
                 'm' => $start_date->month - 1,
                 'd' => $start_date->day,
-                'h' => true,
+                'h' => !$event['early_checkin'],
             ];
             $end = [
                 'y' => $end_date->year,
                 'm' => $end_date->month - 1,
                 'd' => $end_date->day,
-                'h' => true,
+                'h' => !$event['late_checkout'],
             ];
             $events_json[] = [
                 'start' => $start,
@@ -201,6 +201,8 @@ class AdminEventController extends Controller
         //
         $input = $request->all();
         $input['external'] = $request->has('external');
+        $input['early_checkin'] = $request->has('early_checkin');
+        $input['late_checkout'] = $request->has('late_checkout');
         if (isset($input['positions'])) {
             foreach ($input['positions'] as $index => $plposition) {
                 Position::where('id', $index)->update(['amount' => $plposition]);

@@ -164,7 +164,7 @@ class DailyTask extends Command
             $array = [[
                 'ID' => $application['id'],
                 'Datum' => Carbon::parse($application['created_at'])->format('d.m.Y'),
-                'Anrede' => $application->salutation['name'],
+                'Anrede' => '',
                 'Vorname' => $application['firstname'],
                 'Name' => $application['name'],
                 'Organisation' => $application['organisation'],
