@@ -6,6 +6,10 @@ Deine Buchung für das Ferienhaus Itelfingen vom {{Carbon\Carbon::create($event[
 <br>
 Du wirst zwei Wochen vor deinem Aufenthalt noch die letzten Informationen per E-Mail erhalten.
 <br>
+@component('mail::button', ['url' => route('faq'), 'color' => 'success'])
+    Besuche auch unsere FAQ-Seite
+@endcomponent
+<br>
 {{$additional_text}}
 <br>
 Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.

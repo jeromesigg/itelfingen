@@ -20,7 +20,7 @@
                                 <li>"Impressum" und "Über uns" aufgetrennt</li>
                                 <li>Footer mit Impressum, Über uns, FAQ und Login vereinheitlicht</li>
                                 <li>Möglichkeit eigener Text für Mail-Verkehr</li>
-                                <li>Early Check-In und Late Check-Out werden angezeigt</li>
+                                <li>Early Check-In und Late Check-Out werden im Kalender angezeigt</li>
                             </ul>
                         </li>
                         <li>
