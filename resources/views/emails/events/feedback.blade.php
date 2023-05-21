@@ -2,7 +2,8 @@
     <h1>Dein Feedback für das Ferienhaus Itelfingen</h1>
     Guten Tag {{$event->firstname}} {{$event->name}},
     <br><br>
-    Du konntest letzte Woche einen Aufenthalt in unserem Ferienhaus Itelfingen geniessen. Wir hoffen, dass alles funktioniert hat und du wunderbare Tage verbringen konntest.
+    Heute ist dein Abreisetag in unserem Ferienhaus Itelfingen. Bitte beachte die Hausrückgabe-Checkliste in der Hausordnung und bei der Haustüre.
+    Wir hoffen, dass alles funktioniert hat und du wunderbare Tage verbringen konntest.
     <br>
     Sollte sich etwas an den Anzahl Übernachtung gegenüber der Offerte geändert haben, kannst du und dies gerne noch melden.
     <br>
