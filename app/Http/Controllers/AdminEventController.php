@@ -8,6 +8,7 @@ use App\Events\EventInvoiceSend;
 use App\Events\EventOfferCreate;
 use App\Events\EventOfferSend;
 use App\Helper\Helper;
+use App\Mail\ApplicationWanted;
 use App\Mail\CleaningSent;
 use App\Models\ContractStatus;
 use App\Models\Event;
@@ -244,6 +245,9 @@ class AdminEventController extends Controller
                     $event->update([
                         'contract_status_id' => config('status.contract_rechnung_versendet'), ]);
                 }
+                break;
+            case '6':
+                Mail::send(new ApplicationWanted($event, $additional_text));
                 break;
         }
 

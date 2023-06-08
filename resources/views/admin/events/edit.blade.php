@@ -3,7 +3,7 @@
     <section>
         <div class="container-fluid">
             <header>
-                <h3 class="display">Buchung bearbeiten</h3>
+                <h3 class="display">Buchung {{str_pad($event['id'],5,'0', STR_PAD_LEFT)}} bearbeiten</h3>
             </header>
             <div class="form-row">
                 <div class="form-group col-xl-10">
@@ -175,6 +175,7 @@
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
                                     </div>
                                     <div class="form-group col-xl-2 col-6 ">
+                                        {!! Form::submit('6 Genossenschafts Info versenden', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
                                     </div>
                                     @break
                                 @default
