@@ -1,5 +1,5 @@
 @component('mail::message')
-    <h1>Ihre Buchung für das Ferienhaus Itelfingen</h1>
+    <h1>Die letzten Informationen zu deiner Buchung für das Ferienhaus Itelfingen</h1>
     Guten Tag {{$event->firstname}} {{$event->name}},
     <br><br>
     Im angehängten PDF findest du die wichtigsten Informationen zu deinem baldigen Aufenthalt im Ferienhaus Itelfingen und die Parkkarte für das Ferienhaus Itelfingen.

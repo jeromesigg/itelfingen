@@ -285,6 +285,7 @@
             }
             if( position.pricelist_position['bexio_code']>200){
                 subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
+                person = 0;
             }
             total_amount += subtotal;
             total_person += person;

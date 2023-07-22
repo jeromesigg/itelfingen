@@ -11,7 +11,7 @@ Zum Angebot
 <br>
 {{$additional_text}}
 <br>
-Die Schlussrechnung erhalten Sie nach der Buchung, somit können allfällige Anpassungen an den Übernachtungen noch berücksichtigt werden.
+Die Schlussrechnung erhalten Sie nach der Buchung, somit können allfällige Anpassungen an den Übernachtungen noch berücksichtigt werden, Sie müssen die Angebots-Rechnung also nicht bezahlen.
 <br>
 Wir hoffen, dass die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF.
 <br>

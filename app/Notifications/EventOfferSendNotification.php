@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Mail\SendOffersMail;
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Ixudra\Curl\Facades\Curl;
@@ -65,9 +66,21 @@ class EventOfferSendNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $event = $this->event;
+        $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
+        $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
+        $total_amount = $event->total_amount;
+        $total_people = $event->total_people;
+        $total_days = $event->total_days;
+
         return [
             //
             'action' => 'Angebot versendet',
+            'name' => $event['firstname']." ".$event['name'],
+            'date' => $start_date." bis ".$end_date,
+            'days' => $total_days . ' Nächte',
+            'total_people' => $total_people,
+            'total_amount' => $total_amount
         ];
     }
 }

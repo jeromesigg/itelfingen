@@ -46,7 +46,7 @@ class LastInfosSent extends Mailable
         return $this->markdown('emails.events.last_infos', ['event' => $this->event])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Deine Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen')
+            ->subject('Die letzten Informationen zu deiner Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen')
             ->attach($PdfPath, [
                 'as' => 'Infos_vor_Buchung.pdf',
                 'mime' => 'application/pdf',
