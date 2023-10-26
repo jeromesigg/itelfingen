@@ -12,7 +12,7 @@
                 <span class="card_title"> Übernachtungen</span>
                 <p class="card_text">
                   {{-- Buchungspauschale 200.- <br> --}}
-                  Reinigungsspauschale {{config('pricelist.cleaning')}}.-
+                    Reinigungs- und Buchungspauschale {{config('pricelist.cleaning')}}.-
                   <span class="card_subtitle">Genossenschafter:innen</span>
                   Fr. {{config('pricelist.member_adults')}}.- pro Nacht und Person (ab 16 Jahren) <br>
                   Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (6-16 Jahren)
@@ -32,7 +32,7 @@
               <div class="card_content">
                 <span class="card_title">Tagesaufenthalte (ohne Übernachtung)</span>
                 <p class="card_text">
-                    Reinigungsspauschale {{config('pricelist.cleaning')/2}}.-<br>
+                    Reinigungs- und Buchungspauschale {{config('pricelist.cleaning')/2}}.-<br>
                     Tagespauschale Fr. {{config('pricelist.daily')}}.-
                 </p>
               </div>

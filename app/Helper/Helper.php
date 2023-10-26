@@ -128,7 +128,7 @@ class Helper
     public static function GetEventCleaningMailCheck(Event $event)
     {
         $cleaning_mail = '';
-        if($event->event_status['id'] <> config('status.event_eigene') && $event->event_status['id'] <> config('status.event_storniert')){
+        if($event->event_status['id'] <> config('status.event_storniert')){
             $cleaning_mail = $event->cleaning_mail ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Putzmail versendet' :
                 '<i class="fa-solid fa-xmark" style="color: indianred"></i> Kein Putzmail versendet';
             $cleaning_mail .= '<br>';
