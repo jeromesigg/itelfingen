@@ -220,7 +220,7 @@ class AdminEventController extends Controller
                 EventOfferCreate::dispatch($event);
                 break;
             case '3':
-                if (! is_null($event['bexio_offer_id'])) {
+                if (!is_null($event['bexio_offer_id'])) {
                     EventOfferSend::dispatch($event);
                     Notification::send($event, new EventOfferSendNotification($event, $additional_text));
 

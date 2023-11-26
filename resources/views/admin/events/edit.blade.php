@@ -151,9 +151,10 @@
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </div>
                                     <div class="form-group col-xl-2 col-6 ">
-                                        {!! Form::submit('4 Rechnung erstellen', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
+                                        {!! Form::submit('3 Erinnerung versenden', ['class' => 'btn btn-secondary', 'name' => 'submit'])!!}
                                     </div>
                                     <div class="form-group col-xl-2 col-6 ">
+                                        {!! Form::submit('4 Rechnung erstellen', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
                                     </div>
                                     @break
                                 @case(config('status.contract_rechnung_erstellt'))
@@ -183,6 +184,10 @@
                             <div class="form-group col-xl-4">
                                 {!! Form::label('additional_text', 'Zusatztext für Mail:') !!}
                                 {!! Form::textarea('additional_text', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                                <br>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-secondary" onclick="PrepareReminderMail()">Erinnerungstext einfügen</button>
+                                </div>
                             </div>
                         </div>
                     {!! Form::close()!!}
@@ -252,6 +257,11 @@
         + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
 	    $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
 	    $('#cleaning_mail_text').val(text);
+    }
+
+    function PrepareReminderMail() {
+        text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Ihnen erhalten.";
+        $('#additional_text').val(text);
     }
 
     function Total_Change() {
