@@ -70,10 +70,6 @@ Route::get('admin/run-migrations-seed', function () {
 });
 
 Route::get('admin/run-deployment', function () {
-    echo 'config:cache <br>';
-    Artisan::call('config:cache');
-    echo 'view:cache <br>';
-    Artisan::call('view:cache');
-
+    Artisan::call('optimize:clear');
     return true;
 });
