@@ -16,4 +16,15 @@ Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfü
 <br><br>
 Freundliche Grüsse,<br>
 Das Ferienhaus Itelfingen
+<br>
+<div class="header">
+    <div class="breadcrumb flat"  >
+        <a href="#" class="past">Buchungsanfrage</a>
+        <a href="#" class="past">Angebot</a>
+        <a href="#" class="active">Definitive Buchung</a>
+        <a href="#" class="">Letzte Infos</a>
+        <a href="#" class="">Aufenthalt</a>
+        <a href="#" class="">Rechnung</a>
+    </div>
+</div>
 @endcomponent

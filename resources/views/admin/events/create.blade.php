@@ -78,8 +78,8 @@
                                 {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
                         </div>
                         <div class="col-md-3 form-group">
-                            {!! Form::label('external', 'Externe Buchung:') !!}
-                            {!! Form::checkbox('external', '1',false) !!}
+                            {!! Form::label('foreign_key', 'Externe Buchungs-Nr.:') !!}
+                            {!! Form::text('foreign_key', null, ['class' => 'form-control']) !!}
                         </div>
                     </div>
                     <div class="form-row">
@@ -141,7 +141,6 @@
 	    $('#total_amount').val("0");
         $('#code').val("290393");
 	    $('#event_status_id').val(@json(config('status.event_eigene')));
-        $('#external')[0].checked = false;
     }
     function createExtern() {
         $('#name').val("Externe Buchung");
@@ -154,7 +153,6 @@
         $('#total_amount').val("0");
         $('#code').val("");
         $('#event_status_id').val(@json(config('status.event_neu')));
-        $('#external')[0].checked = true;
     }
     function Total_Change() {
         var start_date = new Date(document.getElementById('start_date').value);

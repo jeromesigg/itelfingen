@@ -49,6 +49,7 @@ class WeeklyTask extends Command
             ->where('contract_status_id', '=', config('status.contract_angebot_erstellt'))
             ->orderby('start_date')->get();
         $events_no_cleaning_mail = Event::where('start_date', '<=', $date)
+            ->where('start_date', '>', Carbon::today())
             ->where('cleaning_mail', false)
             ->where('event_status_id', '=', config('status.event_bestaetigt'))
             ->orderby('start_date')->get();

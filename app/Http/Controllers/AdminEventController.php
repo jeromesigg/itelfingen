@@ -91,7 +91,7 @@ class AdminEventController extends Controller
                     '<br>' . $event['group_name'];
             })
             ->addColumn('number', function (Event $event) {
-                return $event->number();
+                return $event->number() . '<br>' .  $event['foreign_key'];
             })
             ->editColumn('start_date', function (Event $event) {
                 return [
@@ -115,7 +115,7 @@ class AdminEventController extends Controller
             ->editColumn('contract_status', function (Event $event) {
                 return $event->contract_status ? $event->contract_status['name'] : '';
             })
-            ->rawColumns(['name', 'status'])
+            ->rawColumns(['name', 'status', 'number'])
             ->make(true);
     }
 
@@ -146,6 +146,7 @@ class AdminEventController extends Controller
     {
         //
         $input = $request->all();
+        $input['external'] =  isset($input['foreign_key']);
         $input['contract_status_id'] = config('status.contract_offen');
         $one_day = false;
         if ($input['total_days'] < 1) {
@@ -201,7 +202,7 @@ class AdminEventController extends Controller
     {
         //
         $input = $request->all();
-        $input['external'] = $request->has('external');
+        $input['external'] =  isset($input['foreign_key']);
         $input['early_checkin'] = $request->has('early_checkin');
         $input['late_checkout'] = $request->has('late_checkout');
         if (isset($input['positions'])) {

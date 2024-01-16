@@ -88,9 +88,8 @@
                                 {!! Form::checkbox('late_checkout', '1', $event['late_checkout']) !!}
                             </div>
                             <div class="col-xl-2 col-4 form-group">
-                                <br>
-                                {!! Form::label('external', 'Externe Buchung:') !!}
-                                {!! Form::checkbox('external', '1', $event['external']) !!}
+                                {!! Form::label('foreign_key', 'Externe Buchungs-Nr.:') !!}
+                                {!! Form::text('foreign_key', null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="col-xl-2 col-6 form-group">
                                 {!! Form::label('contract_status_id', 'Angebot / Rechnung:') !!}
@@ -260,7 +259,7 @@
     }
 
     function PrepareReminderMail() {
-        text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Ihnen erhalten.";
+        text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Dir erhalten. Sollten wir innerhalb der nächsten zwei Wochen keine Bestätigung erhalten, müssen wir die Buchung leider wieder freigeben.";
         $('#additional_text').val(text);
     }
 
