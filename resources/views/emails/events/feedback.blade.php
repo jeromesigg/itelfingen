@@ -15,4 +15,15 @@
     <br><br>
     Freundliche Grüsse,<br>
     Das Ferienhaus Itelfingen
+    <br>
+    <div class="header">
+        <div class="breadcrumb flat"  >
+            <a href="#" class="past">Buchungsanfrage</a>
+            <a href="#" class="past">Angebot</a>
+            <a href="#" class="past">Definitive Buchung</a>
+            <a href="#" class="past">Letzte Infos</a>
+            <a href="#" class="active">Aufenthalt</a>
+            <a href="#" class="">Rechnung</a>
+        </div>
+    </div>
 @endcomponent

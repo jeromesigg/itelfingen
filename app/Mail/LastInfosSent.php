@@ -42,11 +42,15 @@ class LastInfosSent extends Mailable
         $email = $this->event['email'];
         $name = $this->event['firstname'].' '.$this->event['name'];
         $outputFile = Helper::PrintParking($this->event);
+        $number = str_pad($this->event['id'],5,'0', STR_PAD_LEFT);
+        if(isset($event['foreign_key'])){
+            $number .= ' (' . $event['foreign_key'] . ')';
+        }
 
         return $this->markdown('emails.events.last_infos', ['event' => $this->event])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Die letzten Informationen zu deiner Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen')
+            ->subject('Die letzten Informationen zu deiner Buchung ' . $number . ' für das Ferienhaus Itelfingen')
             ->attach($PdfPath, [
                 'as' => 'Infos_vor_Buchung.pdf',
                 'mime' => 'application/pdf',

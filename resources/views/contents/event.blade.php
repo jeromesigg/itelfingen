@@ -2,7 +2,7 @@
 
     <div class="container" data-aos="fade-up">
         <div class="section-title">
-            <p>Jetzt das Ferienhaus buchen</p>
+            <p>Jetzt Buchungsanfrage</p>
         </div>
         @if (session()->has('success_event'))
             <div class="alert alert-dismissable alert-success">
