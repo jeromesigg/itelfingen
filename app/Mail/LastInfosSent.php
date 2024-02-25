@@ -38,7 +38,6 @@ class LastInfosSent extends Mailable
     public function build()
     {
         $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
-        $PdfPath_HO = public_path('files/Hausordnung.pdf');
         $email = $this->event['email'];
         $name = $this->event['firstname'].' '.$this->event['name'];
         $outputFile = Helper::PrintParking($this->event);
@@ -57,10 +56,6 @@ class LastInfosSent extends Mailable
             ])
             ->attach($outputFile, [
                 'as' => 'Parkkarte.pdf',
-                'mime' => 'application/pdf',
-            ])
-            ->attach($PdfPath_HO, [
-                'as' => 'Hausordnung.pdf',
                 'mime' => 'application/pdf',
             ]);
     }

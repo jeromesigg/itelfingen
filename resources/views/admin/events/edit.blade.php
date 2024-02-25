@@ -221,6 +221,9 @@
                         {!! Form::close()!!}
                     </div>
                     <br>
+                    <div class="form-group">
+                        <a href="{{route('events.downloadParking', $event)}}" class="btn btn-secondary">Parkplatz-Karte herunterladen</a>
+                    </div>
                 </div>
             </div>
             <div class="row">

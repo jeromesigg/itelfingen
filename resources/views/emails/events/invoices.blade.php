@@ -18,15 +18,9 @@ Für Rückfragen zu dieser Rechnung stehen wir jederzeit gerne zur Verfügung.
 Freundliche Grüsse, <br>
 Das Ferienhaus Itelfingen
 <br>
-<div class="header">
-    <div class="breadcrumb flat"  >
-        <a href="#" class="past">Buchungsanfrage</a>
-        <a href="#" class="past">Angebot</a>
-        <a href="#" class="past">Definitive Buchung</a>
-        <a href="#" class="past">Letzte Infos</a>
-        <a href="#" class="past">Aufenthalt</a>
-        <a href="#" class="active">Rechnung</a>
-    </div>
+
+<div class="breadcrumbs">
+    <img src="https://itelfingen.ch/img/mail/6.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
 </div>
 @endcomponent
 

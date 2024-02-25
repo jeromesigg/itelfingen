@@ -263,6 +263,11 @@ class AdminEventController extends Controller
 
         return redirect()->back();
     }
+   public function DownloadParking(Event $event)
+{
+    $outputFile = Helper::PrintParking($event);
+    return response()->download($outputFile);
+}
 
     /**
      * Remove the specified resource from storage.
