@@ -24,14 +24,7 @@ Bemerkung <br>
 <br>
 Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit einem Angebot und allen weiteren Dokumenten (Überprüfen Sie auch ihren Spam-Ordner).
 <br>
-<div class="header">
-    <div class="breadcrumb flat"  >
-        <a href="#" class="active">Buchungsanfrage</a>
-        <a href="#" class="">Angebot</a>
-        <a href="#" class="">Definitive Buchung</a>
-        <a href="#" class="">Letzte Infos</a>
-        <a href="#" class="">Aufenthalt</a>
-        <a href="#" class="">Rechnung</a>
-    </div>
+<div class="breadcrumbs">
+    <img src="https://itelfingen.ch/img/mail/1.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
 </div>
 @endcomponent

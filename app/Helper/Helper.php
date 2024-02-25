@@ -136,7 +136,7 @@ class Helper
         return $cleaning_mail;
     }
 
-public static function GetEventCodeCheck(Event $event)
+    public static function GetEventCodeCheck(Event $event)
     {
         $code = '';
         if($event->event_status['id'] <> config('status.event_eigene') && $event->event_status['id'] <> config('status.event_storniert')){

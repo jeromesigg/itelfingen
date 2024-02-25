@@ -25,19 +25,19 @@
         <tbody>
             <tr>
                 <td>
-                    <a href="https://www.itelfingen.ch/"><img src="https://itelfingen.ch/img/mail/icon_link.svg" class="logo img-header"
+                    <a href="https://www.itelfingen.ch/"><img src="https://itelfingen.ch/img/mail/icon_link.png" class="logo img-header"
                                                               width="40px" alt="Ferienhaus Itelfingen"/></a>
                 </td>
                 <td>
-                    <a href="mailto:verwalter@itelfingen.ch"><img src="https://itelfingen.ch/img/mail/icon_mail.svg" class="logo img-header"
+                    <a href="mailto:verwalter@itelfingen.ch"><img src="https://itelfingen.ch/img/mail/icon_mail.png" class="logo img-header"
                                                                   width="40px" alt="Mail"/></a>
                 </td>
                 <td>
-                    <a href="https://www.instagram.com/itelfingen/"><img src="https://itelfingen.ch/img/mail/icon_instagram.svg" class="logo img-header"
+                    <a href="https://www.instagram.com/itelfingen/"><img src="https://itelfingen.ch/img/mail/icon_instagram.png" class="logo img-header"
                                                                          width="40px" alt="Instagram - Ferienhaus Itelfingen"/></a>
                 </td>
                 <td>
-                    <a href="https://maps.app.goo.gl/nDkcMkAQLsQPfp557"><img src="https://itelfingen.ch/img/mail/icon_google.svg" class="logo img-header icon-color"
+                    <a href="https://maps.app.goo.gl/nDkcMkAQLsQPfp557"><img src="https://itelfingen.ch/img/mail/icon_google.png" class="logo img-header icon-color"
                                                                              width="40px" alt="Google - Ferienhaus Itelfingen"/></a>
                 </td>
             </tr>
