@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ExportBookings;
+use Carbon\Carbon;
+use App\Models\Event;
 use App\Helper\Helper;
 use App\Models\Contact;
-use App\Models\Event;
+use App\Exports\ExportBookings;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
@@ -25,6 +26,7 @@ class AdminController extends Controller
         $events_all = Event::where('event_status_id', '<', config('status.event_eigene'))->count();
         $events_new = Event::where('event_status_id', config('status.event_neu'))->count();
         $events = Event::where('start_date', '>=', today())->where('event_status_id', '<>', config('status.event_storniert'))->orderBy('id', 'DESC')->paginate(5);
+        $events_current = Event::where('start_date', '>=',  Carbon::today()->addWeeks(-2))->where('event_status_id', '<>', config('status.event_storniert'))->orderBy('start_date', 'ASC')->get();
 
         $contacts_new = Contact::where('done', false)->orderBy('created_at', 'DESC')->get();
 
@@ -48,7 +50,7 @@ class AdminController extends Controller
         ]);
 
         $title='Dashboard';
-        return view('admin/index', compact('icon_array', 'contacts_new', 'events', 'title'));
+        return view('admin/index', compact('icon_array', 'contacts_new', 'events', 'title', 'events_current'));
     }
 
     public function changes()
