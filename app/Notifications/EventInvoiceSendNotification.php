@@ -14,7 +14,7 @@ class EventInvoiceSendNotification extends Notification
     use Queueable;
 
     public Event $event;
-    public $additional_text;
+    public string $additional_text;
 
     public array $invoice;
 
@@ -23,7 +23,7 @@ class EventInvoiceSendNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Event $event, $additional_text)
+    public function __construct(Event $event, string $additional_text)
     {
         //
         $this->event = $event;
