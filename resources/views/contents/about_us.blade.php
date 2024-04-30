@@ -48,7 +48,7 @@
 
                         <div class="row">
                             @foreach ($people as $person)
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="member" data-aos="zoom-in" data-aos-delay="100">
                                         <img src="{{$person->photo ? $person->photo->file : 'https://loremflickr.com/350/400/face?random='. $person->id}}" class="img-fluid" alt="">
                                         <div class="member-info">

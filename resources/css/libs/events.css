@@ -135,6 +135,15 @@
 	color: #333;
 }
 
+.hk-agenda__day--BDP {
+	border: 1px solid #7e967e;
+	border-right: 1px solid #7e967e;
+	border-top: 1px solid #aa7679;
+	border-left: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/besetzt_end-provisorisch_start.svg) 50% 50%;
+	color: #333;
+}
+
 .hk-agenda__day--SP {
 	border-top: 1px solid var(--ebonyclay);
 	border-right: 1px solid var(--ebonyclay);
