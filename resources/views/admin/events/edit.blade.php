@@ -224,6 +224,19 @@
                     <div class="form-group">
                         <a href="{{route('events.downloadParking', $event)}}" class="btn btn-secondary">Parkplatz-Karte herunterladen</a>
                     </div>
+                    <br><br>
+                    <table class="table">
+                        <tbody>
+                            @foreach ($event->notifications->sortBy('created_at') as $notification)
+                                <tr>
+                                    <td>
+                                        {{\Carbon\Carbon::parse($notification->created_at)->isoFormat('DD.MM.YY')}}
+                                    </td>
+                                    <td>{{$notification->data['action'] ?? 'Buchung erstellt' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="row">

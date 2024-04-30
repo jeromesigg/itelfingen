@@ -1123,8 +1123,10 @@ section {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 10px;
+  bottom:0;
   transition: bottom 0.4s;
+  background: black;
+  opacity: 0.75;
 }
 
 .about_us .member .member-info-content h4 {
