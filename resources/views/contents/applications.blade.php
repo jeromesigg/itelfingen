@@ -50,6 +50,7 @@
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
                 <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
+                <li>Durch den Beitritt gelten die {!! Html::link('files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf', 'Statuten', ['target' => 'blank']) !!} als akzeptiert.</li>
             </ul>
 
             {!! Form::open(['method' => 'POST', 'action'=>'ApplicationController@store']) !!}
