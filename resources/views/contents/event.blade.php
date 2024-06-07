@@ -1,6 +1,6 @@
 <section id="booking" class="calendar section">
 
-    <div class="container" data-aos="fade-up">
+    <div class="container" >
         <div class="section-title">
             <p>Jetzt Buchungsanfrage</p>
         </div>

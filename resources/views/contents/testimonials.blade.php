@@ -1,13 +1,13 @@
 @if($testimonials->count() > 0)
   <section id="testimonials" class="testimonials section-bg">
-    <div class="container" data-aos="fade-up">
+    <div class="container" >
   
       <div class="section-title">
         <h2>Erfahrungen</h2>
         <p>Was bisherige Gäste über das Lagerhaus gesagt haben</p>
       </div>
   
-      <div class="owl-carousel testimonials-carousel" data-aos="zoom-in" data-aos-delay="100">
+      <div class="owl-carousel testimonials-carousel">
         @foreach ($testimonials as $testimonial)
           <div class="testimonial-item">
             <p>
