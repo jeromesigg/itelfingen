@@ -16,7 +16,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
 
         <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
-        <link href="{{asset('css/admin.css')}}" rel="stylesheet">
+        
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         @yield('styles')
 
@@ -48,7 +49,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
-        <script src="{{asset('js/admin.js')}}"></script>
         @yield('scripts')
     </body>
 

@@ -23,6 +23,8 @@ class Event extends Model
         'cleaning_mail' => 'boolean',
         'last_info' => 'boolean',
         'external' => 'boolean',
+        'early_checkin' => 'boolean',
+        'late_checkout' => 'boolean',
     ];
 
     public function event_status()

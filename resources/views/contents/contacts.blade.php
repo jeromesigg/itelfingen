@@ -1,5 +1,5 @@
 <section id="contact" class="contact section-bg">
-  <div class="container" data-aos="fade-up">
+  <div class="container">
 
     <div class="section-title">
       <p>Schreib uns</p>
@@ -28,10 +28,10 @@
       </div>
   @endif
 
-  <div data-aos="fade-up">
+  <div >
     <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
   </div>
-  <div class="container" data-aos="fade-up">
+  <div class="container" >
     <div class="row mt-5">
       <div class="col-lg-4">
         <div class="info">

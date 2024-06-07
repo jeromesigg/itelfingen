@@ -1,11 +1,11 @@
 <section id="pricelist" class="pricelist section-blue">
-    <div class="container" data-aos="fade-up">
+    <div class="container" >
 
       <div class="section-title">
         <p>Unsere Preise</p>
       </div>
 
-      <div class="row pricelist-container" data-aos="fade-up" data-aos-delay="200">
+      <div class="row pricelist-container">
         <div class="col-lg-6">
             <div class="card card_title-line_white_mobile" style="width: 100%">
               <div class="card_content">

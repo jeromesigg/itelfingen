@@ -18,7 +18,7 @@
                 </div>
             </section>
             <section id="about_us" class="about_us">
-                <div class="container" data-aos="fade-up">
+                <div class="container">
                     <div class="section-title">
                         <p>Was macht die Genossenschaft Ferienhaus Itelfingen</p>
                     </div>
@@ -48,8 +48,8 @@
 
                         <div class="row">
                             @foreach ($people as $person)
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="member" data-aos="zoom-in" data-aos-delay="100">
+                                <div class="col-lg-3 col-md-6">
+                                    <div class="member">
                                         <img src="{{$person->photo ? $person->photo->file : 'https://loremflickr.com/350/400/face?random='. $person->id}}" class="img-fluid" alt="">
                                         <div class="member-info">
                                             <div class="member-info-content">

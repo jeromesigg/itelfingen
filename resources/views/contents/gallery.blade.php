@@ -1,6 +1,6 @@
 <section id="gallery" class="gallery section">
 
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
+  <div class="container" >
     <div class="section-title">
       <p>Impressionen</p>
     </div>      
