@@ -19,12 +19,13 @@ class EventController extends Controller
         $validator = Validator::make($request->all(), [
             'zipcode' => 'numeric',
             'name' => 'required',
-            'total_people' => 'gt:0',
+            'total_people' => 'gt:0|lte:19',
             'terms' => 'accepted',
         ], [
             'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
             'terms.accepted' => 'Die Hausordnung muss akzeptiert werden.',
-            'total_people.gt' => 'Für die Buchung braucht es mindestens 1 Person.', ]);
+            'total_people.gt' => 'Für die Buchung braucht es mindestens 1 Person.',
+            'total_people.lte' => 'Für die Buchung sind maximal 19 Personen erlaubt.',  ]);
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous().'#booking')

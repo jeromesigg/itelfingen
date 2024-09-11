@@ -1,5 +1,5 @@
 @component('mail::message')
-<h1>Ihre Buchung für das Ferienhaus Itelfingen</h1>
+<h1>Ihre Buchungs-Anfrage für das Ferienhaus Itelfingen</h1>
 @component('mail::table')
     |        |          |
     | :------------- | :------------- |
@@ -22,5 +22,9 @@ Bemerkung <br>
 {{$event->comment}}
 <br>
 <br>
-Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit dem Vertrag und allen weiteren Dokumenten.
+Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit einem Angebot und allen weiteren Dokumenten (Überprüfen Sie auch ihren Spam-Ordner).
+<br>
+<div class="breadcrumbs">
+    <img src="https://itelfingen.ch/img/mail/1.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
+</div>
 @endcomponent

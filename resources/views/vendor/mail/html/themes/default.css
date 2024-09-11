@@ -94,6 +94,7 @@ img {
     margin: 0;
     padding: 0;
     width: 100%;
+    background-color: #e8eced;
 }
 
 /* Header */
@@ -105,7 +106,7 @@ img {
 
 .header a {
     color: #3d4852;
-    font-size: 19px;
+    font-size: 14px;
     font-weight: bold;
     text-decoration: none;
 }
@@ -123,9 +124,9 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #edede5;
     border-bottom: 1px solid #edf2f7;
     border-top: 1px solid #edf2f7;
+    background-color: #edede5;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -135,11 +136,11 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 80%;
-    background-color: #edede5;
     border-color: #e8e5ef;
     border-radius: 2px;
     border-width: 1px;
     box-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015);
+    background-color: #edede5;
     margin: 0 auto;
     padding: 0;
     width: 80%;

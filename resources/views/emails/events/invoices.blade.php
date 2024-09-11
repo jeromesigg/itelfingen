@@ -17,5 +17,10 @@ Für Rückfragen zu dieser Rechnung stehen wir jederzeit gerne zur Verfügung.
 <br><br>
 Freundliche Grüsse, <br>
 Das Ferienhaus Itelfingen
+<br>
+
+<div class="breadcrumbs">
+    <img src="https://itelfingen.ch/img/mail/6.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
+</div>
 @endcomponent
 

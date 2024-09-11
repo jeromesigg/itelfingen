@@ -47,7 +47,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController');
     Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
-    Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendcleaningmail');
+    Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
+    Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
 
     Route::resource('admin/contacts', 'AdminContactController');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
@@ -70,10 +71,6 @@ Route::get('admin/run-migrations-seed', function () {
 });
 
 Route::get('admin/run-deployment', function () {
-    echo 'config:cache <br>';
-    Artisan::call('config:cache');
-    echo 'view:cache <br>';
-    Artisan::call('view:cache');
-
+    Artisan::call('optimize:clear');
     return true;
 });

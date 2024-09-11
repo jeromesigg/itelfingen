@@ -15,7 +15,7 @@ class Event extends Model
         'name', 'event_status_id', 'start_date', 'end_date',
         'firstname', 'group_name', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'contract_status_id', 'comment_intern',
         'terms', 'total_amount', 'total_days', 'total_people', 'bexio_user_id', 'bexio_invoice_id', 'bexio_file_id',
-        'user_id', 'cleaning_mail', 'bexio_offer_id', 'discount', 'last_info', 'code', 'feedback_mail', 'external', 'early_checkin', 'late_checkout',
+        'user_id', 'cleaning_mail', 'bexio_offer_id', 'discount', 'last_info', 'code', 'feedback_mail', 'external', 'early_checkin', 'late_checkout', 'foreign_key',
     ];
 
     protected $casts = [
@@ -23,6 +23,8 @@ class Event extends Model
         'cleaning_mail' => 'boolean',
         'last_info' => 'boolean',
         'external' => 'boolean',
+        'early_checkin' => 'boolean',
+        'late_checkout' => 'boolean',
     ];
 
     public function event_status()

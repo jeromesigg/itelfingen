@@ -39,11 +39,15 @@ class FeedbackMail extends Mailable
         $email = $this->event['email'];
         $name = $this->event['firstname'].' '.$this->event['name'];
         $PdfPath_HO = public_path('files/Hausordnung.pdf');
+        $number = str_pad($this->event['id'],5,'0', STR_PAD_LEFT);
+        if(isset($event['foreign_key'])){
+            $number .= ' (' . $event['foreign_key'] . ')';
+        }
 
         return $this->markdown('emails.events.feedback', ['event' => $this->event])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Dein Feedback zur Buchung ' . str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen')
+            ->subject('Dein Feedback zur Buchung ' . $number . ' für das Ferienhaus Itelfingen')
             ->attach($PdfPath_HO, [
                 'as' => 'Hausordnung.pdf',
                 'mime' => 'application/pdf',

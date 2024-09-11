@@ -2077,8 +2077,10 @@ section {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 10px;
+  bottom:0;
   transition: bottom 0.4s;
+  background: black;
+  opacity: 0.75;
 }
 
 .about_us .member .member-info-content h4 {
@@ -2286,6 +2288,15 @@ section {
 	border-bottom: 1px solid #aa7679;
 	border-right: 1px solid #aa7679;
 	background: var(--orientalpink) url(/img/calendar/provisorisch_end-besetzt_start.svg) 50% 50%;
+	color: #333;
+}
+
+.hk-agenda__day--BP {
+	border: 1px solid #7e967e;
+	border-right: 1px solid #7e967e;
+	border-top: 1px solid #aa7679;
+	border-left: 1px solid #aa7679;
+	background: var(--orientalpink) url(/img/calendar/besetzt_end-provisorisch_start.svg) 50% 50%;
 	color: #333;
 }
 
