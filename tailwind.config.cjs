@@ -13,16 +13,17 @@ module.exports = {
     theme: {
         fontFamily: {
           'body': [
-            'PPMigra', 
+            'PPMigra',  
             // other fallback fonts
-                ],
-            },
-          screens: {
-            sm: '480px',
-            md: '768px',
-            lg: '976px',
-            xl: '1440px',
-            '2xl': '1536px',
+          ],
+          titillium: ['TitilliumWeb', 'sans-serif'],
+        },
+        screens: {
+          sm: '480px',
+          md: '768px',
+          lg: '976px',
+          xl: '1440px',
+          '2xl': '1536px',
         },
         spacing: {
           px: '1px',

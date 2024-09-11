@@ -85,7 +85,7 @@ class Helper
             foreach ($write_array as $write) {
                 $fpdi->Ln($row_height);
 
-                $write['text'] = iconv('utf-8', 'cp1252', $write['text']);
+                $write['text'] = iconv('utf-8', 'cp1252//TRANSLIT', $write['text']);
                 $fpdi->Cell(0, 10, $write['text'], 0, 1, 'C');
             }
             $fpdi->Ln(29);

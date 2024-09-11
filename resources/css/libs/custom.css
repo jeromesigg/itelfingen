@@ -195,4 +195,19 @@ a {
   border-radius: 1rem;
 }
 
+.h-picture {
+  height: 14rem
+}
 
+
+@media (min-width: 768px) {
+  .md\:h-picture {
+      height: 50rem;
+  }
+}
+
+
+body {
+  font-family: "Titillium Web", sans-serif;
+  font-size: larger;
+}
