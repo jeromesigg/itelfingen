@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\EventCreated;
-use App\Events\EventInvoiceCreate;
-use App\Events\EventInvoiceSend;
-use App\Events\EventOfferCreate;
-use App\Events\EventOfferSend;
-use App\Helper\Helper;
-use App\Mail\ApplicationWanted;
-use App\Mail\CleaningSent;
-use App\Models\ContractStatus;
+use Notification;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Event;
-use App\Models\EventStatus;
+use App\Helper\Helper;
 use App\Models\Homepage;
 use App\Models\Position;
-use App\Models\PricelistPosition;
-use App\Models\User;
-use App\Notifications\EventInvoiceCreatedNotification;
-use App\Notifications\EventInvoiceSendNotification;
-use App\Notifications\EventOfferSendNotification;
-use Carbon\Carbon;
+use App\Mail\CleaningSent;
+use App\Models\EventStatus;
+use App\Events\EventCreated;
 use Illuminate\Http\Request;
+use App\Events\EventOfferSend;
+use App\Models\ContractStatus;
+use App\Mail\ApplicationWanted;
+use App\Events\EventInvoiceSend;
+use App\Events\EventOfferCreate;
+use App\Models\PricelistPosition;
+use App\Events\EventInvoiceCreate;
 use Illuminate\Support\Facades\Mail;
-use Notification;
 use Yajra\DataTables\Facades\DataTables;
+use App\Notifications\EventOfferSendNotification;
+use App\Notifications\EventInvoiceSendNotification;
+use App\Notifications\EventCleaningSentNotification;
+use App\Notifications\EventInvoiceCreatedNotification;
 
 class AdminEventController extends Controller
 {
@@ -258,7 +259,7 @@ class AdminEventController extends Controller
     public function SendCleaningMail(Request $request, Event $event)
     {
         $input = $request->all();
-        Mail::send(new CleaningSent($event, $input['cleaning_mail_address'], $input['cleaning_mail_text']));
+        Notification::send($event, new EventCleaningSentNotification($event, $input['cleaning_mail_address'], $input['cleaning_mail_text']));
         $event->update(['cleaning_mail' => true]);
 
         return redirect()->back();

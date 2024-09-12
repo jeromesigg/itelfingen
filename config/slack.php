@@ -26,6 +26,7 @@ return [
     */
     'channel' => env('DEFAULT_SLACK_CHANNEL', '#general'),
     'application_channel' => env('APPLICATION_SLACK_CHANNEL', '#general'),
+    'event_channel' => env('EVENT_SLACK_CHANNEL', '#general'),
 
     /*
     |-------------------------------------------------------------

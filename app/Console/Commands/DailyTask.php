@@ -13,6 +13,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Ixudra\Curl\Facades\Curl;
 use Revolution\Google\Sheets\Facades\Sheets;
+use jeremykenedy\Slack\Laravel\Facade as Slack;
 
 class DailyTask extends Command
 {
@@ -50,6 +51,7 @@ class DailyTask extends Command
         $this->SendEventLastInfos();
         $this->SendApplicationInvoices();
         $this->SendFeedbackMails();
+        $this->SendNextEventToSlack();
     }
 
     public function SendEventLastInfos()
@@ -181,6 +183,24 @@ class DailyTask extends Command
             // Add new sheet to the configured google spreadsheet
             Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
 //            }
+        }
+    }
+
+    public function SendNextEventToSlack()
+    {
+        $date = Carbon::today()->addDays(2);
+        $events = Event::where('start_date', '=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
+
+        foreach ($events as $event) {
+            $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
+            $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
+
+            Slack::send("Die nächste Buchung von ".$start_date." bis ".$end_date.":\n".
+                    $event['firstname']." ".$event['name']." - ".$event['group_name']."\n".
+                    "Telefon Nummer: ".$event['telephone']);
+        }
+        if (count($events) > 0) {
+            $this->info(count($events).' nächste Buchungen gemeldet.');
         }
     }
 }
