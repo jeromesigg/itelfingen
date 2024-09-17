@@ -2,7 +2,7 @@
 <h1>Die letzten Informationen zu deiner Buchung für das Ferienhaus Itelfingen</h1>
 Guten Tag {{$event->firstname}} {{$event->name}},
 <br><br>
-Im angehängten PDF findest du die wichtigsten Informationen zu deinem baldigen Aufenthalt im Ferienhaus Itelfingen und die Parkkarte für das Ferienhaus Itelfingen.
+Im angehängten PDF findest du die wichtigsten Informationen zu deinem baldigen Aufenthalt im Ferienhaus Itelfingen und die Parkkarte für das Ferienhaus Itelfingen. Hinterlege in jedem Auto eine Parkkarte, da sonst die Gefahr einer Busse in der Höhe von 240.- droht.
 <br>
 @component('mail::button', ['url' => route('faq'), 'color' => 'success'])
     Besuche auch unsere FAQ-Seite
