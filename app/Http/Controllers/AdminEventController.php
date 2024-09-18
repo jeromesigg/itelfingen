@@ -23,9 +23,12 @@ use App\Events\EventInvoiceCreate;
 use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use App\Notifications\EventOfferSendNotification;
+use Spatie\IcalendarGenerator\Components\Calendar;
 use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
+use Spatie\IcalendarGenerator\Components\Event as Event_ICAL;
+use Spatie\IcalendarGenerator\Enums\EventStatus as EventStatus_ICAL;
 
 class AdminEventController extends Controller
 {
@@ -264,11 +267,12 @@ class AdminEventController extends Controller
 
         return redirect()->back();
     }
-   public function DownloadParking(Event $event)
-{
-    $outputFile = Helper::PrintParking($event);
-    return response()->download($outputFile);
-}
+
+    public function DownloadParking(Event $event)
+    {
+        $outputFile = Helper::PrintParking($event);
+        return response()->download($outputFile);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -305,4 +309,27 @@ class AdminEventController extends Controller
         }
         return $events_return;
     }
+
+    public function api_ical()
+    {
+        //
+        $calendar = Calendar::create(config('app.name'))
+        ->withoutTimezone()
+        ;
+        $events = Event::where('end_date','>',now())->where('event_status_id','<',config('status.event_storniert'))->get();
+        foreach ($events as $event)
+        {
+            $start = Carbon::parse($event->start_date);
+            $end = Carbon::parse($event->end_date)->addDays(1);
+            $calendar->event(Event_ICAL::create()
+                    ->startsAt($start)
+                    ->endsAt($end)
+                    ->status(EventStatus_ICAL::confirmed()));
+        }
+        return response($calendar->get(), 200, [
+            'Content-Type' => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="itelfingen.ics"',
+        ]);
+    }
+        
 }
