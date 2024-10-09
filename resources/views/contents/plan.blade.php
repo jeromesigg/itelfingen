@@ -5,12 +5,14 @@
         </div>
         <div class="md:flex">
             <ul class="flex-column space-y space-y-4 text-xl font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist"
-            data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="inline-flex items-center px-4 py-3 rounded-lg hover:text-gray-900 bg-gray-50 hover:bg-gray-100 w-full dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
+            {{-- data-tabs-active-classes="inline-flex items-center px-4 py-3 rounded-lg hover:text-gray-900 bg-green-50 hover:bg-gray-100 w-full dark:bg-green-800 dark:hover:bg-green-700 dark:hover:text-white" --}}
+            data-tabs-inactive-classes="px-4 py-3"
+            data-tabs-active-classes="inline-flex items-center px-4 py-3 rounded-lg hover:text-gray-900 bg-gray-50 hover:bg-gray-100 w-full dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
                 <li class="me-2" role="presentation">
-                    <button id="groundfloor-tab" data-tabs-target="#groundfloor" type="button" role="tab" aria-controls="groundfloor" aria-selected="true" >Erdgeschoss</button>
+                    <button id="groundfloor-tab" data-tabs-target="#groundfloor" type="button" role="tab" aria-controls="groundfloor" aria-selected="true">Erdgeschoss</button>
                 </li>
                 <li class="me-2" role="presentation">
-                    <button id="firstfloor-tab" data-tabs-target="#firstfloor" type="button" role="tab" aria-controls="firstfloor" aria-selected="false" class="inline-flex items-center px-4 py-3 rounded-lg hover:text-gray-900 bg-gray-50 hover:bg-gray-100 w-full dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">Obergeschoss</button>
+                    <button id="firstfloor-tab" data-tabs-target="#firstfloor" type="button" role="tab" aria-controls="firstfloor" aria-selected="false">Obergeschoss</button>
                 </li>
 
             </ul>

@@ -103,7 +103,7 @@
 
   <!-- ======= Javascript Section ======= -->
   @include('contents.event_js')
-  <script>
+  <script type="module">
       $(function () {
           var table = $('#datatable').DataTable({
               responsive: true,

@@ -195,7 +195,9 @@ class DailyTask extends Command
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
 
-            Slack::send("Die nächste Buchung von ".$start_date." bis ".$end_date.":\n".
+            Slack::from(config('slack.username'), config('slack.icon'))
+                ->to(config('slack.event_channel'))
+                ->send("Die nächste Buchung von ".$start_date." bis ".$end_date.":\n".
                     $event['firstname']." ".$event['name']." - ".$event['group_name']."\n".
                     "Telefon Nummer: ".$event['telephone']);
         }

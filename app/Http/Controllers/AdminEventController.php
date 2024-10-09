@@ -48,26 +48,28 @@ class AdminEventController extends Controller
 
         $events_json = [];
         foreach ($events_all as $event) {
-            $start_date = new Carbon($event['start_date']);
-            $end_date = new Carbon($event['end_date']);
-            $start = [
-                'y' => $start_date->year,
-                'm' => $start_date->month - 1,
-                'd' => $start_date->day,
-                'h' => !$event['early_checkin'],
-            ];
-            $end = [
-                'y' => $end_date->year,
-                'm' => $end_date->month - 1,
-                'd' => $end_date->day,
-                'h' => !$event['late_checkout'],
-            ];
-            $events_json[] = [
-                'start' => $start,
-                'end' => $end,
-                'state' => $event->event_status['color'],
-                'id' => $event->id,
-            ];
+            if($event['event_status_id'] <= config('status.event_eigene')){
+                $start_date = new Carbon($event['start_date']);
+                $end_date = new Carbon($event['end_date']);
+                $start = [
+                    'y' => $start_date->year,
+                    'm' => $start_date->month - 1,
+                    'd' => $start_date->day,
+                    'h' => !$event['early_checkin'],
+                ];
+                $end = [
+                    'y' => $end_date->year,
+                    'm' => $end_date->month - 1,
+                    'd' => $end_date->day,
+                    'h' => !$event['late_checkout'],
+                ];
+                $events_json[] = [
+                    'start' => $start,
+                    'end' => $end,
+                    'state' => $event->event_status['color'],
+                    'id' => $event->id,
+                ];
+            }
         }
         $title = 'Buchungen';
 
