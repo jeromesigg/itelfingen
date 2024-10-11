@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap.js';
+import './bootstrap';
 import './admin/jquery-ui.min.js';
 import 'bootstrap';
 import 'laravel-datatables-vite';

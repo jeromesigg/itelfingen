@@ -6,7 +6,6 @@ use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Magarrent\LaravelCurrencyFormatter\Facades\Currency;
 
 class SendOffersMail extends Mailable
 {
@@ -53,7 +52,7 @@ class SendOffersMail extends Mailable
             $number .= ' (' . $event['foreign_key'] . ')';
         }
 
-        return $this->markdown('emails.events.offers', ['event' => $event, 'link' => $this->link, 'total' => Currency::currency('CHF')->format($this->total), 'additional_text' => $this->additional_text])
+        return $this->markdown('emails.events.offers', ['event' => $event, 'link' => $this->link, 'total' => $this->total, 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Ihr Angebot zur Buchung ' . $number  . ' für das Ferienhaus Itelfingen')

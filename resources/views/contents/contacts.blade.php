@@ -54,8 +54,9 @@
       </div>
 
       <div class="col-lg-8 mt-5 mt-lg-0">
-        {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store', 'autocomplete'=>"off", 'id' => 'contact_form'])!!}
-          <div class="form-row">
+        {{-- {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store', 'autocomplete'=>"off", 'id' => 'contact_form'])!!} --}}
+        {{ html()->form('POST', 'ContactController@store')->id('contact_form')->open() }}
+          {{-- <div class="form-row">
             <div class="col-md-6 form-group">
               {!! Form::label('name', 'Kontakt:') !!}
               {!! Form::text('name', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
@@ -77,8 +78,8 @@
             {!! htmlFormButton('Sende Nachricht', ['class' => 'btn btn-frontpage']) !!}
             {{-- @captcha('de') --}}
             {{-- {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-frontpage'])!!} --}}
-        </div>
-        {!! Form::close()!!}
+          </div> --}}
+        {{ html()->form()->close() }}
       </div>
     </div>
   </div>

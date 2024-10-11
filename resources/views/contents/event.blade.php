@@ -26,7 +26,8 @@
 
         <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container container-fluid">
-                {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform']) !!}
+                {{ html()->form('POST', 'EventController@create')->id('calendarform')->open() }}
+                {{-- {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform']) !!} --}}
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
@@ -114,7 +115,7 @@
                         <div class="col-md-12 col-xl-12 hk-dateselect" id="wizard_formular" style="display: none">
                             <h3>Buchungs Informationen</h3>
                             <table>
-                                <tr>
+                                {{-- <tr>
                                     <td>
                                         <div class="row" >
                                             <div class="col-md-12 col-xl-4" >
@@ -241,11 +242,11 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> --}}
                             </table>
                         </div>
                     </div>
-                {!! Form::close()!!}
+                {{ html()->form()->close() }}
             </div>
         </div>
     </div>
