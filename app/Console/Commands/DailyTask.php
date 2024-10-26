@@ -2,18 +2,21 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\ApplicationInvoiceMail;
-use App\Mail\FeedbackMail;
-use App\Mail\LastInfosSent;
-use App\Models\Application;
-use App\Models\Event;
-use App\Models\PricelistPosition;
+use Notification;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Event;
+use App\Mail\FeedbackMail;
+use App\Models\Application;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Console\Command;
+use App\Models\PricelistPosition;
+use App\Mail\ApplicationInvoiceMail;
+use Illuminate\Support\Facades\Mail;
 use Revolution\Google\Sheets\Facades\Sheets;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
+use App\Notifications\EventFeedbackNotification;
+use App\Notifications\EventLastInfosNotification;
+use App\Notifications\ApplicationInvoiceNotification;
 
 class DailyTask extends Command
 {
@@ -60,7 +63,7 @@ class DailyTask extends Command
         $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
         foreach ($events as $event) {
-            Mail::send(new LastInfosSent($event));
+            Notification::send($event, new EventLastInfosNotification($event));
             $event->update(['last_info' => true]);
         }        if (count($events) > 0) {
             $this->info(count($events).' Letzte Infos-Emails versendet.');
@@ -73,7 +76,7 @@ class DailyTask extends Command
         $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
         foreach ($events as $event) {
-            Mail::send(new FeedbackMail($event));
+            Notification::send($event, new EventFeedbackNotification($event));
             $event->update(['feedback_mail' => true]);
         }        if (count($events) > 0) {
             $this->info(count($events).' Feedback-Mails versendet.');
@@ -147,13 +150,7 @@ class DailyTask extends Command
                 ->asJson(true)
                 ->post();
 
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $invoice = json_decode($invoice, true);
-
-            Mail::send(new ApplicationInvoiceMail($application, $invoice));
+            Notification::send($application, new ApplicationInvoiceNotification($application));
 
             $application->update([
                 'invoice_send' => true,

@@ -18,7 +18,6 @@ class ApplicationInvoiceMail extends Mailable
      * @var \App\Models\Application
      */
     protected $application;
-
     protected $invoice;
 
     /**
@@ -27,9 +26,15 @@ class ApplicationInvoiceMail extends Mailable
      * @param  \App\Models\Application  $application
      * @return void
      */
-    public function __construct(Application $application, $invoice)
+    public function __construct(Application $application)
     {
         $this->application = $application;
+
+        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->get();
+        $invoice = json_decode($invoice, true);
         $this->invoice = $invoice;
     }
 

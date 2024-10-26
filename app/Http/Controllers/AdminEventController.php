@@ -20,6 +20,7 @@ use App\Events\EventInvoiceSend;
 use App\Events\EventOfferCreate;
 use App\Models\PricelistPosition;
 use App\Events\EventInvoiceCreate;
+use App\Notifications\EventApplicationWantedNotification;
 use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 use App\Notifications\EventOfferSendNotification;
@@ -252,7 +253,7 @@ class AdminEventController extends Controller
                 }
                 break;
             case '6':
-                Mail::send(new ApplicationWanted($event, $additional_text));
+                Notification::send($event, new EventApplicationWantedNotification($event, $additional_text));
                 break;
         }
 
