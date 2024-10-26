@@ -75,6 +75,7 @@ class ApplicationCreatedNotification extends Notification
         $application = $this->application;
 
         return [
+            'action' => 'Genossenschaft Antrag',
             'name' => $application->firstname.' '.$application->name,
             'e-mail' => $application->email,
             'gruppe' => $application->organisation,
