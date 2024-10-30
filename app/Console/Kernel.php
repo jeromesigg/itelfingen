@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\DailyTask::class,
         Commands\WeeklyTask::class,
+        Commands\MonthlyTask::class,
         //
     ];
 
@@ -28,6 +29,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('task:daily')->daily();
         $schedule->command('task:weekly')->weekly();
+        $schedule->command('task:monthly')->monthly();
     }
 
     /**
