@@ -23,8 +23,8 @@ class ContactController extends Controller
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous().'#contact')
-                        ->withErrors($validator, 'contact')
-                        ->withInput();
+                ->withErrors($validator, 'contact')
+                ->withInput();
         }
 
         $contact = Contact::create($input);

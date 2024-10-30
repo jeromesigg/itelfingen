@@ -6,14 +6,12 @@ use App\Mail\FeedbackMail;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class EventFeedbackNotification extends Notification
 {
     use Queueable;
-    public Event $event;
 
+    public Event $event;
 
     /**
      * Create a new notification instance.

@@ -21,7 +21,6 @@ class ApplicationCreated extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  \App\Models\Application  $application
      * @return void
      */
     public function __construct(Application $application)

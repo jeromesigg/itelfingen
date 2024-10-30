@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Application extends Model
 {
-    use Notifiable, HasFactory;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name', 'salutation_id', 'firstname', 'organisation', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'why',

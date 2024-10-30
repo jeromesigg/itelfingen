@@ -14,8 +14,6 @@ class EventCreated
 
     /**
      * The user instance.
-     *
-     * @var \App\Models\Event
      */
     public Event $event;
 

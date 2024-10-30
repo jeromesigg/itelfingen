@@ -21,7 +21,6 @@ class ContactCreated extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  \App\Models\Contact  $contact
      * @return void
      */
     public function __construct(Contact $contact)

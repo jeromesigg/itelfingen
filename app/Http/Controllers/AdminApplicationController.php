@@ -74,7 +74,6 @@ class AdminApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -102,9 +101,7 @@ class AdminApplicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
-    {
-    }
+    public function edit() {}
 
     /**
      * Update the specified resource in storage.

@@ -14,6 +14,7 @@ class EventInvoiceSendNotification extends Notification
     use Queueable;
 
     public Event $event;
+
     public string $additional_text;
 
     public array $invoice;
@@ -76,11 +77,11 @@ class EventInvoiceSendNotification extends Notification
         return [
             //
             'action' => 'Rechnung versendet',
-            'name' => $event['firstname']." ".$event['name'],
-            'date' => $start_date." bis ".$end_date,
-            'days' => $total_days . ' Nächte',
+            'name' => $event['firstname'].' '.$event['name'],
+            'date' => $start_date.' bis '.$end_date,
+            'days' => $total_days.' Nächte',
             'total_people' => $total_people,
-            'total_amount' => $total_amount
+            'total_amount' => $total_amount,
         ];
     }
 }

@@ -72,5 +72,6 @@ Route::get('admin/run-migrations-seed', function () {
 
 Route::get('admin/run-deployment', function () {
     Artisan::call('optimize:clear');
+
     return true;
 });

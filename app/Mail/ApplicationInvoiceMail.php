@@ -18,12 +18,12 @@ class ApplicationInvoiceMail extends Mailable
      * @var \App\Models\Application
      */
     protected $application;
+
     protected $invoice;
 
     /**
      * Create a new message instance.
      *
-     * @param  \App\Models\Application  $application
      * @return void
      */
     public function __construct(Application $application)

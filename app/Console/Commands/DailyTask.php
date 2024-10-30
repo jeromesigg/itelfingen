@@ -2,21 +2,18 @@
 
 namespace App\Console\Commands;
 
-use Notification;
-use Carbon\Carbon;
-use App\Models\Event;
-use App\Mail\FeedbackMail;
 use App\Models\Application;
-use Ixudra\Curl\Facades\Curl;
-use Illuminate\Console\Command;
+use App\Models\Event;
 use App\Models\PricelistPosition;
-use App\Mail\ApplicationInvoiceMail;
-use Illuminate\Support\Facades\Mail;
-use Revolution\Google\Sheets\Facades\Sheets;
-use jeremykenedy\Slack\Laravel\Facade as Slack;
+use App\Notifications\ApplicationInvoiceNotification;
 use App\Notifications\EventFeedbackNotification;
 use App\Notifications\EventLastInfosNotification;
-use App\Notifications\ApplicationInvoiceNotification;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Ixudra\Curl\Facades\Curl;
+use jeremykenedy\Slack\Laravel\Facade as Slack;
+use Notification;
+use Revolution\Google\Sheets\Facades\Sheets;
 
 class DailyTask extends Command
 {
@@ -158,7 +155,7 @@ class DailyTask extends Command
             ]
             );
 
-//            if (config('app.env') == 'production') {
+            //            if (config('app.env') == 'production') {
             // Write to Google Sheet
             $array = [[
                 'ID' => $application['id'],
@@ -179,7 +176,7 @@ class DailyTask extends Command
             ]];
             // Add new sheet to the configured google spreadsheet
             Sheets::spreadsheet(config('google.spreadsheet_id'))->sheet('Bewerbungen')->append($array);
-//            }
+            //            }
         }
     }
 
@@ -192,9 +189,9 @@ class DailyTask extends Command
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
 
-            Slack::send("Die nächste Buchung von ".$start_date." bis ".$end_date.":\n".
-                    $event['firstname']." ".$event['name']." - ".$event['group_name']."\n".
-                    "Telefon Nummer: ".$event['telephone']);
+            Slack::send('Die nächste Buchung von '.$start_date.' bis '.$end_date.":\n".
+                    $event['firstname'].' '.$event['name'].' - '.$event['group_name']."\n".
+                    'Telefon Nummer: '.$event['telephone']);
         }
         if (count($events) > 0) {
             $this->info(count($events).' nächste Buchungen gemeldet.');

@@ -2,19 +2,16 @@
 
 namespace App\Notifications;
 
+use App\Mail\ApplicationInvoiceMail;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Ixudra\Curl\Facades\Curl;
-use App\Mail\ApplicationInvoiceMail;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class ApplicationInvoiceNotification extends Notification
 {
     use Queueable;
-    public Application $application;
 
+    public Application $application;
 
     /**
      * Create a new notification instance.

@@ -2,22 +2,21 @@
 
 namespace App\Notifications;
 
-use Carbon\Carbon;
-use App\Models\Event;
 use App\Mail\CleaningSent;
+use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class EventCleaningSentNotification extends Notification
 {
     use Queueable;
 
     public Event $event;
-    public string $email;
-    public string $text;
 
+    public string $email;
+
+    public string $text;
 
     /**
      * Create a new notification instance.
@@ -72,11 +71,11 @@ class EventCleaningSentNotification extends Notification
         return [
             //
             'action' => 'Reinigungsmail versendet',
-            'name' => $event['firstname']." ".$event['name'],
-            'date' => $start_date." bis ".$end_date,
-            'days' => $total_days . ' Nächte',
+            'name' => $event['firstname'].' '.$event['name'],
+            'date' => $start_date.' bis '.$end_date,
+            'days' => $total_days.' Nächte',
             'total_people' => $total_people,
-            'total_amount' => $total_amount
+            'total_amount' => $total_amount,
         ];
     }
 }
