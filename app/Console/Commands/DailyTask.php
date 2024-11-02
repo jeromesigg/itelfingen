@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Application;
 use App\Models\Event;
+use App\Models\Newsletter;
 use App\Models\PricelistPosition;
 use App\Notifications\ApplicationInvoiceNotification;
 use App\Notifications\EventFeedbackNotification;
@@ -152,8 +153,15 @@ class DailyTask extends Command
             $application->update([
                 'invoice_send' => true,
                 'bexio_invoice_id' => $invoice['id'],
-            ]
-            );
+            ]);
+
+            Newsletter::updateOrCreate (
+                ['email' => $application['email']],
+                [
+                    'firstname' => $application['firstname'],
+                    'name' => $application['name'],
+                    'members' => true
+                ]);
 
             //            if (config('app.env') == 'production') {
             // Write to Google Sheet

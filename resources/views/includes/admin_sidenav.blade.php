@@ -83,6 +83,9 @@
         <li>
             <a  href="{{route('admin.bookings')}}" ><i class="fa-solid fa-chart-line"></i> Auslastung</a>
         </li>
+        <li>
+            <a  href="{{route('newsletter.index')}}" ><i class="fa-solid fa-envelope"></i> Newsletter</a>
+        </li>
         <li><a href="#FAQDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fas fa-list-ul"></i> FAQs</a></li>
         <ul id="FAQDropdown" class="collapse list-unstyled ">
             <li>

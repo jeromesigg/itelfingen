@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\EventCreated;
-use App\Events\EventInvoiceCreate;
-use App\Events\EventInvoiceSend;
-use App\Events\EventOfferCreate;
-use App\Events\EventOfferSend;
-use App\Helper\Helper;
-use App\Models\ContractStatus;
+use Notification;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Event;
-use App\Models\EventStatus;
+use App\Helper\Helper;
 use App\Models\Homepage;
 use App\Models\Position;
+use App\Models\Newsletter;
+use App\Models\EventStatus;
+use App\Events\EventCreated;
+use Illuminate\Http\Request;
+use App\Events\EventOfferSend;
+use App\Models\ContractStatus;
+use App\Events\EventInvoiceSend;
+use App\Events\EventOfferCreate;
 use App\Models\PricelistPosition;
-use App\Models\User;
-use App\Notifications\EventApplicationWantedNotification;
+use App\Events\EventInvoiceCreate;
+use Yajra\DataTables\Facades\DataTables;
+use App\Notifications\EventOfferSendNotification;
+use Spatie\IcalendarGenerator\Components\Calendar;
+use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
-use App\Notifications\EventInvoiceSendNotification;
-use App\Notifications\EventOfferSendNotification;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Notification;
-use Spatie\IcalendarGenerator\Components\Calendar;
+use App\Notifications\EventApplicationWantedNotification;
 use Spatie\IcalendarGenerator\Components\Event as Event_ICAL;
 use Spatie\IcalendarGenerator\Enums\EventStatus as EventStatus_ICAL;
-use Yajra\DataTables\Facades\DataTables;
 
 class AdminEventController extends Controller
 {
@@ -234,6 +235,14 @@ class AdminEventController extends Controller
                     $event->update([
                         'event_status_id' => config('status.event_bestaetigt'),
                         'contract_status_id' => config('status.contract_rechnung_erstellt'), ]);
+                    
+                    Newsletter::updateOrCreate(
+                        ['email' => $event['email']],
+                        [
+                        'firstname' => $event['firstname'],
+                        'name' => $event['name'],
+                        'bookings' => true
+                    ]);
                 }
                 break;
             case '5':
