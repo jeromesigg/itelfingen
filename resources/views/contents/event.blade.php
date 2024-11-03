@@ -26,7 +26,7 @@
 
         <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container container-fluid">
-                {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform']) !!}
+                {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform', 'lang' => 'de-CH']) !!}
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
