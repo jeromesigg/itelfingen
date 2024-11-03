@@ -4,10 +4,7 @@ namespace App\Mail;
 
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ApplicationWanted extends Mailable
@@ -15,11 +12,12 @@ class ApplicationWanted extends Mailable
     use Queueable, SerializesModels;
 
     protected $event;
+
     public $additional_text;
+
     /**
      * Create a new message instance.
      *
-     * @param  \App\Models\Event  $event
      * @return void
      */
     public function __construct(Event $event, $additional_text)
@@ -41,6 +39,6 @@ class ApplicationWanted extends Mailable
         return $this->markdown('emails.events.application', ['event' => $event, 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Dein Interesse ' . str_pad($event['id'],5,'0', STR_PAD_LEFT) . ' für die Genossenschaft Ferienhaus Itelfingen');
+            ->subject('Dein Interesse '.str_pad($event['id'], 5, '0', STR_PAD_LEFT).' für die Genossenschaft Ferienhaus Itelfingen');
     }
 }

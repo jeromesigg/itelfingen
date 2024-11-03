@@ -9,7 +9,6 @@ use App\Models\PricelistPosition;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use jeremykenedy\Slack\Laravel\ServiceProvider;
 use setasign\Fpdi\Fpdi;
 use Spatie\GoogleCalendar\Event as Event_API;
 
@@ -20,6 +19,7 @@ class Helper
         $outputFile = Storage::disk('local')->path('files/Parkkarten/'.$event['id'].'.pdf');
         // fill data
         Helper::fillPDF(storage_path('app/files/Parkkarte.pdf'), $outputFile, $event);
+
         //output to browser
         return $outputFile;
     }
@@ -110,7 +110,7 @@ class Helper
 
     public static function GetEventUserCheck(Event $event)
     {
-        switch ($event->event_status['id']){
+        switch ($event->event_status['id']) {
             case config('status.event_eigene'):
                 $user = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Interne Buchung';
                 break;
@@ -118,41 +118,44 @@ class Helper
                 $user = '<i class="fa-solid fa-xmark" style="color: indianred"></i> Storniert';
                 break;
             default:
-                $user = $event->user ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Verantwortlich: ' . $event->user->username :
-                    '<i class="fa-solid fa-xmark" style="color: indianred"></i> ' . 'Kein Benutzer zugewiesen';
+                $user = $event->user ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Verantwortlich: '.$event->user->username :
+                    '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Kein Benutzer zugewiesen';
                 break;
         }
-        return $user . '<br>';
+
+        return $user.'<br>';
     }
 
     public static function GetEventCleaningMailCheck(Event $event)
     {
         $cleaning_mail = '';
-        if($event->event_status['id'] <> config('status.event_storniert')){
+        if ($event->event_status['id'] != config('status.event_storniert')) {
             $cleaning_mail = $event->cleaning_mail ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Putzmail versendet' :
                 '<i class="fa-solid fa-xmark" style="color: indianred"></i> Kein Putzmail versendet';
             $cleaning_mail .= '<br>';
         }
+
         return $cleaning_mail;
     }
 
     public static function GetEventCodeCheck(Event $event)
     {
         $code = '';
-        if($event->event_status['id'] <> config('status.event_eigene') && $event->event_status['id'] <> config('status.event_storniert')){
-            $code = $event->code ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Turcode: ' . $event->code :
-            '<i class="fa-solid fa-xmark" style="color: indianred"></i> ' . 'Kein Code zugewiesen';
+        if ($event->event_status['id'] != config('status.event_eigene') && $event->event_status['id'] != config('status.event_storniert')) {
+            $code = $event->code ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Turcode: '.$event->code :
+            '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Kein Code zugewiesen';
             $code .= '<br>';
         }
+
         return $code;
     }
 
     public static function GetEventOfferStatus(Event $event)
     {
         $offer = '';
-        if($event->event_status['id'] <> config('status.event_eigene') && $event->event_status['id'] <> config('status.event_storniert')) {
+        if ($event->event_status['id'] != config('status.event_eigene') && $event->event_status['id'] != config('status.event_storniert')) {
             if ($event->bexio_offer_id) {
-                $offer = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> ' . '<a target="_blank" href="https://office.bexio.com/index.php/kb_offer/show/id/' . $event['bexio_offer_id'] . '">Angebot</a> ';
+                $offer = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.'<a target="_blank" href="https://office.bexio.com/index.php/kb_offer/show/id/'.$event['bexio_offer_id'].'">Angebot</a> ';
                 switch ($event->contract_status['id']) {
                     case config('status.contract_angebot_erstellt') :
                         $offer .= 'erstellt';
@@ -163,40 +166,43 @@ class Helper
                     default:
                         $offer .= 'erstellt, versendet & akzeptiert';
                         break;
-                };
+                }
             } else {
-                $offer = '<i class="fa-solid fa-xmark" style="color: indianred"></i> ' . 'Kein Angebot erstellt';
+                $offer = '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Kein Angebot erstellt';
             }
             $offer .= '<br>';
         }
+
         return $offer;
     }
 
     public static function GetEventInvoiceStatus(Event $event)
     {
         $invoice = '';
-        if($event->event_status['id'] <> config('status.event_eigene') && $event->event_status['id'] <> config('status.event_storniert')) {
+        if ($event->event_status['id'] != config('status.event_eigene') && $event->event_status['id'] != config('status.event_storniert')) {
 
-            if($event->bexio_invoice_id){
-                $invoice = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> ' . '<a target="_blank" href="https://office.bexio.com/index.php/kb_invoice/show/id/'.$event['bexio_invoice_id'].'">Rechnung</a> ';
-                switch ($event->contract_status['id']){
-                    case config('status.contract_rechnung_erstellt') :
+            if ($event->bexio_invoice_id) {
+                $invoice = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.'<a target="_blank" href="https://office.bexio.com/index.php/kb_invoice/show/id/'.$event['bexio_invoice_id'].'">Rechnung</a> ';
+                switch ($event->contract_status['id']) {
+                    case config('status.contract_rechnung_erstellt'):
                         $invoice .= 'erstellt';
                         break;
-                    case config('status.contract_rechnung_versendet') :
+                    case config('status.contract_rechnung_versendet'):
                         $invoice .= 'erstellt & versendet';
                         break;
-                };
-            }else {
-                $invoice = '<i class="fa-solid fa-xmark" style="color: indianred"></i> ' . 'Keine Rechnung erstellt';
+                }
+            } else {
+                $invoice = '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Keine Rechnung erstellt';
             }
-        $invoice .= '<br>';
+            $invoice .= '<br>';
         }
+
         return $invoice;
     }
 
-    public static function GetChart($time_frame){
-        switch ($time_frame){
+    public static function GetChart($time_frame)
+    {
+        switch ($time_frame) {
             case 'quarter':
                 $time_frame_SQL = "concat(DATE_FORMAT(start_date, '%Y'),'-Q', QUARTER(start_date)) as timeframe";
                 break;
@@ -204,7 +210,7 @@ class Helper
                 $time_frame_SQL = "concat(LEFT(DATE_FORMAT(start_date, '%M'),3), ' ', DATE_FORMAT(start_date, '%Y')) as timeframe";
                 break;
             case 'daily':
-                $time_frame_SQL = "start_date as timeframe";
+                $time_frame_SQL = 'start_date as timeframe';
                 break;
             default:
                 $time_frame_SQL = "DATE_FORMAT(start_date, '%Y') as timeframe";
@@ -216,7 +222,7 @@ class Helper
             DB::raw('sum(total_people*total_days) as stays'),
             DB::raw($time_frame_SQL),
         )
-            ->where('event_status_id','<=',config('status.event_bestaetigt'))
+            ->where('event_status_id', '<=', config('status.event_bestaetigt'))
             ->groupBy('timeframe')
             ->orderBy('start_date', 'ASC');
 
@@ -236,5 +242,4 @@ class Helper
 
         return $bookingChart;
     }
-
 }

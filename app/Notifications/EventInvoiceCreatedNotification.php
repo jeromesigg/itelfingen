@@ -15,6 +15,7 @@ class EventInvoiceCreatedNotification extends Notification
     use Queueable;
 
     public Event $event;
+
     public $additional_text;
 
     /**
@@ -66,16 +67,15 @@ class EventInvoiceCreatedNotification extends Notification
         $total_people = $event->total_people;
         $total_days = $event->total_days;
 
-
-//        if (config('app.env') == 'production') {
-            return (new SlackMessage)
-                ->from(config('slack.username'), config('slack.icon'))
-                ->to(config('slack.channel'))
-                ->content("Es hat eine neue Buchung gegeben:\n".
-                    $total_days . " Nächte, vom ".$start_date." bis ".$end_date.".\n".
-                    "Von ".$event['firstname']." ".$event['name']." - ".$event['group_name']."\n".
-                    "Anzahl Personen: ".$total_people.", Total: ".$total_amount. " CHF.");
-//        }
+        //        if (config('app.env') == 'production') {
+        return (new SlackMessage)
+            ->from(config('slack.username'), config('slack.icon'))
+            ->to(config('slack.channel'))
+            ->content("Es hat eine neue Buchung gegeben:\n".
+                $total_days.' Nächte, vom '.$start_date.' bis '.$end_date.".\n".
+                'Von '.$event['firstname'].' '.$event['name'].' - '.$event['group_name']."\n".
+                'Anzahl Personen: '.$total_people.', Total: '.$total_amount.' CHF.');
+        //        }
     }
 
     /**
@@ -96,11 +96,11 @@ class EventInvoiceCreatedNotification extends Notification
         return [
             //
             'action' => 'Rechnung erstellt',
-            'name' => $event['firstname']." ".$event['name'],
-            'date' => $start_date." bis ".$end_date,
-            'days' => $total_days . ' Nächte',
+            'name' => $event['firstname'].' '.$event['name'],
+            'date' => $start_date.' bis '.$end_date,
+            'days' => $total_days.' Nächte',
             'total_people' => $total_people,
-            'total_amount' => $total_amount
+            'total_amount' => $total_amount,
         ];
     }
 }

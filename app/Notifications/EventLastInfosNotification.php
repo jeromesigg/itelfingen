@@ -2,15 +2,16 @@
 
 namespace App\Notifications;
 
-use Carbon\Carbon;
-use App\Models\Event;
 use App\Mail\LastInfosSent;
+use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class EventLastInfosNotification extends Notification
 {
     use Queueable;
+
     public Event $event;
 
     /**
@@ -61,8 +62,8 @@ class EventLastInfosNotification extends Notification
         return [
             //
             'action' => 'Letzte Infos versendet',
-            'name' => $event['firstname']." ".$event['name'],
-            'date' => $start_date." bis ".$end_date,
+            'name' => $event['firstname'].' '.$event['name'],
+            'date' => $start_date.' bis '.$end_date,
         ];
     }
 }

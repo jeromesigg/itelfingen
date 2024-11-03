@@ -33,7 +33,6 @@ return [
     'application_enabled' => env('APPLICATION_ENABLED', 'false'),
     'api_token' => env('API_TOKEN', '1234'),
 
-
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

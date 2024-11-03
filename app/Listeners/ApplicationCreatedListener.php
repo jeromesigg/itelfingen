@@ -20,7 +20,6 @@ class ApplicationCreatedListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\ApplicationCreatedEvent  $event
      * @return void
      */
     public function handle(ApplicationCreatedEvent $event)

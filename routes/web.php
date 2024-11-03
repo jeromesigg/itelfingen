@@ -60,6 +60,11 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/applications', 'AdminApplicationController');
     Route::get('applications/createDataTables', ['as' => 'applications.CreateDataTables', 'uses' => 'AdminApplicationController@createDataTables']);
     Route::post('applications/{application}/refuse', ['as' => 'applications.refuse', 'uses' => 'AdminApplicationController@refuse']);
+    Route::get('newsletter/createDataTables', ['as' => 'newsletter.CreateDataTables', 'uses' => 'NewsletterController@createDataTables']);
+    Route::get('/admin/newsletter/export-bookings', ['as' => 'newsletter.exportBookings', 'uses' => 'NewsletterController@exportBookings']);
+    Route::get('/admin/newsletter/export-members', ['as' => 'newsletter.exportMembers', 'uses' => 'NewsletterController@exportMembers']);
+    Route::get('/admin/newsletter/import', ['as' => 'newsletter.import', 'uses' => 'NewsletterController@import']);
+    Route::resource('admin/newsletter', 'NewsletterController');
 });
 
 Route::get('admin/run-migrations', function () {
@@ -72,5 +77,6 @@ Route::get('admin/run-migrations-seed', function () {
 
 Route::get('admin/run-deployment', function () {
     Artisan::call('optimize:clear');
+
     return true;
 });

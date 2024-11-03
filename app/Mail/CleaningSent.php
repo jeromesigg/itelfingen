@@ -12,9 +12,10 @@ class CleaningSent extends Mailable
 {
     use Queueable, SerializesModels;
 
-
     protected $event;
+
     protected $email;
+
     protected $text;
 
     /**
@@ -39,6 +40,6 @@ class CleaningSent extends Mailable
         return $this->markdown('emails.events.cleaning', ['text' => $this->text])
             ->to($this->email)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Reinigungsanfrage '. str_pad($this->event['id'],5,'0', STR_PAD_LEFT) . ' für das Ferienhaus Itelfingen vom '. Carbon::parse($this->event->end_date)->format('d.m.Y'));
+            ->subject('Reinigungsanfrage '.str_pad($this->event['id'], 5, '0', STR_PAD_LEFT).' für das Ferienhaus Itelfingen vom '.Carbon::parse($this->event->end_date)->format('d.m.Y'));
     }
 }

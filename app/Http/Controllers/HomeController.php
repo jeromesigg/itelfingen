@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Faq;
 use App\Models\FaqChapter;
-use App\Models\History;
 use App\Models\Homepage;
 use App\Models\Person;
 use App\Models\Picture;
 use App\Models\PricelistPosition;
-use App\Models\Testimonial;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -48,13 +46,13 @@ class HomeController extends Controller
                 'y' => $start_date->year,
                 'm' => $start_date->month - 1,
                 'd' => $start_date->day,
-                'h' => !($event['early_checkin'] || ($start_date->dayOfWeek === 0)),
+                'h' => ! ($event['early_checkin'] || ($start_date->dayOfWeek === 0)),
             ];
             $end = [
                 'y' => $end_date->year,
                 'm' => $end_date->month - 1,
                 'd' => $end_date->day,
-                'h' => !($event['late_checkout'] || ($end_date->dayOfWeek === 0)),
+                'h' => ! ($event['late_checkout'] || ($end_date->dayOfWeek === 0)),
             ];
             $events_json[] = [
                 'start' => $start,

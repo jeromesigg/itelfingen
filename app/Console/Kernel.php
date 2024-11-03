@@ -15,19 +15,20 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\DailyTask::class,
         Commands\WeeklyTask::class,
+        Commands\MonthlyTask::class,
         //
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('task:daily')->daily();
         $schedule->command('task:weekly')->weekly();
+        $schedule->command('task:monthly')->monthly();
     }
 
     /**

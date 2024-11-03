@@ -12,20 +12,19 @@ class AdminContactController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         //
-        $title = "Anfragen";
+        $title = 'Anfragen';
+
         return view('admin.contacts.index', compact('title'));
     }
 
     public function createDataTables(Request $request)
     {
         $input = $request->all();
-        $done = !($input['done'] != 'Alle');
+        $done = ! ($input['done'] != 'Alle');
         $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
 
         return DataTables::of($contacts)

@@ -2,21 +2,20 @@
 
 namespace App\Notifications;
 
-use Carbon\Carbon;
-use App\Models\Event;
-use Illuminate\Bus\Queueable;
 use App\Mail\ApplicationWanted;
+use App\Models\Event;
+use Carbon\Carbon;
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class EventApplicationWantedNotification extends Notification
 {
     use Queueable;
 
     public Event $event;
+
     public $additional_text;
-    
+
     /**
      * Create a new notification instance.
      *
@@ -66,8 +65,8 @@ class EventApplicationWantedNotification extends Notification
         return [
             //
             'action' => 'Genossenschafts-Infos versendet',
-            'name' => $event['firstname']." ".$event['name'],
-            'date' => $start_date." bis ".$end_date,
+            'name' => $event['firstname'].' '.$event['name'],
+            'date' => $start_date.' bis '.$end_date,
         ];
     }
 }

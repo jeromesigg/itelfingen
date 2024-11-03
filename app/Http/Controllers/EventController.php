@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\EventCreated;
 use App\Models\City;
 use App\Models\Event;
-use App\Models\PricelistPosition;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,8 +28,8 @@ class EventController extends Controller
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous().'#booking')
-                        ->withErrors($validator, 'event')
-                        ->withInput();
+                ->withErrors($validator, 'event')
+                ->withInput();
         }
 
         $input = $request->all();
