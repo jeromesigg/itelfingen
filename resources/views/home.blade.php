@@ -67,6 +67,16 @@
           }
       });
   });
+
+    $('#contact_form').submit(function(event) {
+        event.preventDefault();
+        grecaptcha.ready(function() {
+            grecaptcha.execute("{{ env('RECAPTCHA_SITE_KEY') }}", {action: 'contact_form'}).then(function(token) {
+                $('#contact_form').prepend('<input type="hidden" name="g-recaptcha-response" value="' + token + '">');
+                $('#contact_form').unbind('submit').submit();
+            });;
+        });
+    });
 </script>
 
   <!-- ======= Javascript Section ======= -->

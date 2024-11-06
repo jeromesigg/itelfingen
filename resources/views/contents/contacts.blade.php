@@ -74,9 +74,9 @@
             {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8, 'data-lpignore'=>'true']) !!}
           </div>
           <div class="form-group">
-            {!! htmlFormButton('Sende Nachricht', ['class' => 'btn btn-frontpage']) !!}
+            {{-- {!! htmlFormButton('Sende Nachricht', ['class' => 'btn btn-frontpage']) !!} --}}
             {{-- @captcha('de') --}}
-            {{-- {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-frontpage'])!!} --}}
+            {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-frontpage'])!!}
         </div>
         {!! Form::close()!!}
       </div>

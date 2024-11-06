@@ -31,4 +31,7 @@
 
 <link href="{{asset('css/main.css')}}" rel="stylesheet">
 
-{!! ReCaptcha::htmlScriptTagJsApi() !!}
+{{-- {!! ReCaptcha::htmlScriptTagJsApi() !!} --}}
+<script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>
+
+
