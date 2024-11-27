@@ -26,7 +26,9 @@ class Helper
 
     public static function fillPDF($file, $outputFile, Event $event)
     {
-        define('FPDF_FONTPATH', public_path('fonts'));
+        if(!defined('FPDF_FONTPATH')){
+            define('FPDF_FONTPATH', public_path('fonts'));
+        }
         $fpdi = new FPDI;
         $fpdi->AddFont('TitilliumWeb-Light');
         // merger operations
