@@ -34,12 +34,11 @@ class EventController extends Controller
 
         $input = $request->all();
 
+
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
         $input['contract_status_id'] = config('status.contract_offen');
-        $name = $input['firstname'].' '.$input['name'];
-        $email = $input['email'];
         $one_day = false;
         if ($input['total_days'] < 1) {
             $input['start_date'] = new Carbon($input['date']);

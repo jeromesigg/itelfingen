@@ -283,6 +283,10 @@
         var start_date = new Date(document.getElementById('start_date').value);
         var end_date = new Date(document.getElementById('end_date').value);
         var days = (end_date - start_date)/(24*3600*1000);
+        var one_day = (days === 0);
+        if(days === 0){
+            days = 1;
+        }
 	    var positions = @json($positions);
         var total_amount = 0, id = 0, total_person = 0;
         var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
@@ -291,22 +295,20 @@
             person = position.pricelist_position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
             person = person || 0;
             var subtotal = 0
-            if(days === 0){
-                if(position.pricelist_position['bexio_code'] < 50){
+            if(position.pricelist_position['bexio_code'] < 50){
+                if(one_day){
                     subtotal = position.pricelist_position['price'] / 2;
                     person = 1;
                 }
-                else if(position.pricelist_position['bexio_code'] < 100) {
-                    subtotal =position.pricelist_position['price']
-                }
-            }
-            else {
-                if(position.pricelist_position['bexio_code'] < 50){
+                else {
                     subtotal = position.pricelist_position['price'];
                 }
-                else if(position.pricelist_position['bexio_code'] > 100) {
-                    subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
-                }
+            }
+            else if(position.pricelist_position['bexio_code'] < 100) {
+                subtotal =position.pricelist_position['price']
+            }
+            else if(position.pricelist_position['bexio_code'] > 100) {
+                subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
             }
             if( position.pricelist_position['bexio_code']>200){
                 subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
