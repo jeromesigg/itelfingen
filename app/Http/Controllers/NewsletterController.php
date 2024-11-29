@@ -124,7 +124,7 @@ class NewsletterController extends Controller
 
     public function import()
     {
-        $events = Event::where('event_status_id', config('status.event_bestaetigt'))->where('contract_status_id', config('status.contract_rechnung_erstellt'))->get();
+        $events = Event::where('event_status_id', config('status.event_bestaetigt'))->where('contract_status_id', '>=', config('status.contract_rechnung_erstellt'))->get();
         foreach($events as $event){
             Newsletter::updateOrCreate(
                 ['email' => $event['email']],
