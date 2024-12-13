@@ -305,7 +305,7 @@
                 }
             }
             else if(position.pricelist_position['bexio_code'] < 100) {
-                subtotal =position.pricelist_position['price']
+                subtotal = position.pricelist_position['price'] * position['amount'];
             }
             else if(position.pricelist_position['bexio_code'] > 100) {
                 subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
