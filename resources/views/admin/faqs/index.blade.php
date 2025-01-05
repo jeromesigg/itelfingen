@@ -11,27 +11,25 @@
 
             <div class="row">
                 <div class="col-sm-4">
-                    {!! Form::open(['method' => 'POST', 'action'=>'AdminFaqController@store', 'files' => true]) !!}
-                        <div class="form-group">
-                            {!! Form::label('name', 'Titel:') !!}
-                            {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('description', 'Beschreibung:') !!}
-                            {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 15]) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('photo_id', 'Photo:') !!}
-                            {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="col-md-6 form-group">
-                            {!! Form::label('faq_chapter_id', 'Kapitel:') !!}
-                            {!! Form::select('faq_chapter_id', $faq_chapters, null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::submit('FAQ erstellen', ['class' => 'btn btn-primary'])!!}
-                        </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('faqs.store')" enctype="multipart/form-data" accept-charset="UTF-8">
+                        <x-forms.container>
+                            <x-forms.text label="Titel:" name="name"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.textarea label="Beschreibung:" name="description" rows=15/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Photo: " name="photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.select label="Kapitel:" name="faq_chapter_id" required=true :collection="$faq_chapters"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                FAQ erstellen
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>
                 <div class="col-sm-8">
                     <div class="table-responsive">

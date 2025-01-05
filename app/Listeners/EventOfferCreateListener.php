@@ -67,7 +67,7 @@ class EventOfferCreateListener
                         'contact_id' => $event->bexio_user_id,
                         'user_id' => 1,
                         'is_valid_from' => now(),
-                        'is_valid_until' => Carbon::create($event->start_date)->addDays(-14),
+                        'is_valid_until' => now()->addMonth(),
                         'api_reference' => $event['id'],
                         'positions' => $positions_array,
                     ]

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('impressum', 'HomeController@impressum')->name('impressum');
 Route::get('faq', 'HomeController@faq')->name('faq');
 Route::get('applications', 'ApplicationController@index')->name('applications');
-Route::post('applications/store', 'ApplicationController@store');
+Route::post('applications/store', ['as' => 'application.store', 'uses' => 'ApplicationController@store']);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('about_us', 'HomeController@about_us')->name('about_us');
 
@@ -27,10 +27,10 @@ Auth::routes();
 // Route::get('/home', 'HomeController@index')->name('home');
 
 //fullcalender
-Route::post('event/create', 'EventController@create');
+Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create']);
 Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventController@searchResponseCity']);
 
-Route::post('contacts', 'ContactController@store');
+Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'] );
 
 Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin', 'AdminController@index');
@@ -45,7 +45,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/histories', 'AdminHistoryController');
     Route::resource('admin/users', 'AdminUserController');
     Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
-    Route::resource('admin/events', 'AdminEventController');
+    Route::resource('admin/events', 'AdminEventController')->names('admin.events');
     Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');

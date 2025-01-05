@@ -158,8 +158,7 @@ class DailyTask extends Command
             $application->update([
                 'invoice_send' => true,
                 'bexio_invoice_id' => $invoice['id'],
-            ]
-            );
+            ]);
 
 //            if (config('app.env') == 'production') {
             // Write to Google Sheet

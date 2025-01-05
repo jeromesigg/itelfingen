@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="row">
-                        {!! Html::link('files/Jahresbericht_2022.pdf', 'Jahresbericht 2022', ['target' => 'blank']) !!}
+                        <a href='/files/Jahresbericht_2022.pdf' target="blank">Jahresbericht 2022</a>
                     </div>
 
                     @if(count($people)>0)
