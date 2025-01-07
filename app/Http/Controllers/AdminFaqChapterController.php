@@ -42,7 +42,6 @@ class AdminFaqChapterController extends Controller
         $index = FaqChapter::all()->count();
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');
-
         if (($file = $request->file('old_photo_id')) && $input['new_photo_id']) {
             $name = time().$file->getClientOriginalName();
             Image::make($input['new_photo_id'])->save('images/'.$name);

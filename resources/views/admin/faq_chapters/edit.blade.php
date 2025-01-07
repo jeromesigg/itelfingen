@@ -15,7 +15,7 @@
                  <div class="col-sm-9">
                     <x-forms.form :action="route('faq_chapters.update', $faqchapter)" enctype="multipart/form-data" accept-charset="UTF-8" method="PATCH" :model="$faqchapter">
                         <x-forms.container>
-                            <x-forms.text label="Titel:" name="name"/>
+                            <x-forms.text label="Titel:" name="name" required=true/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.text label="Symbol:" name="symbol"/>

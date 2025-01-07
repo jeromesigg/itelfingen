@@ -180,11 +180,11 @@
                             </x-forms.container>
                         </div>
                     </x-forms.form>
-                    {{-- {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Buchung löschen', ['class' => 'btn btn-danger'])!!}
-                    </div>
-                    {!! Form::close()!!} --}}
+                    <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event">
+                        <x-forms.button type="submit" name="submit" class="btn btn-danger">
+                            Buchung löschen
+                        </x-forms.button>
+                    </x-forms.form>
                 </div>
                 <div class="col-xl-2">
 
@@ -196,19 +196,17 @@
                         <br>
                     @endif
                     <div id="cleaning_mail" style="display: none">
-                        {{-- {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@SendCleaningMail', $event]]) !!}
-                        <div class="form-group">
-                                {!! Form::label('cleaning_mail_address', 'Mail Adresse:') !!}
-                                {!! Form::text('cleaning_mail_address', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                                {!! Form::label('cleaning_mail_text', 'Mail Text:') !!}
-                                {!! Form::textarea('cleaning_mail_text', null, ['class' => 'form-control', 'rows' =>9]) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::submit('Mail versenden', ['class' => 'btn btn-secondary'])!!}
-                        </div>
-                        {!! Form::close()!!} --}}
+                        <x-forms.form :action="route('events.sendCleaningMail', $event)" method="POST" :model="$event">
+                            <x-forms.container>
+                                <x-forms.text label="Mail Adresse:" name="cleaning_mail_address" type="email"/>
+                            </x-forms.container>
+                            <x-forms.container>
+                                <x-forms.text-area label="Mail Text:" name="cleaning_mail_text" rows=9/>
+                            </x-forms.container>
+                            <x-forms.button type="submit" name="submit" class="btn btn-secondary">
+                                Mail versenden
+                            </x-forms.button>
+                        </x-forms.form>
                     </div>
                     <br>
                     <div class="form-group">

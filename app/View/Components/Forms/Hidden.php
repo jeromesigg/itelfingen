@@ -14,7 +14,7 @@ class Hidden extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, string $label = '', string $id = '')
+    public function __construct(string $name, string $label = '', string $id = null)
     {
         $this->name = $name;
         $this->id = $id ?? $name;

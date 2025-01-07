@@ -17,7 +17,7 @@
             <div class="col-sm-3">
                 <x-forms.form :action="route('faq_chapters.store')" enctype="multipart/form-data" accept-charset="UTF-8">
                     <x-forms.container>
-                        <x-forms.text label="Titel:" name="name"/>
+                        <x-forms.text label="Titel:" name="name" required=true/>
                     </x-forms.container>
                     <x-forms.container>
                         <x-forms.text label="Symbol:" name="symbol"/>

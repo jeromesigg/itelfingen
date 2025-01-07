@@ -39,7 +39,7 @@
                             <div class="title col-xl-8">
                                 <strong>
                                     @if (Auth::user()->isManager())
-                                        <a href="{{route('events.edit', $event->id)}}">{{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
+                                        <a href="{{route('admin.events.edit', $event->id)}}">{{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
                                     @else
                                         {{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
                                     @endif
@@ -78,7 +78,7 @@
                             <div class="title col-xl-8">
                                 <strong>
                                     @if (Auth::user()->isManager())
-                                        <a href="{{route('events.edit', $event->id)}}">{{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
+                                        <a href="{{route('admin.events.edit', $event->id)}}">{{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
                                     @else
                                         {{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
                                     @endif

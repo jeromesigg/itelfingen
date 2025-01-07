@@ -16,28 +16,31 @@
                     <img src="{{$picture->photo ? $picture->photo->file : 'http://placehold.it/350x350'}}" alt="" class="img-responsive" style="max-width: -webkit-fill-available;">
                 </div>
                 <div class="col-sm-9">
-                    {!! Form::model($picture, ['method' => 'PATCH', 'action'=>['AdminPicturesController@update', $picture->id], 'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                            {!! Form::label('photo_id', 'Original Photo:') !!}
-                            {!! Form::file('photo_id', ['class' => 'photo_id', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::hidden('new_photo_id', null, ['class' => 'form-control', 'required', 'id' => 'new_photo_id']) !!}
-                    </div>
 
-                    <div class="form-group">
-                        {!! Form::submit('Albumbild updaten', ['class' => 'btn btn-primary col-sm-6'])!!}
-                    </div>
-                    {!! Form::close()!!}
-                    {!! Form::open(['method' => 'DELETE', 'action'=>['AdminPicturesController@destroy', $picture->id]]) !!}
-                        <div class="form-group">
-                            {!! Form::submit('Albumbild löschen', ['class' => 'btn btn-danger col-sm-6'])!!}
-                        </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('pictures.update', $picture)" enctype="multipart/form-data" accept-charset="UTF-8" method="PATCH" :model="$picture">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="name" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Symbol:" name="symbol"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Original Photo: " name="photo_id" class="photo_id" required=true/>
+                            <x-forms.hidden name="cropped_photo_id" />
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Albumbild updaten
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
+                    <x-forms.form :action="route('pictures.destroy', $picture)" method="DELETE">
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-danger">
+                                Albumbild löschen
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>
             </div>
             <div class="row">
