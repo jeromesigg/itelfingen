@@ -11,117 +11,99 @@
             <button class="btn btn-primary" onclick="createExtern()">Externe Buchung erstellen</button>
         </div>
         <br>
-        {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@store']]) !!}
+        <x-forms.form :action="route('admin.events.create')">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            {!! Form::label('start_date', 'Start:') !!}
-                            {!! Form::date('start_date', null, ['class' => 'form-control', 'required', 'onchange' => "Total_Change()"]) !!}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {!! Form::label('end_date', 'Ende:') !!}
-                            {!! Form::date('end_date', null, ['class' => 'form-control', 'onchange' => "Total_Change()"]) !!}
-                        </div>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Start:" name="start_date" type="date" required=true onchange="Total_Change()"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Ende:" name="end_date" type="date" required=true onchange="Total_Change()"/>
+                        </x-forms.container>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            {!! Form::label('name', 'Name:') !!}
-                            {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {!! Form::label('firstname', 'Vorname:') !!}
-                            {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
-                        </div>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Name:" name="name" required=true/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Vorname:" name="firstname"/>
+                        </x-forms.container>
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('group_name', 'Gruppe/Anlass:') !!}
-                        {!! Form::text('group_name', null, ['class' => 'form-control']) !!}
-                    </div>
+                    <x-forms.container>
+                        <x-forms.text label="Gruppe/Anlass:" name="group_name"/>
+                    </x-forms.container>
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            {!! Form::label('email', 'Email:') !!}
-                            {!! Form::email('email', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {!! Form::label('telephone', 'Telefon:') !!}
-                            {!! Form::text('telephone', null, ['class' => 'form-control']) !!}
-                        </div>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Email:" name="email" required=true type="email"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Telefon:" name="telephone" />
+                        </x-forms.container>
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('street', 'Strasse:') !!}
-                        {!! Form::text('street', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
+                    <x-forms.container>
+                        <x-forms.text label="Strasse:" name="street" required=true/>
+                    </x-forms.container>
                     <div class="form-row">
-                        <div class="form-group col-md-3">
-                            {!! Form::label('plz', 'PLZ:') !!}
-                            {!! Form::text('plz', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="form-group col-md-9">
-                            {!! Form::label('city', 'Ortschaft:') !!}
-                            {!! Form::text('city', null, ['class' => 'form-control', 'required']) !!}
-                        </div>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Ortschaft:" name="city" required=true/>
+                        </x-forms.container>
                     </div>
                 </div>
                 <div class="form-group col-md-6" style="padding-left:30px">
-                    <div class="form-group">
-                        {!! Form::label('comment', 'Bemerkung:') !!}
-                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>3]) !!}
-                    </div>
+                    <x-forms.container>
+                        <x-forms.text-area label="Bemerkungen:" name="comment" rows=3/>
+                    </x-forms.container>
                     <div class="form-row">
                         <div class="col-md-3 form-group">
-                            {!! Form::label('event_status_id', 'Status:') !!}
-                            {!! Form::select('event_status_id', $event_statuses, null, ['class' => 'form-control', 'required']) !!}
+                            <x-forms.select label="Status:" name="event_status_id" :collection="$event_statuses"/>
                         </div>
-                        <div class="col-md-6 form-group">
-                                {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
-                                {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>3]) !!}
-                        </div>
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('foreign_key', 'Externe Buchungs-Nr.:') !!}
-                            {!! Form::text('foreign_key', null, ['class' => 'form-control']) !!}
-                        </div>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=3/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-3">
+                            <x-forms.text label="Externe Buchungs-Nr.:" name="foreign_key"/>
+                        </x-forms.container>
                     </div>
                     <div class="form-row">
                         @foreach ($positions as $index => $position)
                             @if ($position['bexio_code']<50)
-                                {!! Form::hidden('positions['.$position['bexio_code'].']', 1, ['class' => 'form-control', 'id' =>'position_'.$position['id'], 'onchange' => "Total_Change()"]) !!}
+                                <x-forms.hidden name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()"/>
                             @else
-                                <div class="col-md-3 form-group">
-                                    {!! Form::label('positions['.$position['bexio_code'].']', $position['name'] . ' ('. $position['price'] . ' CHF)') !!}
-                                    {!! Form::number('positions['.$position['bexio_code'].']', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position['id'], 'onchange' => "Total_Change()"]) !!}
-                                </div>
+                                <x-forms.container class="col-md-3">
+                                    <x-forms.text label="{{ $position['name'] . ' ('. $position['price'] . ' CHF)'}}" name="{{'positions['.$position['bexio_code'].']'}}" type="number" id="{{'position_'.$position['id']}}" onChange="Total_Change()" />
+                                </x-forms.container>
                             @endif
                         @endforeach
-                        {!! Form::hidden('total_people', null, ['class' => 'form-control', 'id' => 'total_people']) !!}
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('total_days', 'Tage:') !!}
-                            {!! Form::number('total_days', null, ['class' => 'form-control', 'required', 'id' => 'total_days', 'onchange' => "Total_Change()"]) !!}
-                        </div>
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('discount', 'Rabatt [%]:') !!}
-                            {!! Form::number('discount', null, ['class' => 'form-control', 'id' => 'discount', 'onchange' => "Total_Change()"]) !!}
-                        </div>
-                        <div class="col-md-3 form-group">
-                            {!! Form::label('', 'Total [CHF]:') !!}<br>
-                            {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
+                        <x-forms.hidden name="total_people" />
+                        <x-forms.container class="col-md-3">
+                            <x-forms.text label="Tage:" name="total_days" type="number" required=true onChange="Total_Change()"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-3">
+                            <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-3">
+                            <x-forms.text label="Total CHF:" name="total_amount" type="number"/>
                             <span id="total"></span>.-
-                        </div>
+                        </x-forms.container>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-6 form-group">
-                            {!! Form::label('user_id', 'Verantwortlicher:') !!}
-                            {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
-                        </div>
-                        <div class="col-md-6 form-group">
-                            {!! Form::label('code', 'Tür-Code:') !!}
-                            {!! Form::number('code', null, ['class' => 'form-control']) !!}
-                        </div>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.select label="Verantwortlicher:" name="user_id" required=true :collection="$users"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-6">
+                            <x-forms.text label="Tür-Code:" name="code" type="number"/>
+                        </x-forms.container>
                     </div>
                 </div>
             </div>
-            {!! Form::submit('Buchung erstellen', ['class' => 'btn btn-primary'])!!}
-        {!! Form::close()!!}
+            <x-forms.button type="submit" class="btn btn-primary">
+                Buchung erstellen
+            </x-forms.button>
+        </x-forms.form>
         <div class="row">
             @include('includes.form_error')
         </div>

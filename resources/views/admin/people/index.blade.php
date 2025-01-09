@@ -10,23 +10,22 @@
     
         <div class="row">
             <div class="col-sm-3">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminPersonController@store', 'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('function', 'Funktion:') !!}
-                        {!! Form::text('function', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('photo_id', 'Photo:') !!}
-                        {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Person erstellen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                {!! Form::close()!!}
+                <x-forms.form :action="route('people.store')" enctype="multipart/form-data" accept-charset="UTF-8">
+                    <x-forms.container>
+                        <x-forms.text label="Name:" name="name" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Funktion:" name="function"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.file label="Photo: " name="photo_id"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            Person erstellen
+                        </x-forms.button>
+                    </x-forms.container>
+                </x-forms.form>
             </div>    
             <div class="col-sm-9">
                 <table class="table">

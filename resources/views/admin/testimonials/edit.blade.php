@@ -8,33 +8,28 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($testimonial, ['method' => 'PATCH', 'action'=>['AdminTestimonialController@update', $testimonial->id], 'autocomplete' => 'off']) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('function', 'Function:') !!}
-                        {!! Form::text('function', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('comment', 'Kommentar:') !!}
-                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'required', 'rows' => 2]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('sort-index', 'Sort-Index:') !!}
-                        {!! Form::text('sort-index', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('archive_status_id', 'Archiv-Status:') !!}
-                        {!! Form::select('archive_status_id', $archive_statuses, null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                   
-  
-                    <div class="form-group">
-                        {!! Form::submit('Bewertung Updaten', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('testimonials.store')" method="PATCH" :model="$testimonial">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="name" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Funktion:" name="function"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.textarea label="Kommentar:" name="comment" rows=2/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Sort-Index:" name="sort-index" required=true type="number"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.select label="Archiv Status:" name="archive_status_id" required=true :collection="$archive_statuses"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Bewertung Updaten
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>   
             </div>   
             <div class="row"> 

@@ -7,23 +7,22 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($position, ['method' => 'PATCH', 'action'=>['AdminPricelistPositionController@update', $position->id]]) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('show', 'Anzeigen:') !!}
-                        {!! Form::checkbox('show', '1', null) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('archive_status_id', 'Archiv Status:') !!}
-                        {!! Form::select('archive_status_id', $archive_statuses, null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Rechnungsposition updaten', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('positions.update', $position)" method="PATCH" :model="$position">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="name" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Anzeigen:" name="show" type="checkbox" value="{{$position['show']}}"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.select label="Archiv Status:" name="archive_status_id" required=true :collection="$archive_statuses"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Rechnungsposition erstellen
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>   
             </div>   
             <div class="row"> 

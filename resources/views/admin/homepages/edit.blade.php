@@ -8,60 +8,49 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($homepage, ['method' => 'PATCH', 'action'=>['AdminHomepageController@update', $homepage->id], 'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('title', 'Name:') !!}
-                        {!! Form::text('title', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('subtitle', 'Beschreibung:') !!}
-                        {!! Form::text('subtitle', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('address', 'Adresse:') !!}
-                        {!! Form::textarea('address', null, ['class' => 'form-control', 'required', 'rows' =>3]) !!}
-                    </div>
-                     <div class="form-group">
-                         {!! Form::label('postaddress', 'Post-Adresse:') !!}
-                         {!! Form::textarea('postaddress', null, ['class' => 'form-control', 'required', 'rows' =>3]) !!}
-                     </div>
-                    <div class="form-group">
-                        {!! Form::label('mail', 'E-Mail:') !!}
-                        {!! Form::text('mail', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('phone', 'Telefon:') !!}
-                        {!! Form::text('phone', null, ['class' => 'form-control']) !!}
-                    </div>
-                     <div class="form-group">
-                         {!! Form::label('green_text', 'Banner-Text:') !!}
-                         {!! Form::text('green_text', null, ['class' => 'form-control']) !!}
-                     </div>
-                    <div class="form-group">
-                        {!! Form::label('main_photo_id', 'Haupt-Photo:') !!}
-                        {!! Form::file('main_photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('background_top_photo_id', '1. Photo:') !!}
-                        {!! Form::file('background_top_photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('background_bottom_photo_id', 'Grosses Photo Umgebung:') !!}
-                        {!! Form::file('background_bottom_photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('big_login_photo_id', 'Grosses Photo Login:') !!}
-                        {!! Form::file('big_login_photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('small_login_photo_id', 'Kleines Photo Login:') !!}
-                        {!! Form::file('small_login_photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::submit('Homepage Updaten', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('homepages.update', $homepage)" enctype="multipart/form-data" accept-charset="UTF-8" method="PATCH" :model="$homepage">
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="title" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Beschreibung:" name="subtitle"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.textarea label="Adresse:" name="address" required=true rows=3/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.textarea label="Post-Adresse:" name="postaddress" required=true rows=3/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="E-Mail:" name="email"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Telefon:" name="phone"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Banner-Text:" name="green_text"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Haupt-Photo: " name="main_photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="1. Photo: " name="background_top_photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Grosses Photo Umgebung: " name="background_bottom_photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Grosses Photo Login: " name="big_login_photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Kleines Photo Login: " name="small_login_photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Homepage aktualisieren
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>
             </div>
             <div class="row">

@@ -10,23 +10,22 @@
     
         <div class="row">
             <div class="col-sm-3">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminTestimonialController@store', 'autocomplete' => 'off']) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('function', 'Funktion:') !!}
-                        {!! Form::text('function', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('comment', 'Kommentar:') !!}
-                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 2]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Kommentar erstellen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                {!! Form::close()!!}
+                <x-forms.form :action="route('testimonials.store')">
+                    <x-forms.container>
+                        <x-forms.text label="Name:" name="name" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Funktion:" name="function"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.textarea label="Kommentar:" name="comment" rows=2/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            Kommentar erstellen
+                        </x-forms.button>
+                    </x-forms.container>
+                </x-forms.form>
             </div>    
             <div class="col-sm-9">
                 <table class="table">

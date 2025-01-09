@@ -11,39 +11,28 @@
         <div class="row">
             @if (Auth::user()->isAdmin())
                 <div class="col-sm-3">
-                    {!! Form::open(['method' => 'POST', 'action'=>'AdminUserController@store', 'autocomplete' => 'off']) !!}
-                        <div class="form-group">
-                            {!! Form::label('username', 'Name:') !!}
-                            {!! Form::text('username', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('fullname', 'Name:') !!}
-                            {!! Form::text('fullname', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('phone', 'Handy-Nummer:') !!}
-                            {!! Form::text('phone', null, ['class' => 'form-control']) !!}
-                        </div>
-                        {{-- <div class="form-group">
-                            {!! Form::label('signature', 'Unterschrift:') !!}
-                            {!! Form::file('signature', null, ['class' => 'form-control']) !!}
-                        </div> --}}
-                        <div class="form-group">
-                            {!! Form::label('role_id', 'Role:') !!}
-                            {!! Form::select('role_id', [''=>'Wähle Rolle'] + $roles, null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('is_active', 'Status:') !!}
-                            {!! Form::select('is_active', array(1 => "Aktiv", 0 => 'Archiviert'), null,  ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('password', 'Password:') !!}
-                            {!! Form::password('password', ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::submit('Benutzer erstellen', ['class' => 'btn btn-primary'])!!}
-                        </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('users.create')" autocomplete="off">
+                        <x-forms.container>
+                            <x-forms.text label="Username:" name="username" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Name:" name="fullname"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Handy-Nummer:" name="phone"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.select label="Rolle:" name="role_id" required=true :collection="$roles"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Password:" name="password" required=true type="password"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Benutzer erstellen
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>
             @endif
             <div class="col-sm-9">

@@ -15,26 +15,23 @@
 
         <div class="row">
             <div class="col-sm-3">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminFaqChapterController@store']) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Titel:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('symbol', 'Symbol:') !!}
-                        {!! Form::text('symbol', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('old_photo_id', 'Original Photo:') !!}
-                        {!! Form::file('old_photo_id', ['class' => 'old_photo_id']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::hidden('new_photo_id', null, ['class' => 'form-control', 'id' => 'new_photo_id']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('FAQ Kapitel erstellen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                {!! Form::close()!!}
+                <x-forms.form :action="route('faq_chapters.store')" enctype="multipart/form-data" accept-charset="UTF-8">
+                    <x-forms.container>
+                        <x-forms.text label="Titel:" name="name" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Symbol:" name="symbol"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.file label="Photo: " name="old_photo_id" class="old_photo_id"/>
+                        <x-forms.hidden name="new_photo_id" />
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            FAQ Kapitel erstellen
+                        </x-forms.button>
+                    </x-forms.container>
+                </x-forms.form>
             </div>
             <div class="col-sm-9">
                 <table class="table">

@@ -26,7 +26,7 @@
 
         <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container container-fluid">
-                {!! Form::open(['method' => 'POST', 'action'=>'EventController@create', 'id' => 'calendarform', 'lang' => 'de-CH']) !!}
+                <x-forms.form :action="route('event.create')" id='calendarform' lang="de-CH">
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3>Verfügbarkeit</h3>
@@ -119,60 +119,51 @@
                                         <div class="row" >
                                             <div class="col-md-12 col-xl-4" >
                                                 <div class="form-row">
-                                                    <div class="col-md-6 form-group">
-                                                    {!! Form::label('firstname', 'Vorname:') !!}
-                                                    {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
-                                                    </div>
-                                                    <div class="col-md-6 form-group">
-                                                    {!! Form::label('name', 'Nachname*:') !!}
-                                                    {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                                                    </div>
+                                                    <x-forms.container class="col-md-6">
+                                                        <x-forms.text label="Vorname:" name="firstname" />
+                                                    </x-forms.container>
+                                                    <x-forms.container class="col-md-6">
+                                                        <x-forms.text label="Nachname*:" name="name" required=true />
+                                                    </x-forms.container>
                                                 </div>
-                                                <div class="form-group">
-                                                    {!! Form::label('group', 'Anlass / Gruppe:') !!}
-                                                    {!! Form::text('group', null, ['class' => 'form-control']) !!}
-                                                </div>
-                                                <div class="form-group">
-                                                    {!! Form::label('street', 'Strasse*:') !!}
-                                                    {!! Form::text('street', null, ['class' => 'form-control', 'required']) !!}
-                                                </div>
+                                                <x-forms.container>
+                                                    <x-forms.text label="Anlass / Gruppe:" name="group" />
+                                                </x-forms.container>
+                                                <x-forms.container>
+                                                    <x-forms.text label="Strasse*:" name="street" required=true />
+                                                </x-forms.container>
                                                 <div class="form-row">
-                                                    <div class="col-md-3 form-group">
-                                                        {!! Form::label('zipcode', 'PLZ*:') !!}
-                                                        {!! Form::text('zipcode', null, ['class' => 'form-control autocomplete_txt', 'required', 'numeric']) !!}
-                                                    </div>
-                                                    <div class="col-md-9 form-group">
-                                                        {!! Form::label('city', 'Ortschaft*:') !!}
-                                                        {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
-                                                    </div>
-                                                    {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
+                                                    <x-forms.container class="col-md-3">
+                                                        <x-forms.text label="PLZ*:" name="zipcode" required=true type="number" class="autocomplete_txt"/>
+                                                    </x-forms.container>
+                                                    <x-forms.container class="col-md-9">
+                                                        <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
+                                                    </x-forms.container>
+                                                    <x-forms.hidden name="city_id" class="autocomplete_txt"/>
                                                 </div>
-                                                <div class="form-group">
-                                                    {!! Form::label('email', 'E-Mail*:') !!}
-                                                    {!! Form::email('email', null, ['class' => 'form-control', 'required', 'email']) !!}
-                                                </div>
-                                                <div class="form-group">
-                                                    {!! Form::label('telephone', 'Telefon / Mobil:') !!}
-                                                    {!! Form::text('telephone', null, ['class' => 'form-control']) !!}
-                                                </div>
-                                                <div class="form-group">
-                                                    {!! Form::label('marketing_comment', 'Wie sind Sie auf uns aufmerksam geworden?') !!}
-                                                    {!! Form::textarea('marketing_comment', null, ['class' => 'form-control', 'rows' => 5]) !!}
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="terms">Ich akzeptiere die {!! Html::link('files/Hausordnung.pdf', 'Hausordnung', ['target' => 'blank']) !!}:</label>
-                                                    {!! Form::checkbox('terms', '1', null) !!}
-                                                </div>
+                                                <x-forms.container>
+                                                    <x-forms.text label="E-Mail*:" name="email"  required=true type="email"/>
+                                                </x-forms.container>
+                                                <x-forms.container>
+                                                    <x-forms.text label="Telefon / Mobil:" name="telephone"/>
+                                                </x-forms.container>
+                                                <x-forms.container>
+                                                    <x-forms.text-area label="Wie sind Sie auf uns aufmerksam geworden?" name="marketing_comment" rows=3/>
+                                                </x-forms.container>
+                                                <x-forms.container>
+                                                    <label for="terms">Ich akzeptiere die <a href='/files/Hausordnung.pdf' target="blank">Hausordnung</a>*:</label>
+                                                    <x-forms.text name="terms" type="checkbox" />
+                                                </x-forms.container>
                                             </div>
                                             <div class="col-md-12 col-xl-8">
                                                 <div class="h5" style="text-align: end" id="multiday_text">
                                                     Buchung von <span id="start_date_text"></span> bis <span id="end_date_text"></span>
-                                                    {!! Form::hidden('start_date', null, ['class' => 'form-control','id' => 'start_date']) !!}
-                                                    {!! Form::hidden('end_date', null, ['class' => 'form-control','id' => 'end_date']) !!}
+                                                    <x-forms.hidden name="start_date" />
+                                                    <x-forms.hidden name="end_date"/>
                                                 </div>
                                                 <div class="h5" style="text-align: end" id="oneday_text">
                                                     Buchung vom <span id="date_text"></span></span>
-                                                    {!! Form::hidden('date', null, ['class' => 'form-control','id' => 'date']) !!}
+                                                    <x-forms.hidden name="date"/>
                                                 </div>
                                                 <div class="table-responsive">
                                                     <table class="table">
@@ -190,10 +181,10 @@
                                                                 <th>Total <span id="days"></span></th>
                                                                 <th></th>
                                                                 <th><span id="total_amount_show"></span>.-</th>
-                                                                {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
-                                                                {!! Form::hidden('total_people', null, ['class' => 'form-control', 'id' => 'total_people']) !!}
-                                                                {!! Form::hidden('discount', null, ['class' => 'form-control', 'id' => 'discount']) !!}
-                                                                {!! Form::hidden('total_days', null, ['class' => 'form-control','id' => 'total_days']) !!}
+                                                                <x-forms.hidden name="total_amount"/>
+                                                                <x-forms.hidden name="total_people"/>
+                                                                <x-forms.hidden name="discount"/>
+                                                                <x-forms.hidden name="total_days"/>
                                                             </tr>
                                                             <tr>
                                                                 <th colspan="4">
@@ -212,7 +203,8 @@
                                                                     @if ($position['bexio_code']<100)
                                                                         <th scope="row" id={{'position_'.$position['bexio_code']}}><span id="position_{{$position['bexio_code']}}_amount"></span></th>
                                                                     @else
-                                                                        <th scope="row">{!! Form::number('positions['.$position['bexio_code'].']', null, [ 'class' => 'form-control', 'id' => 'position_'.$position['bexio_code'], 'onchange' => "Total_Change()"]) !!}</th>
+                                                                   
+                                                                        <th scope="row"><x-forms.text name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['bexio_code']}}" type="number" onChange="Total_Change()"/></th>
                                                                     @endif
                                                                     <td>{{$position['name']}}</td>
                                                                     <td>{{$position['price']}}.-</td>
@@ -222,10 +214,9 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <div class="form-group">
-                                                    {!! Form::label('comment', 'Bemerkungen:') !!}
-                                                    {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3, 'placeholder'=>'z.B. Genossenschafts-Nr. oder Name der Genossenschafter, Anzahl Parkplätze etc.']) !!}
-                                                </div>
+                                                <x-forms.container>
+                                                    <x-forms.text-area label="Bemerkungen" name="comment" rows=3 placeholder="z.B. Genossenschafts-Nr. oder Name der Genossenschafter, Anzahl Parkplätze etc."/>
+                                                </x-forms.container>
                                             </div>
                                         </div>
                                     </td>
@@ -237,7 +228,9 @@
                                                 <button type="button" class="btn btn-frontpage" onclick="wizard_step(1)">Zurück</button>
                                             </div>
                                             <div class="col-md-4">
-                                                {!! Form::submit('Reservieren', ['class' => 'btn btn-frontpage'])!!}
+                                                <x-forms.button type="submit" class="btn btn-frontpage">
+                                                    Reservieren
+                                                </x-forms.button>
                                             </div>
                                         </div>
                                     </td>
@@ -245,7 +238,8 @@
                             </table>
                         </div>
                     </div>
-                {!! Form::close()!!}
+                </x-forms.form>
+
             </div>
         </div>
     </div>

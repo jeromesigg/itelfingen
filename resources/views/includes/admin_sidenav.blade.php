@@ -32,10 +32,10 @@
                         <a href="#EventsDropdown" aria-expanded="false" data-toggle="collapse"> <i class="far fa-calendar-alt"></i> Buchungen</a>
                         <ul id="EventsDropdown" class="collapse list-unstyled ">
                             <li>
-                                <a href="{{route('events.index')}}"> Buchungen</a>
+                                <a href="{{route('admin.events.index')}}"> Buchungen</a>
                             </li>
                             <li>
-                                <a href="{{route('events.create')}}"> Buchung erstellen</a>
+                                <a href="{{route('admin.events.create')}}"> Buchung erstellen</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

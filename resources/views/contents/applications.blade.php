@@ -50,69 +50,59 @@
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
                 <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
-                <li>Durch den Beitritt gelten die {!! Html::link('files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf', 'Statuten', ['target' => 'blank']) !!} als akzeptiert.</li>
+                <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank">Statuten</a> als akzeptiert.</li>
             </ul>
-
-            {!! Form::open(['method' => 'POST', 'action'=>'ApplicationController@store']) !!}
+            <x-forms.form :action="route('application.store')">
                 <div class="form-row">
-                    <div class="col-md-4 form-group">
-                        {!! Form::label('firstname', 'Vorname:') !!}
-                        {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="col-md-4 form-group">
-                        {!! Form::label('name', 'Nachname*:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="col-md-4 form-group">
-                        {!! Form::label('organisation', 'Organisation:') !!}
-                        {!! Form::text('organisation', null, ['class' => 'form-control']) !!}
-                    </div>
+                  <x-forms.container class="col-md-4">
+                      <x-forms.text label="Vorname:" name="firstname"/>
+                  </x-forms.container>
+                  <x-forms.container class="col-md-4">
+                      <x-forms.text label="Nachname*:" name="firstname" required=true/>
+                  </x-forms.container>
+                  <x-forms.container class="col-md-4">
+                      <x-forms.text label="Organisation:" name="organisation"/>
+                  </x-forms.container>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-5 form-group">
-                        {!! Form::label('street', 'Strasse*:') !!}
-                        {!! Form::text('street', null, ['class' => 'form-control', 'required']) !!}
-                    </div>
-                    <div class="col-md-2 form-group">
-                        {!! Form::label('zipcode', 'PLZ*:') !!}
-                        {!! Form::text('zipcode', null, ['class' => 'form-control autocomplete_txt', 'required', 'numeric']) !!}
-                    </div>
-                    <div class="col-md-5 form-group">
-                        {!! Form::label('city', 'Ortschaft*:') !!}
-                        {!! Form::text('city', null, ['class' => 'form-control autocomplete_txt', 'required']) !!}
-                    </div>
-                    {!! Form::hidden('city_id', null, ['class' => 'form-control autocomplete_txt']) !!}
+                    <x-forms.container class="col-md-5">
+                        <x-forms.text label="Strasse*:" name="street" required=true/>
+                    </x-forms.container>
+                    <x-forms.container class="col-md-2">
+                        <x-forms.text label="PLZ*:" name="zipcode" type="number" required=true class="autocomplete_txt"/>
+                    </x-forms.container>
+                    <x-forms.container class="col-md-5">
+                        <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
+                    </x-forms.container>
+                    <x-forms.hidden name="city_id" class="autocomplete_txt"/>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-6 form-group">
-                        {!! Form::label('email', 'E-Mail*:') !!}
-                        {!! Form::email('email', null, ['class' => 'form-control', 'required', 'email']) !!}
-                    </div>
-                    <div class="col-md-6 form-group">
-                        {!! Form::label('telephone', 'Telefon / Mobil:') !!}
-                        {!! Form::text('telephone', null, ['class' => 'form-control']) !!}
-                    </div>
+                    <x-forms.container class="col-md-6">
+                        <x-forms.text label="E-Mail:" name="email" type="email" required=true/>
+                    </x-forms.container>
+                    <x-forms.container class="col-md-6">
+                        <x-forms.text label="Telefon / Mobil:" name="telephone"/>
+                    </x-forms.container>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-6 form-group">
-                        {!! Form::label('why', 'Warum willst Du Genossenschafter:in werden?*') !!}
-                        {!! Form::textarea('why', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => 'Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?', 'required']) !!}
-                    </div>
-                    <div class="col-md-6 form-group">
-                        {!! Form::label('comment', 'Hast du noch Fragen oder Bemerkungen?') !!}
-                        {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' => 3]) !!}
-                    </div>
+                    <x-forms.container class="col-md-6">
+                        <x-forms.text-area label="Warum willst Du Genossenschafter:in werden?*" name="why" required=true rows=3 placeholder="Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?"/>
+                    </x-forms.container>
+                    <x-forms.container class="col-md-6">
+                        <x-forms.text-area label="Hast du noch Fragen oder Bemerkungen?" name="comment" rows=3/>
+                    </x-forms.container>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <p>Danke! Noch ein Klick und deine Bewerbung ist bei uns eingegangen!</p>
                     </div>
-                    <div class="col-md-6" style ="text-align: right;">
-                        {!! Form::submit('Bewerbung absenden', ['class' => 'btn btn-frontpage'])!!}
+                    <div class="col-md-6">
+                        <x-forms.button type="submit" class="btn btn-frontpage">
+                            Bewerbung absenden
+                        </x-forms.button>
                     </div>
                 </div>
-
-            {!! Form::close()!!}
+            </x-forms.form>
         </div>
     </main><!-- End #main -->
         <!-- ======= Footer ======= -->

@@ -88,8 +88,8 @@ class AdminEventController extends Controller
 
         return DataTables::of($events)
             ->addColumn('name', function (Event $event) {
-                return $event['firstname'].' <a href='.\URL::route('events.edit', $event).'>'.$event['name'].'</a>'.
-                    '<br>'.$event['group_name'];
+                return $event['firstname'] . ' <a href='.\URL::route('admin.events.edit', $event).'>'.$event['name'].'</a>' .
+                    '<br>' . $event['group_name'];
             })
             ->addColumn('number', function (Event $event) {
                 return $event->number().'<br>'.$event['foreign_key'];
@@ -158,6 +158,7 @@ class AdminEventController extends Controller
             $input['start_date'] = new Carbon($input['start_date']);
             $input['end_date'] = new Carbon($input['end_date']);
         }
+        $input['uuid'] = \Illuminate\Support\Str::uuid();
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event['event_status_id'] == config('status.event_eigene')) {

@@ -10,24 +10,23 @@
             <header> 
                 <h3 class="display">Albumbild erstellen</h3>
             </header>
-            <div class="row">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminPicturesController@store', 'files' => true]) !!}
-                <div class="form-group">
-                    {!! Form::label('name', 'Name:') !!}
-                    {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                </div>
-                <div class="form-group">
-                        {!! Form::label('photo_id', 'Original Photo:') !!}
-                        {!! Form::file('photo_id', ['class' => 'photo_id', 'required']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::hidden('cropped_photo_id', null, ['class' => 'form-control', 'required', 'id' => 'cropped_photo_id']) !!}
-                </div>
-                <div class="form-group">
-                    {!! Form::submit('Albumbild Erstellen', ['class' => 'btn btn-primary'])!!}
-                </div>
-                {!! Form::close()!!}
-            </div>   
+            <x-forms.form :action="route('pictures.store')" enctype="multipart/form-data" accept-charset="UTF-8">
+                <x-forms.container>
+                    <x-forms.text label="Name:" name="name" required=true/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.text label="Symbol:" name="symbol"/>
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.file label="Original Photo: " name="photo_id" class="photo_id" required=true/>
+                    <x-forms.hidden name="cropped_photo_id" />
+                </x-forms.container>
+                <x-forms.container>
+                    <x-forms.button type="submit" class="btn btn-primary">
+                        Albumbild erstellen
+                    </x-forms.button>
+                </x-forms.container>
+            </x-forms.form>
             <div class="row"> 
                 @include('includes.form_error')
             </div>   

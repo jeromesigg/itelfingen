@@ -54,31 +54,27 @@
       </div>
 
       <div class="col-lg-8 mt-5 mt-lg-0">
-        {!! Form::open(['method' => 'POST', 'action'=>'ContactController@store', 'autocomplete'=>"off", 'id' => 'contact_form'])!!}
+        <x-forms.form :action="route('contacts.store')" id='contact_form'>
           <div class="form-row">
-            <div class="col-md-6 form-group">
-              {!! Form::label('name', 'Kontakt:') !!}
-              {!! Form::text('name', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
-            </div>
-            <div class="col-md-6 form-group">
-              {!! Form::label('email', 'Email:') !!}
-              {!! Form::email('email', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
-            </div>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="Name:" name="name" required=true />
+            </x-forms.container>
+            <x-forms.container class="col-md-6">
+                <x-forms.text label="Email:" name="email" type="email" required=true />
+            </x-forms.container>
           </div>
-          <div class="form-group">
-            {!! Form::label('subject', 'Betreff:') !!}
-            {!! Form::text('subject', null, ['class' => 'form-control', 'required', 'data-lpignore'=>'true']) !!}
-          </div>
-          <div class="form-group">
-            {!! Form::label('content', 'Nachricht:') !!}
-            {!! Form::textarea('content', null, ['class' => 'form-control', 'required', 'rorws' => 8, 'data-lpignore'=>'true']) !!}
-          </div>
-          <div class="form-group">
-            {!! htmlFormButton('Sende Nachricht', ['class' => 'btn btn-frontpage']) !!}
-            {{-- @captcha('de') --}}
-            {{-- {!! Form::submit('Sende Nachricht', ['class' => 'btn btn-frontpage'])!!} --}}
-        </div>
-        {!! Form::close()!!}
+          <x-forms.container>
+              <x-forms.text label="Betreff:" name="subject" required=true />
+          </x-forms.container>
+          <x-forms.container>
+              <x-forms.textarea label="Nachricht:" name="content" required=true rows="8"/>
+          </x-forms.container>
+          <x-forms.container>
+            <x-forms.button type="submit" class="btn btn-frontpage">
+              Sende Nachricht
+            </x-forms.button>
+          </x-forms.container>
+        </x-forms.form>
       </div>
     </div>
   </div>
