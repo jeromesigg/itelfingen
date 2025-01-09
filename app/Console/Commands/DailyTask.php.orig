@@ -154,6 +154,7 @@ class DailyTask extends Command
                 'invoice_send' => true,
                 'bexio_invoice_id' => $invoice['id'],
             ]);
+<<<<<<< HEAD
 
             Newsletter::updateOrCreate (
                 ['email' => $application['email']],
@@ -162,6 +163,8 @@ class DailyTask extends Command
                     'name' => $application['name'],
                     'members' => true
                 ]);
+=======
+>>>>>>> feature/laravel_10
 
             //            if (config('app.env') == 'production') {
             // Write to Google Sheet
