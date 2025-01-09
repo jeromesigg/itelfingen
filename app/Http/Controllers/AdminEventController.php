@@ -162,6 +162,7 @@ class AdminEventController extends Controller
             $input['start_date'] = new Carbon($input['start_date']);
             $input['end_date'] = new Carbon($input['end_date']);
         }
+        $input['uuid'] = \Illuminate\Support\Str::uuid();
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event['event_status_id'] == config('status.event_eigene')) {

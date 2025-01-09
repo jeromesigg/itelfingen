@@ -51,6 +51,7 @@ class EventController extends Controller
             $input['start_date'] = new Carbon($input['start_date']);
             $input['end_date'] = new Carbon($input['end_date']);
         }
+        $input['uuid'] = \Illuminate\Support\Str::uuid();
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         Notification::send($event, new EventCreatedNotification($event));
