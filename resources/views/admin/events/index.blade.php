@@ -99,7 +99,7 @@
 </section>
 @endsection
 
-@section('scripts')
+@push('scripts')
 
   <!-- ======= Javascript Section ======= -->
   @include('contents.event_js')
@@ -192,4 +192,4 @@
           }
       });
   </script>
-@endsection
+@endpush

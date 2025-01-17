@@ -74,6 +74,6 @@
         </div>
     </section>
 @endsection
-@section('scripts')
+@push('scripts')
     @include('admin/faq_chapters/photo_cropped_js')
-@endsection
+    @endpush

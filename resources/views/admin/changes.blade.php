@@ -86,4 +86,4 @@
         </div>
     </section>
 
-@endsection
+    @endpush

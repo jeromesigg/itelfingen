@@ -118,8 +118,8 @@
 
 .btn-frontpage {
   color: black;
-  background-color: var(--gladegreen);
-  border-color: var(--gladegreen);
+  background-color: var(--gladegreen) !important;
+  border-color: var(--gladegreen) !important;
   text-transform: uppercase;
   font-weight: 600;
   /* width: 250px; */
@@ -130,8 +130,8 @@
 
 .btn-frontpage:hover {
   color: black;
-  background-color: var(--gladegreen);
-  border-color: var(--gladegreen);
+  background-color: var(--gladegreen) !important;
+  border-color: var(--gladegreen) !important;
   text-transform: uppercase;
   font-weight: 600;
 }
@@ -195,4 +195,19 @@ a {
   border-radius: 1rem;
 }
 
+.h-picture {
+  height: 14rem
+}
 
+
+@media (min-width: 768px) {
+  .md\:h-picture {
+      height: 50rem;
+  }
+}
+
+
+body {
+  font-family: "Titillium Web", sans-serif;
+  font-size: larger;
+}

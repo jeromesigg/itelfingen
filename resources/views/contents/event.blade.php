@@ -1,6 +1,6 @@
 <section id="booking" class="calendar section">
 
-    <div class="container" data-aos="fade-up">
+    <div class="container" >
         <div class="section-title">
             <p>Jetzt Buchungsanfrage</p>
         </div>
@@ -27,9 +27,10 @@
         <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container container-fluid">
                 <x-forms.form :action="route('event.create')" id='calendarform' lang="de-CH">
+                    <x-honeypot />
                     <div class="row">
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
-                            <h3>Verfügbarkeit</h3>
+                            <h3 class="text-3xl dark:text-white mb-2.5">Verfügbarkeit</h3>
                             <div id="reservation_error_date" style="display: none" class="alert alert-danger">
                                 Es muss ein Datum gewählt werden.
                             </div>
@@ -45,7 +46,7 @@
 
                             <div class="hk-agenda">
                                 <div class="d-none d-sm-block">
-                                    <a class="hk-agenda__prev" onclick="Agenda.prev(3); return false" href="#">
+                                    <a class="hk-agenda__prev text-orientalpink mb-1" onclick="Agenda.prev(3); return false" href="#">
                                         früheres Datum
                                     </a>
                                 </div>
@@ -60,19 +61,19 @@
                                     @endfor
                                 </div>
                                 <div class="d-none d-sm-block">
-                                    <a class="hk-agenda__next" onclick="Agenda.next(3); return false" href="#">
+                                    <a class="hk-agenda__next text-orientalpink mb-1" onclick="Agenda.next(3); return false" href="#">
                                         späteres Datum
                                     </a>
                                 </div>
                                 <!-- mobile buttons -->
                                 <div class="row d-flex d-sm-none">
                                     <div class="col-6">
-                                        <a class="hk-agenda__prev hk-agenda__prev--mobile" onclick="Agenda.prev(1); return false" href="#">
+                                        <a class="hk-agenda__prev hk-agenda__prev--mobile text-orientalpink mb-1" onclick="Agenda.prev(1); return false" href="#">
                                             früheres Datum
                                         </a>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <a class="hk-agenda__next hk-agenda__next--mobile" onclick="Agenda.next(1); return false" href="#">
+                                        <a class="hk-agenda__next hk-agenda__next--mobile text-orientalpink mb-1" onclick="Agenda.next(1); return false" href="#">
                                             späteres Datum
                                         </a>
                                     </div>
@@ -81,30 +82,30 @@
                             <div class="row">
                                 <div class="col-md-10 col-sm-12">
                                     <div class="hk-agenda__legend">
-                                        <h5>Legende</h5>
+                                        <h5 class="text-xl">Legende</h5>
                                         <div class="row">
-                                            <div class="col-md-3 col-sm-6">
+                                            <div class="col-md-3 col-sm-6 text-base">
                                                 <span class="hk-agenda__legend-block hk-agenda__day--FF"></span>
-                                                <span class="hk-agenda__legend-label">Frei</span>
+                                                <span class="hk-agenda__legend-label align-top">Frei</span>
                                             </div>
-                                            <div class="col-md-3 col-sm-6">
+                                            <div class="col-md-3 col-sm-6 text-base">
                                                 <span class="hk-agenda__legend-block hk-agenda__day--PP"></span>
-                                                <span class="hk-agenda__legend-label">Provisorisch besetzt</span>
+                                                <span class="hk-agenda__legend-label align-top">Provisorisch besetzt</span>
                                             </div>
-                                            <div class="col-md-3 col-sm-6">
+                                            <div class="col-md-3 col-sm-6 text-base">
                                                 <span class="hk-agenda__legend-block hk-agenda__day--BB"></span>
-                                                <span class="hk-agenda__legend-label">Besetzt</span>
+                                                <span class="hk-agenda__legend-label align-top">Besetzt</span>
                                             </div>
-                                            <div class="col-md-3 col-sm-6">
-                                                <span class="hk-agenda__legend-block hk-agenda__day--BF"></span>
-                                                <span class="hk-agenda__legend-label">Halbtage</span>
+                                            <div class="col-md-3 col-sm-6 text-base">
+                                                <span class="hk-agenda__legend-block hk-agenda__day--FB"></span>
+                                                <span class="hk-agenda__legend-label align-top">Halbtage</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2 col-sm-12">
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-frontpage" onclick="wizard_step(2)">Weiter</button>
+                                        <button type="button" class="btn btn-frontpage bg-gladegreen" onclick="wizard_step(2)">Weiter</button>
                                     </div>
                                 </div>
                             </div>
@@ -225,10 +226,10 @@
                                     <td>
                                         <div class="form-row">
                                             <div class="col-md-4">
-                                                <button type="button" class="btn btn-frontpage" onclick="wizard_step(1)">Zurück</button>
+                                                <button type="button" class="btn btn-frontpage bg-gladegreen" onclick="wizard_step(1)">Zurück</button>
                                             </div>
                                             <div class="col-md-4">
-                                                <x-forms.button type="submit" class="btn btn-frontpage">
+                                                <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
                                                     Reservieren
                                                 </x-forms.button>
                                             </div>

@@ -1,22 +1,22 @@
 <section id="pricelist" class="pricelist section-blue">
-    <div class="container" data-aos="fade-up">
+    <div class="container" >
 
       <div class="section-title">
         <p>Unsere Preise</p>
       </div>
 
-      <div class="row pricelist-container" data-aos="fade-up" data-aos-delay="200">
+      <div class="row pricelist-container">
         <div class="col-lg-6">
             <div class="card card_title-line_white_mobile" style="width: 100%">
               <div class="card_content">
-                <span class="card_title"> Übernachtungen</span>
+                <h3 class="text-3xl"> Übernachtungen</h3>
                 <p class="card_text">
                   {{-- Buchungspauschale 200.- <br> --}}
-                    Reinigungs- und Buchungspauschale {{config('pricelist.cleaning')}}.-
-                  <span class="card_subtitle">Genossenschafter:innen</span>
+                    Reinigungs- und Buchungspauschale {{config('pricelist.cleaning')}}.
+                  <h4 class="text-2xl mt-3">Genossenschafter:innen</h4>
                   Fr. {{config('pricelist.member_adults')}}.- pro Nacht und Person (ab 16 Jahren) <br>
-                  Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (6-16 Jahren)
-                  <span class="card_subtitle">Privatpersonen</span>
+                  Fr. {{config('pricelist.member_kids')}}.- pro Nacht und Person (6-16 Jahren)<br>
+                  <h4 class="text-2xl mt-3">Privatpersonen</h4>
                   Fr. {{config('pricelist.other_adults')}}.- pro Nacht und Person (ab 16 Jahren) <br>
                   Fr. {{config('pricelist.other_kids')}}.- pro Nacht und Person (6-16 Jahren)
                 </p>
@@ -30,7 +30,7 @@
           <div class="col-lg-6">
             <div class="card card_title-line_white">
               <div class="card_content">
-                <span class="card_title">Tagesaufenthalte (ohne Übernachtung)</span>
+                <h3 class="text-3xl">Tagesaufenthalte (ohne Übernachtung)</h3>
                 <p class="card_text">
                     Reinigungs- und Buchungspauschale {{config('pricelist.cleaning')/2}}.-<br>
                     Tagespauschale Fr. {{config('pricelist.daily')}}.-

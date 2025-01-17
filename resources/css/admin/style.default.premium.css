@@ -148,10 +148,6 @@ h2 {
   margin-bottom: 0;
 }
 
-.card:not([class*="text"]) p {
-  color: #888;
-}
-
 .display {
   font-weight: 400 !important;
 }

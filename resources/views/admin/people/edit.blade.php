@@ -18,9 +18,14 @@
                         <x-forms.container>
                             <x-forms.file label="Photo: " name="photo_id"/>
                         </x-forms.container>
-                        <x-forms.container>
-                            <x-forms.text label="Sort-Index:" name="sort-index" required=true type="number"/>
-                        </x-forms.container>
+                        <div class="row">
+                            <x-forms.container class="col-sm-6">
+                                <x-forms.select label="Archiv-Status:" name="archive_status_id" :collection="$archive_statuses"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-sm-6">
+                                <x-forms.text label="Sort-Index:" name="sort-index" required=true type="number"/>
+                            </x-forms.container>
+                        </div>
                         <x-forms.container>
                             <x-forms.button type="submit" class="btn btn-primary">
                                 Person aktualisieren

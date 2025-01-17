@@ -52,7 +52,7 @@
     </section>
 @endsection
 
-@section('scripts')
+@push('scripts')
 
     <!-- ======= Javascript Section ======= -->
     <script>
@@ -83,4 +83,4 @@
             });
         });
     </script>
-@endsection
+@endpush

@@ -11,7 +11,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <h2>Bewerbung Genossenschaft</h2>
             <ol>
-              <li><a href="{{route('home')}}">Home</a></li>
+              <li><a href="{{route('home')}}" class="text-orientalpink">Home</a></li>
               <li>Bewerbung Genossenschaft</li>
             </ol>
           </div>
@@ -36,7 +36,7 @@
             </p>
             <h5>Warum mitmachen?</h5>
             <ul>
-                <li>Auf unserer Webseite findest du die reduzierten Preise für Genossenschafter: <a href="https://www.itelfingen.ch" target="_blank">www.itelfingen.ch</a></li>
+                <li>Auf unserer Webseite findest du die reduzierten Preise für Genossenschafter: <a href="https://www.itelfingen.ch" target="_blank" class="text-orientalpink">www.itelfingen.ch</a></li>
                 <li>Gemeinsam das schöne Haus mitprägen und mitunterhalten.</li>
                 <li>Genossenschafter/innen können Ideen einbringen und umsetzen und sich bei der GV mit einbringen.</li>
                 <li>Ein Gemeinschaftsgefühl, gemeinsam etwas Begeisterndes schaffen und prägen.</li>
@@ -50,7 +50,7 @@
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
                 <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
-                <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank">Statuten</a> als akzeptiert.</li>
+                <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank" class="text-orientalpink">Statuten</a> als akzeptiert.</li>
             </ul>
             <x-forms.form :action="route('application.store')">
                 <div class="form-row">
@@ -97,7 +97,7 @@
                         <p>Danke! Noch ein Klick und deine Bewerbung ist bei uns eingegangen!</p>
                     </div>
                     <div class="col-md-6">
-                        <x-forms.button type="submit" class="btn btn-frontpage">
+                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
                             Bewerbung absenden
                         </x-forms.button>
                     </div>
@@ -111,8 +111,7 @@
     {{-- @include('cookieConsent::index') --}}
   </div>
 @endsection
-
-@section('scripts')
+@push('scripts')
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script type="text/javascript">
@@ -159,4 +158,5 @@
 
     });
     </script>
-@endsection
+
+@endpush

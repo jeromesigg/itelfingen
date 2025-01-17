@@ -61,6 +61,6 @@
         </div>
     </section>
 @endsection
-@section('scripts')
+@push('scripts')
     @include('admin/pictures/photo_cropped_js')
-@endsection
+    @endpush

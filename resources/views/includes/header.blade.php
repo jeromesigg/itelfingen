@@ -9,11 +9,11 @@
                 <li class="text-center book"><a href="#booking">Jetzt Buchen</a></li>
                 @guest
                 @else
-                    <li><a href="/admin" target="blank">Dashboard</a></li>
+                    <li><a href="/admin" target="blank" class="text-orientalpink">Dashboard</a></li>
 
                     <!-- Authentication Links -->
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-orientalpink" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->username }} <span class="caret"></span>
                         </a>
 

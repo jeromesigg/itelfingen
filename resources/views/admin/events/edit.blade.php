@@ -233,7 +233,7 @@
         </div>
     </section>
 @endsection
-@section('scripts')
+@push('scripts')
 <script>
     window.addEventListener("load", function() {
         Total_Change();
@@ -311,4 +311,4 @@
         $("#total_people").val(total_person);
     }
 </script>
-@endsection
+@endpush

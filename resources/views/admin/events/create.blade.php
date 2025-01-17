@@ -110,7 +110,7 @@
     </div>
 </section>
 @endsection
-@section('scripts')
+@push('scripts')
 <script>
     function createIntern() {
 	    $('#name').val("Interne Buchung");
@@ -176,4 +176,4 @@
         $("#total_people").val(total_person);
     }
 </script>
-@endsection
+@endpush
