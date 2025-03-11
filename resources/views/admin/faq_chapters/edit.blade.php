@@ -6,10 +6,10 @@
 @endsection
 @section('content')
 
-    <section>
+    <div>
         <div class="container-fluid">
             <header>
-                <h3 class="display">Kapitel bearbeiten</h3>
+                <h3 class="text-3xl font-bold dark:text-white">Kapitel bearbeiten</h3>
             </header>
             <div class="row">
                  <div class="col-sm-9">
@@ -72,8 +72,8 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 @endsection
-@section('scripts')
+@push('scripts')
     @include('admin/faq_chapters/photo_cropped_js')
-@endsection
+    @endpush

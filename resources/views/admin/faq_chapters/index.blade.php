@@ -6,11 +6,11 @@
 @endsection
 
 @section('content')
-<section>
+<div>
     <div class="container-fluid">
 
         <header>
-            <h3>FAQ Kapitel</h3>
+            <h3 class="text-3xl font-bold dark:text-white">FAQ Kapitel</h3>
         </header>
 
         <div class="row">
@@ -48,7 +48,7 @@
                         @if($faq_chapters)
                         @foreach ($faq_chapters as $faq_chapter)
                             <tr>
-                                <td><a href="{{route('faq_chapters.edit', $faq_chapter->id)}}">{{$faq_chapter->name}}</a></td>
+                                <td><a class="text-orientalpink" href="{{route('faq_chapters.edit', $faq_chapter->id)}}">{{$faq_chapter->name}}</a></td>
                                 <td><img height="50" src="{{$faq_chapter->photo ? $faq_chapter->photo->file : 'https://placehold.it/50x50'}}" alt=""></td>
                                 <td>{{$faq_chapter['symbol']}}</td>
                                 <td>{{$faq_chapter->archive_status['name']}}</td>
@@ -89,8 +89,8 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 @endsection
-@section('scripts')
+@push('scripts')
     @include('admin/faq_chapters/photo_cropped_js')
-@endsection
+    @endpush

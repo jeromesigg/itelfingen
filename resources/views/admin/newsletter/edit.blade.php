@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('content')
 
-    <section>
+    <div>
         <div class="container-fluid">
             <header>
-                <h3 class="display">Empfänger bearbeiten</h3>
+                <h3 class="text-3xl font-bold dark:text-white">Empfänger bearbeiten</h3>
             </header>
             <div class="row">
                  <div class="col-sm-9">
@@ -41,5 +41,5 @@
                 @include('includes.form_error')
             </div>
         </div>
-    </section>
+    </div>
 @endsection

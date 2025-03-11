@@ -15,26 +15,7 @@ class EventController extends Controller
 {
     public function create(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'zipcode' => 'numeric',
-            'name' => 'required',
-            'total_people' => 'gt:0|lte:19',
-            'terms' => 'accepted',
-        ], [
-            'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
-            'terms.accepted' => 'Die Hausordnung muss akzeptiert werden.',
-            'total_people.gt' => 'Für die Buchung braucht es mindestens 1 Person.',
-            'total_people.lte' => 'Für die Buchung sind maximal 19 Personen erlaubt.',  ]);
-
-        if ($validator->fails()) {
-            return redirect()->to(url()->previous().'#booking')
-                ->withErrors($validator, 'event')
-                ->withInput();
-        }
-
         $input = $request->all();
-
-
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
@@ -54,7 +35,7 @@ class EventController extends Controller
         EventCreated::dispatch($event, $one_day, $input['positions']);
         Notification::send($event, new EventCreatedNotification($event));
 
-        return redirect()->to(url()->previous().'#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden.');
+        return redirect()->to(url()->previous().'#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden. Schau auch in deinem Spam-Ordner nach.');
     }
 
     public function searchResponseCity(Request $request)

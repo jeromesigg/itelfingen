@@ -28,7 +28,7 @@ class AdminApplicationController extends Controller
 
         return DataTables::of($applications)
             ->addColumn('name', function (Application $applications) {
-                return '<a href='.\URL::route('applications.show', $applications).'>'.$applications['name'].'</a>';
+                return '<a class="text-orientalpink" href='.\URL::route('applications.show', $applications).'>'.$applications['name'].'</a>';
             })
             ->addColumn('refuse', function (Application $application) {
                 return $application['refuse'] ? 'Ja' : 'Nein';

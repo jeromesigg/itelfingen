@@ -1,55 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid px-3">
-    <div class="row" style="min-height: 100vh !important;">
-      <div class="col-md-5 col-lg-6 col-xl-4 px-lg-5 d-flex align-items-center">
-        <div class="w-100 py-5">
-          <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="form-group">
-              <label for="username">{{ __('Benutzer') }}</label>
-              <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" placeholder = "Benutzer" value="{{ old('username') }}" required autocomplete="email" autofocus>
-              @error('username')
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $message }}</strong>
-                  </span>
-              @enderror
+  <div class="bg-[url(../images/login.webp)] bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply bg-opacity-60">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen">
+        <a href="/home" class="flex items-center mb-6 text-2xl font-semibold text-white">
+            <img class="w-8 h-8 mr-2" src="/img/logo_small.png" alt="logo">
+            Ferienhaus Itelfingen    
+        </a>
+        <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
+            <div class="p-6 space-y-4 md:space-y-6 lg:space-y-8 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-2xl dark:text-white">
+                    Hausverwalter Login
+                </h1>
+                  <form class="space-y-4 md:space-y-6" method="POST" action="{{ route('login') }}">
+                    @csrf
+                    @error('username')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-500" role="alert">
+                                <strong>{{ $message }}</strong>
+                        </p>
+                    @enderror
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Benutzer') }}</label>
+                        <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Benutzername" required>
+                    </div>
+                    @error('password')
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-500" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </p>
+                    @enderror 
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Password') }}</label>
+                        <input type="password" name="password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required="">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                              <input id="remember" aria-describedby="remember" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800">
+                            </div>
+                            <div class="ml-3 text-sm">
+                              <label for="remember" class="text-gray-500 dark:text-gray-300">Eingeloggt bleiben</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full text-white btn-frontpage bg-gladegreen focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Login</button>
+                </form>
             </div>
-            <div class="form-group mb-4">
-              <div class="row">
-                <div class="col">
-                  <label for="password">{{ __('Password') }}</label>
-                </div>
-              </div>
-              <input id="password" placeholder = "Passwort" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                @error('password')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-            <div class="form-group row">
-              <div class="col-md-6">
-                  <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                      <label class="form-check-label" for="remember">
-                          Eingeloggt bleiben
-                      </label>
-                  </div>
-              </div>
-            </div>
-            <!-- Submit-->
-            <button class="btn btn-lg btn-block btn-primary mb-3">{{ __('Login') }}</button>
-          </form>
         </div>
-      </div>
-      <div class="col-12 col-md-7 col-lg-6 col-xl-8 d-none d-lg-block">
-        <!-- Image-->
-        <div style="background-image: url(images/login.webp); background-size:cover;" class="bg-cover h-100 mr-n3"></div>
-      </div>
     </div>
   </div>
   @endsection

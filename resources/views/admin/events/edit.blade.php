@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 @section('content')
-    <section>
+    <div>
         <div class="container-fluid">
             <header>
-                <h3 class="display">Buchung {{str_pad($event['id'],5,'0', STR_PAD_LEFT)}} bearbeiten</h3>
+                <h3  class="text-3xl font-bold dark:text-white">Buchung {{str_pad($event['id'],5,'0', STR_PAD_LEFT)}} bearbeiten</h3>
             </header>
             <div class="form-row">
                 <div class="form-group col-xl-10">
@@ -42,7 +42,7 @@
                                 <x-forms.text label="Ortschaft:" name="city" required=true/>
                             </x-forms.container>
                         </div>
-                        <hr>
+                        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <x-forms.row>
                             @foreach ($positions as $index => $position)
                                 @if ($position->pricelist_position['bexio_code']<50)
@@ -69,9 +69,11 @@
                                 <span id="total"></span>.-
                             </x-forms.container>
                             <x-forms.container class="col-xl-2 col-4">
+                                <x-forms.text type="checkbox" name="early_checkin" value="{{$event['early_checkin']}}"/>
+                                <label for="early_checkin">Early Check-In</label>
                                 <br>
-                                <x-forms.text type="checkbox" label="Early Check-In:" name="early_checkin" value="{{$event['early_checkin']}}"/>
-                                <x-forms.text type="checkbox" label="Late Check-Out:" name="late_checkout" value="{{$event['late_checkout']}}"/>
+                                <x-forms.text type="checkbox" name="late_checkout" value="{{$event['late_checkout']}}"/>
+                                <label for="late_checkout">Late Check-Out</label>
                             </x-forms.container>
                             <x-forms.container class="col-xl-2 col-4">
                                 <x-forms.text label="Externe Buchungs-Nr.:" name="foreign_key"/>
@@ -80,7 +82,7 @@
                                 <x-forms.select label="Angebot / Rechnung:" name="contract_status_id" :collection="$contract_statuses" required=true/>
                             </div>
                         </div>
-                        <hr>
+                        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
                             <div class="col-xl-2 col-12">
                                 <div class="form-row"> 
@@ -100,7 +102,7 @@
                                 <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=5/>
                             </x-forms.container> 
                         </div> 
-                        <hr>
+                        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
                             <x-forms.container class="col-xl-2 col-6">
                                 <x-forms.button type="submit" name="submit" class="btn btn-primary">
@@ -231,84 +233,87 @@
                 @include('includes.form_error')
             </div>
         </div>
-    </section>
+    </div>
 @endsection
-@section('scripts')
-<script>
-    window.addEventListener("load", function() {
-        Total_Change();
-    });
-    $("#external").change(function() {
-        Total_Change();
-    });
-    function PrepareMail() {
-  		document.getElementById("cleaning_mail").style.display = "block";
-
-        start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
-        end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
-        var total = 0, subtotal = 0, id = 0;
-	    var positions = @json($positions);
-        positions.forEach(position => {
-            id = 'position_' + position['id'];
-            if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
-                subtotal =  parseInt(document.getElementById(id).value) || 0;
-                total += subtotal;
-            }
+@push('scripts')
+    <script type="module">
+        window.addEventListener("load", function() {
+            Total_Change();
         });
-        text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis "
-        + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für "
-        + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
-	    $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
-	    $('#cleaning_mail_text').val(text);
-    }
+        $("#external").change(function() {
+            Total_Change();
+        });
+        function PrepareMail() {
+            document.getElementById("cleaning_mail").style.display = "block";
 
-    function PrepareReminderMail() {
-        text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Dir erhalten. Sollten wir innerhalb der nächsten zwei Wochen keine Bestätigung erhalten, müssen wir die Buchung leider wieder freigeben.";
-        $('#additional_text').val(text);
-    }
-
-    function Total_Change() {
-        var start_date = new Date(document.getElementById('start_date').value);
-        var end_date = new Date(document.getElementById('end_date').value);
-        var days = (end_date - start_date)/(24*3600*1000);
-        var one_day = (days === 0);
-        if(days === 0){
-            days = 1;
+            var start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
+            var end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
+            var total = 0, subtotal = 0, id = 0;
+            var positions = @json($positions);
+            positions.forEach(position => {
+                id = 'position_' + position['id'];
+                if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
+                    subtotal =  parseInt(document.getElementById(id).value) || 0;
+                    total += subtotal;
+                }
+            });
+            var text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis "
+            + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für "
+            + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
+            $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
+            $('#cleaning_mail_text').val(text);
         }
-	    var positions = @json($positions);
-        var total_amount = 0, id = 0, total_person = 0;
-        var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
-        positions.forEach(position => {
-            id = 'position_' + position['id'];
-            person = position.pricelist_position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
-            person = person || 0;
-            var subtotal = 0
-            if(position.pricelist_position['bexio_code'] < 50){
-                if(one_day){
-                    subtotal = position.pricelist_position['price'] / 2;
-                    person = 1;
+
+        function PrepareReminderMail() {
+            var text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Dir erhalten. Sollten wir innerhalb der nächsten zwei Wochen keine Bestätigung erhalten, müssen wir die Buchung leider wieder freigeben.";
+            $('#additional_text').val(text);
+        }
+
+        function Total_Change() {
+            var start_date = new Date(document.getElementById('start_date').value);
+            var end_date = new Date(document.getElementById('end_date').value);
+            var days = (end_date - start_date)/(24*3600*1000);
+            var one_day = (days === 0);
+            if(days === 0){
+                days = 1;
+            }
+            var positions = @json($positions);
+            var total_amount = 0, id = 0, total_person = 0;
+            var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
+            positions.forEach(position => {
+                id = 'position_' + position['id'];
+                var person = position.pricelist_position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
+                person = person || 0;
+                var subtotal = 0
+                if(position.pricelist_position['bexio_code'] < 50){
+                    if(one_day){
+                        subtotal = position.pricelist_position['price'] / 2;
+                        person = 1;
+                    }
+                    else {
+                        subtotal = position.pricelist_position['price'];
+                    }
                 }
-                else {
-                    subtotal = position.pricelist_position['price'];
+                else if(position.pricelist_position['bexio_code'] < 100) {
+                    subtotal = position.pricelist_position['price'] * position['amount'];
                 }
-            }
-            else if(position.pricelist_position['bexio_code'] < 100) {
-                subtotal = position.pricelist_position['price'] * position['amount'];
-            }
-            else if(position.pricelist_position['bexio_code'] > 100) {
-                subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
-            }
-            if( position.pricelist_position['bexio_code']>200){
-                subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
-                person = 0;
-            }
-            total_amount += subtotal;
-            total_person += person;
-        });
-        $("#total").text(total_amount);
-        $("#total_days").val(days);
-        $("#total_amount").val(total_amount);
-        $("#total_people").val(total_person);
-    }
-</script>
-@endsection
+                else if(position.pricelist_position['bexio_code'] > 100) {
+                    subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
+                }
+                if( position.pricelist_position['bexio_code']>200){
+                    subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
+                    person = 0;
+                }
+                total_amount += subtotal;
+                total_person += person;
+            });
+            $("#total").text(total_amount);
+            $("#total_days").val(days);
+            $("#total_amount").val(total_amount);
+            $("#total_people").val(total_person);
+        }
+        window.PrepareMail = PrepareMail;
+        window.PrepareReminderMail = PrepareReminderMail;
+        window.Total_Change = Total_Change;
+    </script>
+@endpush

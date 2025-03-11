@@ -43,7 +43,7 @@
                         @foreach ($people as $person)
                             <tr>  
                                 <td><img height="50" src="{{$person->photo ? $person->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>
-                                <td><a href="{{route('people.edit', $person->id)}}">{{$person->name}}</a></td>
+                                <td><a class="text-orientalpink" href="{{route('people.edit', $person->id)}}">{{$person->name}}</a></td>
                                 <td>{{$person->function}}</td>
                                 <td>{{$person->archive_status['name']}}</td>
                                 <td>{{$person['sort-index']}}</td>

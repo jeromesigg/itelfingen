@@ -1,4 +1,4 @@
-<script>
+<script type="module">
     var $modal = $('#modal');
     var image = document.getElementById('image');
     var cropper;

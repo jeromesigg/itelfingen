@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('pageTitle', 'Buchungen')
 @section('content')
-<section>
+<div>
     <div class="container-fluid">
         <header>
-            <h3 class="display">Buchung erstellen</h3>
+            <h3 class="text-3xl font-bold dark:text-white">Buchung erstellen</h3>
         </header>
         <div>
             <button class="btn btn-primary" onclick="createIntern()">Interne Buchung erstellen</button>
@@ -86,7 +86,7 @@
                             <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()"/>
                         </x-forms.container>
                         <x-forms.container class="col-md-3">
-                            <x-forms.text label="Total CHF:" name="total_amount" type="number"/>
+                            <label for="total" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total CHF</label>
                             <span id="total"></span>.-
                         </x-forms.container>
                     </div>
@@ -108,10 +108,10 @@
             @include('includes.form_error')
         </div>
     </div>
-</section>
+</div>
 @endsection
-@section('scripts')
-<script>
+@push('scripts')
+<script type="module">
     function createIntern() {
 	    $('#name').val("Interne Buchung");
 	    $('#street').val("Itelfingen 3");
@@ -145,7 +145,7 @@
         var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
         positions.forEach(position => {
             id = 'position_' + position['id'];
-            person = position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
+            var person = position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
             person = person || 0;
             var subtotal = 0
             if(days === 0){
@@ -175,5 +175,8 @@
         $("#total_amount").val(total_amount);
         $("#total_people").val(total_person);
     }
+    window.createExtern = createExtern;
+    window.createIntern = createIntern;
+    window.Total_Change = Total_Change;
 </script>
-@endsection
+@endpush
