@@ -47,7 +47,7 @@
               @foreach ($chapter->faqs as $faq)
                 <li class="cd-faq__item">
                   <a class="cd-faq__trigger" href="#0"><span>{{$faq->name}}</span></a>
-                  <div class="cd-faq__content">
+                  <div class="cd-faq__content pt-3 border border-norway">
                     <div class="text-component">
                       <div class="row">
                         @if($faq->photo)

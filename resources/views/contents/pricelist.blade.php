@@ -22,7 +22,7 @@
                 </p>
               </div>
                 @if($application_enabled)
-                    <a type="button" class="btn btn-dark" href="{{route('applications')}}">Genossenschafter:in werden</a>
+                    <a type="button" class="btn btn-dark" href="{{route('applications')}}" target="_blank">Genossenschafter:in werden</a>
                     <br>
                 @endif
             </div>

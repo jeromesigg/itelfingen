@@ -617,7 +617,6 @@ section {
 # About
 --------------------------------------------------------------*/
 .about {
-  /* background: url("../images/about-bg.jpg") center center; */
   background-size: cover;
   position: relative;
 }
@@ -852,7 +851,7 @@ section {
 # Locations
 --------------------------------------------------------------*/
 .locations {
-  background: url(../images/events-bg.webp) center center no-repeat;
+  background: url(@/img/events-bg.webp) center center no-repeat;
   background-size: cover;
   position: relative;
   height: 750px;

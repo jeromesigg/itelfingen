@@ -2,7 +2,7 @@
 
     <div class="container" >
         <div class="section-title">
-            <p>Jetzt Buchungsanfrage</p>
+            <p>Jetzt Buchungsanfrage senden</p>
         </div>
         @if (session()->has('success_event'))
             <div class="alert alert-dismissable alert-success">
@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-2">
                                 <div class="col-md-10 col-sm-12">
                                     <div class="hk-agenda__legend">
                                         <h5 class="text-xl">Legende</h5>
@@ -135,7 +135,7 @@
                                                 </x-forms.container>
                                                 <div class="form-row">
                                                     <x-forms.container class="col-md-3">
-                                                        <x-forms.text label="PLZ*:" name="zipcode" required=true type="number" class="autocomplete_txt"/>
+                                                        <x-forms.text label="PLZ*:" name="zipcode" required=true class="autocomplete_txt"/>
                                                     </x-forms.container>
                                                     <x-forms.container class="col-md-9">
                                                         <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
@@ -153,7 +153,7 @@
                                                 </x-forms.container>
                                                 <x-forms.container>
                                                     <label for="terms">Ich akzeptiere die <a href='/files/Hausordnung.pdf' target="blank">Hausordnung</a>*:</label>
-                                                    <x-forms.text name="terms" type="checkbox" />
+                                                    <x-forms.text name="terms" type="checkbox" required=true/>
                                                 </x-forms.container>
                                             </div>
                                             <div class="col-md-12 col-xl-8">

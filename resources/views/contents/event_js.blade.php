@@ -105,6 +105,7 @@
 	result.setDate(result.getDate() + days);
 	return result;
 	}
+	window.addDays = addDays;
 
 	function $E(name, options) {
 		var node = document.createElement(name);
@@ -372,4 +373,5 @@
 			}
 		}
 	}
+	window.Agenda = Agenda;
 </script>

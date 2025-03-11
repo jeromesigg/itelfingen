@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-<section>
+<div>
     <div class="container-fluid">
 
         <header>
-            <h3>Anfragen</h3>
+            <h3 class="text-3xl font-bold dark:text-white">Anfragen</h3>
         </header>
         <div id="filter_btns">
             <div id="done_btn">
@@ -41,19 +41,20 @@
 
         </div>
     </div>
-</section>
+</div>
 @endsection
 
 
 @push('scripts')
 
-    <script>
+    <script type="module">
         $(function () {
             var table = $('#datatable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
                 pageLength: 10,
+                buttons: [],
                 language: {
                     "url": "/lang/Datatables.json"
                 },

@@ -8,18 +8,98 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CT5IwePq.css",
+    "file": "assets/app-KzmbxH6G.css",
     "src": "resources/css/app.css",
     "isEntry": true
+  },
+  "resources/images/Erdgeschoss.webp": {
+    "file": "assets/Erdgeschoss-eGL0nf62.webp",
+    "src": "resources/images/Erdgeschoss.webp"
+  },
+  "resources/images/Obergeschoss.webp": {
+    "file": "assets/Obergeschoss-DNbFxHtG.webp",
+    "src": "resources/images/Obergeschoss.webp"
+  },
+  "resources/images/about-bg.webp": {
+    "file": "assets/about-bg-BEsCi2pI.webp",
+    "src": "resources/images/about-bg.webp"
   },
   "resources/images/hero-bg.webp": {
     "file": "assets/hero-bg-BxsSwpDD.webp",
     "src": "resources/images/hero-bg.webp"
   },
+  "resources/images/login.webp": {
+    "file": "assets/login-Decb8tK8.webp",
+    "src": "resources/images/login.webp"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-BaGMFJ9N.js",
+    "file": "assets/app-Dd9n7Wte.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
+  },
+  "resources/js/fonts/PPMigra-Regular.eot": {
+    "file": "assets/PPMigra-Regular-CMprnpcM.eot",
+    "src": "resources/js/fonts/PPMigra-Regular.eot"
+  },
+  "resources/js/fonts/PPMigra-Regular.otf": {
+    "file": "assets/PPMigra-Regular-rfU2lMge.otf",
+    "src": "resources/js/fonts/PPMigra-Regular.otf"
+  },
+  "resources/js/fonts/PPMigra-Regular.ttf": {
+    "file": "assets/PPMigra-Regular-5UocUxhr.ttf",
+    "src": "resources/js/fonts/PPMigra-Regular.ttf"
+  },
+  "resources/js/fonts/PPMigra-Regular.woff2": {
+    "file": "assets/PPMigra-Regular-ZPNUBG7o.woff2",
+    "src": "resources/js/fonts/PPMigra-Regular.woff2"
+  },
+  "resources/js/img/calendar/besetzt_end-provisorisch_start.svg": {
+    "file": "assets/besetzt_end-provisorisch_start-CO31g4PL.svg",
+    "src": "resources/js/img/calendar/besetzt_end-provisorisch_start.svg"
+  },
+  "resources/js/img/calendar/besetzt_end-selected_start.svg": {
+    "file": "assets/besetzt_end-selected_start-D5azC4TI.svg",
+    "src": "resources/js/img/calendar/besetzt_end-selected_start.svg"
+  },
+  "resources/js/img/calendar/besetzt_end.svg": {
+    "file": "assets/besetzt_end-CtmJCimI.svg",
+    "src": "resources/js/img/calendar/besetzt_end.svg"
+  },
+  "resources/js/img/calendar/besetzt_start.svg": {
+    "file": "assets/besetzt_start-D7z_sjxz.svg",
+    "src": "resources/js/img/calendar/besetzt_start.svg"
+  },
+  "resources/js/img/calendar/provisorisch-doppelt.svg": {
+    "file": "assets/provisorisch-doppelt-BpmKsmjP.svg",
+    "src": "resources/js/img/calendar/provisorisch-doppelt.svg"
+  },
+  "resources/js/img/calendar/provisorisch_end-besetzt_start.svg": {
+    "file": "assets/provisorisch_end-besetzt_start-CloNdAH4.svg",
+    "src": "resources/js/img/calendar/provisorisch_end-besetzt_start.svg"
+  },
+  "resources/js/img/calendar/provisorisch_end-selected_start.svg": {
+    "file": "assets/provisorisch_end-selected_start-ztXbqYbs.svg",
+    "src": "resources/js/img/calendar/provisorisch_end-selected_start.svg"
+  },
+  "resources/js/img/calendar/provisorisch_end.svg": {
+    "file": "assets/provisorisch_end-B1kc9TcF.svg",
+    "src": "resources/js/img/calendar/provisorisch_end.svg"
+  },
+  "resources/js/img/calendar/provisorisch_start.svg": {
+    "file": "assets/provisorisch_start-QDY0LrhC.svg",
+    "src": "resources/js/img/calendar/provisorisch_start.svg"
+  },
+  "resources/js/img/calendar/selected_end-besetzt_start.svg": {
+    "file": "assets/selected_end-besetzt_start-DdSaWxYy.svg",
+    "src": "resources/js/img/calendar/selected_end-besetzt_start.svg"
+  },
+  "resources/js/img/calendar/selected_end-provisorisch_start.svg": {
+    "file": "assets/selected_end-provisorisch_start-CxdtddgE.svg",
+    "src": "resources/js/img/calendar/selected_end-provisorisch_start.svg"
+  },
+  "resources/js/img/events-bg.webp": {
+    "file": "assets/events-bg-BozPqy6n.webp",
+    "src": "resources/js/img/events-bg.webp"
   }
 }

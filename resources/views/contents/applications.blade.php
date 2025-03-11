@@ -28,14 +28,14 @@
                     </strong>
                 </div>
             @endif
-            <h3>Ich möchte Genossenschafter/in werden... </h3>
-            <p>
+            <h3 class="text-3xl  dark:text-white">Ich möchte Genossenschafter/in werden... </h3>
+            <p class="mb-3 text-lg md:text-xl dark:text-gray-400">
                 Wir freuen uns über dein Interesse an der Genossenschaft Ferienhaus Itelfingen.
                 Hier hast du die Möglichkeit, dich als Genossenschafter/in zu bewerben.
                 Neben den Vorteilen bei der Miete des Hauses freuen wir uns über jeden und jede, welche die Zukunft und Stimmung des Ferienhauses positiv mitprägen!
             </p>
-            <h5>Warum mitmachen?</h5>
-            <ul>
+            <h4 class="text-2xl  dark:text-white">Warum mitmachen?</h4>
+            <ul class="space-y-1 list-disc list-inside dark:text-gray-400 mb-3">
                 <li>Auf unserer Webseite findest du die reduzierten Preise für Genossenschafter: <a href="https://www.itelfingen.ch" target="_blank" class="text-orientalpink">www.itelfingen.ch</a></li>
                 <li>Gemeinsam das schöne Haus mitprägen und mitunterhalten.</li>
                 <li>Genossenschafter/innen können Ideen einbringen und umsetzen und sich bei der GV mit einbringen.</li>
@@ -45,14 +45,15 @@
                 <li>Möglichkeit zur Teilnahme an Genossenschafts-Wochenenden bei denen man kostenlos übernachten und beim Unterhalt oder
                     der Erweiterung der Hauses und Angebotes mitarbeiten kann.</li>
             </ul>
-            <h5>Bist du einverstanden mit den folgenden Punkten?</h5>
-            <ul>
+            <h4 class="text-2xl  dark:text-white mt">Bist du einverstanden mit den folgenden Punkten?</h4>
+            <ul class="space-y-1  list-disc list-inside dark:text-gray-400 mb-3 ">
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
                 <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
                 <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank" class="text-orientalpink">Statuten</a> als akzeptiert.</li>
             </ul>
             <x-forms.form :action="route('application.store')">
+                <x-honeypot />
                 <div class="form-row">
                   <x-forms.container class="col-md-4">
                       <x-forms.text label="Vorname:" name="firstname"/>
@@ -78,7 +79,7 @@
                 </div>
                 <div class="form-row">
                     <x-forms.container class="col-md-6">
-                        <x-forms.text label="E-Mail:" name="email" type="email" required=true/>
+                        <x-forms.text label="E-Mail*:" name="email" type="email" required=true/>
                     </x-forms.container>
                     <x-forms.container class="col-md-6">
                         <x-forms.text label="Telefon / Mobil:" name="telephone"/>
@@ -112,9 +113,7 @@
   </div>
 @endsection
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
-    <script type="text/javascript">
+    <script type="module">
 
     //autocomplete script
     $(document).on('focus','.autocomplete_txt',function(){

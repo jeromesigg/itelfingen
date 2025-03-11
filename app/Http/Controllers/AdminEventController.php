@@ -88,7 +88,7 @@ class AdminEventController extends Controller
 
         return DataTables::of($events)
             ->addColumn('name', function (Event $event) {
-                return $event['firstname'] . ' <a href='.\URL::route('admin.events.edit', $event).'>'.$event['name'].'</a>' .
+                return $event['firstname'] . ' <a class="text-orientalpink" href='.\URL::route('admin.events.edit', $event).'>'.$event['name'].'</a>' .
                     '<br>' . $event['group_name'];
             })
             ->addColumn('number', function (Event $event) {

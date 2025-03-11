@@ -19,7 +19,6 @@ class ContactController extends Controller
             'name' => 'required',
             'email' => 'email|required',
             'content' => 'required',
-            'g-recaptcha-response' => ['required', new ReCaptcha]
         ]);
 
         if ($validator->fails()) {

@@ -2,11 +2,11 @@
 
 @section('content')
     @include('includes.tinyeditor')
-    <section>
+    <div>
         <div class="container-fluid">
 
             <header>
-                <h3>FAQ</h3>
+                <h3 class="text-3xl font-bold dark:text-white">FAQ</h3>
             </header>
 
             <div class="row">
@@ -49,19 +49,20 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 @endsection
 
 @push('scripts')
 
     <!-- ======= Javascript Section ======= -->
-    <script>
+    <script type="module">
         $(function () {
             var table = $('#datatable').DataTable({
                 responsive: true,
                 processing: true,
                 serverSide: true,
                 pageLength: 25,
+                buttons: [],
                 language: {
                     "url": "/lang/Datatables.json"
                 },
@@ -77,9 +78,6 @@
                     { data: 'archive_status', name: 'archive_status' },
                     { data: 'sort-index', name: 'sort-index' },
                 ]
-                {{--                                        <td><img height="50" src="{{$faq->photo ? $faq->photo->file : 'http://placehold.it/50x50'}}" alt=""></td>--}}
-                {{--                                        <td><a href="{{route('faqs.edit', $faq->id)}}">{{$faq->name}}</a></td>--}}
-
             });
         });
     </script>

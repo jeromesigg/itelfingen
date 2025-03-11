@@ -4,7 +4,7 @@
     <div class="section-title">
       <p>Schreib uns</p>
     </div>
-    <p>
+    <p class="mb-3 text-lg md:text-xl">
       Fragen, Anregungen? Wir freuen uns über Deine Nachricht.
     </p>
   </div>

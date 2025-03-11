@@ -209,5 +209,8 @@ a {
 
 body {
   font-family: "Titillium Web", sans-serif;
-  font-size: larger;
+}
+
+.min-h-80vh{
+  min-height: 80vh;
 }
