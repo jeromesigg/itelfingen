@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\ArchiveStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,14 +21,15 @@ class AdminUserController extends Controller
         //
         $user = Auth::user();
         if ($user->isTeam() && ! $user->isAdmin()) {
-            $users = User::whereId($user->id)->all();
+            $users = User::whereId($user->id)->get();
             $roles = Role::whereId($user->role_id)->pluck('name', 'id')->all();
         } else {
             $users = User::all();
             $roles = Role::pluck('name', 'id')->all();
         }
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
 
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.users.index', compact('users', 'roles', 'archive_statuses'));
     }
 
     /**
@@ -50,7 +52,6 @@ class AdminUserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -67,6 +68,7 @@ class AdminUserController extends Controller
             $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
             $input['signature'] = $path;
         }
+        $input['is_active'] = 1;
 
         User::create($input);
 
@@ -99,14 +101,14 @@ class AdminUserController extends Controller
             $roles = Role::pluck('name', 'id')->all();
         }
         $user = User::findOrFail($id);
+        $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
 
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles', 'archive_statuses'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -125,6 +127,12 @@ class AdminUserController extends Controller
         if ($file = $request->file('signature')) {
             $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
             $input['signature'] = $path;
+        }
+        if($input['archive_status_id'] == config('status.aktiv')) {
+            $input['archive_status_id'] = 1;
+        }
+        else {
+            $input['archive_status_id'] = 0;
         }
 
         $user->update($input);

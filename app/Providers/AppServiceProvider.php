@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
         } else {
             \Log::warning('Class Swift_Preferences does not exists');
         }
+        DB::statement("SET lc_time_names = 'de_CH'");
     }
 }

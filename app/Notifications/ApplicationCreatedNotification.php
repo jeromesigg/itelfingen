@@ -56,12 +56,12 @@ class ApplicationCreatedNotification extends Notification
      */
     public function toSlack($notifiable)
     {
-//        if (config('app.env') == 'production') {
+        //        if (config('app.env') == 'production') {
         return (new SlackMessage)
             ->from(config('slack.username'), config('slack.icon'))
             ->to(config('slack.application_channel'))
             ->content('Es hat eine neue Bewerbung gegeben. '.$this->application['firstname'].' '.$this->application['name'].' würde gerne Genossenschafter/in werden. Grund: '.$this->application['why']);
-//        }
+        //        }
     }
 
     /**
@@ -75,6 +75,7 @@ class ApplicationCreatedNotification extends Notification
         $application = $this->application;
 
         return [
+            'action' => 'Genossenschaft Antrag',
             'name' => $application->firstname.' '.$application->name,
             'e-mail' => $application->email,
             'gruppe' => $application->organisation,

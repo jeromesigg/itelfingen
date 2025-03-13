@@ -32,7 +32,6 @@ class AdminFaqChapterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,7 +41,6 @@ class AdminFaqChapterController extends Controller
         $index = FaqChapter::all()->count();
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');
-
         if (($file = $request->file('old_photo_id')) && $input['new_photo_id']) {
             $name = time().$file->getClientOriginalName();
             Image::make($input['new_photo_id'])->save('images/'.$name);
@@ -84,7 +82,6 @@ class AdminFaqChapterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

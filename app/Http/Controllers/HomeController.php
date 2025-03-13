@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
+use Carbon\Carbon;
 use App\Models\Faq;
-use App\Models\FaqChapter;
-use App\Models\History;
-use App\Models\Homepage;
+use App\Models\Event;
 use App\Models\Person;
 use App\Models\Picture;
+use App\Models\Homepage;
+use App\Models\FaqChapter;
+use Illuminate\Http\Request;
 use App\Models\PricelistPosition;
-use App\Models\Testimonial;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -48,13 +48,13 @@ class HomeController extends Controller
                 'y' => $start_date->year,
                 'm' => $start_date->month - 1,
                 'd' => $start_date->day,
-                'h' => !($event['early_checkin'] || ($start_date->dayOfWeek === 0)),
+                'h' => ! ($event['early_checkin'] || ($start_date->dayOfWeek === 0)),
             ];
             $end = [
                 'y' => $end_date->year,
                 'm' => $end_date->month - 1,
                 'd' => $end_date->day,
-                'h' => !($event['late_checkout'] || ($end_date->dayOfWeek === 0)),
+                'h' => ! ($event['late_checkout'] || ($end_date->dayOfWeek === 0)),
             ];
             $events_json[] = [
                 'start' => $start,
@@ -98,5 +98,49 @@ class HomeController extends Controller
         $faq_chapters = FaqChapter::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
 
         return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs', 'title'));
+    }
+
+    public function bookings_login()
+    {
+        $homepage = Homepage::FindOrFail(1);
+        $title = 'Login Kundenbereich';
+
+        return view('contents.bookings_login', compact('homepage', 'title'));
+    }
+
+    public function bookings_uuid(string $uuid)
+    {
+        $homepage = Homepage::FindOrFail(1);
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
+        $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+
+        return view('contents.bookings_show', compact('homepage', 'title', 'event'));
+    }
+
+    public function bookings_check(Request $request)
+    {
+        $input = $request->all();    
+        $event = Event::where('id', intval($input['id']))->where('plz', $input['plz'])->first();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
+        }
+        $homepage = Homepage::FindOrFail(1);
+        $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+
+        return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);
+    }
+
+    public function DownloadLastInfos(string $uuid)
+    {
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
+        $outputFile = Storage::disk('local')->path('contracts/Infos_vor_Buchung.pdf');
+
+        return response()->download($outputFile);
     }
 }

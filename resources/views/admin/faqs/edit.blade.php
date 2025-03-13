@@ -2,45 +2,42 @@
 @section('content')
 
     @include('includes.tinyeditor')
-    <section>
+    <div>
         <div class="container-fluid">
             <header>
-                <h3 class="display">FAQ bearbeiten</h3>
+                <h3 class="text-3xl font-bold dark:text-white">FAQ bearbeiten</h3>
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($faq, ['method' => 'PATCH', 'action'=>['AdminFaqController@update', $faq->id], 'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('name', 'Titel:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('description', 'Beschreibung:') !!}
-                        {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 15]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('photo_id', 'Photo:') !!}
-                        {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                     <div class="form-row">
-                         <div class="col-md-6 form-group">
-                             {!! Form::label('faq_chapter_id', 'Kapitel:') !!}
-                             {!! Form::select('faq_chapter_id', $faq_chapters, null, ['class' => 'form-control', 'required']) !!}
-                         </div>
-                        <div class="col-md-6 form-group">
-                            {!! Form::label('archive_status_id', 'Archiv Status:') !!}
-                            {!! Form::select('archive_status_id', $archive_statuses, null, ['class' => 'form-control', 'required']) !!}
+                    <x-forms.form :action="route('faqs.update', $faq)" enctype="multipart/form-data" accept-charset="UTF-8" method="PATCH" :model="$faq">
+                        <x-forms.container>
+                            <x-forms.text label="Titel:" name="name"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.textarea label="Beschreibung:" name="description" rows=15/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Photo: " name="photo_id"/>
+                        </x-forms.container>
+                        <div class="form-row">                        
+                            <x-forms.container class="col-md-6">
+                                <x-forms.select label="Kapitel:" name="faq_chapter_id" required=true :collection="$faq_chapters"/>
+                            </x-forms.container>     
+                            <x-forms.container class="col-md-6">
+                                <x-forms.select label="Archiv Status:" name="archive_status_id" required=true :collection="$archive_statuses"/>
+                            </x-forms.container>     
                         </div>
-                     </div>
-                    <div class="form-group">
-                        {!! Form::submit('FAQ updaten', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                FAQ updaten
+                            </x-forms.button>
+                        </x-forms.container>  
+                    </x-forms.form>
                 </div>
             </div>
             <div class="row">
                 @include('includes.form_error')
             </div>
         </div>
-    </section>
+    </div>
 @endsection

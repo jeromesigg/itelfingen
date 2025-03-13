@@ -11,10 +11,9 @@
     @include('contents.main')
         <!-- ======= Footer ======= -->
     @include('includes.footer')
-    <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
   </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
   @include('contents.event_js')
-@endsection
+@endpush

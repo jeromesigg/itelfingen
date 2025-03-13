@@ -8,8 +8,6 @@
 /storage/app/google-calendar
 /vendor
 /.vscode
-/public/build
-/bootstrap/ssr
 .env
 .env.backup
 .phpunit.result.cache

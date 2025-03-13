@@ -1,0 +1,85 @@
+{
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "assets/bootstrap-icons-BOrJxbIo.woff",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "assets/bootstrap-icons-BtvjY1KL.woff2",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-B7WyVziW.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CQEjmakH.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/fonts/PPMigra-Regular.eot": {
+    "file": "assets/PPMigra-Regular-CMprnpcM.eot",
+    "src": "resources/js/fonts/PPMigra-Regular.eot"
+  },
+  "resources/js/fonts/PPMigra-Regular.otf": {
+    "file": "assets/PPMigra-Regular-rfU2lMge.otf",
+    "src": "resources/js/fonts/PPMigra-Regular.otf"
+  },
+  "resources/js/fonts/PPMigra-Regular.ttf": {
+    "file": "assets/PPMigra-Regular-5UocUxhr.ttf",
+    "src": "resources/js/fonts/PPMigra-Regular.ttf"
+  },
+  "resources/js/fonts/PPMigra-Regular.woff2": {
+    "file": "assets/PPMigra-Regular-ZPNUBG7o.woff2",
+    "src": "resources/js/fonts/PPMigra-Regular.woff2"
+  },
+  "resources/js/img/calendar/besetzt_end-provisorisch_start.svg": {
+    "file": "assets/besetzt_end-provisorisch_start-CvpzCMGN.svg",
+    "src": "resources/js/img/calendar/besetzt_end-provisorisch_start.svg"
+  },
+  "resources/js/img/calendar/besetzt_end-selected_start.svg": {
+    "file": "assets/besetzt_end-selected_start-D8sTgVxR.svg",
+    "src": "resources/js/img/calendar/besetzt_end-selected_start.svg"
+  },
+  "resources/js/img/calendar/besetzt_end.svg": {
+    "file": "assets/besetzt_end-CWeQw5Hi.svg",
+    "src": "resources/js/img/calendar/besetzt_end.svg"
+  },
+  "resources/js/img/calendar/besetzt_start.svg": {
+    "file": "assets/besetzt_start-CeE6frsG.svg",
+    "src": "resources/js/img/calendar/besetzt_start.svg"
+  },
+  "resources/js/img/calendar/provisorisch-doppelt.svg": {
+    "file": "assets/provisorisch-doppelt-DLqk6ivk.svg",
+    "src": "resources/js/img/calendar/provisorisch-doppelt.svg"
+  },
+  "resources/js/img/calendar/provisorisch_end-besetzt_start.svg": {
+    "file": "assets/provisorisch_end-besetzt_start-DAdkBwW6.svg",
+    "src": "resources/js/img/calendar/provisorisch_end-besetzt_start.svg"
+  },
+  "resources/js/img/calendar/provisorisch_end-selected_start.svg": {
+    "file": "assets/provisorisch_end-selected_start-_SGsZoFf.svg",
+    "src": "resources/js/img/calendar/provisorisch_end-selected_start.svg"
+  },
+  "resources/js/img/calendar/provisorisch_end.svg": {
+    "file": "assets/provisorisch_end-CVIsyXaf.svg",
+    "src": "resources/js/img/calendar/provisorisch_end.svg"
+  },
+  "resources/js/img/calendar/provisorisch_start.svg": {
+    "file": "assets/provisorisch_start-dScfS2Bt.svg",
+    "src": "resources/js/img/calendar/provisorisch_start.svg"
+  },
+  "resources/js/img/calendar/selected_end-besetzt_start.svg": {
+    "file": "assets/selected_end-besetzt_start-BnwWn4OY.svg",
+    "src": "resources/js/img/calendar/selected_end-besetzt_start.svg"
+  },
+  "resources/js/img/calendar/selected_end-provisorisch_start.svg": {
+    "file": "assets/selected_end-provisorisch_start-BXpDM612.svg",
+    "src": "resources/js/img/calendar/selected_end-provisorisch_start.svg"
+  },
+  "resources/js/img/events-bg.webp": {
+    "file": "assets/events-bg-BozPqy6n.webp",
+    "src": "resources/js/img/events-bg.webp"
+  }
+}

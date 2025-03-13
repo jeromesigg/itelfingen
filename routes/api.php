@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::middleware('api_token')->get('events/{api_token}', 'AdminEventController@api');
+Route::middleware('api_token')->get('events_ical/{api_token}', 'AdminEventController@api_ical');

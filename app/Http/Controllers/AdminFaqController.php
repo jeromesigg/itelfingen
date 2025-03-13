@@ -31,11 +31,12 @@ class AdminFaqController extends Controller
         return DataTables::of($faqs)
             ->addColumn('image', function (Faq $faq) {
                 $url = $faq->photo ? $faq->photo['file'] : 'https://via.placeholder.com/50';
-//               return $url;
+
+                //               return $url;
                 return '<img height="50" src="'.$url.'" alt="" class="img-fluid">';
             })
             ->addColumn('name', function (Faq $faq) {
-                return '<a href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
+                return '<a class="text-orientalpink" href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
             })
             ->addColumn('description', function (Faq $faq) {
                 return substr($faq->description, 0, 500);
@@ -65,7 +66,6 @@ class AdminFaqController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -116,7 +116,6 @@ class AdminFaqController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

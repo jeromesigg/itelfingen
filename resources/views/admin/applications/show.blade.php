@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 @section('content')
-    <section>
+    <div>
         <div class="container-fluid">
             <header>
-                <h3 class="display">Bewerbung anzeigen</h3>
+                <h3 class="text-3xl font-bold dark:text-white">Bewerbung anzeigen</h3>
             </header>
             <table>
                 <tr>
@@ -47,5 +47,5 @@
                     <td> {{$application['comment']}}</td>
             </table>
         </div>
-    </section>
+    </div>
 @endsection

@@ -30,9 +30,9 @@
   <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
 
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   @vite([
     'resources/css/app.css',
     'resources/js/app.js'])
-
-  {!! ReCaptcha::htmlScriptTagJsApi() !!}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
 </head>

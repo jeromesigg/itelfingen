@@ -28,7 +28,7 @@ class AdminApplicationController extends Controller
 
         return DataTables::of($applications)
             ->addColumn('name', function (Application $applications) {
-                return '<a href='.\URL::route('applications.show', $applications).'>'.$applications['name'].'</a>';
+                return '<a class="text-orientalpink" href='.\URL::route('applications.show', $applications).'>'.$applications['name'].'</a>';
             })
             ->addColumn('refuse', function (Application $application) {
                 return $application['refuse'] ? 'Ja' : 'Nein';
@@ -74,7 +74,6 @@ class AdminApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -102,9 +101,7 @@ class AdminApplicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
-    {
-    }
+    public function edit() {}
 
     /**
      * Update the specified resource in storage.

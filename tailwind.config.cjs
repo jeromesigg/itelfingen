@@ -13,16 +13,24 @@ module.exports = {
     theme: {
         fontFamily: {
           'body': [
-            'PPMigra', 
+            'PPMigra',  
             // other fallback fonts
-                ],
-            },
-          screens: {
-            sm: '480px',
-            md: '768px',
-            lg: '976px',
-            xl: '1440px',
-            '2xl': '1536px',
+          ],
+          'Titillium Web': ['Titillium Web', 'TitilliumWeb', 'TitilliumWeb-Light', 'sans-serif'],
+        },
+        screens: {
+          sm: '480px',
+          md: '768px',
+          lg: '976px',
+          xl: '1440px',
+          '2xl': '1536px',
+        },
+        colors: {
+          'gladegreen': '#657F61',
+          'ebonyclay': '#293242',
+          'norway': '#A5BAA5',
+          'grannysmith': '#8DA3A8',
+          'orientalpink': '#C78B8E',
         },
         spacing: {
           px: '1px',

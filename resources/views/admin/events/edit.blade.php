@@ -1,200 +1,192 @@
 @extends('layouts.admin')
 @section('content')
-    <section>
+    <div>
         <div class="container-fluid">
             <header>
-                <h3 class="display">Buchung {{str_pad($event['id'],5,'0', STR_PAD_LEFT)}} bearbeiten</h3>
+                <h3  class="text-3xl font-bold dark:text-white">Buchung {{str_pad($event['id'],5,'0', STR_PAD_LEFT)}} bearbeiten</h3>
             </header>
             <div class="form-row">
                 <div class="form-group col-xl-10">
-                    {!! Form::model($event, ['method' => 'PATCH', 'action'=>['AdminEventController@update', $event]]) !!}
+                    <x-forms.form :action="route('admin.events.update', $event)" method="PATCH" :model="$event">
                         <div class="form-row">
-                            <div class="form-group col-xl-2 col-6">
-                                {!! Form::label('start_date', 'Start:') !!}
-                                {!! Form::date('start_date', null, ['class' => 'form-control', 'required', 'id' => 'start_date', 'onchange' => "Total_Change()"]) !!}
-                            </div>
-                            <div class="form-group col-xl-2 col-6">
-                                {!! Form::label('end_date', 'Ende:') !!}
-                                {!! Form::date('end_date', null, ['class' => 'form-control', 'id' => 'end_date', 'onchange' => "Total_Change()"]) !!}
-                            </div>
-                            <div class="form-group col-xl-3 col-6">
-                                {!! Form::label('name', 'Name:') !!}
-                                {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group col-xl-3 col-6">
-                                {!! Form::label('firstname', 'Vorname:') !!}
-                                {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="form-group col-xl-2">
-                                {!! Form::label('group_name', 'Gruppe/Anlass:') !!}
-                                {!! Form::text('group_name', null, ['class' => 'form-control']) !!}
-                            </div>
+                            <x-forms.container class="col-xl-2 col-6">
+                                <x-forms.text label="Start:" name="start_date" type="date" required=true onchange="Total_Change()"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-6">
+                                <x-forms.text label="Ende:" name="end_date" type="date" required=true onchange="Total_Change()"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-3 col-6">
+                                <x-forms.text label="Name:" name="name" required=true/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-3 col-6">
+                                <x-forms.text label="Vorname:" name="firstname"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2">
+                                <x-forms.text label="Gruppe/Anlass:" name="group_name"/>
+                            </x-forms.container>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-xl-3 col-6">
-                                {!! Form::label('email', 'Email:') !!}
-                                {!! Form::email('email', null, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="form-group col-xl-2 col-6">
-                                {!! Form::label('telephone', 'Telefon:') !!}
-                                {!! Form::text('telephone', null, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="form-group col-xl-2">
-                                {!! Form::label('street', 'Strasse:') !!}
-                                {!! Form::text('street', null, ['class' => 'form-control']) !!}
-                            </div>
-                            <div class="form-group col-xl-2 col-3">
-                                {!! Form::label('plz', 'PLZ:') !!}
-                                {!! Form::text('plz', null, ['class' => 'form-control', 'required']) !!}
-                            </div>
-                            <div class="form-group col-xl-3 col-9">
-                                {!! Form::label('city', 'Ortschaft:') !!}
-                                {!! Form::text('city', null, ['class' => 'form-control']) !!}
-                            </div>
+                            <x-forms.container class="col-xl-3 col-6">
+                                <x-forms.text label="Email:" name="email" required=true type="email"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-6">
+                                <x-forms.text label="Telefon:" name="telephone" />
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2">
+                                <x-forms.text label="Strasse:" name="street" required=true/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-3">
+                                <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-3 col-9">
+                                <x-forms.text label="Ortschaft:" name="city" required=true/>
+                            </x-forms.container>
                         </div>
-                    <hr>
-                        <div class="form-row">
+                        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+                        <x-forms.row>
                             @foreach ($positions as $index => $position)
                                 @if ($position->pricelist_position['bexio_code']<50)
-                                    {!! Form::hidden('positions['.$position['id'].']', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position['id']]) !!}
+                                    <x-forms.hidden name="{{'positions['.$position['id'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()" type="number"/>
                                 @else
-                                    <div class="col-xl-2 col-4 form-group">
-                                        {!! Form::label('positions['.$position['id'].']', $position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)') !!}
-                                        {!! Form::number('positions['.$position['id'].']', $position['amount'], ['class' => 'form-control', 'id' =>'position_'.$position['id'], 'onchange' => "Total_Change()"]) !!}
-                                    </div>
+                                    <x-forms.container class="col-xl-2 col-4">
+                                        <x-forms.text label="{{$position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)'}}" name="{{'positions['.$position['id'].']'}}" 
+                                            type="number" id="{{'position_'.$position['id']}}" onChange="Total_Change()" value="{{$position['amount']}}"/> 
+                                    </x-forms.container>
                                 @endif
                             @endforeach
-                            {!! Form::hidden('total_people', null, ['class' => 'form-control', 'id' => 'total_people']) !!}
-                        </div>
+                            <x-forms.hidden name="total_people" />
+                        </x-forms.row>
                         <div class="form-row">
-                            <div class="col-xl-2 col-4 form-group">
-                                {!! Form::label('total_days', 'Tage:') !!}
-                                {!! Form::number('total_days', null, ['class' => 'form-control', 'required', 'id' => 'total_days']) !!}
-                            </div>
-                            <div class="col-xl-2 col-4 form-group">
-                                {!! Form::label('discount', 'Rabatt [%]:') !!}
-                                {!! Form::number('discount', null, ['class' => 'form-control', 'id' => 'discount', 'onchange' => "Total_Change()"]) !!}
-                            </div>
-                            <div class="col-xl-2 col-4 form-group">
-                                {!! Form::label('', 'Total [CHF]:') !!}<br>
-                                {!! Form::hidden('total_amount', null, ['class' => 'form-control', 'id' => 'total_amount']) !!}
-                                <span id="total"></span>.-
-                            </div>
-                            <div class="col-xl-2 col-4 form-group">
+                            <x-forms.container class="col-xl-2 col-4">
+                                <x-forms.text label="Tage:" name="total_days" type="number" required=true onChange="Total_Change()"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-4">
+                                <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-4">
+                                <x-forms.hidden label="Total [CHF]:" name="total_amount" type="number"/>
                                 <br>
-                                {!! Form::label('early_checkin', 'Early Check-In:') !!}
-                                {!! Form::checkbox('early_checkin', '1', $event['early_checkin']) !!}
-                                {!! Form::label('late_checkout', 'Late Check-Out:') !!}
-                                {!! Form::checkbox('late_checkout', '1', $event['late_checkout']) !!}
-                            </div>
-                            <div class="col-xl-2 col-4 form-group">
-                                {!! Form::label('foreign_key', 'Externe Buchungs-Nr.:') !!}
-                                {!! Form::text('foreign_key', null, ['class' => 'form-control']) !!}
-                            </div>
+                                <span id="total"></span>.-
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-4">
+                                <x-forms.text type="checkbox" name="early_checkin" value="{{$event['early_checkin']}}"/>
+                                <label for="early_checkin">Early Check-In</label>
+                                <br>
+                                <x-forms.text type="checkbox" name="late_checkout" value="{{$event['late_checkout']}}"/>
+                                <label for="late_checkout">Late Check-Out</label>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-2 col-4">
+                                <x-forms.text label="Externe Buchungs-Nr.:" name="foreign_key"/>
+                            </x-forms.container>
                             <div class="col-xl-2 col-6 form-group">
-                                {!! Form::label('contract_status_id', 'Angebot / Rechnung:') !!}
-                                {!! Form::select('contract_status_id', $contract_statuses, null, ['class' => 'form-control', 'required']) !!}
+                                <x-forms.select label="Angebot / Rechnung:" name="contract_status_id" :collection="$contract_statuses" required=true/>
                             </div>
                         </div>
-                    <hr>
+                        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
                             <div class="col-xl-2 col-12">
-                                <div class="form-row">
-                                    <div class="col-xl-12 col-6 form-group">
-                                        {!! Form::label('user_id', 'Verantwortlicher:') !!}
-                                        {!! Form::select('user_id', $users, null, ['class' => 'form-control', 'required']) !!}
-                                    </div>
-                                    <div class="col-xl-12 col-6 form-group">
-                                        {!! Form::label('code', 'Tür-Code:') !!}
-                                        {!! Form::number('code', null, ['class' => 'form-control']) !!}
-                                    </div>
+                                <div class="form-row"> 
+                                    <x-forms.container class="col-xl-12 col-6">
+                                        <x-forms.select label="Verantwortlicher:" name="user_id" required=true :collection="$users"/>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-12 col-6">
+                                        <x-forms.text label="Tür-Code:" name="code" type="number"/>
+                                    </x-forms.container>
                                 </div>
+                                    
                             </div>
-                            <div class="form-group col-xl-6">
-                                {!! Form::label('comment', 'Bemerkung:') !!}
-                                {!! Form::textarea('comment', null, ['class' => 'form-control', 'rows' =>5]) !!}
-                            </div>
-                            <div class="form-group col-xl-4">
-                                {!! Form::label('comment_intern', 'Bemerkung (intern):') !!}
-                                {!! Form::textarea('comment_intern', null, ['class' => 'form-control', 'rows' =>5]) !!}
-                            </div>
-                        </div>
-                        <hr>
+                            <x-forms.container class="col-xl-6">
+                                <x-forms.text-area label="Bemerkungen:" name="comment" rows=5/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-4">
+                                <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=5/>
+                            </x-forms.container> 
+                        </div> 
+                        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
-                            <div class="col-xl-2 col-6 form-group">
-                                {!! Form::submit('1 Buchung updaten', ['class' => 'btn btn-primary', 'name' => 'submit'])!!}
-                            </div>
+                            <x-forms.container class="col-xl-2 col-6">
+                                <x-forms.button type="submit" name="submit" class="btn btn-primary">
+                                    1 Buchung updaten
+                                </x-forms.button>
+                            </x-forms.container>
                             @switch($event['contract_status_id'])
-                                @case(config('status.contract_offen'))
-                                    <div class="col-xl-2 col-6 form-group">
-                                        {!! Form::submit(config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen',
-                                            ['class' => 'btn btn-info', 'name' => 'submit'])!!}
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                    </div>
+                                @case(config('status.contract_offen'))  
+                                    <x-forms.container class="col-xl-2 col-6">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                            {{config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen'}}
+                                        </x-forms.button>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6"/>
+                                    <x-forms.container class="col-xl-2 col-6"/>
                                     @break
                                 @case(config('status.contract_angebot_erstellt'))
-                                    <div class="form-group col-xl-2 col-6 ">
+                                    <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                        {!! Form::submit('3 Angebot versenden', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                    </div>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                            3 Angebot versenden
+                                        </x-forms.button>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6"/>
                                     @break
                                 @case(config('status.contract_angebot_versendet'))
-                                    <div class="form-group col-xl-2 col-6 ">
+                                    <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                        {!! Form::submit('3 Erinnerung versenden', ['class' => 'btn btn-secondary', 'name' => 'submit'])!!}
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                        {!! Form::submit('4 Rechnung erstellen', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
-                                    </div>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
+                                        <x-forms.button type="submit" class="btn btn-secondary" name="submit">
+                                            3 Erinnerung versenden
+                                        </x-forms.button>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                            4 Rechnung erstellen
+                                        </x-forms.button>
+                                    </x-forms.container>
                                     @break
                                 @case(config('status.contract_rechnung_erstellt'))
-                                    <div class="form-group col-xl-2 col-6 ">
+                                    <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                        {!! Form::submit('5 Rechnung versenden', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
-                                    </div>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                            5 Rechnung versenden
+                                        </x-forms.button>
+                                    </x-forms.container>
                                     @break
                                 @case(config('status.contract_rechnung_versendet'))
-                                    <div class="form-group col-xl-2 col-6 ">
+                                <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
-                                    </div>
-                                    <div class="form-group col-xl-2 col-6 ">
-                                        {!! Form::submit('6 Genossenschafts Info versenden', ['class' => 'btn btn-info', 'name' => 'submit'])!!}
-                                    </div>
+                                    </x-forms.container>
+                                    <x-forms.container class="col-xl-2 col-6">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                            6 Genossenschafts Info versenden
+                                        </x-forms.button>
+                                    </x-forms.container>
                                     @break
                                 @default
                             @endswitch
-                            <div class="form-group col-xl-4">
-                                {!! Form::label('additional_text', 'Zusatztext für Mail:') !!}
-                                {!! Form::textarea('additional_text', null, ['class' => 'form-control', 'rows' =>3]) !!}
+                            <x-forms.container class="col-xl-4">
+                                <x-forms.text-area label="Zusatztext für Mail:" name="additional_text" rows=3/>
                                 <br>
                                 <div class="form-group">
                                     <button type="button" class="btn btn-secondary" onclick="PrepareReminderMail()">Erinnerungstext einfügen</button>
                                 </div>
-                            </div>
+                            </x-forms.container>
                         </div>
-                    {!! Form::close()!!}
-                    {!! Form::open(['method' => 'DELETE', 'action'=>['AdminEventController@destroy', $event->id]]) !!}
-                    <div class="form-group">
-                        {!! Form::submit('Buchung löschen', ['class' => 'btn btn-danger'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    </x-forms.form>
+                    <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event">
+                        <x-forms.button type="submit" name="submit" class="btn btn-danger">
+                            Buchung löschen
+                        </x-forms.button>
+                    </x-forms.form>
                 </div>
                 <div class="col-xl-2">
 
@@ -206,19 +198,17 @@
                         <br>
                     @endif
                     <div id="cleaning_mail" style="display: none">
-                        {!! Form::open(['method' => 'POST', 'action'=>['AdminEventController@SendCleaningMail', $event]]) !!}
-                        <div class="form-group">
-                                {!! Form::label('cleaning_mail_address', 'Mail Adresse:') !!}
-                                {!! Form::text('cleaning_mail_address', null, ['class' => 'form-control']) !!}
-                        </div>
-                        <div class="form-group">
-                                {!! Form::label('cleaning_mail_text', 'Mail Text:') !!}
-                                {!! Form::textarea('cleaning_mail_text', null, ['class' => 'form-control', 'rows' =>9]) !!}
-                        </div>
-                        <div class="form-group">
-                            {!! Form::submit('Mail versenden', ['class' => 'btn btn-secondary'])!!}
-                        </div>
-                        {!! Form::close()!!}
+                        <x-forms.form :action="route('events.sendCleaningMail', $event)" method="POST" :model="$event">
+                            <x-forms.container>
+                                <x-forms.text label="Mail Adresse:" name="cleaning_mail_address" type="email"/>
+                            </x-forms.container>
+                            <x-forms.container>
+                                <x-forms.text-area label="Mail Text:" name="cleaning_mail_text" rows=9/>
+                            </x-forms.container>
+                            <x-forms.button type="submit" name="submit" class="btn btn-secondary">
+                                Mail versenden
+                            </x-forms.button>
+                        </x-forms.form>
                     </div>
                     <br>
                     <div class="form-group">
@@ -243,82 +233,87 @@
                 @include('includes.form_error')
             </div>
         </div>
-    </section>
+    </div>
 @endsection
-@section('scripts')
-<script>
-    window.addEventListener("load", function() {
-        Total_Change();
-    });
-    $("#external").change(function() {
-        Total_Change();
-    });
-    function PrepareMail() {
-  		document.getElementById("cleaning_mail").style.display = "block";
-
-        start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
-        end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
-        var total = 0, subtotal = 0, id = 0;
-	    var positions = @json($positions);
-        positions.forEach(position => {
-            id = 'position_' + position['id'];
-            if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
-                subtotal =  parseInt(document.getElementById(id).value) || 0;
-                total += subtotal;
-            }
+@push('scripts')
+    <script type="module">
+        window.addEventListener("load", function() {
+            Total_Change();
         });
-        text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis "
-        + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für "
-        + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
-	    $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
-	    $('#cleaning_mail_text').val(text);
-    }
+        $("#external").change(function() {
+            Total_Change();
+        });
+        function PrepareMail() {
+            document.getElementById("cleaning_mail").style.display = "block";
 
-    function PrepareReminderMail() {
-        text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Dir erhalten. Sollten wir innerhalb der nächsten zwei Wochen keine Bestätigung erhalten, müssen wir die Buchung leider wieder freigeben.";
-        $('#additional_text').val(text);
-    }
+            var start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
+            var end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
+            var total = 0, subtotal = 0, id = 0;
+            var positions = @json($positions);
+            positions.forEach(position => {
+                id = 'position_' + position['id'];
+                if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
+                    subtotal =  parseInt(document.getElementById(id).value) || 0;
+                    total += subtotal;
+                }
+            });
+            var text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis "
+            + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für "
+            + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
+            $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
+            $('#cleaning_mail_text').val(text);
+        }
 
-    function Total_Change() {
-        var start_date = new Date(document.getElementById('start_date').value);
-        var end_date = new Date(document.getElementById('end_date').value);
-        var days = (end_date - start_date)/(24*3600*1000);
-	    var positions = @json($positions);
-        var total_amount = 0, id = 0, total_person = 0;
-        var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
-        positions.forEach(position => {
-            id = 'position_' + position['id'];
-            person = position.pricelist_position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
-            person = person || 0;
-            var subtotal = 0
+        function PrepareReminderMail() {
+            var text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Dir erhalten. Sollten wir innerhalb der nächsten zwei Wochen keine Bestätigung erhalten, müssen wir die Buchung leider wieder freigeben.";
+            $('#additional_text').val(text);
+        }
+
+        function Total_Change() {
+            var start_date = new Date(document.getElementById('start_date').value);
+            var end_date = new Date(document.getElementById('end_date').value);
+            var days = (end_date - start_date)/(24*3600*1000);
+            var one_day = (days === 0);
             if(days === 0){
+                days = 1;
+            }
+            var positions = @json($positions);
+            var total_amount = 0, id = 0, total_person = 0;
+            var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
+            positions.forEach(position => {
+                id = 'position_' + position['id'];
+                var person = position.pricelist_position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
+                person = person || 0;
+                var subtotal = 0
                 if(position.pricelist_position['bexio_code'] < 50){
-                    subtotal = position.pricelist_position['price'] / 2;
-                    person = 1;
+                    if(one_day){
+                        subtotal = position.pricelist_position['price'] / 2;
+                        person = 1;
+                    }
+                    else {
+                        subtotal = position.pricelist_position['price'];
+                    }
                 }
                 else if(position.pricelist_position['bexio_code'] < 100) {
-                    subtotal =position.pricelist_position['price']
-                }
-            }
-            else {
-                if(position.pricelist_position['bexio_code'] < 50){
-                    subtotal = position.pricelist_position['price'];
+                    subtotal = position.pricelist_position['price'] * position['amount'];
                 }
                 else if(position.pricelist_position['bexio_code'] > 100) {
                     subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
                 }
-            }
-            if( position.pricelist_position['bexio_code']>200){
-                subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
-                person = 0;
-            }
-            total_amount += subtotal;
-            total_person += person;
-        });
-        $("#total").text(total_amount);
-        $("#total_days").val(days);
-        $("#total_amount").val(total_amount);
-        $("#total_people").val(total_person);
-    }
-</script>
-@endsection
+                if( position.pricelist_position['bexio_code']>200){
+                    subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
+                    person = 0;
+                }
+                total_amount += subtotal;
+                total_person += person;
+            });
+            $("#total").text(total_amount);
+            $("#total_days").val(days);
+            $("#total_amount").val(total_amount);
+            $("#total_people").val(total_person);
+        }
+        window.PrepareMail = PrepareMail;
+        window.PrepareReminderMail = PrepareReminderMail;
+        window.Total_Change = Total_Change;
+    </script>
+@endpush

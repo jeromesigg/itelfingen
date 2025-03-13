@@ -38,7 +38,6 @@ class AdminPersonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -46,7 +45,7 @@ class AdminPersonController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = Str::uuid() . '_' . $input['name'].'.jpg';
+            $name = Str::uuid().'_'.$input['name'].'.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 
@@ -89,7 +88,6 @@ class AdminPersonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -98,7 +96,7 @@ class AdminPersonController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = Str::uuid() . '_' . $input['name'].'.jpg';
+            $name = Str::uuid().'_'.$input['name'].'.jpg';
             $file->move('images', $name);
             $photo = Photo::create(['file' => $name]);
 

@@ -1,7 +1,7 @@
 <!doctype html>
       @include('includes.head')  
-  <body>
+  <body antialiased >
     @yield('content')
-    @yield('scripts')
+    @stack('scripts')
   </body>
 </html>

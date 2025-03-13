@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Event;
+use App\Exports\ExportBookings;
 use App\Helper\Helper;
 use App\Models\Contact;
-use App\Exports\ExportBookings;
+use App\Models\Event;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
@@ -26,10 +26,9 @@ class AdminController extends Controller
         $events_all = Event::where('event_status_id', '<', config('status.event_eigene'))->count();
         $events_new = Event::where('event_status_id', config('status.event_neu'))->count();
         $events = Event::where('start_date', '>=', today())->where('event_status_id', '<>', config('status.event_storniert'))->orderBy('id', 'DESC')->paginate(5);
-        $events_current = Event::where('start_date', '>=',  Carbon::today()->addWeeks(-2))->where('event_status_id', '<>', config('status.event_storniert'))->orderBy('start_date', 'ASC')->paginate(5);
+        $events_current = Event::where('start_date', '>=', Carbon::today()->addWeeks(-2))->where('event_status_id', '<>', config('status.event_storniert'))->orderBy('start_date', 'ASC')->paginate(5);
 
         $contacts_new = Contact::where('done', false)->orderBy('created_at', 'DESC')->get();
-
 
         $icon_array = collect([
             (object) [
@@ -49,7 +48,8 @@ class AdminController extends Controller
             ],
         ]);
 
-        $title='Dashboard';
+        $title = 'Dashboard';
+
         return view('admin/index', compact('icon_array', 'contacts_new', 'events', 'title', 'events_current'));
     }
 
@@ -65,8 +65,9 @@ class AdminController extends Controller
         $bookingChartQuarter = Helper::getChart('quarter');
         $bookingChartMonthly = Helper::getChart('monthly');
 
-        $title='Auslastung';
-        return view('admin/bookings', compact( 'bookingChartYear', 'bookingChartQuarter','title', 'bookingChartMonthly'));
+        $title = 'Auslastung';
+
+        return view('admin/bookings', compact('bookingChartYear', 'bookingChartQuarter', 'title', 'bookingChartMonthly'));
     }
 
     public function exportCSV()

@@ -39,11 +39,7 @@ class EventOfferCreateListener
                 $amount = $position['amount'];
                 if ($position->pricelist_position['bexio_code'] > 200) {
                     $amount = max($position['amount'] - 3, 0) * $event['total_days'];
-                } elseif ($position->pricelist_position['bexio_code'] == 20){
-                    if( $event['total_days'] == 0) {
-                        $amount = $position['amount'] / 2;
-                    }
-                } else {
+                }  elseif ($position->pricelist_position['bexio_code'] > 20)   {
                     $amount = $event['total_days'] * $position['amount'];
                 }
                 if ($amount > 0) {
@@ -67,7 +63,7 @@ class EventOfferCreateListener
                         'contact_id' => $event->bexio_user_id,
                         'user_id' => 1,
                         'is_valid_from' => now(),
-                        'is_valid_until' => Carbon::create($event->start_date)->addDays(-14),
+                        'is_valid_until' => now()->addMonth(),
                         'api_reference' => $event['id'],
                         'positions' => $positions_array,
                     ]

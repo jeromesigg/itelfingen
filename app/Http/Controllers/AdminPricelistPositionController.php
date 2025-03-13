@@ -26,11 +26,11 @@ class AdminPricelistPositionController extends Controller
     {
         //
         $positions = Curl::to('https://api.bexio.com/2.0/article')
-        ->withHeader('Accept: application/json')
-        ->withBearer(config('app.bexio_token'))
-        ->withContentType('application/json')
-        ->asJson(true)
-        ->get();
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->withContentType('application/json')
+            ->asJson(true)
+            ->get();
 
         foreach ($positions as $position) {
             $position_db = PricelistPosition::where('bexio_id', $position['id']);
@@ -55,7 +55,6 @@ class AdminPricelistPositionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -92,17 +91,14 @@ class AdminPricelistPositionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //
-        if ($request['show'] === null) {
-            $request['show'] = 0;
-        }
         $input = $request->all();
+        $input['show'] = $request->has('show');
         PricelistPosition::whereId($id)->first()->update($input);
 
         return redirect('/admin/positions');

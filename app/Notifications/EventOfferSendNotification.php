@@ -14,6 +14,7 @@ class EventOfferSendNotification extends Notification
     use Queueable;
 
     public Event $event;
+
     public $additional_text;
 
     public array $offer;
@@ -76,11 +77,11 @@ class EventOfferSendNotification extends Notification
         return [
             //
             'action' => 'Angebot versendet',
-            'name' => $event['firstname']." ".$event['name'],
-            'date' => $start_date." bis ".$end_date,
-            'days' => $total_days . ' Nächte',
+            'name' => $event['firstname'].' '.$event['name'],
+            'date' => $start_date.' bis '.$end_date,
+            'days' => $total_days.' Nächte',
             'total_people' => $total_people,
-            'total_amount' => $total_amount
+            'total_amount' => $total_amount,
         ];
     }
 }

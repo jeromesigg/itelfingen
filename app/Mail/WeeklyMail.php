@@ -14,23 +14,17 @@ class WeeklyMail extends Mailable
 
     /**
      * The event instance.
-     *
-     * @var Collection
      */
     protected Collection $contacts;
 
     /**
      * The event instance.
-     *
-     * @var Collection
      */
     protected Collection $events;
 
     /**
      * Create a new message instance.
      *
-     * @param  Collection  $events
-     * @param  Collection  $contacts
      * @return void
      */
     public function __construct(Collection $events, Collection $contacts)

@@ -10,7 +10,7 @@ use Ixudra\Curl\Facades\Curl;
 
 class ApplicationInvoiceMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels;cd
 
     /**
      * The event instance.
@@ -24,12 +24,17 @@ class ApplicationInvoiceMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  \App\Models\Application  $application
      * @return void
      */
-    public function __construct(Application $application, $invoice)
+    public function __construct(Application $application)
     {
         $this->application = $application;
+
+        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->get();
+        $invoice = json_decode($invoice, true);
         $this->invoice = $invoice;
     }
 
@@ -41,14 +46,15 @@ class ApplicationInvoiceMail extends Mailable
     public function build()
     {
         $application = $this->application;
+        $invoice = $this->invoice;
 
-        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$this->invoice['id'].'/pdf')
+        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'].'/pdf')
             ->withHeader('Accept: application/json')
             ->withBearer(config('app.bexio_token'))
             ->asJson(true)
             ->get();
 
-        return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link']])
+        return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $invoice['network_link']])
             ->to($application['email'], $application['firstname'].' '.$application['name'])
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen')
