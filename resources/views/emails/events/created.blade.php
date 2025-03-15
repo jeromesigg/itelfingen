@@ -24,10 +24,11 @@ Bemerkung <br>
 <br>
 Sobald die Buchung überprüft wurde, erhalten Sie von unserem Hausverwalter eine E-Mail mit einem Angebot und allen weiteren Dokumenten (Überprüfen Sie auch ihren Spam-Ordner).
 <br>
-In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
+<br>
+In Ihrem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> finden Sie alle wichtigen Informationen und eine Übersicht Ihrer Buchung.
 <div class="breadcrumbs">
     <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">
-        <img src="https://itelfingen.ch/img/mail/1.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
+        <img src="https://itelfingen.ch/img/mail/1.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Buchung"/>
     </a>
 </div>
 @endcomponent

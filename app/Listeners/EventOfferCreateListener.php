@@ -2,10 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\EventOfferCreate;
-use App\Models\Position;
 use Carbon\Carbon;
+use App\Models\Position;
 use Ixudra\Curl\Facades\Curl;
+use App\Events\EventOfferCreate;
+use Illuminate\Support\Facades\Log;
 
 class EventOfferCreateListener
 {
@@ -76,6 +77,9 @@ class EventOfferCreateListener
                     'bexio_offer_id' => $offer['id'],
                     'contract_status_id' => config('status.contract_angebot_erstellt'),
                 ]);
+            }
+            else{
+                Log::channel('emergency')->error($offer);
             }
         }
     }

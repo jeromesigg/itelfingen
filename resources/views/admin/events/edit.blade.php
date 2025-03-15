@@ -105,14 +105,14 @@
                         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
                             <x-forms.container class="col-xl-2 col-6">
-                                <x-forms.button type="submit" name="submit" class="btn btn-primary">
+                                <x-forms.button type="submit" name="submit" class="btn btn-primary" value="1 Buchung updaten">
                                     1 Buchung updaten
                                 </x-forms.button>
                             </x-forms.container>
                             @switch($event['contract_status_id'])
                                 @case(config('status.contract_offen'))  
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="2 Angebot erstellen">
                                             {{config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen'}}
                                         </x-forms.button>
                                     </x-forms.container>
@@ -124,7 +124,7 @@
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value=" 3 Angebot versenden">
                                             3 Angebot versenden
                                         </x-forms.button>
                                     </x-forms.container>
@@ -135,12 +135,12 @@
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-secondary" name="submit">
+                                        <x-forms.button type="submit" class="btn btn-secondary" name="submit" value="3 Erinnerung versenden">
                                             3 Erinnerung versenden
                                         </x-forms.button>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="4 Rechnung erstellen">
                                             4 Rechnung erstellen
                                         </x-forms.button>
                                     </x-forms.container>
@@ -153,7 +153,7 @@
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="5 Rechnung versenden">
                                             5 Rechnung versenden
                                         </x-forms.button>
                                     </x-forms.container>
@@ -166,7 +166,7 @@
                                         <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit">
+                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="6 Genossenschafts Info versenden">
                                             6 Genossenschafts Info versenden
                                         </x-forms.button>
                                     </x-forms.container>

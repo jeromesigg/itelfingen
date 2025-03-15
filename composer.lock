@@ -3297,16 +3297,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.6.1",
+            "version": "v3.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "0df0a762698176d714e42e2dfed92b6b9e24b8e4"
+                "reference": "8f8914731f5eb43b6bb145d87c8d5a9edfc89313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/0df0a762698176d714e42e2dfed92b6b9e24b8e4",
-                "reference": "0df0a762698176d714e42e2dfed92b6b9e24b8e4",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/8f8914731f5eb43b6bb145d87c8d5a9edfc89313",
+                "reference": "8f8914731f5eb43b6bb145d87c8d5a9edfc89313",
                 "shasum": ""
             },
             "require": {
@@ -3361,7 +3361,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.6.1"
+                "source": "https://github.com/livewire/livewire/tree/v3.6.2"
             },
             "funding": [
                 {
@@ -3369,7 +3369,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-04T21:48:52+00:00"
+            "time": "2025-03-12T20:24:15+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -5902,22 +5902,22 @@
         },
         {
             "name": "simonschaufi/laravel-dkim",
-            "version": "v3.4.2",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simonschaufi/laravel-dkim.git",
-                "reference": "b9bf2efbaa5eece7958b4121299b3663bf0cb310"
+                "reference": "7771c2df1bd609962d7cc1bffec27fbd483111b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simonschaufi/laravel-dkim/zipball/b9bf2efbaa5eece7958b4121299b3663bf0cb310",
-                "reference": "b9bf2efbaa5eece7958b4121299b3663bf0cb310",
+                "url": "https://api.github.com/repos/simonschaufi/laravel-dkim/zipball/7771c2df1bd609962d7cc1bffec27fbd483111b7",
+                "reference": "7771c2df1bd609962d7cc1bffec27fbd483111b7",
                 "shasum": ""
             },
             "require": {
-                "illuminate/config": "^9.0 || ^10.0 || ^11.0",
-                "illuminate/contracts": "^9.0 || ^10.0 || ^11.0",
-                "illuminate/mail": "^9.0 || ^10.0 || ^11.0"
+                "illuminate/config": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/contracts": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/mail": "^9.0 || ^10.0 || ^11.0 || ^12.0"
             },
             "type": "library",
             "autoload": {
@@ -5938,7 +5938,7 @@
             "description": "Laravel package for signing outgoing messages with DKIM.",
             "support": {
                 "issues": "https://github.com/simonschaufi/laravel-dkim/issues",
-                "source": "https://github.com/simonschaufi/laravel-dkim/tree/v3.4.2"
+                "source": "https://github.com/simonschaufi/laravel-dkim/tree/v3.5.0"
             },
             "funding": [
                 {
@@ -5950,7 +5950,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-29T11:03:30+00:00"
+            "time": "2025-02-17T09:40:04+00:00"
         },
         {
             "name": "spatie/enum",

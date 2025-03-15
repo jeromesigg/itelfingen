@@ -16,7 +16,11 @@ Wir würden uns freuen, dich wieder einmal im Ferienhaus Itelfingen begrüssen z
 Freundliche Grüsse,<br>
 Das Ferienhaus Itelfingen
 <br>
+<br>
+In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
 <div class="breadcrumbs">
-    <img src="https://itelfingen.ch/img/mail/5.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
+    <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">
+        <img src="https://itelfingen.ch/img/mail/5.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Feedback"/>
+    </a>
 </div>
 @endcomponent

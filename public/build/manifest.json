@@ -8,9 +8,17 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B7WyVziW.css",
+    "file": "assets/app-D6Oz5RtZ.css",
     "src": "resources/css/app.css",
     "isEntry": true
+  },
+  "resources/images/hero-bg.webp": {
+    "file": "assets/hero-bg-BxsSwpDD.webp",
+    "src": "resources/images/hero-bg.webp"
+  },
+  "resources/images/login.webp": {
+    "file": "assets/login-Decb8tK8.webp",
+    "src": "resources/images/login.webp"
   },
   "resources/js/app.js": {
     "file": "assets/app-CQEjmakH.js",

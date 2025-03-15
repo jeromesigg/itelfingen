@@ -16,7 +16,7 @@
         "intervention/image": "^2.5",
         "ixudra/curl": "^6.21",
         "jeremykenedy/slack-laravel": "^2.6",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.0",
         "laravel/slack-notification-channel": "^3.4",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^4.0",
@@ -39,7 +39,7 @@
         "laravel/pint": "^1.2",
         "laravel/sail": "^1.13",
         "mockery/mockery": "^1.3.1",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^11.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "config": {

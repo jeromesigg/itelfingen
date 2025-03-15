@@ -2,12 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Mail\SendOffersMail;
-use App\Models\Event;
 use Carbon\Carbon;
+use App\Models\Event;
+use App\Mail\EventCreated;
+use App\Mail\SendOffersMail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Notifications\Notification;
 
 class EventOfferSendNotification extends Notification
 {
