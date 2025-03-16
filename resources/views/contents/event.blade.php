@@ -113,7 +113,7 @@
                             <br>
                         </div>
                         <div class="col-md-12 col-xl-12 hk-dateselect" id="wizard_formular" style="display: none">
-                            <h3>Buchungs Informationen</h3>
+                            <h3 class="text-3xl dark:text-white mb-2.5">Buchungs Informationen</h3>
                             <table>
                                 <tr>
                                     <td>
@@ -225,10 +225,10 @@
                                 <tr>
                                     <td>
                                         <div class="form-row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 mb-1">
                                                 <button type="button" class="btn btn-frontpage bg-gladegreen" onclick="wizard_step(1)">Zurück</button>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 mb-1">
                                                 <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
                                                     Reservieren
                                                 </x-forms.button>
