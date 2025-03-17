@@ -22,21 +22,15 @@
                     <div class="section-title">
                         <p>Was macht die Genossenschaft Ferienhaus Itelfingen?</p>
                     </div>
-
-                    <div class="row">
-                        <p>
-                            Die Genossenschaft Ferienhaus Itelfingen bezweckt, in Itelfingen, Gemeinde Meierskappel, auf gemeinnütziger Grundlage ein Ferienhaus
-                            zu betreiben. Sie stellt es hauptsächlich Jugendlichen und Erwachsenen für Ferien und Freizeit zur Benützung zur Verfügung.
-                            Die Genossenschaft pachtet das Ferienhaus von der Reformierten Kirche Zürich. Der Vorstand der Genossenschaft kümmert sich um
-                            Betrieb und Instandhaltung des Ferienhauses. Genossenschafter können sich aktiv beteiligen und das schöne Haus mitprägen und
-                            mitunterhalten, zudem profitieren Sie von reduzierten Mietpreisen. Die Genossenschaft möchte Gemeinschaft und fruchtbare Begegnungen
-                            schaffen und wünscht sich, dass an diesem Ort grosse Ideen entstehen dürfen.
-                        </p>
-                    </div>
-
-                    <div class="row">
-                        <a href='/files/Jahresbericht_2022.pdf' target="blank">Jahresbericht 2022</a>
-                    </div>
+                    <p class="mb-3 text-gray-500 dark:text-gray-400">
+                        Die Genossenschaft Ferienhaus Itelfingen bezweckt, in Itelfingen, Gemeinde Meierskappel, auf gemeinnütziger Grundlage ein Ferienhaus
+                        zu betreiben. Sie stellt es hauptsächlich Jugendlichen und Erwachsenen für Ferien und Freizeit zur Benützung zur Verfügung.
+                        Die Genossenschaft pachtet das Ferienhaus von der Reformierten Kirche Zürich. Der Vorstand der Genossenschaft kümmert sich um
+                        Betrieb und Instandhaltung des Ferienhauses. Genossenschafter können sich aktiv beteiligen und das schöne Haus mitprägen und
+                        mitunterhalten, zudem profitieren Sie von reduzierten Mietpreisen. Die Genossenschaft möchte Gemeinschaft und fruchtbare Begegnungen
+                        schaffen und wünscht sich, dass an diesem Ort grosse Ideen entstehen dürfen.
+                    </p>
+                    <a class="text-orientalpink" href='/files/Jahresbericht_2022.pdf' target="blank">Jahresbericht 2022</a>
 
                     @if(count($people)>0)
                         <br>
