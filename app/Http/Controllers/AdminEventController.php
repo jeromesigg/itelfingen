@@ -223,7 +223,7 @@ class AdminEventController extends Controller
                 break;
             case '3':
                 if (! is_null($event['bexio_offer_id'])) {
-                    // EventOfferSend::dispatch($event);
+                    EventOfferSend::dispatch($event);
                     Notification::send($event, new EventOfferSendNotification($event, $additional_text));
 
                     $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);

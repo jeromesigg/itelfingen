@@ -50,8 +50,8 @@ class DailyTask extends Command
     public function handle()
     {
         $this->SendEventLastInfos();
-        $this->SendApplicationInvoices();
         $this->SendFeedbackMails();
+        $this->SendApplicationInvoices();
         $this->SendNextEventToSlack();
     }
 

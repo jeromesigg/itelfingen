@@ -59,7 +59,7 @@
                       <x-forms.text label="Vorname:" name="firstname"/>
                   </x-forms.container>
                   <x-forms.container class="col-md-4">
-                      <x-forms.text label="Nachname*:" name="firstname" required=true/>
+                      <x-forms.text label="Nachname*:" name="name" required=true/>
                   </x-forms.container>
                   <x-forms.container class="col-md-4">
                       <x-forms.text label="Organisation:" name="organisation"/>
