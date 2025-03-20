@@ -145,6 +145,9 @@ class DailyTask extends Command
                 ->withBearer(config('app.bexio_token'))
                 ->get();
             $invoice = json_decode($invoice, true);
+            $application->update([
+                'bexio_invoice_id' => $invoice['id'],
+            ]);
         } else {
             $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
                 ->withHeader('Accept: application/json')
@@ -158,7 +161,6 @@ class DailyTask extends Command
 
             $application->update([
                 'invoice_send' => true,
-                'bexio_invoice_id' => $invoice['id'],
             ]);
 
             Newsletter::updateOrCreate (
