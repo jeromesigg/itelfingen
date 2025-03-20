@@ -2,19 +2,19 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Application;
+use Notification;
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Newsletter;
+use App\Models\Application;
+use Ixudra\Curl\Facades\Curl;
+use Illuminate\Console\Command;
 use App\Models\PricelistPosition;
-use App\Notifications\ApplicationInvoiceNotification;
+use Revolution\Google\Sheets\Facades\Sheets;
+use jeremykenedy\Slack\Laravel\Facade as Slack;
 use App\Notifications\EventFeedbackNotification;
 use App\Notifications\EventLastInfosNotification;
-use Carbon\Carbon;
-use Illuminate\Console\Command;
-use Ixudra\Curl\Facades\Curl;
-use jeremykenedy\Slack\Laravel\Facade as Slack;
-use Notification;
-use Revolution\Google\Sheets\Facades\Sheets;
+use App\Notifications\ApplicationInvoiceNotification;
 
 class DailyTask extends Command
 {
@@ -124,14 +124,6 @@ class DailyTask extends Command
                 )
                 ->asJson(true)
                 ->post();
-        } else {
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $invoice = json_decode($invoice, true);
-        }
-        if (isset($invoice['id'])) {
             $title = 'Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen';
 
             Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'].'/send')
@@ -147,8 +139,22 @@ class DailyTask extends Command
                 )
                 ->asJson(true)
                 ->post();
+                
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'])
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->get();
+            $invoice = json_decode($invoice, true);
+        } else {
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->get();
+            $invoice = json_decode($invoice, true);
+        }
+        if (isset($invoice['id'])) {
 
-            Notification::send($application, new ApplicationInvoiceNotification($application));
+            Notification::send($application, new ApplicationInvoiceNotification($application, $invoice));
 
             $application->update([
                 'invoice_send' => true,

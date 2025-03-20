@@ -13,22 +13,17 @@ class ApplicationInvoiceNotification extends Notification
     use Queueable;
 
     public Application $application;
-    public array $invoice;
+    public $invoice;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Application $application)
+    public function __construct(Application $application, $invoice)
     {
         //
         $this->application = $application;
-        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->get();
-        $invoice = json_decode($invoice, true);
         $this->invoice = $invoice;
     }
 
