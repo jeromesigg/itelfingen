@@ -36,7 +36,7 @@ class AdminFaqController extends Controller
                 return '<img height="50" src="'.$url.'" alt="" class="img-fluid">';
             })
             ->addColumn('name', function (Faq $faq) {
-                return '<a href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
+                return '<a class="text-orientalpink" href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
             })
             ->addColumn('description', function (Faq $faq) {
                 return substr($faq->description, 0, 500);

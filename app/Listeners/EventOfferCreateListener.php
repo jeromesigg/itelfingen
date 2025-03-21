@@ -2,10 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\EventOfferCreate;
-use App\Models\Position;
 use Carbon\Carbon;
+use App\Models\Position;
 use Ixudra\Curl\Facades\Curl;
+use App\Events\EventOfferCreate;
+use Illuminate\Support\Facades\Log;
 
 class EventOfferCreateListener
 {
@@ -63,7 +64,7 @@ class EventOfferCreateListener
                         'contact_id' => $event->bexio_user_id,
                         'user_id' => 1,
                         'is_valid_from' => now(),
-                        'is_valid_until' => Carbon::create($event->start_date)->addDays(-14),
+                        'is_valid_until' => now()->addMonth(),
                         'api_reference' => $event['id'],
                         'positions' => $positions_array,
                     ]
@@ -76,6 +77,9 @@ class EventOfferCreateListener
                     'bexio_offer_id' => $offer['id'],
                     'contract_status_id' => config('status.contract_angebot_erstellt'),
                 ]);
+            }
+            else{
+                Log::channel('emergency')->error($offer);
             }
         }
     }

@@ -2,9 +2,10 @@
 
 namespace App\Notifications;
 
-use App\Mail\ApplicationInvoiceMail;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
+use Ixudra\Curl\Facades\Curl;
+use App\Mail\ApplicationInvoiceMail;
 use Illuminate\Notifications\Notification;
 
 class ApplicationInvoiceNotification extends Notification
@@ -12,16 +13,18 @@ class ApplicationInvoiceNotification extends Notification
     use Queueable;
 
     public Application $application;
+    public $invoice;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Application $application)
+    public function __construct(Application $application, $invoice)
     {
         //
         $this->application = $application;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -43,7 +46,7 @@ class ApplicationInvoiceNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new ApplicationInvoiceMail($this->application);
+        return new ApplicationInvoiceMail($this->application, $this->invoice);
     }
 
     /**

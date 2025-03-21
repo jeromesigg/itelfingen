@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
-use App\Notifications\ContactCreatedNotification;
-use Illuminate\Http\Request;
-use Notification;
 use Validator;
+use Notification;
+use App\Models\Contact;
+use App\Rules\ReCaptcha;
+use Illuminate\Http\Request;
+use App\Notifications\ContactCreatedNotification;
 
 class ContactController extends Controller
 {
@@ -18,7 +19,6 @@ class ContactController extends Controller
             'name' => 'required',
             'email' => 'email|required',
             'content' => 'required',
-            'g-recaptcha-response' => 'recaptcha',
         ]);
 
         if ($validator->fails()) {

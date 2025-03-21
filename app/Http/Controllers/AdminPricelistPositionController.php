@@ -97,10 +97,8 @@ class AdminPricelistPositionController extends Controller
     public function update(Request $request, $id)
     {
         //
-        if ($request['show'] === null) {
-            $request['show'] = 0;
-        }
         $input = $request->all();
+        $input['show'] = $request->has('show');
         PricelistPosition::whereId($id)->first()->update($input);
 
         return redirect('/admin/positions');

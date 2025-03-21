@@ -26,7 +26,9 @@ class Helper
 
     public static function fillPDF($file, $outputFile, Event $event)
     {
-        define('FPDF_FONTPATH', public_path('fonts'));
+        if(!defined('FPDF_FONTPATH')){
+            define('FPDF_FONTPATH', public_path('fonts'));
+        }
         $fpdi = new FPDI;
         $fpdi->AddFont('TitilliumWeb-Light');
         // merger operations
@@ -118,7 +120,7 @@ class Helper
                 $user = '<i class="fa-solid fa-xmark" style="color: indianred"></i> Storniert';
                 break;
             default:
-                $user = $event->user ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Verantwortlich: '.$event->user->username :
+                $user = $event->user ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.$event->user->username :
                     '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Kein Benutzer zugewiesen';
                 break;
         }
@@ -239,7 +241,11 @@ class Helper
         $bookingChart->dataset('Anzahl Übernachtungen', 'line', $stays)
             ->color('#B47EB3')
             ->backgroundColor('#B47EB3');
-
+        $chart[0] = $timeframe;
+        $chart[1] = $days;
+        $chart[2] = $stays;
+        
+        return $chart;
         return $bookingChart;
     }
 }

@@ -18,7 +18,7 @@
                 | Datum | Name | E-Mail | Anlass / Gruppe | Kommentar Intern |
                 | :------------- | :------------- |  :------------- |  :------------- |  :------------- |
                 @foreach ($event_element['events'] as $event)
-                    | {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}} | <a href="{{route('events.edit', $event->id)}}">{{$event->firstname}} {{$event->name}}</a> | {{$event->email}} | {{$event->group_name}} | {{$event->comment_intern}} |
+                    | {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} bis {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}} | <a href="{{route('admin.events.edit', $event->id)}}">{{$event->firstname}} {{$event->name}}</a> | {{$event->email}} | {{$event->group_name}} | {{$event->comment_intern}} |
                 @endforeach
             @endcomponent
         @endif

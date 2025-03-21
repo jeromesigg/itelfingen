@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ApplicationCreatedEvent;
-use App\Models\Application;
+use Notification;
 use App\Models\Homepage;
 use App\Models\Salutation;
-use App\Notifications\ApplicationCreatedNotification;
+use App\Models\Application;
 use Illuminate\Http\Request;
-use Notification;
+use Ixudra\Curl\Facades\Curl;
+use App\Events\ApplicationCreatedEvent;
+use App\Notifications\ApplicationCreatedNotification;
 
 class ApplicationController extends Controller
 {

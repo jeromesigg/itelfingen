@@ -10,27 +10,25 @@
     
         <div class="row">
             <div class="col-sm-3">
-                {!! Form::open(['method' => 'POST', 'action'=>'AdminHistoryController@store', 'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('title', 'Titel:') !!}
-                        {!! Form::text('title', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('subtitle', 'Untertitel:') !!}
-                        {!! Form::text('subtitle', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('description', 'Beschreibung:') !!}
-                        {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 3]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('photo_id', 'Photo:') !!}
-                        {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Geschichte erstellen', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                {!! Form::close()!!}
+                <x-forms.form :action="route('histories.store')" enctype="multipart/form-data" accept-charset="UTF-8">
+                    <x-forms.container>
+                        <x-forms.text label="Titel:" name="title" required=true/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.text label="Untertitel:" name="subtitle"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.textarea label="Beschreibung:" name="description" rows=3/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.file label="Photo: " name="photo_id"/>
+                    </x-forms.container>
+                    <x-forms.container>
+                        <x-forms.button type="submit" class="btn btn-primary">
+                            Geschichte erstellen
+                        </x-forms.button>
+                    </x-forms.container>
+                </x-forms.form>
             </div>    
             <div class="col-sm-9">
                 <table class="table">

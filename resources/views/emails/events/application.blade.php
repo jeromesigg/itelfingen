@@ -15,4 +15,7 @@ Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfü
 <br><br>
 Freundliche Grüsse,<br>
 Das Ferienhaus Itelfingen
+<br>
+<br>
+In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
 @endcomponent

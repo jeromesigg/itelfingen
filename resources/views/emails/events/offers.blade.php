@@ -11,7 +11,7 @@ Zum Angebot
 <br>
 {{$additional_text}}
 <br>
-Die Schlussrechnung erhälst Du nach der Buchung, somit können allfällige Anpassungen an den Übernachtungen noch berücksichtigt werden, Du musst die Angebots-Rechnung also nicht bezahlen.
+Die Schlussrechnung erhälst Du nach der Buchung, somit können allfällige akzeptierte Anpassungen an den Übernachtungen noch berücksichtigt werden, Du musst die Angebots-Rechnung also nicht bezahlen. Bei grossen Abweichung melde Dich bitte vorher bei der Verwaltung, damit diese akzeptiert wird.
 <br>
 Wir hoffen, dass die Buchung Deinen Wünschen entspricht und würden uns über Deine Bestätigung freuen. Die Bestätigung beinhaltet ebenfalls ein Akzeptieren der Hausordnung im angehängten PDF. Kontrolliere vor allem das Datum und die Anzahl Personen.
 <br>
@@ -20,7 +20,11 @@ Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfü
 Freundliche Grüsse, <br>
 Das Ferienhaus Itelfingen
 <br>
+<br>
+In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
 <div class="breadcrumbs">
-    <img src="https://itelfingen.ch/img/mail/2.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
+    <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">
+        <img src="https://itelfingen.ch/img/mail/2.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Angebot"/>
+    </a>
 </div>
 @endcomponent

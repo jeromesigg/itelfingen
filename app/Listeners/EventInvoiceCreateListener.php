@@ -57,9 +57,7 @@ class EventInvoiceCreateListener
                 ->asJson(true)
                 ->post();
 
-            if (config('app.env') == 'production') {
-                Helper::EventToGoogleCalendar($event);
-            }
+            Helper::EventToGoogleCalendar($event);
         }
     }
 }

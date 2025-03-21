@@ -380,7 +380,6 @@ h1, h2, h3, h4, h5, h6 {
 #hero {
   width: 100%;
   height: 100vh;
-  background: url("../images/hero-bg.webp") top center;
   background-size: cover;
   position: relative;
   padding: 0;
@@ -407,6 +406,15 @@ h1, h2, h3, h4, h5, h6 {
   #hero .container {
     padding-top: 98px;
   }
+}
+
+@media (max-width: 500px) {
+  #hero {
+      height: 40vh;
+  }
+#hero .container {
+  padding-top: 98px;
+}
 }
 
 
@@ -510,7 +518,7 @@ h1, h2, h3, h4, h5, h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 120px 0;
+  padding: 90px 0;
   overflow: hidden;
 }
 
@@ -618,7 +626,6 @@ section {
 # About
 --------------------------------------------------------------*/
 .about {
-  /* background: url("../images/about-bg.jpg") center center; */
   background-size: cover;
   position: relative;
 }
@@ -748,38 +755,6 @@ section {
   padding: 0;
 }
 
-.rooms .owl-dot {
-  display: inline-block;
-  margin: 0 5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #ddd !important;
-}
-
-.rooms .owl-dot.active {
-  background-color: var(--orientalpink) !important;
-}
-
-
-.rooms .owl-nav, .rooms .owl-dots {
-  margin-top: 5px;
-  text-align: center;
-}
-
-.rooms .owl-dot {
-  display: inline-block;
-  margin: 0 5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #ddd !important;
-}
-
-.rooms .owl-dot.active {
-  background-color: var(--orientalpink) !important;
-}
-
 /*--------------------------------------------------------------
 # Pricelist Section
 --------------------------------------------------------------*/
@@ -885,7 +860,7 @@ section {
 # Locations
 --------------------------------------------------------------*/
 .locations {
-  background: url(../images/events-bg.webp) center center no-repeat;
+  background: url(@/img/events-bg.webp) center center no-repeat;
   background-size: cover;
   position: relative;
   height: 750px;
@@ -950,46 +925,10 @@ section {
   margin-bottom: 0;
 }
 
-.locations .owl-nav, .locations .owl-dots {
-  margin-top: 5px;
-  text-align: center;
-}
-
-.locations .owl-dot {
-  display: inline-block;
-  margin: 0 5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #ddd !important;
-}
-
-.locations .owl-dot.active {
-  background-color: #cda45e !important;
-}
-
 @media (min-width: 992px) {
   .locations .testimonial-item p {
     width: 80%;
   }
-}
-
-.locations .owl-nav, .locations .owl-dots {
-  margin-top: 5px;
-  text-align: center;
-}
-
-.locations .owl-dot {
-  display: inline-block;
-  margin: 0 5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #ddd !important;
-}
-
-.locations .owl-dot.active {
-  background-color: #cda45e !important;
 }
 
 .location-item img {
@@ -1054,24 +993,6 @@ section {
   position: relative;
   z-index: 1;
   color: white;
-}
-
-.testimonials .owl-nav, .testimonials .owl-dots {
-  margin-top: 5px;
-  text-align: center;
-}
-
-.testimonials .owl-dot {
-  display: inline-block;
-  margin: 0 5px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #ddd !important;
-}
-
-.testimonials .owl-dot.active {
-  background-color: #cda45e !important;
 }
 
 @media (max-width: 767px) {

@@ -1,10 +1,7 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  <head>
       @include('includes.head')  
-  </head>
-  <body>
+  <body antialiased >
     @yield('content')
-    @yield('scripts')
+    @stack('scripts')
   </body>
 </html>

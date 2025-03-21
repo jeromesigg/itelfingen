@@ -8,27 +8,25 @@
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($history, ['method' => 'PATCH', 'action'=>['AdminHistoryController@update', $history->id], 'files' => true]) !!}
-                    <div class="form-group">
-                        {!! Form::label('title', 'Titel:') !!}
-                        {!! Form::text('title', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('subtitle', 'Untertitel:') !!}
-                        {!! Form::text('subtitle', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('description', 'Beschreibung:') !!}
-                        {!! Form::textarea('description', null, ['class' => 'form-control', 'rows' => 3]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('photo_id', 'Photo:') !!}
-                        {!! Form::file('photo_id', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Geschichte updaten', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                    <x-forms.form :action="route('histories.update', $history)" enctype="multipart/form-data" accept-charset="UTF-8" method="PATCH" :model="$history">
+                        <x-forms.container>
+                            <x-forms.text label="Titel:" name="title" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Untertitel:" name="subtitle"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.textarea label="Beschreibung:" name="description" rows=3/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.file label="Photo: " name="photo_id"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Geschichte aktualisieren
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>   
             </div>   
             <div class="row"> 

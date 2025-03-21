@@ -2,19 +2,19 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Application;
+use Notification;
+use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Newsletter;
+use App\Models\Application;
+use Ixudra\Curl\Facades\Curl;
+use Illuminate\Console\Command;
 use App\Models\PricelistPosition;
-use App\Notifications\ApplicationInvoiceNotification;
+use Revolution\Google\Sheets\Facades\Sheets;
+use jeremykenedy\Slack\Laravel\Facade as Slack;
 use App\Notifications\EventFeedbackNotification;
 use App\Notifications\EventLastInfosNotification;
-use Carbon\Carbon;
-use Illuminate\Console\Command;
-use Ixudra\Curl\Facades\Curl;
-use jeremykenedy\Slack\Laravel\Facade as Slack;
-use Notification;
-use Revolution\Google\Sheets\Facades\Sheets;
+use App\Notifications\ApplicationInvoiceNotification;
 
 class DailyTask extends Command
 {
@@ -50,8 +50,8 @@ class DailyTask extends Command
     public function handle()
     {
         $this->SendEventLastInfos();
-        $this->SendApplicationInvoices();
         $this->SendFeedbackMails();
+        $this->SendApplicationInvoices();
         $this->SendNextEventToSlack();
     }
 
@@ -124,14 +124,6 @@ class DailyTask extends Command
                 )
                 ->asJson(true)
                 ->post();
-        } else {
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $invoice = json_decode($invoice, true);
-        }
-        if (isset($invoice['id'])) {
             $title = 'Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen';
 
             Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'].'/send')
@@ -147,12 +139,28 @@ class DailyTask extends Command
                 )
                 ->asJson(true)
                 ->post();
+                
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'])
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->get();
+            $invoice = json_decode($invoice, true);
+            $application->update([
+                'bexio_invoice_id' => $invoice['id'],
+            ]);
+        } else {
+            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
+                ->withHeader('Accept: application/json')
+                ->withBearer(config('app.bexio_token'))
+                ->get();
+            $invoice = json_decode($invoice, true);
+        }
+        if (isset($invoice['id'])) {
 
-            Notification::send($application, new ApplicationInvoiceNotification($application));
+            Notification::send($application, new ApplicationInvoiceNotification($application, $invoice));
 
             $application->update([
                 'invoice_send' => true,
-                'bexio_invoice_id' => $invoice['id'],
             ]);
 
             Newsletter::updateOrCreate (
@@ -197,7 +205,7 @@ class DailyTask extends Command
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
 
-            Slack::send('Die nächste Buchung von '.$start_date.' bis '.$end_date.":\n".
+            Slack::to(config('slack.application_channel'))->send('Die nächste Buchung von '.$start_date.' bis '.$end_date.":\n".
                     $event['firstname'].' '.$event['name'].' - '.$event['group_name']."\n".
                     'Telefon Nummer: '.$event['telephone']);
         }

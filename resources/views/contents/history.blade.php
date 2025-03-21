@@ -1,11 +1,11 @@
 <section id="history" class="history">
-    <div class="container" data-aos="fade-up">
+    <div class="container">
 
       <div class="section-title">
         <p>Die Geschichte des Hauses</p>
       </div>
 
-      <div class="row" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
         <div class="col-lg-3">
           <ul class="nav nav-tabs flex-column">
             @foreach ($histories as $i => $history)
