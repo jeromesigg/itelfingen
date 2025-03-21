@@ -89,12 +89,12 @@ class Entry extends Component
                     'text'  => 'FAQ ansehen',
                     'path' => 'M11 9h6m-6 3h6m-6 3h6M6.996 9h.01m-.01 3h.01m-.01 3h.01M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z'
                 ],
-                [
-                    'link'  => '#',
-                    'text'  => 'Checkliste "Hausabgabe" ansehen',
-                    'path' => 'M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 7 2 2 4-4m-5-9v4h4V3h-4Z',
+                // [
+                //     'link'  => '#',
+                //     'text'  => 'Checkliste "Hausabgabe" ansehen',
+                //     'path' => 'M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 7 2 2 4-4m-5-9v4h4V3h-4Z',
 
-                ],
+                // ],
                 [
                     'link'  =>'#',
                     'text'  => 'Abfallcontainer Code: 4315',

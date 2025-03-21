@@ -152,7 +152,7 @@
                                                     <x-forms.text-area label="Wie sind Sie auf uns aufmerksam geworden?" name="marketing_comment" rows=3/>
                                                 </x-forms.container>
                                                 <x-forms.container>
-                                                    <label for="terms">Ich akzeptiere die <a href='/files/Hausordnung.pdf' target="blank">Hausordnung</a>*:</label>
+                                                    <label for="terms">Ich akzeptiere die <a href='/files/Hausordnung.pdf' target="blank" class="text-orientalpink">Hausordnung</a>*:</label>
                                                     <x-forms.text name="terms" type="checkbox" required=true/>
                                                 </x-forms.container>
                                             </div>
