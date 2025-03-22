@@ -32,7 +32,7 @@ Auth::routes();
 // Route::get('/home', 'HomeController@index')->name('home');
 
 //fullcalender
-Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create']);
+Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create'])->middleware(ProtectAgainstSpam::class);
 Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventController@searchResponseCity']);
 
 Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'] )->middleware(ProtectAgainstSpam::class);
@@ -72,16 +72,16 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/newsletter', 'NewsletterController');
 });
 
-Route::get('admin/run-migrations', function () {
-    return Artisan::call('migrate', ['--force' => true]);
-});
+// Route::get('admin/run-migrations', function () {
+//     return Artisan::call('migrate', ['--force' => true]);
+// });
 
-Route::get('admin/run-migrations-seed', function () {
-    return Artisan::call('migrate --seed', ['--force' => true]);
-});
+// Route::get('admin/run-migrations-seed', function () {
+//     return Artisan::call('migrate --seed', ['--force' => true]);
+// });
 
-Route::get('admin/run-deployment', function () {
-    Artisan::call('optimize:clear');
+// Route::get('admin/run-deployment', function () {
+//     Artisan::call('optimize:clear');
 
-    return true;
-});
+//     return true;
+// });
