@@ -15,6 +15,22 @@ class EventController extends Controller
 {
     public function create(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'zipcode' => 'numeric|gte:1000|lte:9999',
+            'total_people' => 'gt:0|lte:19',
+        ], [
+            'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
+            'zipcode.gte' => 'Die Postleitzahl muss grösser oder gleich 1000 sein.',
+            'zipcode.lte' => 'Die Postleitzahl muss kleiner oder gleich 9999 sein.',
+            'total_people.gt' => 'Für die Buchung braucht es mindestens 1 Person.',
+            'total_people.lte' => 'Für die Buchung sind maximal 19 Personen erlaubt.',  ]);
+
+        if ($validator->fails()) {
+            return redirect()->to(url()->previous().'#booking')
+                ->withErrors($validator, 'event')
+                ->withInput();
+        }
+
         $input = $request->all();
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
