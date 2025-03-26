@@ -127,10 +127,20 @@ class HomeController extends Controller
         if ($event === null) {
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
         }
+
+        return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);
+    }
+
+    public function bookings_checklist(string $uuid)
+    {
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
         $homepage = Homepage::FindOrFail(1);
         $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
 
-        return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);
+        return view('contents.bookings_checklist', compact('homepage', 'title', 'event'));
     }
 
     public function DownloadLastInfos(string $uuid)

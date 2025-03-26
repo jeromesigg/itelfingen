@@ -224,7 +224,7 @@ class Helper
             DB::raw('sum(total_people*total_days) as stays'),
             DB::raw($time_frame_SQL),
         )
-            ->where('event_status_id', '<=', config('status.event_bestaetigt'))
+            ->where('event_status_id', '=', config('status.event_bestaetigt'))
             ->groupBy('timeframe')
             ->orderBy('start_date', 'ASC');
 
@@ -232,20 +232,10 @@ class Helper
         $days = $events_nights->pluck('days');
         $stays = $events_nights->pluck('stays');
 
-        $bookingChart = new BookingChart;
-        $bookingChart->labels($timeframe);
-        $bookingChart->height(900);
-        $bookingChart->dataset('Anzahl Tage', 'line', $days)
-            ->color('#92D1C3')
-            ->backgroundColor('#92D1C3');
-        $bookingChart->dataset('Anzahl Übernachtungen', 'line', $stays)
-            ->color('#B47EB3')
-            ->backgroundColor('#B47EB3');
         $chart[0] = $timeframe;
         $chart[1] = $days;
         $chart[2] = $stays;
         
         return $chart;
-        return $bookingChart;
     }
 }

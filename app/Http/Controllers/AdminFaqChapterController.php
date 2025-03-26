@@ -13,7 +13,7 @@ class AdminFaqChapterController extends Controller
     public function index()
     {
         //
-        $faq_chapters = FaqChapter::orderBy('sort-index')->paginate(10);
+        $faq_chapters = FaqChapter::orderBy('sort-index')->get();
 
         return view('admin.faq_chapters.index', compact('faq_chapters'));
     }

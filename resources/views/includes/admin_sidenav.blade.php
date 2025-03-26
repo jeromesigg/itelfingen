@@ -192,6 +192,31 @@
         </ul>
       </li>
       <li>
+        <button type="button" class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group  dark:text-white" aria-controls="dropdown-checkpoints" data-collapse-toggle="dropdown-checkpoints">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 9h6m-6 3h6m-6 3h6M6.996 9h.01m-.01 3h.01m-.01 3h.01M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+          </svg>
+          <span class="flex-1 ml-3 text-left whitespace-nowrap">
+            Checkliste Reinigung
+          </span>
+          <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"  clip-rule="evenodd"></path>
+          </svg>
+        </button>
+        <ul id="dropdown-checkpoints" class="hidden py-2 space-y-2">
+          <li>
+            <a href="{{route('checkpoints.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 groupdark:text-white " >
+              Checkpunkte Reinigung
+            </a>
+          </li>
+          <li>
+            <a href="{{route('rooms.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group  dark:text-white " >
+              Räume
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
         <a href="{{route('applications.index')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white  group">
           <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="square" stroke-linejoin="round" stroke-width="2" d="M7 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h1m4-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm7.441 1.559a1.907 1.907 0 0 1 0 2.698l-6.069 6.069L10 19l.674-3.372 6.07-6.07a1.907 1.907 0 0 1 2.697 0Z"/>

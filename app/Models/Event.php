@@ -47,6 +47,12 @@ class Event extends Model
         return $this->hasMany(Position::class);
     }
 
+    public function event_rooms()
+    {
+        return $this->hasMany(EventRoom::class);
+    }
+
+
     public function routeNotificationForSlack($notification)
     {
         return config('slack.endpoint');

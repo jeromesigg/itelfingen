@@ -25,6 +25,7 @@ Route::get('about_us', 'HomeController@about_us')->name('about_us');
 Route::get('bookings/login', 'HomeController@bookings_login')->name('bookings.login');
 Route::post('bookings/login', 'HomeController@bookings_check')->name('bookings.check');
 Route::get('bookings/{uuid}', 'HomeController@bookings_uuid')->name('bookings.uuid');
+Route::get('bookings/{uuid}/checklist', 'HomeController@bookings_checklist')->name('bookings.checklist');
 Route::get('admin/bookings/{uuid}/DownloadLastInfos', 'HomeController@DownloadLastInfos')->name('bookings.downloadLastInfos');
 
 Auth::routes();
@@ -70,6 +71,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/newsletter/export-members', ['as' => 'newsletter.exportMembers', 'uses' => 'NewsletterController@exportMembers']);
     Route::get('/admin/newsletter/import', ['as' => 'newsletter.import', 'uses' => 'NewsletterController@import']);
     Route::resource('admin/newsletter', 'NewsletterController');
+    Route::resource('admin/checkpoints', 'AdminCheckpointController');
+    Route::resource('admin/rooms', 'AdminRoomsController');
 });
 
 // Route::get('admin/run-migrations', function () {
