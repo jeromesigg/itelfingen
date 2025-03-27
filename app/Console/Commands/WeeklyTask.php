@@ -46,9 +46,21 @@ class WeeklyTask extends Command
         $events_new = Event::where('contract_status_id', '<', config('status.contract_angebot_erstellt'))
             ->where('event_status_id', '<>', config('status.event_eigene'))
             ->orderby('start_date')->get();
-        $events_open_offers = Event::where('start_date', '<=', $date)
-            ->where('contract_status_id', '=', config('status.contract_angebot_erstellt'))
+        $events_open_offers = Event::where('start_date', '>', Carbon::today())
+            ->where('contract_status_id', '=', config('status.contract_angebot_versendet'))
             ->orderby('start_date')->get();
+        $tempArray = array();
+        $date_offer = Carbon::today()->addMonths(-2);
+        foreach($events_open_offers as $event) { 
+            foreach($event->notifications as $notification) {
+                if(($notification['type'] == "App\Notifications\EventOfferSendNotification") && ($notification['date'] < $date_offer)) {
+                    $tempArray[] = $event;
+                }
+            }
+        }
+        // Assign the temporary array back to the original array
+        $events_open_offers = $tempArray;
+
         $events_no_cleaning_mail = Event::where('start_date', '<=', $date)
             ->where('start_date', '>', Carbon::today())
             ->where('cleaning_mail', false)
@@ -67,7 +79,7 @@ class WeeklyTask extends Command
 
         $event_array = collect([
             ['text' => 'Folgende Buchungen wurden noch nicht bearbeitet', 'events' => $events_new],
-            ['text' => 'Folgende Offerten wurden noch nicht angenommen', 'events' => $events_open_offers],
+            ['text' => 'Folgende Angebote sind älter als zwei Monate', 'events' => $events_open_offers],
             ['text' => 'Folgende Buchungen haben noch kein Reinigungs-Mail versendet', 'events' => $events_no_cleaning_mail],
             ['text' => 'Folgende Buchungen haben noch keinen Tür-Code.', 'events' => $events_no_code],
             ['text' => 'Folgende Buchungen haben noch keine Rechnung erhalten.', 'events' => $events_no_invoice],
