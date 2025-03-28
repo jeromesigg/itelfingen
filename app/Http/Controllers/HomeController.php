@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Faq;
 use App\Models\Event;
+use App\Models\EventCheckpoint;
 use App\Models\Person;
 use App\Models\Picture;
 use App\Models\Homepage;
@@ -152,5 +153,19 @@ class HomeController extends Controller
         $outputFile = Storage::disk('local')->path('contracts/Infos_vor_Buchung.pdf');
 
         return response()->download($outputFile);
+    }
+
+    public function bookings_checkpointDone(Request $request)
+    {
+        $checkpoint_id = $request->get('checkpoint_id');
+        $checkpoint = EventCheckpoint::findOrFail($checkpoint_id);
+        $checkpoint->done = !$checkpoint->done;
+        // $checkpoint->update($input);
+        return response()->json([
+            'data' => [
+                'done' =>  $checkpoint->done,
+                'success' => $checkpoint->save(),
+            ]
+          ]);
     }
 }

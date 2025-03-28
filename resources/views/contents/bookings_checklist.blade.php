@@ -19,7 +19,7 @@
           <ul class="cd-faq__categories">
             @foreach ($event->event_rooms as $event_room)
               <li>
-                  <a class="cd-faq__category cd-faq__category truncate" href="#{{$event_room->room->name}}">
+                  <a class="cd-faq__category cd-faq__category truncate" href="#id-{{$event_room->id}}">
                     {{$event_room->room->name}}
                   </a>
               </li>
@@ -28,27 +28,26 @@
   
           <div class="cd-faq__items">
             @foreach ($event->event_rooms as $event_room)
-              <ul id=" {{$event_room->room->name}}" class="cd-faq__group mb-4">
-  
-                <div class="cd-faq__title">
-                    <h2 class="cd-faq__title-text">
-                        {{$event_room->room->name}}
-                    </h2>
-                </div>
+            <h3  class="mb-5 text-lg font-medium text-gray-900 dark:text-white">{{$event_room->room->name}}</h3>
+              <ul id="id-{{$event_room->id}}" class="cd-faq__group grid w-full gap-6 md:grid-cols-3">
                 @if($event_room->event_checkpoints->count() > 0)
                     @foreach ($event_room->event_checkpoints as $event_checkpoint)
-                    <li class="cd-faq__item">
-                        <a class="cd-faq__trigger" href="#0"><span>{{$event_checkpoint->checkpoint->name}}</span></a>
-                        <div class="cd-faq__content pt-3 border border-norway">
-                        <div class="text-component">
-                            <div class="row">
-                                <div class="col-lg-12 order-1 order-lg-1">
-                                <p>{!! $event_checkpoint->checkpoint->description !!}</p>
-                                </div>
-                            </div>
-                        </div>
-                        </div> <!-- cd-faq__content -->
-                    </li>
+                      <li>
+                          <input type="checkbox" id="{{$event_checkpoint['id']}}" value="{{$event_checkpoint['done']}}" class="hidden peer" required="">
+                          <label for="{{$event_checkpoint['id']}}" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+                              <div class="block">
+                                  <div class="w-full text-lg font-semibold">
+                                    <span id="done">
+                                      @if($event_checkpoint->done)
+                                        <i class="fa-regular fa-circle-check" style="color:darkseagreen"></i>
+                                      @endif
+                                    </span>
+                                    {{$event_checkpoint->checkpoint->name}}
+                                  </div>
+                                  <div class="w-full text-sm">{!! $event_checkpoint->checkpoint->description !!}</div>
+                              </div>
+                          </label>
+                      </li>
                     @endforeach
                 @endif
               </ul> <!-- cd-faq__group -->
@@ -64,3 +63,24 @@
         @include('includes.footer')
     </div>
 @endsection
+
+@push('scripts')
+<script type="module">
+  $(document).ready(function(){
+    $("input:checkbox").change(function() {
+      var checkpoint_id = $(this).attr('id');
+      $.ajax({
+              type:'POST',
+              url: "{!! route('bookings.checkpointDone') !!}",
+              headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+              data: { "checkpoint_id" : checkpoint_id },
+              success: function(data){
+                if(data.data.success){
+                  //do something
+                }
+              }
+          });
+      });
+  });
+</script>
+@endpush

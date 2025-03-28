@@ -27,6 +27,7 @@ Route::post('bookings/login', 'HomeController@bookings_check')->name('bookings.c
 Route::get('bookings/{uuid}', 'HomeController@bookings_uuid')->name('bookings.uuid');
 Route::get('bookings/{uuid}/checklist', 'HomeController@bookings_checklist')->name('bookings.checklist');
 Route::get('admin/bookings/{uuid}/DownloadLastInfos', 'HomeController@DownloadLastInfos')->name('bookings.downloadLastInfos');
+Route::post('bookings/checkpoint/done', 'HomeController@bookings_checkpointDone')->name('bookings.checkpointDone');
 
 Auth::routes();
 

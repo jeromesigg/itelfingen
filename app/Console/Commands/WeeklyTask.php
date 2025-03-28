@@ -49,6 +49,7 @@ class WeeklyTask extends Command
         $events_open_offers = Event::where('start_date', '>', Carbon::today())
             ->where('contract_status_id', '=', config('status.contract_angebot_versendet'))
             ->orderby('start_date')->get();
+            
         $tempArray = array();
         $date_offer = Carbon::today()->addMonths(-2);
         foreach($events_open_offers as $event) { 
