@@ -160,11 +160,17 @@ class HomeController extends Controller
         $checkpoint_id = $request->get('checkpoint_id');
         $checkpoint = EventCheckpoint::findOrFail($checkpoint_id);
         $checkpoint->done = !$checkpoint->done;
-        // $checkpoint->update($input);
+        $checkpoint->save();
+        $event_room = $checkpoint->event_room;
+        $done = ($event_room->event_checkpoints_open()->count() === 0);
+        $event_room->done = $done;
+        $event_room->save();
         return response()->json([
             'data' => [
-                'done' =>  $checkpoint->done,
-                'success' => $checkpoint->save(),
+                'checkpoint_done' =>  $checkpoint->done,
+                'room_id' =>  $event_room->id,
+                'room_done' =>  $event_room->done,
+                'success' => true,
             ]
           ]);
     }

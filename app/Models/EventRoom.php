@@ -24,5 +24,10 @@ class EventRoom extends Model
     public function event_checkpoints()
     {
         return $this->hasMany(EventCheckpoint::class);
+    }    
+    
+    public function event_checkpoints_open()
+    {
+        return $this->event_checkpoints()->where('done', false);
     }
 }
