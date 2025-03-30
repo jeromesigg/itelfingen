@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Notification;
 use Carbon\Carbon;
+use App\Models\Room;
 use App\Models\Event;
 use App\Models\Newsletter;
 use App\Models\Application;
@@ -61,6 +62,19 @@ class DailyTask extends Command
         $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
         foreach ($events as $event) {
+            if ($event->event_rooms->count() === 0) {
+                $rooms = Room::where('archive_status_id', config('status.aktiv'))->orderBy('sort-index')->get();
+                foreach ($rooms as $room) {
+                    $event_room = $event->event_rooms()->create([
+                        'room_id' => $room->id,
+                    ]);
+                    foreach ($room->checkpoints()->get() as $checkpoint) {
+                        $event_room->event_checkpoints()->create([
+                            'checkpoint_id' => $checkpoint->id,
+                        ]);
+                    }
+                }
+            }
             Notification::send($event, new EventLastInfosNotification($event));
             $event->update(['last_info' => true]);
         }        if (count($events) > 0) {

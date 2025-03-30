@@ -6,7 +6,7 @@
         <section class="breadcrumbs">
           <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-              <h2>Checkliste</h2>
+              <h2 class="text-4xl font-bold dark:text-white">Checkliste</h2>
               <ol>
                 <li><a href="{{route('home')}}">Home</a></li>
                 <li>Checkliste</li>
@@ -15,50 +15,48 @@
           </div>
         </section>
   
-        <div class="container max-width-md margin-top-lg margin-bottom-lg">
-          {{-- <ul class="cd-faq__categories">
-            @foreach ($event->event_rooms as $event_room)
-              <li>
-                  <a class="cd-faq__category cd-faq__category truncate" href="#id-{{$event_room->id}}">
-                    {{$event_room->room->name}}
-                  </a>
-              </li>
-            @endforeach
-          </ul> <!-- cd-faq__categories --> --}}
-  
-          {{-- <div class="cd-faq__items"> --}}
+        <div id="accordion-arrow-icon" data-accordion="collapse" class="container max-width-md margin-top-lg margin-bottom-lg" data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
             @foreach ($event->event_rooms as $event_room)
               <div id="id-{{$event_room->id}}">
-                <h2 class="text-4xl font-bold dark:text-white mb-2 mt-6 items-center justify-between border-2 border-gray-200 rounded-lg p-2">
-                  <span id="room_done_{{$event_room->id}}">
-                    @if($event_room->done)
-                      <i class="fa-regular fa-circle-check" style="color:darkseagreen"></i>
-                    @endif
-                  </span>
-                  {{$event_room->room->name}}
-                </h2>
-                <ul class="grid w-full gap-6 md:grid-cols-4">
-                  @if($event_room->event_checkpoints->count() > 0)
-                      @foreach ($event_room->event_checkpoints as $event_checkpoint)
-                        <li>
-                            <input type="checkbox" id="{{$event_checkpoint['id']}}" value="{{$event_checkpoint['done']}}" class="hidden peer"  @if($event_checkpoint->done) checked @endif>
-                            <label for="{{$event_checkpoint['id']}}" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
-                                <div class="block">
-                                    <div class="w-full text-lg font-semibold">
-                                      <span id="checkpoint_done_{{$event_checkpoint->id}}">
-                                        @if($event_checkpoint->done)
-                                          <i class="fa-regular fa-circle-check" style="color:darkseagreen"></i>
-                                        @endif
-                                      </span>
-                                      {{$event_checkpoint->checkpoint->name}}
+                <h3 id="accordion-arrow-icon-heading-{{$event_room->id}}">
+                  <button type="button" class="flex justify-between w-full p-5 text-3xl font-bold rtl:text-right text-gray-800 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-arrow-icon-body-{{$event_room->id}}" aria-expanded="false" aria-controls="accordion-arrow-icon-body-{{$event_room->id}}">
+                    <span id="room_done_{{$event_room->id}}">
+                      @if($event_room->done)
+                        <i class="fa-regular fa-circle-check" style="color:darkseagreen"></i>
+                      @endif
+                    </span>
+                    <span>{{$event_room->room->name}}</span>
+                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                    </svg>
+                  </button>
+                </h3>
+                <div id="accordion-arrow-icon-body-{{$event_room->id}}" class="hidden" aria-labelledby="accordion-arrow-icon-heading-{{$event_room->id}}">
+                  <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                    <ul class="grid w-full gap-6 md:grid-cols-4">
+                      @if($event_room->event_checkpoints->count() > 0)
+                          @foreach ($event_room->event_checkpoints as $event_checkpoint)
+                            <li>
+                                <input type="checkbox" id="{{$event_checkpoint['id']}}" value="{{$event_checkpoint['done']}}" class="hidden peer"  @if($event_checkpoint->done) checked @endif>
+                                <label for="{{$event_checkpoint['id']}}" class="inline-flex items-center justify-between w-full p-5 text-gray-800 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+                                    <div class="block">
+                                        <div class="w-full text-lg font-semibold">
+                                          <span id="checkpoint_done_{{$event_checkpoint->id}}">
+                                            @if($event_checkpoint->done)
+                                              <i class="fa-regular fa-circle-check" style="color:darkseagreen"></i>
+                                            @endif
+                                          </span>
+                                          {{$event_checkpoint->checkpoint->name}}
+                                        </div>
+                                        <div class="w-full text-sm">{!! $event_checkpoint->checkpoint->description !!}</div>
                                     </div>
-                                    <div class="w-full text-sm">{!! $event_checkpoint->checkpoint->description !!}</div>
-                                </div>
-                            </label>
-                        </li>
-                      @endforeach
-                  @endif
-                </ul> <!-- cd-faq__group -->
+                                </label>
+                            </li>
+                          @endforeach
+                      @endif
+                    </ul> <!-- cd-faq__group -->
+                  </div> 
+                </div> 
               </div> 
             @endforeach
           {{-- </div> <!-- cd-faq__items -->

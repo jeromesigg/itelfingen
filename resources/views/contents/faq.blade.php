@@ -9,7 +9,7 @@
       <section class="breadcrumbs">
         <div class="container">
           <div class="d-flex justify-content-between align-items-center">
-            <h2>FAQ</h2>
+            <h2 class="text-4xl font-bold dark:text-white">FAQ</h2>
             <ol>
               <li><a href="{{route('home')}}">Home</a></li>
               <li>FAQ</li>
