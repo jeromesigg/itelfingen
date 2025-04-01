@@ -5,6 +5,10 @@ Guten Tag {{$event->firstname}} {{$event->name}},
 Heute ist dein Abreisetag in unserem Ferienhaus Itelfingen. Bitte beachte die Hausrückgabe-Checkliste in der Hausordnung und bei der Haustüre. Der Code für den Abfalleimer ist 4315. Bitte entsorge den Abfall in den Containern gemäss Hausordnung.
 Wir hoffen, dass alles funktioniert hat und du wunderbare Tage verbringen konntest.
 <br>
+@component('mail::button', ['url' => config('app.url').'/bookings/'.$event->uuid.'/checklist', 'color' => 'success'])
+    Zur Checkliste für die Hausrückgabe
+@endcomponent
+<br>
 Sollte sich etwas an den Anzahl Übernachtung gegenüber der Offerte geändert haben, kannst du und dies gerne noch melden.
 <br>
 Bitte fülle noch die Rückmeldung aus, damit wir uns in Zukunft noch weiter verbessern können.

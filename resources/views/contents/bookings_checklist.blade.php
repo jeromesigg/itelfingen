@@ -1,20 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('includes.header')
-    <div id="app"><main id="main">
-        <section class="breadcrumbs">
-          <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-              <h2 class="text-4xl font-bold dark:text-white">Checkliste</h2>
-              <ol>
-                <li><a href="{{route('home')}}">Home</a></li>
-                <li>Checkliste</li>
-              </ol>
-            </div>
+  @include('includes.header')
+  <div id="app">
+    <main id="main">
+      <section class="breadcrumbs">
+        <div class="container">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="text-4xl font-bold dark:text-white">Checkliste</h2>
+            <ol>
+              <li><a href="{{route('home')}}">Home</a></li>
+              <li>Checkliste</li>
+            </ol>
           </div>
-        </section>
-  
+        </div>
+      </section>
+      
+      <div class="container max-width-md margin-top-lg margin-bottom-lg">
+        <p class="mb-3 text-gray-800 dark:text-gray-400">
+          Hier findest du eine Übersicht über die Checkliste für die Hausabgabe des Ferienhauses.
+          <br>Bitte klicke auf die einzelnen Punkte, um sie als erledigt zu markieren.
+          <br>Die Punkte werden dann grün markiert und du kannst sie jederzeit wieder abwählen falls nötig.
+        </p>
         <div id="accordion-arrow-icon" data-accordion="collapse" class="container max-width-md margin-top-lg margin-bottom-lg" data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
             @foreach ($event->event_rooms as $event_room)
               <div id="id-{{$event_room->id}}">
@@ -54,21 +61,16 @@
                             </li>
                           @endforeach
                       @endif
-                    </ul> <!-- cd-faq__group -->
+                    </ul> 
                   </div> 
                 </div> 
               </div> 
             @endforeach
-          {{-- </div> <!-- cd-faq__items -->
-  
-          <a href="#0" class="cd-faq__close-panel text-replace">Schliessen</a>
-  
-          <div class="cd-faq__overlay" aria-hidden="true"></div> --}}
-        </div> <!-- cd-faq -->
-  
-      </main><!-- End #main -->
-        @include('includes.footer')
-    </div>
+        </div>
+      </div>
+    </main>
+      @include('includes.footer')
+  </div>
 @endsection
 
 @push('scripts')

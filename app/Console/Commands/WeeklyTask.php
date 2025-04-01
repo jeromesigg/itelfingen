@@ -54,8 +54,10 @@ class WeeklyTask extends Command
         $date_offer = Carbon::today()->addMonths(-2);
         foreach($events_open_offers as $event) { 
             foreach($event->notifications as $notification) {
-                if(($notification['type'] == "App\Notifications\EventOfferSendNotification") && ($notification['date'] < $date_offer)) {
+                if(($notification['type'] == "App\Notifications\EventOfferSendNotification") && ($notification['created_at'] < $date_offer)) {
+					$event['name'] = $event['name'] . ' (' . Carbon::parse($notification['created_at'])->isoFormat('L') . ')'; 
                     $tempArray[] = $event;
+                    break;
                 }
             }
         }
