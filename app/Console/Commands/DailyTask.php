@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Notification;
 use Carbon\Carbon;
+use App\Models\Room;
 use App\Models\Event;
 use App\Models\Newsletter;
 use App\Models\Application;
@@ -61,6 +62,19 @@ class DailyTask extends Command
         $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
         foreach ($events as $event) {
+            if ($event->event_rooms->count() === 0) {
+                $rooms = Room::where('archive_status_id', config('status.aktiv'))->orderBy('sort-index')->get();
+                foreach ($rooms as $room) {
+                    $event_room = $event->event_rooms()->create([
+                        'room_id' => $room->id,
+                    ]);
+                    foreach ($room->checkpoints()->get() as $checkpoint) {
+                        $event_room->event_checkpoints()->create([
+                            'checkpoint_id' => $checkpoint->id,
+                        ]);
+                    }
+                }
+            }
             Notification::send($event, new EventLastInfosNotification($event));
             $event->update(['last_info' => true]);
         }        if (count($events) > 0) {
@@ -205,7 +219,7 @@ class DailyTask extends Command
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');
             $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
 
-            Slack::to(config('slack.application_channel'))->send('Die nächste Buchung von '.$start_date.' bis '.$end_date.":\n".
+            Slack::to(config('slack.event_channel'))->send('Die nächste Buchung von '.$start_date.' bis '.$end_date.":\n".
                     $event['firstname'].' '.$event['name'].' - '.$event['group_name']."\n".
                     'Telefon Nummer: '.$event['telephone']);
         }

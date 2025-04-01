@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
   @include('includes.header')
   <div id="app">
-
     <main id="main">
       <section class="breadcrumbs">
         <div class="container">

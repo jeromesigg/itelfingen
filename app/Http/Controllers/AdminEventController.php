@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Notification;
 use Carbon\Carbon;
+use App\Models\Room;
 use App\Models\User;
 use App\Models\Event;
 use App\Helper\Helper;
@@ -214,6 +215,7 @@ class AdminEventController extends Controller
         if ($input['contract_status_id'] == config('status.contract_storniert')) {
             $input['event_status_id'] = config('status.event_storniert');
         }
+        
         $event->update($input);
         $additional_text = $input['additional_text'] ?? '';
 

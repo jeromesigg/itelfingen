@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Faq;
 use App\Models\Event;
+use App\Models\EventCheckpoint;
 use App\Models\Person;
 use App\Models\Picture;
 use App\Models\Homepage;
@@ -127,10 +128,20 @@ class HomeController extends Controller
         if ($event === null) {
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
         }
+
+        return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);
+    }
+
+    public function bookings_checklist(string $uuid)
+    {
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
         $homepage = Homepage::FindOrFail(1);
         $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
 
-        return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);
+        return view('contents.bookings_checklist', compact('homepage', 'title', 'event'));
     }
 
     public function DownloadLastInfos(string $uuid)
@@ -142,5 +153,25 @@ class HomeController extends Controller
         $outputFile = Storage::disk('local')->path('contracts/Infos_vor_Buchung.pdf');
 
         return response()->download($outputFile);
+    }
+
+    public function bookings_checkpointDone(Request $request)
+    {
+        $checkpoint_id = $request->get('checkpoint_id');
+        $checkpoint = EventCheckpoint::findOrFail($checkpoint_id);
+        $checkpoint->done = !$checkpoint->done;
+        $checkpoint->save();
+        $event_room = $checkpoint->event_room;
+        $done = ($event_room->event_checkpoints_open()->count() === 0);
+        $event_room->done = $done;
+        $event_room->save();
+        return response()->json([
+            'data' => [
+                'checkpoint_done' =>  $checkpoint->done,
+                'room_id' =>  $event_room->id,
+                'room_done' =>  $event_room->done,
+                'success' => true,
+            ]
+          ]);
     }
 }

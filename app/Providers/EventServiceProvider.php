@@ -9,6 +9,7 @@ use App\Events\EventInvoiceSend;
 use App\Events\EventOfferCreate;
 use App\Events\EventOfferSend;
 use App\Listeners\ApplicationCreatedListener;
+use App\Listeners\EventChecklistCreateListener;
 use App\Listeners\EventContactCreateListener;
 use App\Listeners\EventCreatedListener;
 use App\Listeners\EventInvoiceCreateListener;
@@ -42,6 +43,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         EventInvoiceCreate::class => [
             EventInvoiceCreateListener::class,
+            EventChecklistCreateListener::class,
         ],
         EventInvoiceSend::class => [
             EventInvoiceSendListener::class,
