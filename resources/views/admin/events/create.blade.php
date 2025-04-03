@@ -11,7 +11,7 @@
             <button class="btn btn-primary" onclick="createExtern()">Externe Buchung erstellen</button>
         </div>
         <br>
-        <x-forms.form :action="route('admin.events.create')">
+        <x-forms.form :action="route('admin.events.store')">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <div class="form-row">
