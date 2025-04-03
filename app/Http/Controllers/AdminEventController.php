@@ -149,6 +149,7 @@ class AdminEventController extends Controller
         //
         $input = $request->all();
         $input['external'] = isset($input['foreign_key']);
+        $input['event_status_id'] = config('status.event_neu');
         $input['contract_status_id'] = config('status.contract_offen');
         $one_day = false;
         if ($input['total_days'] < 1) {
@@ -167,7 +168,7 @@ class AdminEventController extends Controller
             Helper::EventToGoogleCalendar($event);
         }
 
-        return redirect()->route('events.edit', [$event]);
+        return redirect()->route('admin.events.edit', [$event]);
     }
 
     /**

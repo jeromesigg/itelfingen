@@ -36,7 +36,9 @@ class EventCreatedListener
         } else {
             $positions[count($positions)] = ['bexio_code' => 20, 'amount' => 1];
             foreach ($keys as $index => $key) {
-                $positions[count($positions)] = ['bexio_code' => $key, 'amount' => $event->position_array[$key]];
+                if ($key != 20) {
+                    $positions[count($positions)] = ['bexio_code' => $key, 'amount' => $event->position_array[$key]];
+                }
             }
         }
         $positions[count($positions)] = ['bexio_code' => 210, 'amount' => 0];

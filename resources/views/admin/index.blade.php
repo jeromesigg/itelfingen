@@ -29,7 +29,7 @@
         <div class="flex justify-center items-baseline my-8">
           <ul class="news list-unstyled">
             <!-- Item-->
-            @foreach ($events_current as $event)
+            @foreach ($events as $event)
                 <li class="justify-content-between">
                     <div class="left-col row">
                         <div class="title col-xl-6">
@@ -63,7 +63,7 @@
         <div class="flex justify-center items-baseline my-8">
           <ul class="news list-unstyled">
             <!-- Item-->
-            @foreach ($events as $event)
+            @foreach ($events_current as $event)
                 <li class="justify-content-between">
                     <div class="left-col row">
                         <div class="title col-xl-6">
