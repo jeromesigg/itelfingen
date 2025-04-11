@@ -222,7 +222,7 @@
                                     <td>
                                         {{\Carbon\Carbon::parse($notification->created_at)->isoFormat('DD.MM.YY')}}
                                     </td>
-                                    <td>{{$notification['created_at'] ?? 'Buchung erstellt' }}</td>
+                                    <td>{{$notification->data['action'] ?? 'Buchung erstellt' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

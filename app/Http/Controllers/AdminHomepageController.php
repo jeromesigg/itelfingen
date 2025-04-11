@@ -133,4 +133,13 @@ class AdminHomepageController extends Controller
     {
         //
     }
+
+    
+    public function CommentUpdate(Request $request,Homepage $homepage)
+    {
+        $input = request()->all();
+        $homepage->update($input);
+        return redirect()->back();
+        //
+    }
 }

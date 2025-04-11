@@ -39,6 +39,7 @@ class AdminEventController extends Controller
     public function index(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         //
+        $homepage = Homepage::FindOrFail(1);
         $event_type = 'admin';
         $events_all = Event::all();
         $positions = [];
@@ -70,7 +71,7 @@ class AdminEventController extends Controller
         }
         $title = 'Buchungen';
 
-        return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title'));
+        return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title', 'homepage'));
     }
 
     public function createDataTables(Request $request)
