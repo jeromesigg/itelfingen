@@ -4,17 +4,27 @@
 <div>
     <div class="container-fluid">
 
-        <header>
+        <header class="mb-4 d-flex justify-content-between align-items-center">
             <h3 class="text-3xl font-bold dark:text-white">{{$title}}</h3>
         </header>
+
+        <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
+            <x-forms.container>
+                <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
+            </x-forms.container>
+            <x-forms.button type="submit" name="submit" class="btn btn-secondary">
+                Bemerkung aktualisieren
+            </x-forms.button>
+        </x-forms.form>
+        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
         <div id="filter_btns">
             <div id="date_btn">
                 <div class="row" style="width: 20%">
-                    <div class="col-md-6">
+                    <div class="col-6 mb-1">
                          <button class="btn btn-primary">Alle</button>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-6 mb-1">
                         <button class="btn btn-primary active">Ab Heute</button>
                     </div>
                 </div>
@@ -22,12 +32,12 @@
             <div id="status_btn">
                 <br>
                 <div class="row">
-                    <div class="col-md-1">
-                        <button class="btn btn-secondary active">Alle</button>
+                    <div class="col-sm-6 col-md-1">
+                        <button class="btn btn-secondary active mb-1">Alle</button>
                     </div>
                     @foreach ($contract_statuses as $contract_status)
-                        <div class="col-md-1">
-                            <button class="btn btn-secondary">{{$contract_status}}</button>
+                        <div class="col-sm-6 col-md-1">
+                            <button class="btn btn-secondary mb-1">{{$contract_status}}</button>
                         </div>
                     @endforeach
                 </div>

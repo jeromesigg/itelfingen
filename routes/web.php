@@ -44,6 +44,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/changes', ['as' => 'admin.changes', 'uses' => 'AdminController@changes']);
     Route::get('/admin/bookings', ['as' => 'admin.bookings', 'uses' => 'AdminController@bookings']);
     Route::get('/admin/bookings/export-csv', ['as' => 'admin.exportcsv', 'uses' => 'AdminController@exportCSV']);
+    Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
     Route::resource('admin/homepages', 'AdminHomepageController');
     Route::resource('admin/pictures', 'AdminPicturesController');
     Route::resource('admin/eventstatuses', 'AdminEventStatusesController');
