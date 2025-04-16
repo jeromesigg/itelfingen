@@ -71,7 +71,7 @@
                     <div class="form-row">
                         @foreach ($positions as $index => $position)
                             @if ($position['bexio_code']<50)
-                                <x-forms.hidden name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()"/>
+                                <x-forms.hidden name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()" value="1"/>
                             @else
                                 <x-forms.container class="col-md-3">
                                     <x-forms.text label="{{ $position['name'] . ' ('. $position['price'] . ' CHF)'}}" name="{{'positions['.$position['bexio_code'].']'}}" type="number" id="{{'position_'.$position['id']}}" onChange="Total_Change()" />
