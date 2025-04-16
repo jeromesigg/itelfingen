@@ -18,7 +18,7 @@ class Text extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, string $label = '', string $id = null, bool $required = false, string $type = 'text', $value = null)
+    public function __construct(string $name, string $label = '', $id = null, bool $required = false, string $type = 'text', $value = null)
     {
         $this->name = $name;
         $this->label = $label;

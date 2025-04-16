@@ -8,40 +8,38 @@
             <h3 class="text-3xl font-bold dark:text-white">{{$title}}</h3>
         </header>
 
+        <a type="button" href="{{route('admin.events.create')}}" class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">Buchung erstellen</a>
         <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
             <x-forms.container>
                 <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
             </x-forms.container>
-            <x-forms.button type="submit" name="submit" class="btn btn-secondary">
+            <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
                 Bemerkung aktualisieren
             </x-forms.button>
         </x-forms.form>
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
         <div id="filter_btns">
-            <div id="date_btn">
-                <div class="row" style="width: 20%">
-                    <div class="col-6 mb-1">
-                         <button class="btn btn-primary">Alle</button>
-                    </div>
-                    <div class="col-6 mb-1">
-                        <button class="btn btn-primary active">Ab Heute</button>
-                    </div>
+            <div id="date_btn" class="grid grid-cols-1 md:grid-cols-2 gap-2 w-1/5">
+                <div>
+                    <button class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">Alle</button>
+                </div>
+                <div>
+                    <button class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen active">Ab Heute</button>
                 </div>
             </div>
-            <div id="status_btn">
-                <br>
-                <div class="row">
-                    <div class="col-sm-6 col-md-1">
-                        <button class="btn btn-secondary active mb-1">Alle</button>
-                    </div>
-                    @foreach ($contract_statuses as $contract_status)
-                        <div class="col-sm-6 col-md-1">
-                            <button class="btn btn-secondary mb-1">{{$contract_status}}</button>
-                        </div>
-                    @endforeach
+            <br>
+            <div id="status_btn" class="grid grid-cols-1 md:grid-cols-7 gap-2">
+                <div class="...">
+                    <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith active">Alle</button>
                 </div>
+                @foreach ($contract_statuses as $contract_status)
+                    <div class="...">
+                        <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">{{$contract_status}}</button>
+                    </div>
+                @endforeach
             </div>
+        </div>
         </div>
         <input type="hidden" value="Ab Heute" id="date_btn_value">
         <input type="hidden" value="Alle" id="status_btn_value">
@@ -155,12 +153,14 @@
           var btnContainer_status = document.getElementById("status_btn");
 
           // Get all buttons with class="btn" inside the container
-          var btns_date = btnContainer_date.getElementsByClassName("btn");
-          var btns_status = btnContainer_status.getElementsByClassName("btn");
+          var btns_date = btnContainer_date.getElementsByTagName("button");
+          var btns_status = btnContainer_status.getElementsByTagName("button");
+          console.log(btns_status);
 
           // Loop through the buttons and add the active class to the current/clicked button
           for (var i = 0; i < btns_date.length; i++) {
               btns_date[i].addEventListener("click", function () {
+                    
                   var current = btnContainer_date.getElementsByClassName("active");
                   // If there's no active class
                   if (current.length > 0) {
@@ -193,7 +193,7 @@
           var btnsContainer = document.getElementById("filter_btns");
 
           // Get all buttons with class="btn" inside the container
-          var btns = btnsContainer.getElementsByClassName("btn");
+          var btns = btnsContainer.getElementsByTagName("button");
 
           // Loop through the buttons and add the active class to the current/clicked button
           for (var i = 0; i < btns.length; i++) {

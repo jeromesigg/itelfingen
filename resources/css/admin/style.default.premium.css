@@ -2227,11 +2227,6 @@ a {
   text-decoration: none;
 }
 
-a:focus, a:hover {
-  color: #22773c;
-  text-decoration: underline;
-}
-
 h1,
 h2,
 h3,
