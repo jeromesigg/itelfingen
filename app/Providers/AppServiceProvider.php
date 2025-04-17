@@ -31,7 +31,6 @@ class AppServiceProvider extends ServiceProvider
         if (class_exists('Swift_Preferences')) {
             \Swift_Preferences::getInstance()->setTempDir(storage_path().'/tmp');
         } else {
-            \Log::warning('Class Swift_Preferences does not exists');
         }
         DB::statement("SET lc_time_names = 'de_CH'");
     }

@@ -46,7 +46,7 @@
                         <x-forms.row>
                             @foreach ($positions as $index => $position)
                                 @if ($position->pricelist_position['bexio_code']<50)
-                                    <x-forms.hidden name="{{'positions['.$position['id'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()" type="number"/>
+                                    <x-forms.hidden name="{{'positions['.$position['id'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()" type="number" value="{{$position['amount']}}"/>
                                 @else
                                     <x-forms.container class="col-xl-2 col-4">
                                         <x-forms.text label="{{$position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)'}}" name="{{'positions['.$position['id'].']'}}" 

@@ -13,7 +13,7 @@ class ExportBookings implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return Event::where('event_status_id', '<=', config('status.event_bestaetigt'))->get(['start_date', 'end_date', 'event_status_id', 'total_days', 'total_amount', 'total_people', 'external', 'early_checkin', 'late_checkout']);
+        return Event::where('event_status_id', '<=', config('status.event_bestaetigt'))->get(['start_date', 'end_date', 'name', 'firstname', 'group_name', 'event_status_id', 'total_days', 'total_amount', 'total_people', 'external', 'early_checkin', 'late_checkout']);
     }
 
     public function headings(): array
@@ -21,6 +21,9 @@ class ExportBookings implements FromCollection, WithHeadings
         return [
             'Datum Start',
             'Datum Ende',
+            'Name',
+            'Vorname',
+            'Gruppe',
             'Status',
             'Total Tage',
             'Total Betrag',

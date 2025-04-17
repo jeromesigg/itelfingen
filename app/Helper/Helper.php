@@ -16,7 +16,7 @@ class Helper
 {
     public static function PrintParking(Event $event)
     {
-        $outputFile = Storage::disk('local')->path('files/Parkkarten/'.$event['id'].'.pdf');
+        $outputFile = Storage::disk('local')->path('files/Parkkarten/Parkkarte_'.str_pad($event['id'], 5, '0', STR_PAD_LEFT).'.pdf');
         // fill data
         Helper::fillPDF(storage_path('app/files/Parkkarte.pdf'), $outputFile, $event);
 
