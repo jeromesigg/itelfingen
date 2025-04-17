@@ -182,8 +182,8 @@
                             </x-forms.container>
                         </div>
                     </x-forms.form>
-                    <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event">
-                        <x-forms.button type="submit" name="submit" class="btn btn-danger">
+                    <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event" id="DeleteForm">
+                        <x-forms.button type="submit" name="submit-delete" class="confirm-delete btn btn-danger">
                             Buchung löschen
                         </x-forms.button>
                     </x-forms.form>
@@ -239,6 +239,24 @@
     <script type="module">
         window.addEventListener("load", function() {
             Total_Change();
+            $('.confirm-delete').on('click', function(e){
+                e.preventDefault(); //cancel default action
+
+                Swal.fire({
+                    title: 'Buchung löschen?',
+                    text: "Lösche Buchungen nur im Notfall. Zur Nachvollziehbarkeit der Buchungen, bitte den Status auf 'Storniert' setzen und nicht löschen.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ja',
+                    cancelButtonText: 'Abbrechen',
+                    confirmButtonColor: 'blue',
+                    cancelButtonColor: 'red',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById("DeleteForm").submit();
+                    }
+                });
+            });
         });
         $("#external").change(function() {
             Total_Change();
