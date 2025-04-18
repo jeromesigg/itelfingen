@@ -105,14 +105,14 @@
                         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
                             <x-forms.container class="col-xl-2 col-6">
-                                <x-forms.button type="submit" name="submit" class="btn btn-primary" value="1 Buchung updaten">
+                                <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen" value="1 Buchung updaten">
                                     1 Buchung updaten
                                 </x-forms.button>
                             </x-forms.container>
                             @switch($event['contract_status_id'])
                                 @case(config('status.contract_offen'))  
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="2 Angebot erstellen">
+                                        <x-forms.button type="submit" class="focus:outline-none text-white bg-norway hover:bg-norway hover:text-white focus:ring-4 focus:ring-norway font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-norway dark:hover:bg-norway dark:focus:ring-norway" name="submit" value="2 Angebot erstellen">
                                             {{config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen'}}
                                         </x-forms.button>
                                     </x-forms.container>
@@ -121,10 +121,10 @@
                                     @break
                                 @case(config('status.contract_angebot_erstellt'))
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                        <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value=" 3 Angebot versenden">
+                                        <x-forms.button type="submit" class="focus:outline-none text-white bg-ebonyclay hover:bg-ebonyclay hover:text-white focus:ring-4 focus:ring-ebonyclay font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-ebonyclay dark:hover:bg-ebonyclay dark:focus:ring-ebonyclay" name="submit" value=" 3 Angebot versenden">
                                             3 Angebot versenden
                                         </x-forms.button>
                                     </x-forms.container>
@@ -132,41 +132,41 @@
                                     @break
                                 @case(config('status.contract_angebot_versendet'))
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                        <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-secondary" name="submit" value="3 Erinnerung versenden">
+                                        <x-forms.button type="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" name="submit" value="3 Erinnerung versenden">
                                             3 Erinnerung versenden
                                         </x-forms.button>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="4 Rechnung erstellen">
+                                        <x-forms.button type="submit" class="focus:outline-none text-white bg-ebonyclay hover:bg-ebonyclay hover:text-white focus:ring-4 focus:ring-ebonyclay font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-ebonyclay dark:hover:bg-ebonyclay dark:focus:ring-ebonyclay" name="submit" value="4 Rechnung erstellen">
                                             4 Rechnung erstellen
                                         </x-forms.button>
                                     </x-forms.container>
                                     @break
                                 @case(config('status.contract_rechnung_erstellt'))
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                        <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
+                                        <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="5 Rechnung versenden">
+                                        <x-forms.button type="submit" class="focus:outline-none text-white bg-norway hover:bg-norway hover:text-white focus:ring-4 focus:ring-norway font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-norway dark:hover:bg-norway dark:focus:ring-norway" name="submit" value="5 Rechnung versenden">
                                             5 Rechnung versenden
                                         </x-forms.button>
                                     </x-forms.container>
                                     @break
                                 @case(config('status.contract_rechnung_versendet'))
                                 <x-forms.container class="col-xl-2 col-6">
-                                        <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
+                                        <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <a target="_blank" class = 'btn btn-secondary' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
+                                        <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_invoice/show/id/{{$event['bexio_invoice_id']}}">Rechnung anzeigen</a>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6">
-                                        <x-forms.button type="submit" class="btn btn-info" name="submit" value="6 Genossenschafts Info versenden">
+                                        <x-forms.button type="submit" class="focus:outline-none text-white bg-ebonyclay hover:bg-ebonyclay hover:text-white focus:ring-4 focus:ring-ebonyclay font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-ebonyclay dark:hover:bg-ebonyclay dark:focus:ring-ebonyclay" name="submit" value="6 Genossenschafts Info versenden">
                                             6 Genossenschafts Info versenden
                                         </x-forms.button>
                                     </x-forms.container>
@@ -177,13 +177,13 @@
                                 <x-forms.text-area label="Zusatztext für Mail:" name="additional_text" rows=3/>
                                 <br>
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-secondary" onclick="PrepareReminderMail()">Erinnerungstext einfügen</button>
+                                    <button type="button" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="PrepareReminderMail()">Erinnerungstext einfügen</button>
                                 </div>
                             </x-forms.container>
                         </div>
                     </x-forms.form>
                     <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event" id="DeleteForm">
-                        <x-forms.button type="submit" name="submit-delete" class="confirm-delete btn btn-danger">
+                        <x-forms.button type="submit" name="submit-delete" class="confirm-delete focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                             Buchung löschen
                         </x-forms.button>
                     </x-forms.form>
@@ -191,9 +191,13 @@
                 <div class="col-xl-2">
 
                     <br>
+                    <div class="form-group">
+                        <a type="button" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" href="{{route('bookings.uuid',$event['uuid'])}}" target="blank">Zum Kundenlogin</a>
+                    </div>
                     @if(!$event->cleaning_mail)
+                        <br>
                         <div class="form-group">
-                            <button class="btn btn-secondary" onclick="PrepareMail()">Mail an Putzfirma</button>
+                            <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="PrepareMail()">Mail an Putzfirma</button>
                         </div>
                         <br>
                     @endif
@@ -205,14 +209,14 @@
                             <x-forms.container>
                                 <x-forms.text-area label="Mail Text:" name="cleaning_mail_text" rows=9/>
                             </x-forms.container>
-                            <x-forms.button type="submit" name="submit" class="btn btn-secondary">
+                            <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
                                 Mail versenden
                             </x-forms.button>
                         </x-forms.form>
                     </div>
                     <br>
                     <div class="form-group">
-                        <a href="{{route('events.downloadParking', $event)}}" class="btn btn-secondary">Parkplatz-Karte herunterladen</a>
+                        <a href="{{route('events.downloadParking', $event)}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
                     <br><br>
                     <table class="table">
