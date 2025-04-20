@@ -1,5 +1,5 @@
 <section id="gallery_section" class="gallery section">
-  <div class="container" >
+  <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
     <div class="section-title">
       <p>Impressionen</p>
     </div>      

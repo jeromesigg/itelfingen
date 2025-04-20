@@ -5,17 +5,13 @@
   <div id="app">
     <main id="main">
       <section class="breadcrumbs">
-        <div class="container">
+        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
           <div class="d-flex justify-content-between align-items-center">
             <h2>Bewerbung Genossenschaft</h2>
-            <ol>
-              <li><a href="{{route('home')}}" class="text-orientalpink">Home</a></li>
-              <li>Bewerbung Genossenschaft</li>
-            </ol>
           </div>
         </div>
       </section>
-        <div class="container max-width-md margin-top-lg margin-bottom-lg">
+        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
             @if (session()->has('success'))
                 <div class="alert alert-dismissable alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -52,50 +48,50 @@
             </ul>
             <x-forms.form :action="route('application.store')">
                 <x-honeypot />
-                <div class="form-row">
-                  <x-forms.container class="col-md-4">
+                <div class="grid md:grid-cols-3 gap-4">
+                  <x-forms.container >
                       <x-forms.text label="Vorname:" name="firstname"/>
                   </x-forms.container>
-                  <x-forms.container class="col-md-4">
+                  <x-forms.container >
                       <x-forms.text label="Nachname*:" name="name" required=true/>
                   </x-forms.container>
-                  <x-forms.container class="col-md-4">
+                  <x-forms.container >
                       <x-forms.text label="Organisation:" name="organisation"/>
                   </x-forms.container>
                 </div>
-                <div class="form-row">
-                    <x-forms.container class="col-md-5">
+                <div class="grid md:grid-cols-12 gap-4">
+                    <x-forms.container class="md:col-span-5">
                         <x-forms.text label="Strasse*:" name="street" required=true/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-2">
+                    <x-forms.container class="md:col-span-2">
                         <x-forms.text label="PLZ*:" name="zipcode" type="number" required=true class="autocomplete_txt"/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-5">
+                    <x-forms.container class="md:col-span-5">
                         <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
                     </x-forms.container>
                     <x-forms.hidden name="city_id" class="autocomplete_txt"/>
                 </div>
-                <div class="form-row">
-                    <x-forms.container class="col-md-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <x-forms.container>
                         <x-forms.text label="E-Mail*:" name="email" type="email" required=true/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-6">
+                    <x-forms.container >
                         <x-forms.text label="Telefon / Mobil:" name="telephone"/>
                     </x-forms.container>
                 </div>
-                <div class="form-row">
-                    <x-forms.container class="col-md-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <x-forms.container>
                         <x-forms.text-area label="Warum willst Du Genossenschafter:in werden?*" name="why" required=true rows=3 placeholder="Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?"/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-6">
+                    <x-forms.container>
                         <x-forms.text-area label="Hast du noch Fragen oder Bemerkungen?" name="comment" rows=3/>
                     </x-forms.container>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
                         <p>Danke! Noch ein Klick und deine Bewerbung ist bei uns eingegangen!</p>
                     </div>
-                    <div class="col-md-6">
+                    <div>
                         <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
                             Bewerbung absenden
                         </x-forms.button>

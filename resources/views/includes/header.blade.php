@@ -1,7 +1,7 @@
 
 <header class="m-1">
     <nav class="bg-white border-gray-200 dark:bg-gray-800">
-        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-2xl">
             <a href="/" class="flex items-center">
                 <img src="/img/logo.png" class="mr-3 h-24 sm:h-12" alt="Itelfingen Logo" />
             </a>

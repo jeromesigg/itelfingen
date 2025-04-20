@@ -1,8 +1,8 @@
-@import './libs/bootstrap.css';
-@import 'bootstrap-icons/font/bootstrap-icons.css';
-@import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+/* @import './libs/bootstrap.css'; */
+/* @import 'bootstrap-icons/font/bootstrap-icons.css'; */
+/* @import "datatables.net-bs5/css/dataTables.bootstrap5.min.css"; */
 /* @import "datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css"; */
-@import 'datatables.net-select-bs5/css/select.bootstrap5.css';
+/* @import 'datatables.net-select-bs5/css/select.bootstrap5.css'; */
 @import './libs/fonts.css';
 @import './libs/style.css';
 @import './admin/style.default.premium.css';

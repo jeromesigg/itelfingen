@@ -7,18 +7,14 @@
 
     <main id="main">
       <section class="breadcrumbs">
-        <div class="container">
+        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
           <div class="d-flex justify-content-between align-items-center">
             <h2 class="text-4xl font-bold dark:text-white">FAQ</h2>
-            <ol>
-              <li><a href="{{route('home')}}">Home</a></li>
-              <li>FAQ</li>
-            </ol>
           </div>
         </div>
       </section>
 
-      <div class="cd-faq js-cd-faq container max-width-md margin-top-lg margin-bottom-lg">
+      <div class="cd-faq js-cd-faq px-4 mx-auto max-w-screen-2xl lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
         <ul class="cd-faq__categories">
           @foreach ($faq_chapters as $chapter)
             <li>
@@ -48,17 +44,17 @@
                 <li class="cd-faq__item">
                   <a class="cd-faq__trigger" href="#0"><span>{{$faq->name}}</span></a>
                   <div class="cd-faq__content pt-3 border border-norway">
-                    <div class="text-component">
-                      <div class="row">
+                    <div class="text-component px-2">
+                      <div class="grid lg:grid-cols-2 gap-4">
                         @if($faq->photo)
-                          <div class="col-lg-6 order-1 order-lg-1">
+                          <div class="order-1 order-lg-1">
                               <p>{!! $faq->description !!}</p>
                           </div>
-                          <div class="col-lg-6 text-center order-2 order-lg-2">
+                          <div class="text-center order-2 order-lg-2">
                             <img src="{{$faq->photo ? $faq->photo->file : ''}}" alt="" class="img-fluid">
                           </div>
                         @else
-                          <div class="col-lg-12 order-1 order-lg-1">
+                          <div class="col-span-2 order-1 order-lg-1">
                             <p>{!! $faq->description !!}</p>
                           </div>
                         @endif
@@ -70,22 +66,16 @@
             </ul> <!-- cd-faq__group -->
           @endforeach
         </div> <!-- cd-faq__items -->
-
         <a href="#0" class="cd-faq__close-panel text-replace">Schliessen</a>
-
         <div class="cd-faq__overlay" aria-hidden="true"></div>
       </div> <!-- cd-faq -->
 
     </main><!-- End #main -->
         <!-- ======= Footer ======= -->
       @include('includes.footer')
-
-    {{-- @include('cookieConsent::index') --}}
   </div>
 @endsection
 
 @push('scripts')
   <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-
-
-  @endpush
+@endpush

@@ -7,18 +7,14 @@
 
         <main id="main">
             <section class="breadcrumbs">
-                <div class="container">
+                <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2>Über uns</h2>
-                        <ol>
-                            <li><a href="{{route('home')}}" class="text-orientalpink">Home</a></li>
-                            <li>Über uns</li>
-                        </ol>
                     </div>
                 </div>
             </section>
             <section id="about_us" class="about_us">
-                <div class="container">
+                <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
                     <div class="section-title">
                         <p>Was macht die Genossenschaft Ferienhaus Itelfingen?</p>
                     </div>
@@ -40,9 +36,9 @@
                             <p>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</p>
                         </div>
 
-                        <div class="row">
+                        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach ($people as $person)
-                                <div class="col-lg-4 col-md-6">
+                                <div>
                                     <div class="member">
                                         <img src="{{$person->photo ? $person->photo->file : 'https://loremflickr.com/350/400/face?random='. $person->id}}" class="img-fluid" alt="">
                                         <div class="member-info">
@@ -62,7 +58,6 @@
         </main><!-- End #main -->
         <!-- ======= Footer ======= -->
         @include('includes.footer')
-        <div id="preloader"></div>
         <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
 
     </div>

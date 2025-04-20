@@ -1,5 +1,5 @@
 <section id="rooms" class="section-green">
-    <div class="px-4 mx-auto max-w-screen-xl lg:px-6">
+    <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
         <div class="section-title">
             <p>Was dich erwartet</p>
         </div>

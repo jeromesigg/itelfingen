@@ -5,7 +5,7 @@
   <div id="app">
     <main id="main">
       <section class="breadcrumbs">
-        <div class="container">
+        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
           <div class="d-flex justify-content-between align-items-center">
             <h2 class="text-4xl font-bold dark:text-white">Checkliste</h2>
             <ol>
@@ -16,7 +16,7 @@
         </div>
       </section>
       
-      <div class="container max-width-md margin-top-lg margin-bottom-lg">
+      <div class="px-4 mx-auto max-w-screen-2xl lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
         <p class="mb-3 text-gray-800 dark:text-gray-400">
           Hier findest du eine Übersicht über die Checkliste für die Hausabgabe des Ferienhauses.
           <br>Bitte klicke auf die einzelnen Punkte, um sie als erledigt zu markieren.

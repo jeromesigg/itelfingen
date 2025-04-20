@@ -1,5 +1,5 @@
 <section id="contact" class="contact section-bg">
-  <div class="container">
+  <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
 
     <div class="section-title">
       <p>Schreib uns</p>
@@ -7,33 +7,31 @@
     <p class="mb-3 text-lg md:text-xl">
       Fragen, Anregungen? Wir freuen uns über Deine Nachricht.
     </p>
-  </div>
-  @if ($errors->contact->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->contact->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-  @endif
-  @if (session()->has('success_contact'))
-      <div class="alert alert-dismissable alert-success">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-          </button>
-          <strong>
-              {!! session()->get('success_contact') !!}
-          </strong>
+    @if ($errors->contact->any())
+      <div class="alert alert-danger">
+          <ul>
+              @foreach ($errors->contact->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach
+          </ul>
       </div>
-  @endif
+    @endif
+    @if (session()->has('success_contact'))
+        <div class="alert alert-dismissable alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>
+                {!! session()->get('success_contact') !!}
+            </strong>
+        </div>
+    @endif
 
-  <div >
-    <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
-  </div>
-  <div class="container" >
-    <div class="row mt-5">
-      <div class="col-lg-4">
+    <div >
+      <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-4 mt-5">
+      <div>
         <div class="info">
           <div class="address">
             <i>
@@ -58,14 +56,14 @@
         </div>
       </div>
 
-      <div class="col-lg-8 mt-5 mt-lg-0">
+      <div class="lg:col-span-2 mt-5 mt-lg-0">
         <x-forms.form :action="route('contacts.store')" id='contact_form'>
           <x-honeypot />
-          <div class="form-row">
-            <x-forms.container class="col-md-6">
+          <div class="grid md:grid-cols-2 gap-4">
+            <x-forms.container>
                 <x-forms.text label="Name:" name="name" required=true />
             </x-forms.container>
-            <x-forms.container class="col-md-6">
+            <x-forms.container>
                 <x-forms.text label="Email:" name="email" type="email" required=true />
             </x-forms.container>
           </div>

@@ -17,7 +17,6 @@
 				if(days === 0 || Agenda.end === null){
 					document.getElementById("oneday_text").style.display = "block";
 					document.getElementById("multiday_text").style.display = "none";
-					document.getElementById("multiday_comment").style.display = "none";
 					positions.forEach(position => {
 						var id = 'row_' + position['bexio_code'];
 						var position_id = '#position_' + position['bexio_code'] + '_amount';
@@ -34,7 +33,6 @@
 				else {
 					document.getElementById("oneday_text").style.display = "none";
 					document.getElementById("multiday_text").style.display = "block";
-					document.getElementById("multiday_comment").style.display = "block";
 					positions.forEach(position => {
 						var id = 'row_' + position['bexio_code'];
 						var position_id = '#position_' + position['bexio_code'] + '_amount';
