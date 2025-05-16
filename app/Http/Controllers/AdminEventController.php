@@ -163,6 +163,8 @@ class AdminEventController extends Controller
             $input['end_date'] = new Carbon($input['end_date']);
         }
         $input['uuid'] = \Illuminate\Support\Str::uuid();
+        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event['event_status_id'] == config('status.event_eigene')) {
@@ -217,6 +219,8 @@ class AdminEventController extends Controller
         if ($input['contract_status_id'] == config('status.contract_storniert')) {
             $input['event_status_id'] = config('status.event_storniert');
         }
+        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
         
         $event->update($input);
         $additional_text = $input['additional_text'] ?? '';
@@ -339,5 +343,27 @@ class AdminEventController extends Controller
             'Content-Type' => 'text/calendar; charset=utf-8',
             'Content-Disposition' => 'attachment; filename="itelfingen.ics"',
         ]);
+    }
+    
+    public function getPhoneNumber($api_token,$number)
+    {
+        if(preg_match('/^\+/', $number)) {
+            $number = substr($number, 3);
+        }
+        $event = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
+        //
+        if ($event->isEmpty()) {
+            return response()->json([
+                'error' => 'No event found with this number',
+            ], 404);
+        }
+        else {
+            $event = $event->first();
+            return response()->json([
+                'number' => $event['telephone'],
+                'firstname' => $event['firstname'],
+                'name' => $event['name'],
+            ]);
+        }
     }
 }
