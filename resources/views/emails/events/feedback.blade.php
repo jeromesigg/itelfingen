@@ -15,7 +15,8 @@ Bitte fülle noch die Rückmeldung aus, damit wir uns in Zukunft noch weiter ver
 @component('mail::button', ['url' => 'https://forms.gle/RMWyPzs8wauakQam9', 'color' => 'success'])
     Zum Feedback-Formular
 @endcomponent
-Wir würden uns freuen, dich wieder einmal im Ferienhaus Itelfingen begrüssen zu dürfen.
+Wir würden uns freuen, dich wieder einmal im Ferienhaus Itelfingen begrüssen zu dürfen. <br>
+Hinterlasse uns doch auch eine Bewertung auf <a href="https://maps.app.goo.gl/nDkcMkAQLsQPfp557">Google Maps</a> oder folge uns auf <a href="https://www.instagram.com/itelfingen/">Instagram</a>.
 <br><br>
 Freundliche Grüsse,<br>
 Das Ferienhaus Itelfingen
