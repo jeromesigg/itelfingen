@@ -366,4 +366,16 @@ class AdminEventController extends Controller
             ]);
         }
     }
+
+    public function isFree($api_token, int $days)
+    {
+        if (!is_numeric($days) || $days < 1) {
+            $days = 1;
+        }
+        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', ['5', '50'])->get();
+        //
+        return response()->json([
+            'isFree' => $events->isEmpty(),
+        ]);
+    }
 }
