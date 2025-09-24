@@ -12,7 +12,8 @@ class Homepage extends Model
         'title', 'subtitle', 'main_photo_id',
         'background_top_photo_id', 'background_bottom_photo_id',
         'big_login_photo_id', 'small_login_photo_id', 'address',
-        'phone', 'mail', 'postaddress', 'green_text', 'event_comment'
+        'phone', 'mail', 'postaddress', 'green_text', 'event_comment',
+        'additional_mail_text'
     ];
 
     public function main_photo()

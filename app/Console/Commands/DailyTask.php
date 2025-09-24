@@ -6,6 +6,7 @@ use Notification;
 use Carbon\Carbon;
 use App\Models\Room;
 use App\Models\Event;
+use App\Models\Homepage;
 use App\Models\Newsletter;
 use App\Models\Application;
 use Ixudra\Curl\Facades\Curl;
@@ -51,7 +52,7 @@ class DailyTask extends Command
     public function handle()
     {
         $this->SendEventLastInfos();
-        $this->SendFeedbackMails();
+        // $this->SendFeedbackMails();
         $this->SendApplicationInvoices();
         $this->SendNextEventToSlack();
     }
@@ -60,7 +61,8 @@ class DailyTask extends Command
     {
         $date = Carbon::today()->addweeks(2);
         $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
-
+        $homepage = Homepage::FindOrFail(1);
+        $additional_text = $homepage['additional_mail_text'];
         foreach ($events as $event) {
             if ($event->event_rooms->count() === 0) {
                 $rooms = Room::where('archive_status_id', config('status.aktiv'))->orderBy('sort-index')->get();
@@ -75,7 +77,7 @@ class DailyTask extends Command
                     }
                 }
             }
-            Notification::send($event, new EventLastInfosNotification($event));
+            Notification::send($event, new EventLastInfosNotification($event, $additional_text));
             $event->update(['last_info' => true]);
         }        if (count($events) > 0) {
             $this->info(count($events).' Letzte Infos-Emails versendet.');

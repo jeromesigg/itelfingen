@@ -64,7 +64,7 @@
                                 <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()"/>
                             </x-forms.container>
                             <x-forms.container class="col-xl-2 col-4">
-                                <x-forms.hidden label="Total [CHF]:" name="total_amount" type="number"/>
+                                <span class="mb-3">Total [CHF]:</span>
                                 <br>
                                 <span id="total"></span>.-
                             </x-forms.container>
@@ -216,7 +216,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <a href="{{route('events.downloadParking', $event)}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
+                        <a href="{{route('events.downloadParking', $event['uuid'])}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
                     <br><br>
                     <table class="table">

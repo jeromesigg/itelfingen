@@ -13,16 +13,18 @@ class EventLastInfosNotification extends Notification
     use Queueable;
 
     public Event $event;
+    public string $additional_text;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, string $additional_text)
     {
         //
         $this->event = $event;
+        $this->additional_text = $additional_text;
     }
 
     /**
@@ -44,7 +46,7 @@ class EventLastInfosNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new LastInfosSent($this->event);
+        return new LastInfosSent($this->event, $this->additional_text);
     }
 
     /**

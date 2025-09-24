@@ -38,8 +38,14 @@
               </div>
     
               <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Zusätzlich</h4>
-                <p class="font-medium text-gray-900 dark:text-white">Early Check-In {{$event['early_checkin'] ? 'dazu' : 'nicht'}} gebucht <br> Late Check-Out {{$event['late_checkout'] ? 'dazu' : 'nicht'}} gebucht</p>
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Check-In und Check-Out</h4>
+                <p class="font-mediumtext-gray-900 dark:text-white">
+                  <span class="font-semibold">Check-In:</span> 
+                  {{$event['early_checkin'] ? '10:00 Uhr (inkl. Early Check-In)' : '15:00 Uhr (ohne Early Check-In)'}} 
+                  <br>
+                  <span class="font-semibold">Check-Out:</span> 
+                  {{$event['late_checkout'] ? '17:00 Uhr (inkl. Late Check-Out)' : '10:00 Uhr (ohne Late Check-Out)'}} 
+                </p>
               </div>
     
               <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">

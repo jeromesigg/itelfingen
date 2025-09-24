@@ -281,8 +281,12 @@ class AdminEventController extends Controller
         return redirect()->back();
     }
 
-    public function DownloadParking(Event $event)
+    public function DownloadParking(string $uuid)
     {
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
         $outputFile = Helper::PrintParking($event);
 
         return response()->download($outputFile);

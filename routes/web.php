@@ -27,6 +27,7 @@ Route::post('bookings/login', 'HomeController@bookings_check')->name('bookings.c
 Route::get('bookings/{uuid}', 'HomeController@bookings_uuid')->name('bookings.uuid');
 Route::get('bookings/{uuid}/checklist', 'HomeController@bookings_checklist')->name('bookings.checklist');
 Route::get('admin/bookings/{uuid}/DownloadLastInfos', 'HomeController@DownloadLastInfos')->name('bookings.downloadLastInfos');
+Route::get('admin/events/{uuid}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
 Route::post('bookings/checkpoint/done', 'HomeController@bookings_checkpointDone')->name('bookings.checkpointDone');
 
 Auth::routes();
@@ -45,6 +46,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/bookings', ['as' => 'admin.bookings', 'uses' => 'AdminController@bookings']);
     Route::get('/admin/bookings/export-csv', ['as' => 'admin.exportcsv', 'uses' => 'AdminController@exportCSV']);
     Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
+    Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@MailTextUpdate')->name('admin.homepages.mail_text_update');
     Route::resource('admin/homepages', 'AdminHomepageController');
     Route::resource('admin/pictures', 'AdminPicturesController');
     Route::resource('admin/eventstatuses', 'AdminEventStatusesController');
