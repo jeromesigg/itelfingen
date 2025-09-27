@@ -11,6 +11,9 @@ Hinterlege in jedem Auto eine Parkkarte, da sonst die Gefahr einer Busse in der 
 @component('mail::panel')
     Der Code für die Türe ist {{$event->code}}.
 @endcomponent
+<br>
+{{$additional_text}}
+<br>
 Bei Notfällen erreichst du uns direkt: <br>
 - Lukas Affolter (079 810 30 05), <br>
 - Jérôme Sigg (079 587 56 51) oder <br>

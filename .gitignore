@@ -5,6 +5,7 @@
 /public/images
 /public/files
 /storage/*.key
+/storage/contracts/*
 /storage/app/google-calendar
 /vendor
 /.vscode

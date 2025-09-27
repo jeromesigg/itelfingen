@@ -9,14 +9,24 @@
         </header>
 
         <a type="button" href="{{route('admin.events.create')}}" class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">Buchung erstellen</a>
-        <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
-            <x-forms.container>
-                <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
-            </x-forms.container>
-            <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
-                Bemerkung aktualisieren
-            </x-forms.button>
-        </x-forms.form>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
+                <x-forms.container>
+                    <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
+                </x-forms.container>
+                <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
+                    Bemerkung aktualisieren
+                </x-forms.button>
+            </x-forms.form>
+                <x-forms.form class="mb-5" :action="route('admin.homepages.mail_text_update', $homepage)" method="PATCH" :model="$homepage">
+                <x-forms.container>
+                    <x-forms.text-area label="Zusätzlicher Mail Text (Letzte Infos):" name="additional_mail_text" rows=5/>
+                </x-forms.container>
+                <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
+                    Zusätzlicher Mail Text aktualisieren
+                </x-forms.button>
+            </x-forms.form>
+        </div>
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
         <div id="filter_btns">

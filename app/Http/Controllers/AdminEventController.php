@@ -281,8 +281,12 @@ class AdminEventController extends Controller
         return redirect()->back();
     }
 
-    public function DownloadParking(Event $event)
+    public function DownloadParking(string $uuid)
     {
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
         $outputFile = Helper::PrintParking($event);
 
         return response()->download($outputFile);
@@ -365,5 +369,17 @@ class AdminEventController extends Controller
                 'name' => $event['name'],
             ]);
         }
+    }
+
+    public function isFree($api_token, int $days)
+    {
+        if (!is_numeric($days) || $days < 1) {
+            $days = 1;
+        }
+        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', ['5', '50'])->get();
+        //
+        return response()->json([
+            'isFree' => $events->isEmpty(),
+        ]);
     }
 }
