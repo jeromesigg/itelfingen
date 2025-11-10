@@ -20,7 +20,7 @@ class EventLastInfosNotification extends Notification
      *
      * @return void
      */
-    public function __construct(Event $event, string $additional_text)
+    public function __construct(Event $event, string $additional_text = '')
     {
         //
         $this->event = $event;

@@ -12,7 +12,7 @@ class AdminPricelistPositionController extends Controller
     public function index()
     {
         //
-        $positions = PricelistPosition::orderby('bexio_code')->paginate(10);
+        $positions = PricelistPosition::orderby('bexio_code')->get();
 
         return view('admin.positions.index', compact('positions'));
     }
@@ -36,7 +36,6 @@ class AdminPricelistPositionController extends Controller
             $position_db = PricelistPosition::where('bexio_id', $position['id']);
             if ($position_db->count() > 0) {
                 $position_db->update([
-                    'name' => $position['deliverer_name'],
                     'price' => $position['sale_price'], ]);
             } else {
                 PricelistPosition::create([

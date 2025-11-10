@@ -59,10 +59,10 @@ class DailyTask extends Command
 
     public function SendEventLastInfos()
     {
-        $date = Carbon::today()->addweeks(2);
+        $date = Carbon::today()->addWeeks(2);
         $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
         $homepage = Homepage::FindOrFail(1);
-        $additional_text = $homepage['additional_mail_text'];
+        $additional_text = $homepage['additional_mail_text'] ? $homepage['additional_mail_text'] : '';
         foreach ($events as $event) {
             if ($event->event_rooms->count() === 0) {
                 $rooms = Room::where('archive_status_id', config('status.aktiv'))->orderBy('sort-index')->get();
