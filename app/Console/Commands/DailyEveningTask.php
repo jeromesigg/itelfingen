@@ -46,7 +46,7 @@ class DailyEveningTask extends Command
 
     public function SendFeedbackMails()
     {
-        $date = Carbon::today();
+        $date = Carbon::today()->addDays(1);
         $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
 
         foreach ($events as $event) {
