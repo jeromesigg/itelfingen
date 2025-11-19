@@ -334,6 +334,22 @@
             $("#total_amount").val(total_amount);
             $("#total_people").val(total_person);
         }
+
+        $("#contract_status_id").change(function(e) {
+            if($(this).val() == {{config('status.contract_storniert')}}){
+                var event = @json($event);
+                if(event['cleaning_mail']){
+                    e.preventDefault(); //cancel default action
+
+                    Swal.fire({
+                        title: 'Buchung stornieren',
+                        text: "Die Buchung wurde bereits der Reinigungsfirma gemeldet. Bitte die Stornierung weiterleiten.",
+                        icon: 'warning',
+                    });
+                }
+            }
+        });
+
         window.PrepareMail = PrepareMail;
         window.PrepareReminderMail = PrepareReminderMail;
         window.Total_Change = Total_Change;
