@@ -347,8 +347,11 @@
 						date.setDate(date.getDate() + 1);
 					}
 					for (; Date.parse(date) != Date.parse(end); date.setDate(date.getDate() + 1)){
-						if ((this.reserved[Date.parse(date)] || {}).rState)
+						if ((this.reserved[Date.parse(date)] || {}).rState){
+							date.setDate(date.getDate() - 1);
+							this.end = new Date(date);
 							break;
+						}
 						else if (this.index[Date.parse(date)])
 							this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state = 'SS';
 					}
