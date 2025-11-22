@@ -366,6 +366,7 @@ class AdminEventController extends Controller
                 'number' => $event['telephone'],
                 'firstname' => $event['firstname'],
                 'name' => $event['name'],
+                'date' => $event['start_date']->format('d.m.Y').' - '.$event['end_date']->format('d.m.Y'),
             ]);
         }
     }
