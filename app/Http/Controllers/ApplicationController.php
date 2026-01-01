@@ -46,6 +46,32 @@ class ApplicationController extends Controller
         $input = $request->all();
 
         $input['plz'] = $input['zipcode'];
+                $query = [
+            [
+                'field' => 'name_1',
+                'value' => $input['name'],
+            ],
+            [
+                'field' => 'name_2',
+                'value' => $input['firstname'] ?: '',
+            ],
+                [
+                    'field' => 'address',
+                    'value' => $input['street'] . ' ' . $input['house_number'],
+                ],
+            [
+                'field' => 'postcode',
+                'value' => $input['plz'],
+            ] ];
+        $person = Curl::to('https://api.bexio.com/2.0/contact/search')
+            ->withHeader('Accept: application/json')
+            ->withBearer(config('app.bexio_token'))
+            ->withContentType('application/json')
+            ->withData($query)
+            ->asJson(true)
+            ->post();
+
+            return count($person);
         $application = Application::create($input);
 
         ApplicationCreatedEvent::dispatch($application);

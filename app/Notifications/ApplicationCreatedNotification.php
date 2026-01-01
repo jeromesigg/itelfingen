@@ -79,7 +79,7 @@ class ApplicationCreatedNotification extends Notification
             'name' => $application->firstname.' '.$application->name,
             'e-mail' => $application->email,
             'gruppe' => $application->organisation,
-            'strasse' => $application->street,
+            'strasse' => $application->street .' '.$application->house_number,
             'ort' => $application->plz.' '.$application->city,
             'telefon' => $application->telephone,
             'wieso' => $application->why,
