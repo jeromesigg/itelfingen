@@ -71,6 +71,6 @@ class Event extends Model
         $cleaning_mail = Helper::GetEventCleaningMailCheck($this);
         $code = Helper::GetEventCodeCheck($this);
 
-        return $user.$offer.$invoice.$cleaning_mail.$code;
+        return $offer . $invoice . $cleaning_mail . $code;
     }
 }

@@ -54,7 +54,7 @@
         <input type="hidden" value="Ab Heute" id="date_btn_value">
         <input type="hidden" value="Alle" id="status_btn_value">
         <br>
-        <div class="hk-reservation hk-reservation__step1">
+        <div class="hk-reservation hk-reservation__step1 text-gray-600 dark:text-gray-300">
             <div class="hk-reservation__container container-fluid">
                 <div class="row">
                     <div class="col-lg-12 hk-calendar">
@@ -98,7 +98,7 @@
             </div>
         </div>
         <br>
-        <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+        <table class="text-gray-600 dark:text-gray-300" style="width:100%" id="datatable">
             <thead>
                 <tr>
                     <th scope="col" width="8%">Datum</th>
