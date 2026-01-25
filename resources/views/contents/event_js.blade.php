@@ -154,6 +154,8 @@
 		load: function(records, mode) {
 			this.mode = mode;
 			for (var i = 0, date, end; i < records.length; ++i) {
+				if(records[i].state === null)
+					continue;
 				date = new Date(records[i].start.y, records[i].start.m, records[i].start.d);
 				end = new Date(records[i].end.y, records[i].end.m, records[i].end.d);
 				if (Date.parse(date) == Date.parse(end))
