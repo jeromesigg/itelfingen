@@ -2,7 +2,7 @@
 
 @section('content')
 <div>
-    <div class="container-fluid">
+    <div class="container-fluid text-gray-600 dark:text-gray-300">
 
         <header>
             <h3 class="text-3xl font-bold dark:text-white">Anfragen</h3>
@@ -23,7 +23,7 @@
         <input type="hidden" value="Offen" id="done_btn_value">
         <div class="row">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+                <table class="table table-striped table-bordered text-gray-600 dark:text-gray-300" style="width:100%" id="datatable">
                     <thead>
                         <tr>
                             <th scope="col" width="10%">Erstellt</th>
