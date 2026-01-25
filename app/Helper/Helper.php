@@ -236,6 +236,18 @@ class Helper
         $chart[1] = $days;
         $chart[2] = $stays;
         
+        // $chart_json = collect([
+        //     [
+        //     'name' => "Anzahl Tage",
+        //     'data' => $days,
+        //     'color' => "#1A56DB",
+        //     ],
+        //     [
+        //     'name' => "Anzahl Übernachtungen",
+        //     'data' => $stays,   
+        //     'color' => "#7E3BF2",
+        //     ]
+        // ]);
         return $chart;
     }
 }

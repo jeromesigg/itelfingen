@@ -30,6 +30,8 @@
     --color-accent-fg: #539bf5;
     --color-border: #dee2e6;
     --color-logo: #1c2128;
+    --chart-bg: #fff;
+    --chart-text: #666;
 }
 
 .dark {
@@ -48,6 +50,8 @@
     --color-accent-fg: #539bf5;
     --color-border: #fafafa;
     --color-logo:  #F4F7FA;
+    --chart-bg: #1f2937;
+    --chart-text: #f3f4f6;
 }
 
 .text-dark__white {

@@ -3,31 +3,14 @@
 @section('content')
 
     <!-- Counts Section -->
-	{{-- <section class="dashboard-counts section-padding">
-    <div class="container-fluid">
-      <div class="row">
-        @foreach ($icon_array as $icon)
-          <div class="col-xl-4 col-md-6 col-6">
-            <div class="wrapper count-title d-flex">
-              <div class="icon"><i class={{$icon->icon}}></i></div>
-              <div class="name"><strong class="text-uppercase">{{$icon->name}}</strong>
-                <div class="count-number">{{$icon->number}}</div>
-              </div>
-            </div>
-          </div>
-        @endforeach
-      </div>
-    </div>
-  </section> --}}
   <div class="my-4 grid gap-4 grid-cols-2 2xl:grid-cols-3">
     @foreach ($icon_array as $icon)
-      <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
+      <div class="items-center space-x-0 rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:flex sm:space-x-4 md:p-6">
         <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg {{$icon->color}} sm:mb-0">
           {!! $icon->icon !!}
         </div>
         <div>
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{$icon->number}}</h2>
-          <p class="text-gray-500 dark:text-gray-400">{{$icon->name}}</p>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{$icon->number}} {{$icon->name}}</h2>
         </div>
       </div>
     @endforeach
