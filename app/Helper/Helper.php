@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Position;
 use App\Models\PricelistPosition;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Fpdi;
@@ -236,18 +237,68 @@ class Helper
         $chart[1] = $days;
         $chart[2] = $stays;
         
-        // $chart_json = collect([
-        //     [
-        //     'name' => "Anzahl Tage",
-        //     'data' => $days,
-        //     'color' => "#1A56DB",
-        //     ],
-        //     [
-        //     'name' => "Anzahl Übernachtungen",
-        //     'data' => $stays,   
-        //     'color' => "#7E3BF2",
-        //     ]
-        // ]);
+        if ($time_frame === 'heatmap') {
+            $chart = Helper::GetHeatmap();
+        }
         return $chart;
+    }
+
+    public static function GetHeatmap()
+    {
+        $year = Carbon::now()->year-1;
+        $events = Event::where('event_status_id', '=', config('status.event_bestaetigt'))->whereYear('start_date', '=',$year )->get();
+
+        $days = collect();
+
+        $formatWeek = fn (int $w) => 'KW ' . str_pad($w, 2, '0', STR_PAD_LEFT);
+
+        $weeks = collect(range(1, 53))->map($formatWeek);
+
+
+        foreach ($events as $event) {
+            $period = CarbonPeriod::create(
+                Carbon::parse($event->start_date),
+                Carbon::parse($event->end_date)
+            );
+
+            foreach ($period as $date) {
+
+                $week = $formatWeek($date->isoWeek());
+                $weekday = $date->format('N'); // 1–7
+
+                $current = $days->get($weekday, []);
+
+                $current[$week] = ($current[$week] ?? 0) + $event->total_people;
+                $days->put($weekday, $current); 
+            }
+        }
+            
+        // Reihenfolge Mo–So fixieren
+        $weekdayMap = [
+            1 => 'Mo',
+            2 => 'Di',
+            3 => 'Mi',
+            4 => 'Do',
+            5 => 'Fr',
+            6 => 'Sa',
+            7 => 'So',
+        ];
+
+        $series = collect($weekdayMap)->map(function ($label, $weekday) use ($days, $weeks) {
+            $weekData = collect($days->get($weekday, []));
+            return [
+                'name' => $label,
+                'data' => $weeks->map(fn($week) => [
+                        'x' => $week,
+                        'y' => $weekData->get($week, 0),
+                    ])
+                    ->values(),
+            ];
+        })->values();
+
+        return [
+            'year'   => $year,
+            'series' => $series,
+        ];
     }
 }
