@@ -75,10 +75,12 @@ class AdminController extends Controller
         $bookingChartYear = Helper::getChart('yearly');
         $bookingChartQuarter = Helper::getChart('quarter');
         $bookingChartMonthly = Helper::getChart('monthly');
+        $bookingHeatMap = Helper::getChart('heatmap');
+
 
         $title = 'Auslastung';
 
-        return view('admin/bookings', compact('bookingChartYear', 'bookingChartQuarter', 'title', 'bookingChartMonthly'));
+        return view('admin/bookings', compact('bookingChartYear', 'bookingChartQuarter', 'title', 'bookingChartMonthly', 'bookingHeatMap'));
     }
 
     public function exportCSV()
