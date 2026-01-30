@@ -11,7 +11,7 @@ class Application extends Model
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'salutation_id', 'firstname', 'organisation', 'email', 'street', 'plz', 'city', 'telephone', 'comment', 'why',
+        'name', 'salutation_id', 'firstname', 'organisation', 'email', 'street', 'house_number', 'plz', 'city', 'telephone', 'comment', 'why',
         'bexio_user_id', 'bexio_invoice_id', 'invoice_send', 'refuse',
     ];
 

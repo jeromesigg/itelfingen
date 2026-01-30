@@ -32,10 +32,13 @@
                             <x-forms.container class="col-xl-2 col-6">
                                 <x-forms.text label="Telefon:" name="telephone" />
                             </x-forms.container>
-                            <x-forms.container class="col-xl-2">
+                            <x-forms.container class="col-xl-2 col-10">
                                 <x-forms.text label="Strasse:" name="street" required=true/>
                             </x-forms.container>
-                            <x-forms.container class="col-xl-2 col-3">
+                            <x-forms.container class="col-xl-1 col-2">
+                                <x-forms.text label="Nr.:" name="house_number"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-1 col-3">
                                 <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
                             </x-forms.container>
                             <x-forms.container class="col-xl-3 col-9">

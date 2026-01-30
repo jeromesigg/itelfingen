@@ -196,7 +196,7 @@ class DailyTask extends Command
                 'Vorname' => $application['firstname'],
                 'Name' => $application['name'],
                 'Organisation' => $application['organisation'],
-                'Strasse' => $application['street'],
+                'Strasse' => $application['street'] . ' ' . $application['house_number'],
                 'PLZ' => $application['plz'],
                 'Ort' => $application['city'],
                 'E-Mail' => $application['email'],

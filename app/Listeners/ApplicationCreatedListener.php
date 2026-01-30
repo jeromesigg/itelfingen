@@ -38,7 +38,7 @@ class ApplicationCreatedListener
                 ],
                 [
                     'field' => 'address',
-                    'value' => $application->street,
+                    'value' => $application->street . ' ' . $application->house_number,
                 ],
                 [
                     'field' => 'postcode',
@@ -61,7 +61,8 @@ class ApplicationCreatedListener
                         'contact_type_id' => '2',
                         'name_1' => $application->name,
                         'name_2' => $application->firstname,
-                        'address' => $application->street,
+                        'street_name' => $application->street,
+                        'house_number' => $application->house_number ?: '',
                         'postcode' => $application->plz,
                         'city' => $application->city,
                         'country_id' => 1,
@@ -76,7 +77,7 @@ class ApplicationCreatedListener
             } else {
                 $person = $person[0];
             }
-            if (! isset($person->error)) {
+            if (! isset($person->errors)) {
                 $application->update(['bexio_user_id' => $person['id']]);
             }
         }
