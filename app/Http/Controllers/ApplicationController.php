@@ -63,15 +63,7 @@ class ApplicationController extends Controller
                 'field' => 'postcode',
                 'value' => $input['plz'],
             ] ];
-        $person = Curl::to('https://api.bexio.com/2.0/contact/search')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->withContentType('application/json')
-            ->withData($query)
-            ->asJson(true)
-            ->post();
 
-            return count($person);
         $application = Application::create($input);
 
         ApplicationCreatedEvent::dispatch($application);
