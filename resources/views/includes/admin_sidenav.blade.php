@@ -27,7 +27,7 @@
     @if (Auth::user()->isManager())
       <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
         <li>
-          <a href="{{route('admin.contacts.index')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-whitegroup">
+          <a href="{{route('admin.contacts.index')}}" class="flex items-center p-2 text-base font-medium rounded-lg text-gray-900 dark:text-white">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7141 15h4.268c.4043 0 .732-.3838.732-.8571V3.85714c0-.47338-.3277-.85714-.732-.85714H6.71411c-.55228 0-1 .44772-1 1v4m10.99999 7v-3h3v3h-3Zm-3 6H6.71411c-.55228 0-1-.4477-1-1 0-1.6569 1.34315-3 3-3h2.99999c1.6569 0 3 1.3431 3 3 0 .5523-.4477 1-1 1Zm-1-9.5c0 1.3807-1.1193 2.5-2.5 2.5s-2.49999-1.1193-2.49999-2.5S8.8334 9 10.2141 9s2.5 1.1193 2.5 2.5Z"/>
             </svg>
@@ -35,7 +35,7 @@
           </a>
         </li>
         <li>
-          <a href="{{route('admin.events.index')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-whitegroup">
+          <a href="{{route('admin.events.index')}}" class="flex items-center p-2 text-base font-medium rounded-lg text-gray-900 dark:text-white">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
             </svg>
@@ -162,12 +162,12 @@
         </button>
         <ul id="dropdown-faqs" class="hidden py-2 space-y-2">
           <li>
-            <a href="{{route('faqs.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 groupdark:text-white " >
+            <a href="{{route('faqs.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group dark:text-white " >
               FAQ Liste
             </a>
           </li>
           <li>
-            <a href="{{route('faq_chapters.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group  dark:text-white " >
+            <a href="{{route('faq_chapters.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group dark:text-white " >
               FAQ Kapitel
             </a>
           </li>
@@ -187,7 +187,7 @@
         </button>
         <ul id="dropdown-checkpoints" class="hidden py-2 space-y-2">
           <li>
-            <a href="{{route('checkpoints.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 groupdark:text-white " >
+            <a href="{{route('checkpoints.index')}}" class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group dark:text-white " >
               Checkpunkte Reinigung
             </a>
           </li>

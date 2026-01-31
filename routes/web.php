@@ -92,3 +92,16 @@ Route::group(['middleware' => 'admin'], function () {
 
 //     return true;
 // });
+
+Route::get('/deploy', function () {
+    // Migrationen erzwingen
+    Artisan::call('migrate', ['--force' => true]);
+
+    // Optional: Cache-Handling
+    Artisan::call('optimize:clear');
+
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'Deployment erfolgreich durchgeführt 🚀',
+    ]);
+})->middleware('auth.deploy');

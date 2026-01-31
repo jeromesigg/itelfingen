@@ -24,7 +24,7 @@
                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Buchungs-Informationen</h4>
                 <dl class="space-y-1">
                   <dt class="font-medium text-gray-900 dark:text-white">{{$event['firstname']}} {{$event['name']}} {{isset($event['group_name']) ? "- ".$event['group_name'] : ''}}</dt>
-                  <dd class="font-normal text-gray-500 dark:text-gray-400">{{$event['street']}},  {{$event['plz']}}  {{$event['city']}} <br> {{$event['email']}} <br> {{$event['telephone']}}</dd>
+                  <dd class="font-normal text-gray-500 dark:text-gray-400">{{$event['street']}} {{$event['house_number']}},  {{$event['plz']}}  {{$event['city']}} <br> {{$event['email']}} <br> {{$event['telephone']}}</dd>
                 </dd>
                 </dl>
               </div>

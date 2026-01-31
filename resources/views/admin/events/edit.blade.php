@@ -32,10 +32,13 @@
                             <x-forms.container class="col-xl-2 col-6">
                                 <x-forms.text label="Telefon:" name="telephone" />
                             </x-forms.container>
-                            <x-forms.container class="col-xl-2">
+                            <x-forms.container class="col-xl-2 col-10">
                                 <x-forms.text label="Strasse:" name="street" required=true/>
                             </x-forms.container>
-                            <x-forms.container class="col-xl-2 col-3">
+                            <x-forms.container class="col-xl-1 col-2">
+                                <x-forms.text label="Nr.:" name="house_number"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-1 col-3">
                                 <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
                             </x-forms.container>
                             <x-forms.container class="col-xl-3 col-9">
@@ -334,6 +337,22 @@
             $("#total_amount").val(total_amount);
             $("#total_people").val(total_person);
         }
+
+        $("#contract_status_id").change(function(e) {
+            if($(this).val() == {{config('status.contract_storniert')}}){
+                var event = @json($event);
+                if(event['cleaning_mail']){
+                    e.preventDefault(); //cancel default action
+
+                    Swal.fire({
+                        title: 'Buchung stornieren',
+                        text: "Die Buchung wurde bereits der Reinigungsfirma gemeldet. Bitte die Stornierung weiterleiten.",
+                        icon: 'warning',
+                    });
+                }
+            }
+        });
+
         window.PrepareMail = PrepareMail;
         window.PrepareReminderMail = PrepareReminderMail;
         window.Total_Change = Total_Change;

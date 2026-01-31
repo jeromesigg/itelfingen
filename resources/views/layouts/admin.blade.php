@@ -7,6 +7,7 @@
         <meta name="description" content="{{env('APP_NAME')}}">
         <meta name="author" content="Jérôme Sigg">
         <meta name="robots" content="noindex,nofollow">
+        <meta name="theme-color" content="#ffffff">
 
         <title>{{isset($title) ? $title . ' - ' : ''}}{{config('app.name')}}</title>
 
@@ -16,10 +17,21 @@
         
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        <script>
+            // It's best to inline this in `head` to avoid FOUC (flash of unstyled content) when changing pages or themes
+            if (localStorage.getItem('color-theme') === 'dark' ||
+                (!('color-theme' in localStorage) &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        </script>
+
         @yield('styles')
     </head>
 
-    <body>
+    <body class="text-dark__black">
       <div class="antialiased bg-gray-50 dark:bg-gray-900">
 
         @include('includes/admin_topnav')

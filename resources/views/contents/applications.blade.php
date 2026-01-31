@@ -64,13 +64,16 @@
                   </x-forms.container>
                 </div>
                 <div class="form-row">
-                    <x-forms.container class="col-md-5">
+                    <x-forms.container class="col-md-4 col-10">
                         <x-forms.text label="Strasse*:" name="street" required=true/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-2">
+                    <x-forms.container class="col-md-1 col-2">
+                        <x-forms.text label="Nr.:" name="house_number"/>
+                    </x-forms.container>
+                    <x-forms.container class="col-md-2 col-2">
                         <x-forms.text label="PLZ*:" name="zipcode" type="number" required=true class="autocomplete_txt"/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-5">
+                    <x-forms.container class="col-md-5 col-10">
                         <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
                     </x-forms.container>
                     <x-forms.hidden name="city_id" class="autocomplete_txt"/>

@@ -154,6 +154,8 @@
 		load: function(records, mode) {
 			this.mode = mode;
 			for (var i = 0, date, end; i < records.length; ++i) {
+				if(records[i].state === null)
+					continue;
 				date = new Date(records[i].start.y, records[i].start.m, records[i].start.d);
 				end = new Date(records[i].end.y, records[i].end.m, records[i].end.d);
 				if (Date.parse(date) == Date.parse(end))
@@ -347,8 +349,11 @@
 						date.setDate(date.getDate() + 1);
 					}
 					for (; Date.parse(date) != Date.parse(end); date.setDate(date.getDate() + 1)){
-						if ((this.reserved[Date.parse(date)] || {}).rState)
+						if ((this.reserved[Date.parse(date)] || {}).rState){
+							date.setDate(date.getDate() - 1);
+							this.end = new Date(date);
 							break;
+						}
 						else if (this.index[Date.parse(date)])
 							this.matrix[this.index[Date.parse(date)].i][this.index[Date.parse(date)].j][this.index[Date.parse(date)].k].state = 'SS';
 					}

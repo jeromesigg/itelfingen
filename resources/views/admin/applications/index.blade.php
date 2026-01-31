@@ -64,6 +64,7 @@
                     { data: 'firstname', name: 'firstname' },
                     { data: 'email', name: 'email' },
                     { data: 'street', name: 'street' },
+                    { data: 'house_number', name: 'house_number' },
                     { data: 'city', name: 'city' },
                     { data: 'organisation', name: 'organisation' },
                     { data: 'why', name: 'why' },

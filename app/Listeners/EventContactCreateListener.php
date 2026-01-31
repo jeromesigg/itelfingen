@@ -39,7 +39,7 @@ class EventContactCreateListener
                 ],
                 [
                     'field' => 'address',
-                    'value' => $event->street,
+                    'value' => $event->street . ' ' . $event->house_number,
                 ],
                 [
                     'field' => 'postcode',
@@ -62,7 +62,8 @@ class EventContactCreateListener
                         'contact_type_id' => '2',
                         'name_1' => $event->name,
                         'name_2' => $event->firstname,
-                        'address' => $event->street,
+                        'street_name' => $event->street,
+                        'house_number' => $event->house_number ?: '',
                         'postcode' => $event->plz,
                         'city' => $event->city,
                         'country_id' => 1,
@@ -77,7 +78,7 @@ class EventContactCreateListener
             } else {
                 $person = $person[0];
             }
-            if (! isset($person->error)) {
+            if (! isset($person->errors)) {
                 $event->update(['bexio_user_id' => $person['id']]);
             }
         }

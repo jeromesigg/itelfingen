@@ -6,7 +6,7 @@
         | Name  | {{$application->firstname}} {{$application->name}} |
         | E-Mail | {{$application->email}} |
         | Anlass / Gruppe | {{$application->organisation}} |
-        | Strasse |  {{$application->street}} |
+        | Strasse |  {{$application->street}} {{$application->house_number}} |
         | PlZ / Ort | {{$application->plz}} {{$application->city}} |
         | Telefon | {{$application->telephone}} |
         | Wieso willst du Genossenschafter:in werden? | {{$application->why}} |

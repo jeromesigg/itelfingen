@@ -130,14 +130,19 @@
                                                 <x-forms.container>
                                                     <x-forms.text label="Anlass / Gruppe:" name="group" />
                                                 </x-forms.container>
-                                                <x-forms.container>
+                                                <div class="form-row">
+                                                <x-forms.container class="col-md-9 col-9">
                                                     <x-forms.text label="Strasse*:" name="street" required=true />
                                                 </x-forms.container>
+                                                    <x-forms.container class="col-md-3 col-3">
+                                                        <x-forms.text label="Nr.:" name="house_number" class="autocomplete_txt"/>
+                                                    </x-forms.container>
+                                                </div>
                                                 <div class="form-row">
-                                                    <x-forms.container class="col-md-3">
+                                                    <x-forms.container class="col-md-3 col-3">
                                                         <x-forms.text label="PLZ*:" name="zipcode" required=true class="autocomplete_txt"/>
                                                     </x-forms.container>
-                                                    <x-forms.container class="col-md-9">
+                                                    <x-forms.container class="col-md-9 col-9">
                                                         <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
                                                     </x-forms.container>
                                                     <x-forms.hidden name="city_id" class="autocomplete_txt"/>

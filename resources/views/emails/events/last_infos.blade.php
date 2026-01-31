@@ -13,11 +13,13 @@ Hinterlege in jedem Auto eine Parkkarte, da sonst die Gefahr einer Busse in der 
 @endcomponent
 <br>
 {{$additional_text}}
-<br>
+<br><br>
 Bei Notfällen erreichst du uns direkt: <br>
 - Lukas Affolter (079 810 30 05), <br>
 - Jérôme Sigg (079 587 56 51) oder <br>
 - Matthias Bächler (079 386 73 20)
+<br><br>
+Wenn du ein schönes Foto von deinem Aufenthalt teilst, freuen wir uns sehr, wenn du uns auf <a href="https://www.instagram.com/itelfingen/">Instagram</a> markierst (@itelfingen) oder den Hashtag #ferienhausitelfingen verwendest.
 <br><br>
 Freundliche Grüsse,<br>
 Das Ferienhaus Itelfingen

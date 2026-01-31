@@ -40,7 +40,7 @@
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Ferienhaus Itelfingen</span>
       </a>
     </div>
-    <div class="flex items-center lg:order-2">
+    <div class="flex items-center lg:order-2 text-gray-700 dark:text-gray-300">
       <button type="button" class="flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
         <span>{{Auth::user()->username}}<span>
       </button>
@@ -57,6 +57,7 @@
           </li>
         </ul>
       </div>
+    <x-toggle-switch/>
     </div>
   </div>
 </nav>
