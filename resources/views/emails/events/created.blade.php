@@ -8,7 +8,7 @@
     | Name  | {{$event->firstname}} {{$event->name}} |
     | E-Mail | {{$event->email}} |
     | Anlass / Gruppe | {{$event->group_name}} |
-    | Strasse |  {{$event->street}} |
+    | Strasse |  {{$event->street}} {{$event->house_number}} |
     | PlZ / Ort | {{$event->plz}} {{$event->city}} |
     | Telefon | {{$event->telephone}} |
     @foreach ($event->positions as $position)

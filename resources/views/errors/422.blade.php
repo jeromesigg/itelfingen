@@ -1,5 +1,6 @@
-@extends('errors::minimal')
+@extends('layouts.app')
 
-@section('title', 'Error')
-@section('code', '422')
-@section('message', $exception->getMessage())
+@section('content')
+    <h1>Error 422</h1>
+    <p>Deine Anfrage wurde als ungültig erkannt.</p>
+@endsection

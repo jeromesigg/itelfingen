@@ -150,7 +150,6 @@ class AdminEventController extends Controller
         //
         $input = $request->all();
         $input['external'] = isset($input['foreign_key']);
-        $input['event_status_id'] = config('status.event_neu');
         $input['contract_status_id'] = config('status.contract_offen');
         $one_day = false;
         if ($input['total_days'] < 1) {
@@ -163,6 +162,8 @@ class AdminEventController extends Controller
             $input['end_date'] = new Carbon($input['end_date']);
         }
         $input['uuid'] = \Illuminate\Support\Str::uuid();
+        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event['event_status_id'] == config('status.event_eigene')) {
@@ -217,6 +218,8 @@ class AdminEventController extends Controller
         if ($input['contract_status_id'] == config('status.contract_storniert')) {
             $input['event_status_id'] = config('status.event_storniert');
         }
+        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
         
         $event->update($input);
         $additional_text = $input['additional_text'] ?? '';
@@ -277,8 +280,12 @@ class AdminEventController extends Controller
         return redirect()->back();
     }
 
-    public function DownloadParking(Event $event)
+    public function DownloadParking(string $uuid)
     {
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        if ($event === null) {
+            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
+        }
         $outputFile = Helper::PrintParking($event);
 
         return response()->download($outputFile);
@@ -338,6 +345,41 @@ class AdminEventController extends Controller
         return response($calendar->get(), 200, [
             'Content-Type' => 'text/calendar; charset=utf-8',
             'Content-Disposition' => 'attachment; filename="itelfingen.ics"',
+        ]);
+    }
+    
+    public function getPhoneNumber($api_token,$number)
+    {
+        if(preg_match('/^\+/', $number)) {
+            $number = substr($number, 3);
+        }
+        $event = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
+        //
+        if ($event->isEmpty()) {
+            return response()->json([
+                'error' => 'No event found with this number',
+            ], 404);
+        }
+        else {
+            $event = $event->first();
+            return response()->json([
+                'number' => $event['telephone'],
+                'firstname' => $event['firstname'],
+                'name' => $event['name'],
+                'date' => $event['start_date']->format('d.m.Y').' - '.$event['end_date']->format('d.m.Y'),
+            ]);
+        }
+    }
+
+    public function isFree($api_token, int $days)
+    {
+        if (!is_numeric($days) || $days < 1) {
+            $days = 1;
+        }
+        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', ['5', '50'])->get();
+        //
+        return response()->json([
+            'isFree' => $events->isEmpty(),
         ]);
     }
 }

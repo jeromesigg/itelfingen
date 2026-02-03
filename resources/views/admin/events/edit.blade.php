@@ -32,10 +32,13 @@
                             <x-forms.container class="col-xl-2 col-6">
                                 <x-forms.text label="Telefon:" name="telephone" />
                             </x-forms.container>
-                            <x-forms.container class="col-xl-2">
+                            <x-forms.container class="col-xl-2 col-10">
                                 <x-forms.text label="Strasse:" name="street" required=true/>
                             </x-forms.container>
-                            <x-forms.container class="col-xl-2 col-3">
+                            <x-forms.container class="col-xl-1 col-2">
+                                <x-forms.text label="Nr.:" name="house_number"/>
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-1 col-3">
                                 <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
                             </x-forms.container>
                             <x-forms.container class="col-xl-3 col-9">
@@ -64,7 +67,7 @@
                                 <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()"/>
                             </x-forms.container>
                             <x-forms.container class="col-xl-2 col-4">
-                                <x-forms.hidden label="Total [CHF]:" name="total_amount" type="number"/>
+                                <span class="mb-3">Total [CHF]:</span>
                                 <br>
                                 <span id="total"></span>.-
                             </x-forms.container>
@@ -216,7 +219,7 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <a href="{{route('events.downloadParking', $event)}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
+                        <a href="{{route('events.downloadParking', $event['uuid'])}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
                     <br><br>
                     <table class="table">
@@ -334,6 +337,22 @@
             $("#total_amount").val(total_amount);
             $("#total_people").val(total_person);
         }
+
+        $("#contract_status_id").change(function(e) {
+            if($(this).val() == {{config('status.contract_storniert')}}){
+                var event = @json($event);
+                if(event['cleaning_mail']){
+                    e.preventDefault(); //cancel default action
+
+                    Swal.fire({
+                        title: 'Buchung stornieren',
+                        text: "Die Buchung wurde bereits der Reinigungsfirma gemeldet. Bitte die Stornierung weiterleiten.",
+                        icon: 'warning',
+                    });
+                }
+            }
+        });
+
         window.PrepareMail = PrepareMail;
         window.PrepareReminderMail = PrepareReminderMail;
         window.Total_Change = Total_Change;

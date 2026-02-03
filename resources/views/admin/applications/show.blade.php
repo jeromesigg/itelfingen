@@ -27,6 +27,10 @@
                     <td>{{$application['street']}}</td>
                 </tr>
                 <tr>
+                    <th>Strassen-Nr.</th>
+                    <td>{{$application['house_number']}}</td>
+                </tr>
+                <tr>
                     <th>PLZ / Ort</th>
                     <td>{{$application['zipcode']}} {{$application['city']}}</td>
                 </tr>

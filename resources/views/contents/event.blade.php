@@ -113,9 +113,14 @@
                                 <x-forms.container>
                                     <x-forms.text label="Anlass / Gruppe:" name="group" />
                                 </x-forms.container>
-                                <x-forms.container>
-                                    <x-forms.text label="Strasse*:" name="street" required=true />
-                                </x-forms.container>
+                                <div class="grid md:grid-cols-4 gap-4">
+                                    <x-forms.container class="md:col-span-3">
+                                        <x-forms.text label="Strasse*:" name="street" required=true />
+                                    </x-forms.container>
+                                    <x-forms.container>
+                                        <x-forms.text label="Nr.:" name="house_number" class="autocomplete_txt"/>
+                                    </x-forms.container>
+                                </div>
                                 <div class="grid md:grid-cols-4 gap-4">
                                     <x-forms.container>
                                         <x-forms.text label="PLZ*:" name="zipcode" required=true class="autocomplete_txt"/>

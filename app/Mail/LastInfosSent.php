@@ -24,9 +24,10 @@ class LastInfosSent extends Mailable
      *
      * @return void
      */
-    public function __construct(Event $event)
+    public function __construct(Event $event, $additional_text)
     {
         $this->event = $event;
+        $this->additional_text = $additional_text;
     }
 
     /**
@@ -45,7 +46,7 @@ class LastInfosSent extends Mailable
             $number .= ' ('.$event['foreign_key'].')';
         }
 
-        return $this->markdown('emails.events.last_infos', ['event' => $this->event])
+        return $this->markdown('emails.events.last_infos', ['event' => $this->event, 'additional_text' => $this->additional_text])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Die letzten Informationen zu deiner Buchung '.$number.' für das Ferienhaus Itelfingen')

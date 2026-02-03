@@ -24,7 +24,7 @@
                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Buchungs-Informationen</h4>
                 <dl class="space-y-1">
                   <dt class="font-medium text-gray-900 dark:text-white">{{$event['firstname']}} {{$event['name']}} {{isset($event['group_name']) ? "- ".$event['group_name'] : ''}}</dt>
-                  <dd class="font-normal text-gray-500 dark:text-gray-400">{{$event['street']}},  {{$event['plz']}}  {{$event['city']}} <br> {{$event['email']}} <br> {{$event['telephone']}}</dd>
+                  <dd class="font-normal text-gray-500 dark:text-gray-400">{{$event['street']}} {{$event['house_number']}},  {{$event['plz']}}  {{$event['city']}} <br> {{$event['email']}} <br> {{$event['telephone']}}</dd>
                 </dd>
                 </dl>
               </div>
@@ -38,8 +38,14 @@
               </div>
     
               <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Zusätzlich</h4>
-                <p class="font-medium text-gray-900 dark:text-white">Early Check-In {{$event['early_checkin'] ? 'dazu' : 'nicht'}} gebucht <br> Late Check-Out {{$event['late_checkout'] ? 'dazu' : 'nicht'}} gebucht</p>
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Check-In und Check-Out</h4>
+                <p class="font-mediumtext-gray-900 dark:text-white">
+                  <span class="font-semibold">Check-In:</span> 
+                  {{$event['early_checkin'] ? '10:00 Uhr (inkl. Early Check-In)' : '15:00 Uhr (ohne Early Check-In)'}} 
+                  <br>
+                  <span class="font-semibold">Check-Out:</span> 
+                  {{$event['late_checkout'] ? '17:00 Uhr (inkl. Late Check-Out)' : '10:00 Uhr (ohne Late Check-Out)'}} 
+                </p>
               </div>
     
               <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">

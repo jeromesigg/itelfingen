@@ -16,7 +16,7 @@ class Select extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, string $label = '', string $id = '', bool $required = false, $collection = [])
+    public function __construct(string $name, string $label = '', string $id = null, bool $required = false, $collection = [])
     {
         $this->name = $name;
         $this->label = $label;

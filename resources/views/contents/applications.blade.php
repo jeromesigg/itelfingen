@@ -12,7 +12,7 @@
         </div>
       </section>
         <div class="px-4 mx-auto max-w-screen-2xl lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
-            @if (session()->has('success'))
+            @if(session()->has('success'))
                 <div class="alert alert-dismissable alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -63,7 +63,10 @@
                     <x-forms.container class="md:col-span-5">
                         <x-forms.text label="Strasse*:" name="street" required=true/>
                     </x-forms.container>
-                    <x-forms.container class="md:col-span-2">
+                    <x-forms.container class="md:col-span-1 col-2">
+                        <x-forms.text label="Nr.:" name="house_number"/>
+                    </x-forms.container>
+                    <x-forms.container class="col-md-2 col-2">
                         <x-forms.text label="PLZ*:" name="zipcode" type="number" required=true class="autocomplete_txt"/>
                     </x-forms.container>
                     <x-forms.container class="md:col-span-5">
@@ -113,9 +116,15 @@
     $(document).on('focus','.autocomplete_txt',function(){
         type = $(this).attr('name');
 
-        if(type =='city')autoType='name';
-        if(type =='zipcode')autoType='plz';
-        if(type =='city_id')autoType='id';
+        if(type =='city'){
+             var autoType='name';
+        }
+        else if(type =='zipcode'){ 
+            var autoType='plz';
+        }
+        else if(type =='city_id'){
+            var autoType='id';
+        }
 
         $(this).autocomplete({
             minLength: 2,

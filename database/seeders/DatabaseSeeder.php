@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Database\Seeders\AddUUIDToEvent;
 use Database\Seeders\BasisdatenSeeder;
+use Database\Seeders\SeedPhoneQuery;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BasisdatenSeeder::class,
             AddUUIDToEvent::class,
+            SeedPhoneQuery::class,
         ]);
         // $this->call(UserSeeder::class);
     }

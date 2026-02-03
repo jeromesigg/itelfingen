@@ -46,6 +46,24 @@ class ApplicationController extends Controller
         $input = $request->all();
 
         $input['plz'] = $input['zipcode'];
+                $query = [
+            [
+                'field' => 'name_1',
+                'value' => $input['name'],
+            ],
+            [
+                'field' => 'name_2',
+                'value' => $input['firstname'] ?: '',
+            ],
+                [
+                    'field' => 'address',
+                    'value' => $input['street'] . ' ' . $input['house_number'],
+                ],
+            [
+                'field' => 'postcode',
+                'value' => $input['plz'],
+            ] ];
+
         $application = Application::create($input);
 
         ApplicationCreatedEvent::dispatch($application);

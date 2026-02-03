@@ -41,9 +41,14 @@
                             <x-forms.text label="Telefon:" name="telephone" />
                         </x-forms.container>
                     </div>
-                    <x-forms.container>
-                        <x-forms.text label="Strasse:" name="street" required=true/>
-                    </x-forms.container>
+                    <div class="form-row">
+                        <x-forms.container class="col-md-10">
+                            <x-forms.text label="Strasse:" name="street" required=true/>
+                        </x-forms.container>
+                        <x-forms.container class="col-md-2">
+                            <x-forms.text label="Nr.:" name="house_number"/>
+                        </x-forms.container>
+                    </div>
                     <div class="form-row">
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
@@ -114,7 +119,8 @@
 <script type="module">
     function createIntern() {
 	    $('#name').val("Interne Buchung");
-	    $('#street').val("Itelfingen 3");
+	    $('#street').val("Itelfingen");
+	    $('#house_number').val("3");
 	    $('#plz').val("6344");
 	    $('#city').val("Meierskappel");
 	    $('#email').val("verwalter@itelfingen.ch");
@@ -126,7 +132,8 @@
     }
     function createExtern() {
         $('#name').val("Externe Buchung");
-        $('#street').val("Itelfingen 3");
+	    $('#street').val("Itelfingen");
+	    $('#house_number').val("3");
         $('#plz').val("6344");
         $('#city').val("Meierskappel");
         $('#email').val("verwalter@itelfingen.ch");

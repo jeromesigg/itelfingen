@@ -142,4 +142,12 @@ class AdminHomepageController extends Controller
         return redirect()->back();
         //
     }
+
+        public function MailTextUpdate(Request $request,Homepage $homepage)
+    {
+        $input = request()->all();
+        $homepage->update($input);
+        return redirect()->back();
+        //
+    }
 }

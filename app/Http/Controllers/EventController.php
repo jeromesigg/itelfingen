@@ -47,6 +47,8 @@ class EventController extends Controller
             $input['end_date'] = new Carbon($input['end_date']);
         }
         $input['uuid'] = \Illuminate\Support\Str::uuid();
+        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         Notification::send($event, new EventCreatedNotification($event));

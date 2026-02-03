@@ -9,14 +9,24 @@
         </header>
 
         <a type="button" href="{{route('admin.events.create')}}" class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">Buchung erstellen</a>
-        <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
-            <x-forms.container>
-                <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
-            </x-forms.container>
-            <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
-                Bemerkung aktualisieren
-            </x-forms.button>
-        </x-forms.form>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
+                <x-forms.container>
+                    <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
+                </x-forms.container>
+                <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
+                    Bemerkung aktualisieren
+                </x-forms.button>
+            </x-forms.form>
+                <x-forms.form class="mb-5" :action="route('admin.homepages.mail_text_update', $homepage)" method="PATCH" :model="$homepage">
+                <x-forms.container>
+                    <x-forms.text-area label="Zusätzlicher Mail Text (Letzte Infos):" name="additional_mail_text" rows=5/>
+                </x-forms.container>
+                <x-forms.button type="submit" name="submit" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">
+                    Zusätzlicher Mail Text aktualisieren
+                </x-forms.button>
+            </x-forms.form>
+        </div>
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
         <div id="filter_btns">
@@ -44,51 +54,36 @@
         <input type="hidden" value="Ab Heute" id="date_btn_value">
         <input type="hidden" value="Alle" id="status_btn_value">
         <br>
-        <div class="hk-reservation hk-reservation__step1">
+        <div class="hk-reservation hk-reservation__step1 text-gray-600 dark:text-gray-300">
             <div class="hk-reservation__container container-fluid">
-                <div class="row">
-                    <div class="col-lg-12 hk-calendar">
-                        <div class="hk-agenda">
-                            <div class="d-none d-sm-block">
-                                <a class="hk-agenda__prev" onclick="Agenda.prev(3); return false" href="#">
-                                    früheres Datum
-                                </a>
-                            </div>
-                            <div class="row">
-                                @for ($i = 0; $i <= 9; $i++)
-                                    <div class="col-md-4 col-sm-6 {{($i>1)?'d-none d-sm-block':''}}">
-                                        <h4 id="agendaTitel{{$i}}" class="hk-agenda__title"> </h4>
-                                        <table class="hk-agenda__month">
-                                            <tbody id="agendaMonat{{$i}}"> </tbody>
-                                        </table>
-                                    </div>
-                                @endfor
-                            </div>
-                            <div class="d-none d-sm-block">
-                                <a class="hk-agenda__next" onclick="Agenda.next(3); return false" href="#">
-                                    späteres Datum
-                                </a>
-                            </div>
-                            <!-- mobile buttons -->
-                            <div class="row d-flex d-sm-none">
-                                <div class="col-6">
-                                    <a class="hk-agenda__prev hk-agenda__prev--mobile" onclick="Agenda.prev(1); return false" href="#">
-                                        früheres Datum
-                                    </a>
+                <div class="hk-calendar">
+                    <div class="hk-agenda">
+                        <div class="d-none d-sm-block">
+                            <a class="hk-agenda__prev" onclick="Agenda.prev(3); return false" href="#">
+                                früheres Datum
+                            </a>
+                        </div>
+                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            @for ($i = 0; $i <= 9; $i++)
+                                <div class="col-md-4 col-sm-6 {{($i>1)?'d-none d-sm-block':''}}">
+                                    <h4 id="agendaTitel{{$i}}" class="hk-agenda__title"> </h4>
+                                    <table class="hk-agenda__month">
+                                        <tbody id="agendaMonat{{$i}}"> </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-6 text-right">
-                                    <a class="hk-agenda__next hk-agenda__next--mobile" onclick="Agenda.next(1); return false" href="#">
-                                        späteres Datum
-                                    </a>
-                                </div>
-                            </div>
+                            @endfor
+                        </div>
+                        <div class="d-none d-sm-block">
+                            <a class="hk-agenda__next" onclick="Agenda.next(3); return false" href="#">
+                                späteres Datum
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <br>
-        <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+        <table class="text-gray-600 dark:text-gray-300" style="width:100%" id="datatable">
             <thead>
                 <tr>
                     <th scope="col" width="8%">Datum</th>

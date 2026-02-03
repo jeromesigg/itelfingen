@@ -14,7 +14,7 @@
                             <x-forms.text label="Titel:" name="name"/>
                         </x-forms.container>
                         <x-forms.container>
-                            <x-forms.textarea label="Beschreibung:" name="description" rows=15/>
+                            <x-forms.text-area label="Beschreibung:" name="description" rows=15/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.file label="Photo: " name="photo_id"/>
