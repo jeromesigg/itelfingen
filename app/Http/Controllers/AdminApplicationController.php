@@ -51,6 +51,9 @@ class AdminApplicationController extends Controller
 
                 return $buttons;
             })
+            ->editColumn('street', function (Application $application) {
+                return $application['street'].' '.$application['house_number'];
+            })
             ->editColumn('created_at', function (Application $application) {
                 return [
                     'display' => Carbon::parse($application['created_at'])->format('d.m.Y'),
