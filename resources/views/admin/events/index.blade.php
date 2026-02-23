@@ -97,6 +97,22 @@
                 </tr>
             </thead>
         </table>
+        <table id="default-table" class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Rolle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Max Mustermann</td>
+                    <td>max@test.de</td>
+                    <td>Admin</td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 </div>
@@ -106,7 +122,14 @@
 
   <!-- ======= Javascript Section ======= -->
   @include('contents.event_js')
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
   <script type="module">
+        document.addEventListener("DOMContentLoaded", function () {
+            const table = document.getElementById("default-table");
+            if (table) {
+                new simpleDatatables.DataTable(table);
+            }
+        });
         $(document).ready(function () {
           var table = $('#datatable').DataTable({
               responsive: true,
