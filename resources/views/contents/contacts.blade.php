@@ -62,7 +62,7 @@
             <x-forms.text label="Betreff:" name="subject" required=true />
         </x-forms.container>
         <x-forms.container>
-            <x-forms.textarea label="Nachricht:" name="content" required=true rows="8"/>
+            <x-forms.text-area label="Nachricht:" name="content" required=true rows="8"/>
         </x-forms.container>
         <x-forms.container>
           <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
