@@ -16,7 +16,7 @@
                             <x-forms.text label="Funktion:" name="function"/>
                         </x-forms.container>
                         <x-forms.container>
-                            <x-forms.textarea label="Kommentar:" name="comment" rows=2/>
+                            <x-forms.text-area label="Kommentar:" name="comment" rows=2/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.text label="Sort-Index:" name="sort-index" required=true type="number"/>
