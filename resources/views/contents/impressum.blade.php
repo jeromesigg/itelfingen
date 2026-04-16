@@ -22,7 +22,7 @@
           <div class="row mt-5">
 
 
-          <div class="col-lg-4">
+            <div class="col-lg-4">
               <div class="info">
                 <div class="address">
                   <i>
@@ -70,6 +70,94 @@
           </div>
         </div>
       </section>
+      
+      <section class="inner-page contact">
+        <div class="container">
+          <div class="space-y-4 font-light text-gray-500 divide-y divide-gray-200 dark:text-gray-400 dark:divide-gray-700">
+              <div class="breadcrumbs">
+                  <h2 class="mb-4 text-2xl font-bold leading-tight text-gray-900 dark:text-white">Datenschutzerklärung</h2>
+                  <p class="mb-2">
+                      Stand: April 2026, v1.0, gültig für die Website www.itelfingen.ch
+                  </p>
+
+              </div>
+
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Welche Daten wir erheben</p>
+                  <p class="mb-2">
+                      Wir erheben nur jene Daten, die für den Betrieb dieser Website und die Vermietung des Ferienhauses erforderlich sind:
+                  </p>
+                  <ul>
+                    <li><strong>Kontaktformular</strong> – Name, E-Mail-Adresse, Nachricht</li>
+                    <li><strong>Buchungsanfrage</strong> – Name, E-Mail-Adresse, Adresse und gewünschte Reisedaten</li>
+                    <li><strong>Nutzungsdaten</strong> – anonymisierte Zugriffsdaten via Cookies (z. B. Google Analytics)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Zweck der Datenbearbeitung</p>
+                  <p class="mb-2">
+                      Ihre Daten verwenden wir ausschliesslich für folgende Zwecke:
+                  </p>
+                  <ul>
+                    <li>Beantwortung von Anfragen und Abwicklung von Buchungen</li>
+                    <li>Erfüllung gesetzlicher Pflichten (z. B. Buchführung)</li>
+                    <li>Verbesserung der Website durch anonymisierte Nutzungsanalyse</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Cookies &amp; Google Analytics</p>
+                  <p class="mb-2">
+                      Diese Website verwendet Cookies sowie Google Analytics zur Auswertung des Nutzungsverhaltens. Dabei werden keine personenbezogenen Daten gespeichert – die Analyse erfolgt anonymisiert.
+                  </p>
+                  <p class="mb-2">Sie können Cookies jederzeit in Ihren Browsereinstellungen deaktivieren. Wir weisen darauf hin, dass dies die Funktionalität der Website einschränken kann.</p>
+                </div>
+              </div>
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Weitergabe an Dritte</p>
+                  <p class="mb-2">
+                    Ihre Daten werden nicht an Dritte verkauft. Eine Weitergabe erfolgt nur, wenn dies gesetzlich vorgeschrieben ist oder Sie ausdrücklich zugestimmt haben.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Aufbewahrung</p>
+                  <p class="mb-2">
+                      Wir speichern Ihre Daten nur so lange, wie es für den jeweiligen Zweck notwendig oder gesetzlich vorgeschrieben ist. Buchungsdaten werden gemäss den gesetzlichen Aufbewahrungsfristen (in der Schweiz i. d. R. 10 Jahre) archiviert.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Ihre Rechte</p>
+                  <p class="mb-2">
+                      Gemäss Schweizer Datenschutzgesetz (DSG) haben Sie das Recht auf:
+                  </p>
+                  <ul>
+                    <li>Auskunft über Ihre gespeicherten Daten</li>
+                    <li>Berichtigung unrichtiger Daten</li>
+                    <li>Löschung Ihrer Daten (soweit keine gesetzlichen Pflichten entgegenstehen)</li>
+                  </ul>
+                  <p>Richten Sie Ihre Anfrage per E-Mail an: verwalter@itelfingen.ch</p>
+                </div>
+              </div>
+              <div class="flex items-start pt-4">
+                <div>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Änderungen</p>
+                  <p class="mb-2">
+                      Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen. Die jeweils aktuelle Version ist auf dieser Seite verfügbar.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
     </main><!-- End #main -->
         <!-- ======= Footer ======= -->
