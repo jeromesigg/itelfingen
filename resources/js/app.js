@@ -16,7 +16,7 @@ import 'laravel-datatables-vite';
 import './libs/validate.js';
 import './admin/jqBootstrapValidation.js';
 import 'flowbite';
-import { DataTable } from "simple-datatables";
+// import { DataTable } from "simple-datatables";
 import './libs/main.js';
 import './libs/custom.js';
 import './libs/faq.js';

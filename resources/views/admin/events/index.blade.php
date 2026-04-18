@@ -83,37 +83,22 @@
             </div>
         </div>
         <br>
-        <table class="text-gray-600 dark:text-gray-300" style="width:100%" id="datatable">
-            <thead>
-                <tr>
-                    <th scope="col" width="8%">Datum</th>
-                    <th scope="col" width="7%">Nr.</th>
-                    <th scope="col" width="10%">Name</th>
-                    <th scope="col" width="15%">E-Mail</th>
-                    <th scope="col" width="5%">Total</th>
-                    <th scope="col" width="25%">Bemerkung</th>
-                    <th scope="col" width="15%">Bemerkung Intern</th>
-                    <th scope="col" width="15%">Status</th>
-                </tr>
-            </thead>
-        </table>
-        <table id="default-table" class="w-full text-sm text-left text-gray-500">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Rolle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Max Mustermann</td>
-                    <td>max@test.de</td>
-                    <td>Admin</td>
-                </tr>
-            </tbody>
-        </table>
-
+        <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+            <table class="w-full text-sm text-left rtl:text-right text-body" style="width:100%" id="datatable">
+                <thead class="bg-neutral-secondary-soft border-b border-default">
+                    <tr>
+                        <th scope="col" width="8%"  class="px-6 py-3 font-medium">Datum</th>
+                        <th scope="col" width="7%"  class="px-6 py-3 font-medium">Nr.</th>
+                        <th scope="col" width="10%"  class="px-6 py-3 font-medium">Name</th>
+                        <th scope="col" width="15%" class="px-6 py-3 font-medium">E-Mail</th>
+                        <th scope="col" width="5%" class="px-6 py-3 font-medium">Total</th>
+                        <th scope="col" width="25%" class="px-6 py-3 font-medium">Bemerkung</th>
+                        <th scope="col" width="15%" class="px-6 py-3 font-medium">Bemerkung Intern</th>
+                        <th scope="col" width="15%" class="px-6 py-3 font-medium">Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </div>
 @endsection
@@ -124,12 +109,7 @@
   @include('contents.event_js')
   <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
   <script type="module">
-        document.addEventListener("DOMContentLoaded", function () {
-            const table = document.getElementById("default-table");
-            if (table) {
-                new simpleDatatables.DataTable(table);
-            }
-        });
+
         $(document).ready(function () {
           var table = $('#datatable').DataTable({
               responsive: true,

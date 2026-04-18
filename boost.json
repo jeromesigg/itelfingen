@@ -1,0 +1,14 @@
+{
+    "agents": [
+        "copilot",
+        "claude_code"
+    ],
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "sail": true,
+    "skills": [
+        "laravel-best-practices",
+        "tailwindcss-development"
+    ]
+}

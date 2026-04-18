@@ -120,6 +120,11 @@ class AdminEventController extends Controller
                 return $event->contract_status ? $event->contract_status['name'] : '';
             })
             ->rawColumns(['name', 'status', 'number'])
+            ->setRowClass("odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default")
+            // ->rowCallback(function ($row) {
+                // $row->setAttribute('class', 'deine-klasse');
+                // return $row;
+            // })
             ->make(true);
     }
 
