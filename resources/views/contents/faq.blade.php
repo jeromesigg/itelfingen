@@ -7,14 +7,14 @@
 
     <main id="main">
       <section class="breadcrumbs">
-        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
           <div class="d-flex justify-content-between align-items-center">
             <h2 class="text-4xl font-bold dark:text-white">FAQ</h2>
           </div>
         </div>
       </section>
 
-      <div class="cd-faq js-cd-faq px-4 mx-auto max-w-screen-2xl lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
+      <div class="cd-faq js-cd-faq px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
         <ul class="cd-faq__categories">
           @foreach ($faq_chapters as $chapter)
             <li>

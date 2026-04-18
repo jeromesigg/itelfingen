@@ -1,6 +1,6 @@
 <section id="about" class="about section">
 
-    <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+    <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
 
         @if($homepage['green_text'])
             <div class="alert alert-dismissable alert-success section-title">

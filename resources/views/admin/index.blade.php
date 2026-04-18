@@ -5,7 +5,7 @@
     <!-- Counts Section -->
     <div class="my-4 grid gap-4 grid-cols-2 2xl:grid-cols-3">
         @foreach ($icon_array as $icon)
-        <div class="items-center space-x-0 rounded-lg bg-white p-4 shadow dark:bg-gray-800 sm:flex sm:space-x-4 md:p-6">
+        <div class="items-center space-x-0 rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800 sm:flex sm:space-x-4 md:p-6">
             <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg {{$icon->color}} sm:mb-0">
             {!! $icon->icon !!}
             </div>
@@ -19,8 +19,8 @@
    
     <div class="my-4 grid gap-4 grid-cols-2 2xl:grid-cols-3">
         <!-- Pricing Card -->
-        {{-- <div class="flex flex-col p-6 mx-auto max-w-2xl text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white"> --}}
-        <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
+        {{-- <div class="flex flex-col p-6 mx-auto max-w-2xl text-gray-900 bg-white rounded-lg border border-gray-100 shadow-sm dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white"> --}}
+        <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
         <h3 class="mb-4 text-2xl font-semibold">Neue Buchungen</h3>
         <div class="items-baseline my-8">
             <ul class="news list-unstyled">
@@ -56,7 +56,7 @@
     <!-- Pricing Card -->
     
     {{-- <x-event-dashboard :events="$events_current" title="Neue Buchungen"/> --}}
-    <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
+    <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
       <h3 class="mb-4 text-2xl font-semibold">Nächste Buchungen</h3>
       <div class="flex justify-center items-baseline my-8">
         <ul class="news list-unstyled">
@@ -90,7 +90,7 @@
 
     </div>
     <!-- Pricing Card -->
-    <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
+    <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
       <h3 class="mb-4 text-2xl font-semibold">Offene Anfragen</h3>
       <div class="flex justify-center items-baseline my-8">
         <ul class="news list-unstyled">

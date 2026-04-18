@@ -7,14 +7,14 @@
 
         <main id="main">
             <section class="breadcrumbs">
-                <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+                <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2>Über uns</h2>
                     </div>
                 </div>
             </section>
             <section id="about_us" class="about_us">
-                <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+                <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
                     <div class="section-title">
                         <p>Was macht die Genossenschaft Ferienhaus Itelfingen?</p>
                     </div>

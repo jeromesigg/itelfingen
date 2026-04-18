@@ -7,14 +7,14 @@
 
     <main id="main">
       <section class="breadcrumbs">
-        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
           <div class="d-flex justify-content-between align-items-center">
             <h2 class="text-4xl dark:text-white">Impressum</h2>
           </div>
         </div>
       </section>
       <section class="inner-page contact">
-        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
           <div class="grid lg:grid-cols-3 gap-4 mt-5">
             <div>
               <div class="info">

@@ -1,5 +1,5 @@
 <li class="mb-10 ms-6">
-    <span class="ring-3 absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 ring-white dark:bg-gray-900 dark:ring-gray-900">
+    <span class="ring-3 absolute -inset-s-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 ring-white dark:bg-gray-900 dark:ring-gray-900">
         <svg class="h-5 w-5 {{$color}}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{$path}}" />"
         </svg>

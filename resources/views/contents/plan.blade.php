@@ -1,5 +1,5 @@
 <section id="plan">
-    <div class="max-w-screen-2xl px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24">
+    <div class="max-w-(--breakpoint-2xl) px-4 py-8 mx-auto lg:px-6 sm:py-16 lg:py-24">
         <div class="section-title">
             <p>Das Ferienhaus</p>
         </div>       
@@ -35,7 +35,7 @@
         </div>
     
         <h3 class="text-3xl dark:text-white mt-12">
-            Mehr Informationen zur Ausstattung gibt es auf unserer <a href="https://www.itelfingen.ch/faq" target="blank" class="text-[color:var(--orientalpink)] hover:underline">FAQ-Seite</a>
+            Mehr Informationen zur Ausstattung gibt es auf unserer <a href="https://www.itelfingen.ch/faq" target="blank" class="text-(--orientalpink) hover:underline">FAQ-Seite</a>
         </h3>
 
     </div>

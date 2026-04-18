@@ -5,13 +5,13 @@
   <div id="app">
     <main id="main">
       <section class="breadcrumbs">
-        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6">
+        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
           <div class="d-flex justify-content-between align-items-center">
             <h2>Bewerbung Genossenschaft</h2>
           </div>
         </div>
       </section>
-        <div class="px-4 mx-auto max-w-screen-2xl lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
+        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
             @if(session()->has('success'))
                 <div class="alert alert-dismissable alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
