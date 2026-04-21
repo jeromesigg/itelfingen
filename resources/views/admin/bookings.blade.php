@@ -4,7 +4,7 @@
 
   <!-- Updates Section -->
   <div class="mt-3.5">
-    <div class="container-fluid">
+    <div class="container mx-auto px-4">
         <div class="flex justify-between mb-5">
           <div>
             <button id="dropdownDefaultButton"

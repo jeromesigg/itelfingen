@@ -6,7 +6,7 @@
 @endsection
 @section('content')
     <section>
-        <div class="container-fluid">
+        <div class="container mx-auto px-4">
             <header>
                 <h3 class="display">Albumbild bearbeiten</h3>
             </header>

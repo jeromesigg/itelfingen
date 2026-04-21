@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('content')
     <div>
-        <div class="container-fluid">
+        <div class="container mx-auto px-4">
             <header>
                 <h3  class="text-3xl font-bold dark:text-white">Buchung {{str_pad($event['id'],5,'0', STR_PAD_LEFT)}} bearbeiten</h3>
             </header>

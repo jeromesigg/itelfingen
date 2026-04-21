@@ -151,3 +151,36 @@
 .text-uppercase {
     letter-spacing: .1em;
 }
+
+@layer components {
+  /* DataTables Pagination */
+  .dataTables_paginate {
+    @apply mt-4 flex justify-between items-center;
+  }
+  
+  .paginate_button {
+    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-sm;
+  }
+  
+  .paginate_button.active {
+    @apply bg-blue-600 text-white border-blue-600;
+  }
+  
+  .paginate_button.disabled {
+    @apply text-gray-400 cursor-not-allowed;
+  }
+  
+  /* DataTables Info */
+  .dataTables_info {
+    @apply text-sm text-gray-600 dark:text-gray-400 mt-2;
+  }
+  
+  /* DataTables Length Menu */
+  .dataTables_length {
+    @apply flex gap-2 items-center mb-4;
+  }
+  
+  .dataTables_length label {
+    @apply flex gap-2 items-center;
+  }
+}

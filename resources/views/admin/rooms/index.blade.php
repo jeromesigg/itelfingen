@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('content')
 <div>
-    <div class="container-fluid">
+    <div class="container mx-auto px-4">
 
         <header>
             <h3 class="text-3xl font-bold dark:text-white">Räume</h3>
