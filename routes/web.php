@@ -57,8 +57,9 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController')->names('admin.events');
     Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
+    Route::get('events/datatable', ['as' => 'events.CreateDataTablesTanStack', 'uses' => 'AdminEventController@createDataTablesTanStack']);
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
-    Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
+    Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('admin.events.downloadParking');
 
     Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);

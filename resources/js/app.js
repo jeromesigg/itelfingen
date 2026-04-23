@@ -20,3 +20,13 @@ import 'flowbite';
 import './libs/main.js';
 import './libs/custom.js';
 import './libs/faq.js';
+
+// Initialize Events Table when DOM is ready
+import { initEventsTable } from './tables/EventsTable.js'
+
+document.addEventListener('DOMContentLoaded', () => {
+  const tbody = document.getElementById('eventTableBody')
+  if (tbody) {
+    initEventsTable()
+  }
+})

@@ -128,6 +128,62 @@ class AdminEventController extends Controller
             ->make(true);
     }
 
+    public function createDataTablesTanStack(Request $request)
+    {
+        $input = $request->all();
+        $input['status'] = $input['status'] ?? 'Alle';
+        $input['date'] = $input['date'] ?? 'Ab Heute';
+        $contract_status = ContractStatus::where('name', '=', $input['status'])->first();
+        $date = $input['date'] != 'Alle' ? Carbon::today() : null;
+        
+        // Query mit gleicher Logik wie createDataTables()
+        $events = Event::when($contract_status, function ($query, $contract_status) {
+            $query->where('contract_status_id', '=', $contract_status['id']);
+        }, function ($query) {
+            $query->where('contract_status_id', '<', config('status.contract_storniert'));
+        })
+            ->when($date, function ($query, $date) {
+                $query->where('start_date', '>=', $date);
+            })
+            // Add search filter
+            ->when($request->has('search') && !empty($request->input('search')), function ($query) use ($request) {
+                $search = $request->input('search');
+                $query->where('id', 'like', "%{$search}%")
+                    ->orWhere('foreign_key', 'like', "%{$search}%")
+                    ->orWhere('firstname', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('comment', 'like', "%{$search}%");
+            })
+            ->orderby('start_date')
+            ->get();
+
+        // Transformation der Daten (gleich wie Yajra, aber manuel)
+        $data = $events->map(function (Event $event) {
+            return [
+                'start_date' => [
+                    'display' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.
+                        Carbon::parse($event['end_date'])->format('d.m.Y'),
+                    'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021'),
+                ],
+                'number' => $event->number().'<br>'.$event['foreign_key'],
+                'name' => $event['firstname'] . ' <a class="text-orientalpink" href='.\URL::route('admin.events.edit', $event).'>'.$event['name'].'</a>' .
+                    '<br>' . $event['group_name'],
+                'email' => $event['email'] ?? '',
+                'total_amount' => $event['total_amount'] ?? '',
+                'comment' => $event['comment'] ?? '',
+                'comment_intern' => $event['comment_intern'] ?? '',
+                'status' => $event->status(),
+            ];
+        });
+
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -177,6 +233,18 @@ class AdminEventController extends Controller
 
         return redirect()->route('admin.events.edit', [$event]);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
 
     /**
      * Show the form for editing the specified resource.

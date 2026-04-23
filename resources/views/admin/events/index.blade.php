@@ -29,27 +29,7 @@
         </div>
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
-        <div id="filter_btns">
-            <div id="date_btn" class="grid grid-cols-1 md:grid-cols-2 gap-2 w-1/5">
-                <div>
-                    <button class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">Alle</button>
-                </div>
-                <div>
-                    <button class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen active">Ab Heute</button>
-                </div>
-            </div>
-            <br>
-            <div id="status_btn" class="grid grid-cols-1 md:grid-cols-7 gap-2">
-                <div>
-                    <button class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith active">Alle</button>
-                </div>
-                @foreach ($contract_statuses as $contract_status)
-                    <div>
-                        <button class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">{{$contract_status}}</button>
-                    </div>
-                @endforeach
-            </div>
-        </div>
+
         <input type="hidden" value="Ab Heute" id="date_btn_value">
         <input type="hidden" value="Alle" id="status_btn_value">
         <div class="hk-reservation hk-reservation__step1 text-gray-600 dark:text-gray-300">
@@ -81,23 +61,71 @@
             </div>
         </div>
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+   
     </div>
     <div>
-        <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-2xs rounded-base border border-default">
-            <table class="w-full text-sm text-left rtl:text-right text-body" style="width:100%" id="datatable">
-                <thead class="bg-neutral-secondary-soft border-b border-default">
+        <div id="filter_btns" class="mb-4">
+            <div id="date_btn" class="grid grid-cols-1 md:grid-cols-2 gap-2 w-1/5">
+                <div>
+                    <button class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">Alle</button>
+                </div>
+                <div>
+                    <button class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen active">Ab Heute</button>
+                </div>
+            </div>
+            <br>
+            <div id="status_btn" class="grid grid-cols-1 md:grid-cols-7 gap-2">
+                <div>
+                    <button class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith active">Alle</button>
+                </div>
+                @foreach ($contract_statuses as $contract_status)
+                    <div>
+                        <button class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">{{$contract_status}}</button>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+            <!-- Search Input -->
+            <div class="mb-4 flex gap-2">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Suchen in Nr., Name, Email, Bemerkung..." 
+                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+            <table class="w-full text-sm text-left rtl:text-right text-body" style="width:100%">
+                <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-default-medium">
                     <tr>
-                        <th scope="col" width="8%"  class="px-6 py-3 font-medium">Datum</th>
-                        <th scope="col" width="7%"  class="px-6 py-3 font-medium">Nr.</th>
-                        <th scope="col" width="10%"  class="px-6 py-3 font-medium">Name</th>
-                        <th scope="col" width="15%" class="px-6 py-3 font-medium">E-Mail</th>
-                        <th scope="col" width="5%" class="px-6 py-3 font-medium">Total</th>
-                        <th scope="col" width="25%" class="px-6 py-3 font-medium">Bemerkung</th>
-                        <th scope="col" width="15%" class="px-6 py-3 font-medium">Bemerkung Intern</th>
-                        <th scope="col" width="15%" class="px-6 py-3 font-medium">Status</th>
+                        <th scope="col" width="8%"  class="px-6 py-3">Datum</th>
+                        <th scope="col" width="7%"  class="px-6 py-3">Nr.</th>
+                        <th scope="col" width="10%"  class="px-6 py-3">Name</th>
+                        <th scope="col" width="15%" class="px-6 py-3">E-Mail</th>
+                        <th scope="col" width="5%" class="px-6 py-3">Total</th>
+                        <th scope="col" width="25%" class="px-6 py-3">Bemerkung</th>
+                        <th scope="col" width="15%" class="px-6 py-3">Bemerkung Intern</th>
+                        <th scope="col" width="15%" class="px-6 py-3">Status</th>
                     </tr>
                 </thead>
+                <tbody id="eventTableBody">
+                    <!-- TanStack Table wird das füllen -->
+                </tbody>
             </table>
+            <!-- Pagination Controls -->
+            <div class="mt-4 flex gap-2 items-center justify-center flex-wrap">
+                <button id="firstPageBtn" class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">« Erste</button>
+                <button id="prevBtn" class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">← Zurück</button>
+                
+                <div id="pageNumbers" class="flex gap-1">
+                    <!-- Seitenzahlen werden hier eingefügt -->
+                </div>
+                
+                <button id="nextBtn" class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">Nächste →</button>
+                <button id="lastPageBtn" class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">Letzte »</button>
+                
+                <span id="pageInfo" class="text-sm text-gray-600 dark:text-gray-400 ml-4"></span>
+            </div>
         </div>
     </div>
 </div>
@@ -107,8 +135,8 @@
 
   <!-- ======= Javascript Section ======= -->
   @include('contents.event_js')
-  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-  <script type="module">
+   <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
+  {{--<script type="module">
 
         $(document).ready(function () {
           var table = $('#datatable').DataTable({
@@ -200,5 +228,5 @@
               });
           }
       });
-  </script>
+  </script> --}}
 @endpush
