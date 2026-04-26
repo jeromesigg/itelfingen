@@ -74,61 +74,7 @@ class AdminEventController extends Controller
         return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title', 'homepage'));
     }
 
-    public function createDataTables(Request $request)
-    {
-        $input = $request->all();
-        $contract_status = ContractStatus::where('name', '=', $input['status'])->first();
-        $date = $input['date'] != 'Alle' ? Carbon::today() : null;
-        $events = Event::when($contract_status, function ($query, $contract_status) {
-            $query->where('contract_status_id', '=', $contract_status['id']);
-        }, function ($query) {
-            $query->where('contract_status_id', '<', config('status.contract_storniert'));
-        })
-            ->when($date, function ($query, $date) {
-                $query->where('start_date', '>=', $date);
-            })
-            ->orderby('start_date')->get();
-
-        return DataTables::of($events)
-            ->addColumn('name', function (Event $event) {
-                return $event['firstname'] . ' <a class="text-orientalpink" href='.\URL::route('admin.events.edit', $event).'>'.$event['name'].'</a>' .
-                    '<br>' . $event['group_name'];
-            })
-            ->addColumn('number', function (Event $event) {
-                return $event->number().'<br>'.$event['foreign_key'];
-            })
-            ->editColumn('start_date', function (Event $event) {
-                return [
-                    'display' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.
-                        Carbon::parse($event['end_date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021'),
-                ];
-            })
-            ->editColumn('end_date', function (Event $event) {
-                return [
-                    'display' => Carbon::parse($event['end_date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($event['end_date'])->diffInDays('01.01.2021'),
-                ];
-            })
-            ->editColumn('user', function (Event $event) {
-                return $event->user ? $event->user['username'] : '';
-            })
-            ->addColumn('status', function (Event $event) {
-                return $event->status();
-            })
-            ->editColumn('contract_status', function (Event $event) {
-                return $event->contract_status ? $event->contract_status['name'] : '';
-            })
-            ->rawColumns(['name', 'status', 'number'])
-            ->setRowClass("odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default")
-            // ->rowCallback(function ($row) {
-                // $row->setAttribute('class', 'deine-klasse');
-                // return $row;
-            // })
-            ->make(true);
-    }
-
-    public function createDataTablesTanStack(Request $request)
+      public function createDataTablesTanStack(Request $request)
     {
         $input = $request->all();
         $input['status'] = $input['status'] ?? 'Alle';
@@ -144,16 +90,6 @@ class AdminEventController extends Controller
         })
             ->when($date, function ($query, $date) {
                 $query->where('start_date', '>=', $date);
-            })
-            // Add search filter
-            ->when($request->has('search') && !empty($request->input('search')), function ($query) use ($request) {
-                $search = $request->input('search');
-                $query->where('id', 'like', "%{$search}%")
-                    ->orWhere('foreign_key', 'like', "%{$search}%")
-                    ->orWhere('firstname', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('comment', 'like', "%{$search}%");
             })
             ->orderby('start_date')
             ->get();

@@ -31,6 +31,7 @@
     "dependencies": {
         "@tanstack/match-sorter-utils": "^8.19.4",
         "@tanstack/table-core": "^8.21.3",
+        "@tanstack/vue-table": "^8.21.3",
         "chart.js": "^4.4.4",
         "simple-datatables": "^10.2.0",
         "sweetalert2": "^11.6.13"
