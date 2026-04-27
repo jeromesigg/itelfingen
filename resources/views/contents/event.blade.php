@@ -32,7 +32,7 @@
                         <div class="col-lg-12 hk-calendar" id="wizard_calendar">
                             <h3 class="text-3xl dark:text-white mb-2.5">Verfügbarkeit</h3>
                             <div id="reservation_error_date" style="display: none" class="alert alert-danger">
-                                Es muss ein Datum gewählt werden.
+                                Es muss mindestens eine Übernachtung gewählt werden.
                             </div>
                             <div id="reservation_error" style="display: none" class="alert alert-danger">
                                 An diesem Datum kann nicht reserviert werden.

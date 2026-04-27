@@ -9,6 +9,10 @@
 				$('#reservation_error_date').show();
 				setTimeout(function() { $('#reservation_error_date').hide(); }, 5000);
 			}
+			else if(Agenda.start === Agenda.end || Agenda.end === null){
+				$('#reservation_error_date').show();
+				setTimeout(function() { $('#reservation_error_date').hide(); }, 5000);
+			}
 			else{
 				document.getElementById("wizard_formular").style.display = "block";
 				document.getElementById("wizard_calendar").style.display = "none";
