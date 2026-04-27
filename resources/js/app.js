@@ -30,3 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventsTable()
   }
 })
+
+// ===== VUE SETUP =====
+import { createApp } from 'vue'
+import App from './components/App.vue'
+import DataTable from './components/DataTable.vue'
+
+const app = createApp(App)
+app.component('DataTable', DataTable)
+
+if (document.getElementById('app')) {
+  app.mount('#app')
+}
