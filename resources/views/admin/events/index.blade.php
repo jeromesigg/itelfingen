@@ -9,7 +9,7 @@
         </header>
 
         <a type="button" href="{{route('admin.events.create')}}" class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen mb-4">Buchung erstellen</a>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 bg-testcolor">
             <x-forms.form class="mb-5" :action="route('admin.homepages.comment_update', $homepage)" method="PATCH" :model="$homepage">
                 <x-forms.container>
                     <x-forms.text-area label="Bemerkungen:" name="event_comment" rows=5/>
@@ -63,7 +63,7 @@
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
    
     </div>
-    <div id="app"></div>
+    <div id="tanStackTable"></div>
 </div>
 @endsection
 

@@ -1,29 +1,36 @@
 <template>
-  <div class="space-y-4">
-    <!-- Search Input -->
-    <div class="mb-4 flex gap-2">
-      <input 
-        v-model="tableState.globalFilter"
-        type="text" 
-        placeholder="Suchen..." 
-        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-
-    <!-- Filter Slots (optional) -->
-    <div v-if="$slots.filters" class="mb-4">
+  <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-lg border border-default-medium dark:border-gray-600">
+        <!-- Filter Slots (optional) -->
+    <div v-if="$slots.filters" class="m-4">
       <slot name="filters"></slot>
     </div>
 
+    <!-- Search Input -->
+    <div class="p-4">
+        <label for="input-group-1" class="sr-only">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>
+            </div>
+                  <input 
+        v-model="tableState.globalFilter"
+        type="text" 
+        placeholder="Suchen..." 
+        class="block w-full max-w-96 ps-9 pe-3 py-2 text-heading text-sm border border-default-medium border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2.5 shadow-xs placeholder:text-body"
+      />
+        </div>
+    </div>
+
+
+
     <!-- Table -->
-    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-2xs rounded-base border border-default">
       <table class="w-full text-sm text-left rtl:text-right text-body">
-        <thead class="bg-neutral-secondary-soft border-b border-default">
+        <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
           <tr>
             <th 
               v-for="header in table.getHeaderGroups()[0]?.headers"
               :key="header.id"
-              class="px-4 py-3 font-medium"
+              class="px-4 py-3 font-bold"
             >
               {{ header.column.columnDef.header }}
             </th>
@@ -35,7 +42,7 @@
             :key="row.id"
             :class="{
               'bg-neutral-primary': index % 2 === 0,
-              'bg-neutral-secondary-soft': index % 2 !== 0,
+              'bg-neutral-primary': index % 2 !== 0,
               'border-b border-default hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors': true
             }"
           >
@@ -48,6 +55,20 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Page Size Selector -->
+    <div class="mb-4 flex items-center gap-2">
+      <label class="text-sm text-gray-600 dark:text-gray-400">Rows pro Seite:</label>
+      <select 
+        v-model.number="tableState.pagination.pageSize"
+        class="px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
     </div>
 
     <!-- Pagination Controls -->
@@ -101,10 +122,10 @@
         {{ paginationInfo }}
       </span>
     </div>
-  </div>
 </template>
 
 <script setup>
+
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import {
   createColumnHelper,
@@ -113,6 +134,11 @@ import {
   getPaginationRowModel,
   useVueTable,
 } from '@tanstack/vue-table'
+
+const INITIAL_PAGE_INDEX = 0
+
+
+const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 
 // ===== PROPS =====
 const props = defineProps({
@@ -154,11 +180,15 @@ const table = useVueTable({
   },
   columns: props.columns,
   state: tableState,
+  onStateChange: (updater) => {
+    // Wichtig: State update triggern
+    const newState = typeof updater === 'function' ? updater(tableState) : updater
+    Object.assign(tableState, newState)
+  },
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
   globalFilterFn: (row, columnId, filterValue) => {
-    // Search in searchable columns
     if (!props.searchableColumns.length) return true
     
     const cellValue = String(row.getValue(columnId) || '').toLowerCase()
@@ -238,17 +268,32 @@ watch(() => props.filters, () => {
   loadData()
 }, { deep: true })
 
+// Wenn pageSize sich ändert
+watch(() => tableState.pagination.pageSize, (newPageSize) => {
+  // Reset to first page wenn pageSize ändert
+  tableState.pagination.pageIndex = 0
+  loadData()
+}, { deep: true })
+
 function previousPage() {
-  tableState.pagination.pageIndex = Math.max(0, tableState.pagination.pageIndex - 1)
+  
+  tableState.pagination.pageIndex--;
+  console.log('Navigating to page:', tableState.pagination.pageIndex)
+ loadData()
 }
 
 function nextPage() {
-  const pageCount = table.getPageCount()
-  tableState.pagination.pageIndex = Math.min(pageCount - 1, tableState.pagination.pageIndex + 1)
+  // console.log('Navigating to page:', tableState.pagination.pageIndex)
+  // tableState.nextPage()
+  
+  tableState.pagination.pageIndex += 1;
+  console.log('Navigating to page:', tableState.pagination.pageIndex)
+ loadData()
 }
 
 function goToPage(pageIndex) {
-  tableState.pagination.pageIndex = pageIndex
+  console.log('Navigating to page:', pageIndex)
+  tableState.setPageIndex(pageIndex)
 }
 
 // ===== LIFECYCLE =====

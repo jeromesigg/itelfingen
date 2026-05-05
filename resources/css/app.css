@@ -14,7 +14,7 @@
 
 @plugin 'flowbite/plugin';
 
-@source '../../node_modules/flowbite/**/*.js';
+@source "../../node_modules/flowbite";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -30,11 +30,25 @@
   --breakpoint-2xl: 1536px;
 
   --color-*: initial;
-  --color-gladegreen: #657f61;
-  --color-ebonyclay: #293242;
-  --color-norway: #a5baa5;
-  --color-grannysmith: #8da3a8;
-  --color-orientalpink: #c78b8e;
+  --color-gladegreen: var(--gladegreen);
+  --color-ebonyclay: var(--ebonyclay);
+  --color-norway: var(--norway);
+  --color-grannysmith: var(--grannysmith);
+  --color-orientalpink: var(--orientalpink);
+    /* neutral.primary.* */
+  --color-neutral-primary-soft:    var(--neutral-primary-soft);
+  --color-neutral-primary:         var(--neutral-primary);
+  --color-neutral-primary-strong:  var(--neutral-primary-strong);
+
+  /* neutral.secondary.* */
+  --color-neutral-secondary-soft:  var(--neutral-secondary-soft);
+  --color-neutral-secondary:       var(--neutral-secondary);
+  --color-neutral-secondary-strong: var(--neutral-secondary-strong);
+
+  /* primary.* */
+  --color-primary-soft:   var(--primary-soft);
+  --color-primary:        var(--primary);
+  --color-primary-strong: var(--primary-strong);
 
   --spacing-*: initial;
   --spacing-0: 0;
@@ -93,6 +107,12 @@
 }
 
 :root {
+    --gladegreen: #657F61;
+    --ebonyclay: #293242;
+    --norway: #A5BAA5;
+    --grannysmith: #8DA3A8;
+    --orientalpink: #C78B8E;
+    --testcolor: #ff0000;
     --color-bg-primary: #F4F7FA;
     --color-text-primary: #666;
     --blue: #4f92c7;
@@ -110,7 +130,20 @@
     --color-logo: #1c2128;
     --chart-bg: #fff;
     --chart-text: #666;
-}
+      /* Neutral */
+    --neutral-primary-soft: #f9fafb;
+    --neutral-primary: #f3f4f6;
+    --neutral-primary-strong: #e5e7eb;
+
+    --neutral-secondary-soft: #f3f4f6;
+    --neutral-secondary: #e5e7eb;
+    --neutral-secondary-strong: #d1d5db;
+
+    /* Brand */
+    --primary-soft: #e0f2fe;
+    --primary: #3b82f6;
+    --primary-strong: #1d4ed8;
+  }
 
 .dark {
     --color-bg-primary: #1c2128;
@@ -130,6 +163,17 @@
     --color-logo:  #F4F7FA;
     --chart-bg: #1f2937;
     --chart-text: #f3f4f6;
+    --neutral-primary-soft: #1f2937;
+    --neutral-primary: #111827;
+    --neutral-primary-strong: #030712;
+
+    --neutral-secondary-soft: #374151;
+    --neutral-secondary: #1f2937;
+    --neutral-secondary-strong: #111827;
+
+    --primary-soft: #1e3a8a;
+    --primary: #3b82f6;
+    --primary-strong: #93c5fd;
 }
 
 .text-dark__white {

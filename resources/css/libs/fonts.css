@@ -1,11 +1,3 @@
-:root{
-    --gladegreen: #657F61;
-    --ebonyclay: #293242;
-    --norway: #A5BAA5;
-    --grannysmith: #8DA3A8;
-    --orientalpink: #C78B8E;
-  }
-  
   @font-face {
     font-family: 'PPMigra';
     src:url('@/fonts/PPMigra-Regular.eot');

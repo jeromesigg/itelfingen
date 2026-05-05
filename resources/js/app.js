@@ -39,6 +39,6 @@ import DataTable from './components/DataTable.vue'
 const app = createApp(App)
 app.component('DataTable', DataTable)
 
-if (document.getElementById('app')) {
-  app.mount('#app')
+if (document.getElementById('tanStackTable')) {
+  app.mount('#tanStackTable')
 }
