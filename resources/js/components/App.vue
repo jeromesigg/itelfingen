@@ -41,14 +41,14 @@ const statusFilter = ref('Alle')
 const apiEndpoint = '/events/datatable'  // ← ALS VARIABLE
 
 const eventColumns = [
-  { accessorKey: 'start_date', header: 'Datum' },
-  { accessorKey: 'number', header: 'Nr.' },
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'email', header: 'E-Mail' },
-  { accessorKey: 'total_amount', header: 'Total' },
-  { accessorKey: 'comment', header: 'Bemerkung' },
-  { accessorKey: 'comment_intern', header: 'Bemerkung Intern' },
-  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'start_date', header: 'Datum', enableSorting: true, },
+  { accessorKey: 'number', header: 'Nr.', enableSorting: true,  },
+  { accessorKey: 'name', header: 'Name', enableSorting: true,  },
+  { accessorKey: 'email', header: 'E-Mail', enableSorting: true,  },
+  { accessorKey: 'total_amount', header: 'Total', enableSorting: false, },
+  { accessorKey: 'comment', header: 'Bemerkung', enableSorting: false },
+  { accessorKey: 'comment_intern', header: 'Bemerkung Intern', enableSorting: false },
+  { accessorKey: 'status', header: 'Status', enableSorting: true },
 ]
 
 // Get contract statuses from window object (set in Blade)

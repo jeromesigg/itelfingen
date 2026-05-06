@@ -30,9 +30,15 @@
             <th 
               v-for="header in table.getHeaderGroups()[0]?.headers"
               :key="header.id"
+              @click="() => { console.log('canSort:', header.column.getCanSort()); header.column.toggleSorting() }"
+               
+              :class="header.column.getCanSort() ? 'cursor-pointer select-none' : ''"
               class="px-4 py-3 font-bold"
             >
               {{ header.column.columnDef.header }}
+              <span v-if="header.column.getIsSorted() === 'asc'">↑</span>
+              <span v-else-if="header.column.getIsSorted() === 'desc'">↓</span>
+              <span v-else-if="header.column.getCanSort()" class="opacity-30">↕</span>
             </th>
           </tr>
         </thead>
@@ -59,8 +65,8 @@
 
     <!-- Page Size Selector -->
     <div class="mb-4 flex items-center gap-2">
-      <label class="text-sm text-gray-600 dark:text-gray-400">Rows pro Seite:</label>
-      <select 
+      <label class="text-sm text-gray-600 dark:text-gray-400">Zeilen pro Seite:</label>
+      <!-- <select 
         v-model.number="tableState.pagination.pageSize"
         class="px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
@@ -68,8 +74,22 @@
         <option value="25">25</option>
         <option value="50">50</option>
         <option value="100">100</option>
-      </select>
+      </select> -->
+      <select
+          :value="table.getState().pagination.pageSize"
+          @change="handlePageSizeChange"
+          class="px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option
+            :key="pageSize"
+            :value="pageSize"
+            v-for="pageSize in pageSizes"
+          >
+            {{ pageSize }}
+          </option>
+        </select>
     </div>
+    
 
     <!-- Pagination Controls -->
     <div class="mt-4 flex gap-2 items-center justify-center flex-wrap">
@@ -128,15 +148,17 @@
 
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import {
-  createColumnHelper,
   getCoreRowModel,
+  useVueTable,
+  createColumnHelper,
   getFilteredRowModel,
   getPaginationRowModel,
-  useVueTable,
+  getSortedRowModel,
 } from '@tanstack/vue-table'
 
 const INITIAL_PAGE_INDEX = 0
-
+const pageSizes = [10, 20, 30, 40, 50]
+const sorting = ref([])
 
 const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 
@@ -171,6 +193,7 @@ const isLoading = ref(false)
 const tableState = reactive({
   pagination: { pageIndex: 0, pageSize: props.pageSize },
   globalFilter: '',
+  sorting: sorting.value,
 })
 
 // ===== TABLE SETUP =====
@@ -185,9 +208,14 @@ const table = useVueTable({
     const newState = typeof updater === 'function' ? updater(tableState) : updater
     Object.assign(tableState, newState)
   },
+ onSortingChange: (updater) => {        
+    sorting.value = typeof updater === 'function'
+      ? updater(sorting.value) : updater
+  },
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
+  getSortedRowModel: getSortedRowModel(),
   globalFilterFn: (row, columnId, filterValue) => {
     if (!props.searchableColumns.length) return true
     
@@ -213,7 +241,7 @@ const paginationInfo = computed(() => {
   const start = totalFiltered === 0 ? 0 : pageIndex * pageSize + 1
   const end = Math.min((pageIndex + 1) * pageSize, totalFiltered)
   
-  return `${start}-${end} of ${totalFiltered}`
+  return `${start}-${end} von ${totalFiltered}`
 })
 
 // ===== METHODS =====
@@ -268,32 +296,24 @@ watch(() => props.filters, () => {
   loadData()
 }, { deep: true })
 
-// Wenn pageSize sich ändert
-watch(() => tableState.pagination.pageSize, (newPageSize) => {
-  // Reset to first page wenn pageSize ändert
-  tableState.pagination.pageIndex = 0
-  loadData()
-}, { deep: true })
+// Wenn pageSize sich änder
+function handlePageSizeChange(e) {
+  table.setPageSize(Number(e.target.value));
+}
 
 function previousPage() {
-  
   tableState.pagination.pageIndex--;
-  console.log('Navigating to page:', tableState.pagination.pageIndex)
- loadData()
+  table.setPageIndex( tableState.pagination.pageIndex)
 }
 
 function nextPage() {
-  // console.log('Navigating to page:', tableState.pagination.pageIndex)
-  // tableState.nextPage()
-  
   tableState.pagination.pageIndex += 1;
-  console.log('Navigating to page:', tableState.pagination.pageIndex)
- loadData()
+  table.setPageIndex( tableState.pagination.pageIndex)
 }
 
 function goToPage(pageIndex) {
-  console.log('Navigating to page:', pageIndex)
-  tableState.setPageIndex(pageIndex)
+  tableState.pagination.pageIndex =pageIndex;
+  table.setPageIndex(tableState.pagination.pageIndex)
 }
 
 // ===== LIFECYCLE =====
