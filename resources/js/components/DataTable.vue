@@ -13,7 +13,7 @@
                 <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>
             </div>
                   <input 
-        v-model="tableState.globalFilter"
+        v-model="globalFilter"
         type="text" 
         placeholder="Suchen..." 
         class="block w-full max-w-96 ps-9 pe-3 py-2 text-heading text-sm border border-default-medium border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 px-3 py-2.5 shadow-xs placeholder:text-body"
@@ -146,69 +146,80 @@
 
 <script setup>
 
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import {
   getCoreRowModel,
-  useVueTable,
-  createColumnHelper,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  useVueTable,
 } from '@tanstack/vue-table'
 
-const INITIAL_PAGE_INDEX = 0
-const pageSizes = [10, 20, 30, 40, 50]
-const sorting = ref([])
-
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
+const pageSizes = [10, 25, 50, 100]
 
 // ===== PROPS =====
 const props = defineProps({
-  columns: {
-    type: Array,
-    required: true,
-  },
-  apiEndpoint: {
-    type: String,
-    required: true,
-  },
-  filters: {
-    type: Object,
-    default: () => ({}),
-  },
-  searchableColumns: {
-    type: Array,
-    default: () => [],
-  },
-  pageSize: {
-    type: Number,
-    default: 10,
-  },
+  columns: { type: Array, required: true,},
+  apiEndpoint: { type: String, required: true,},
+  filters: { type: Object, default: () => ({}), },
+  searchableColumns: {type: Array, default: () => [], },
+  pageSize: {type: Number, default: 10,},
 })
 
 // ===== STATE =====
 const tableData = ref([])
 const isLoading = ref(false)
+const pagination = ref({ pageIndex: 0, pageSize: props.pageSize })
+const globalFilter = ref('')
+const debouncedFilter = ref('')
+const sorting = ref([])
 
-const tableState = reactive({
-  pagination: { pageIndex: 0, pageSize: props.pageSize },
-  globalFilter: '',
-  sorting: sorting.value,
+let debounceTimer = null
+watch(globalFilter, (val) => {
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    debouncedFilter.value = val
+  }, 300)
+})
+
+
+// Gefilterte Daten als computed
+const filteredData = computed(() => {
+  if (!debouncedFilter.value) return tableData.value
+  
+  const search = debouncedFilter.value.toLowerCase()
+  const cols = props.searchableColumns
+
+  return tableData.value.filter(row => {
+    const fields = cols.length ? cols.map(k => row[k]) : Object.values(row)
+    return fields.some(val => String(val || '').toLowerCase().includes(search))
+  })
+})
+
+watch(debouncedFilter, () => {
+  pagination.value.pageIndex = 0
 })
 
 // ===== TABLE SETUP =====
 const table = useVueTable({
-  get data() {
-    return tableData.value
-  },
+  get data() { return filteredData.value },
   columns: props.columns,
-  state: tableState,
-  onStateChange: (updater) => {
-    // Wichtig: State update triggern
-    const newState = typeof updater === 'function' ? updater(tableState) : updater
-    Object.assign(tableState, newState)
+  get state() {
+    return {
+      pagination: pagination.value,
+      // globalFilter: debouncedFilter.value,
+      sorting: sorting.value,
+    }
   },
- onSortingChange: (updater) => {        
+  onPaginationChange: (updater) => {
+    pagination.value = typeof updater === 'function'
+      ? updater(pagination.value) : updater
+  },
+  // onGlobalFilterChange: (updater) => {
+  //   globalFilter.value = typeof updater === 'function'
+  //     ? updater(globalFilter.value) : updater
+  // },
+  onSortingChange: (updater) => {
     sorting.value = typeof updater === 'function'
       ? updater(sorting.value) : updater
   },
@@ -216,60 +227,50 @@ const table = useVueTable({
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
   getSortedRowModel: getSortedRowModel(),
-  globalFilterFn: (row, columnId, filterValue) => {
-    if (!props.searchableColumns.length) return true
-    
-    const cellValue = String(row.getValue(columnId) || '').toLowerCase()
-    return cellValue.includes(filterValue.toLowerCase())
-  },
+  // globalFilterFn: (row, columnId, filterValue) => {
+  //   if (!props.searchableColumns.length) return true
+  //   const cellValue = String(row.getValue(columnId) || '').toLowerCase()
+  //   return cellValue.includes(filterValue.toLowerCase())
+  // },
 })
 
 // ===== COMPUTED =====
+const filteredRowCount = computed(() => filteredData.value.length)
+
 const visiblePages = computed(() => {
   const pageCount = table.getPageCount()
-  const currentPage = table.getState().pagination.pageIndex
-  
+  const currentPage = pagination.value.pageIndex
   let startPage = Math.max(0, currentPage - 2)
   let endPage = Math.min(pageCount - 1, currentPage + 2)
-  
   return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i)
 })
 
 const paginationInfo = computed(() => {
-  const { pageIndex, pageSize } = table.getState().pagination
-  const totalFiltered = table.getFilteredRowModel().rows.length
-  const start = totalFiltered === 0 ? 0 : pageIndex * pageSize + 1
-  const end = Math.min((pageIndex + 1) * pageSize, totalFiltered)
-  
-  return `${start}-${end} von ${totalFiltered}`
+  const { pageIndex, pageSize } = pagination.value
+  const total = filteredRowCount.value
+  const start = total === 0 ? 0 : pageIndex * pageSize + 1
+  const end = Math.min((pageIndex + 1) * pageSize, total)
+  return `${start}-${end} von ${total}`
 })
+
 
 // ===== METHODS =====
 async function loadData() {
   try {
     isLoading.value = true
-    
     // Build query params
-    const params = new URLSearchParams({
-      ...props.filters,
-    })
-
-    const response = await fetch(
-      `${props.apiEndpoint}?${params}`,
-      {
+    const params = new URLSearchParams({ ...props.filters,})
+    const response = await fetch(`${props.apiEndpoint}?${params}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       }
     )
-
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`)
     }
-
     const { data } = await response.json()
     tableData.value = data
-    
     // Reset to first page
-    tableState.pagination.pageIndex = 0
+    pagination.value.pageIndex = 0
   } catch (error) {
     console.error('Error loading table data:', error)
   } finally {
@@ -291,30 +292,14 @@ function formatCellValue(value) {
 }
 
 // ===== WATCHERS =====
-watch(() => props.filters, () => {
-  tableState.pagination.pageIndex = 0
-  loadData()
-}, { deep: true })
+// Navigation – table.X() direkt, kein manuelles State-Update
+function previousPage()      { table.previousPage() }
+function nextPage()          { table.nextPage() }
+function goToPage(i)         { table.setPageIndex(i) }
+function handlePageSizeChange(e) { table.setPageSize(Number(e.target.value)) }
 
-// Wenn pageSize sich änder
-function handlePageSizeChange(e) {
-  table.setPageSize(Number(e.target.value));
-}
-
-function previousPage() {
-  tableState.pagination.pageIndex--;
-  table.setPageIndex( tableState.pagination.pageIndex)
-}
-
-function nextPage() {
-  tableState.pagination.pageIndex += 1;
-  table.setPageIndex( tableState.pagination.pageIndex)
-}
-
-function goToPage(pageIndex) {
-  tableState.pagination.pageIndex =pageIndex;
-  table.setPageIndex(tableState.pagination.pageIndex)
-}
+// ===== WATCHERS =====
+watch(() => props.filters, () => loadData(), { deep: true })
 
 // ===== LIFECYCLE =====
 onMounted(() => {
