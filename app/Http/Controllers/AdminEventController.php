@@ -382,4 +382,17 @@ class AdminEventController extends Controller
             'isFree' => $events->isEmpty(),
         ]);
     }
+
+    public function parse(Request $request)
+    {
+        $request->validate(['text' => 'required|string']);
+
+        $text = $request->input('text');
+
+        $data = str_contains($text, ' bis ')
+            ? Helper::parseFromMailText($text)
+            : Helper::parseFromText($text);
+
+        return response()->json($data);
+    }
 }

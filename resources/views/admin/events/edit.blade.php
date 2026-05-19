@@ -221,6 +221,15 @@
                     <div class="form-group">
                         <a href="{{route('events.downloadParking', $event['uuid'])}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
+                    
+                    @if($event->external)
+                        <x-forms.container>
+                            <x-forms.text-area label="Import Buchung:" name="import-text" rows=9 placeholder="Buchungsinformationen aus PDF 'Name' bis 'Anzahl Personen' hier einfügen..."/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="importExtern()">Externe Buchung importieren</button>
+                        </x-forms.container>
+                    @endif
                     <br><br>
                     <table class="table">
                         <tbody>
@@ -353,8 +362,40 @@
             }
         });
 
+        function importExtern() {
+            const text = document.getElementById('import-text').value;
+
+            fetch('{{ route("events.parse") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({ text }),
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Erfolg:', data);
+                // Felder befüllen
+                document.getElementById('name').value        = data.name ?? '';
+                document.getElementById('firstname').value        = data.vorname ?? '';
+                document.getElementById('group_name').value        = data.gruppe ?? '';
+                document.getElementById('street').value        = data.strasse ?? 'Itelfingen';
+                document.getElementById('house_number').value        = data.hausnummer ?? '3';
+                document.getElementById('plz').value        = data.plz ?? '6344';
+                document.getElementById('city').value        = data.stadt ?? 'Meierskappel';
+                document.getElementById('email').value        = data.email ?? 'verwalter@itelfingen.ch';
+                document.getElementById('telephone').value        = data.telefon ?? (data.mobil ?? '');
+                document.getElementById('start_date').value = data.mietdauer_von ?? '';
+                document.getElementById('end_date').value = data.mietdauer_bis ?? '';
+                Total_Change()
+            })
+            .catch(err => console.error('Fehler:', err));
+        }
+
         window.PrepareMail = PrepareMail;
         window.PrepareReminderMail = PrepareReminderMail;
         window.Total_Change = Total_Change;
+        window.importExtern = importExtern;
     </script>
 @endpush
