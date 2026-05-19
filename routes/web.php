@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminEventController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -59,6 +60,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
+    Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
 
     Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
