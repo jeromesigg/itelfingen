@@ -159,7 +159,7 @@
         .then(data => {
             // Felder befüllen
             document.getElementById('foreign_key').value        = data.buchungsnummer ?? '';
-            document.getElementById('name').value        = data.gruppe ?? '';
+            document.getElementById('name').value        = data.name ?? '';
             document.getElementById('firstname').value        = data.vorname ?? '';
             document.getElementById('group_name').value        = data.gruppe ?? '';
             document.getElementById('street').value        = data.strasse ?? 'Itelfingen';

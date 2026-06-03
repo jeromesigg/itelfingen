@@ -304,20 +304,27 @@ class Helper
 
     public static function parseFromMailText(string $text): array
     {
-        $pattern = '/Anfrage\s+A-(\d+):\s+\w+\s+(\d{2}\.\d{2}\.\d{4})\s+bis\s+\w+\s+(\d{2}\.\d{2}\.\d{4}),\s*Gruppe\s+(.+?)\s*\((.+?)\),\s*ca\.\s*(\d+)\s*Personen\s*\((.+?)\)/';
+        $labels = ['Anfragenummer', 'Datum', 'Name', 'Gruppenart', 'Anzahl', 'Verpflegung', 'Sprache', 'Kommentar der Gruppe'];
 
-        if (! preg_match($pattern, $text, $m)) {
-            return [];
-        }
+        $extract = function (string $field) use ($text, $labels): ?string {
+            $others = array_filter($labels, fn($l) => $l !== $field);
+            $lookahead = '(?=' . implode('|', array_map('preg_quote', $others)) . '|$)';
+            $pattern = '/' . preg_quote($field) . '\s+(.+?)' . $lookahead . '/s';
+            return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+        };
+
+        preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
 
         return [
-            'buchungsnummer'  => 'A-' . $m[1],
-            'mietdauer_von'   => self::convertDate($m[2]),
-            'mietdauer_bis'   => self::convertDate($m[3]),
-            'gruppe'          => $m[4],
-            'kategorie'       => $m[5],
-            'anzahl_personen' => $m[6],
-            'verpflegung'     => $m[7],
+            'buchungsnummer'  => 'A-' . $extract('Anfragenummer'),
+            'mietdauer_von'   => isset($dates[1]) ? self::convertDate($dates[1]) : null,
+            'mietdauer_bis'   => isset($dates[2]) ? self::convertDate($dates[2]) : null,
+            'name'            => $extract('Name'),
+            'gruppe'          => $extract('Gruppenart'),
+            'anzahl_personen' => preg_match('/(\d+)/', $extract('Anzahl') ?? '', $n) ? $n[1] : null,
+            'verpflegung'     => $extract('Verpflegung'),
+            'sprache'         => $extract('Sprache'),
+            'kommentar'       => $extract('Kommentar der Gruppe'),
         ];
     }
 
@@ -344,14 +351,6 @@ class Helper
     private static function extract(string $text, string $pattern): ?string
     {
         return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
-    }
-
-    private static function extractMultiline(string $text, string $from, string $until): ?string
-    {
-        $pattern = '/' . $from . '\s*:\s*(.+?)(?=' . $until . '\s*:)/s';
-        return preg_match($pattern, $text, $m)
-            ? trim(preg_replace('/\s+/', ' ', $m[1]))
-            : null;
     }
 
     private static function extractMultilineRaw(string $text, string $from, string $until): ?string
