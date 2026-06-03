@@ -389,7 +389,7 @@ class AdminEventController extends Controller
 
         $text = $request->input('text');
 
-        $data = str_contains($text, ' bis ')
+        $data = str_contains($text, 'Kommentar der Gruppe')
             ? Helper::parseFromMailText($text)
             : Helper::parseFromText($text);
 

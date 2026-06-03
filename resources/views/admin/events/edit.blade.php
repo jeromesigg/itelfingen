@@ -375,7 +375,6 @@
             })
             .then(res => res.json())
             .then(data => {
-                console.log('Erfolg:', data);
                 // Felder befüllen
                 document.getElementById('name').value        = data.name ?? '';
                 document.getElementById('firstname').value        = data.vorname ?? '';
