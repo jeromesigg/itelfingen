@@ -8,9 +8,35 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-D5MKa3Ho.css",
+    "file": "assets/app-BVkec2A7.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
     "src": "resources/css/app.css",
-    "isEntry": true
+    "isEntry": true,
+    "assets": [
+      "assets/bootstrap-icons-mSm7cUeB.woff2",
+      "assets/bootstrap-icons-BeopsB42.woff",
+      "assets/PPMigra-Regular-CMprnpcM.eot",
+      "assets/PPMigra-Regular-ZPNUBG7o.woff2",
+      "assets/PPMigra-Regular-5UocUxhr.ttf",
+      "assets/PPMigra-Regular-rfU2lMge.otf",
+      "assets/events-bg-BozPqy6n.webp",
+      "assets/provisorisch-doppelt-DLqk6ivk.svg",
+      "assets/provisorisch_start-dScfS2Bt.svg",
+      "assets/provisorisch_end-CVIsyXaf.svg",
+      "assets/besetzt_start-CeE6frsG.svg",
+      "assets/besetzt_end-CWeQw5Hi.svg",
+      "assets/provisorisch_end-besetzt_start-DAdkBwW6.svg",
+      "assets/besetzt_end-provisorisch_start-CvpzCMGN.svg",
+      "assets/selected_end-provisorisch_start-BXpDM612.svg",
+      "assets/provisorisch_end-selected_start-_SGsZoFf.svg",
+      "assets/selected_end-besetzt_start-BnwWn4OY.svg",
+      "assets/besetzt_end-selected_start-D8sTgVxR.svg",
+      "assets/hero-bg-BxsSwpDD.webp",
+      "assets/login-Decb8tK8.webp"
+    ]
   },
   "resources/images/hero-bg.webp": {
     "file": "assets/hero-bg-BxsSwpDD.webp",
@@ -21,7 +47,7 @@
     "src": "resources/images/login.webp"
   },
   "resources/js/app.js": {
-    "file": "assets/app-5bIBvlXo.js",
+    "file": "assets/app-CJwSBASS.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

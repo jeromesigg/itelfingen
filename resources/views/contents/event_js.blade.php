@@ -145,6 +145,12 @@
 			callback.apply({}, cpy);
 		}
 	}
+	function formatDateToISO(date) {
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		return `${year}-${month}-${day}`;
+	}
 
 	var Agenda = {
 		monate: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
@@ -213,6 +219,7 @@
 			this.apply();
 		},
 		change: function() {
+			console.log(this.start, this.end, this.today);
 			if (Date.parse(this.start) > Date.parse(this.end)) {
 				this.end = new Date(this.today);
 				$('#reservation_error').show();
@@ -289,13 +296,13 @@
 				}
 				$('#days').text('(' + days + ' ' + text+')');
 				$("#start_date_text").text(this.start.toLocaleDateString('de-CH', options));
-				$("#start_date").val(this.start.toLocaleString());
+				$("#start_date").val(formatDateToISO(this.start))
 				$("#end_date_text").text(this.end.toLocaleDateString('de-CH', options));
-				$("#end_date").val(this.end.toLocaleString());
+				$("#end_date").val(formatDateToISO(this.end));
 			}
 			else{
 				$("#date_text").text(this.start.toLocaleDateString('de-CH', options));
-				$("#date").val(this.start.toLocaleString());
+				$("#date").val(formatDateToISO(this.start));
 				$('#days').text('1 Tag');
 			}
 			Total_Change();
