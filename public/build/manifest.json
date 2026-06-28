@@ -8,7 +8,7 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BVkec2A7.css",
+    "file": "assets/app-CsZ5XBGP.css",
     "name": "app",
     "names": [
       "app.css"
@@ -47,7 +47,7 @@
     "src": "resources/images/login.webp"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CJwSBASS.js",
+    "file": "assets/app-Dfy-1odX.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

@@ -222,7 +222,7 @@
                         <a href="{{route('events.downloadParking', $event['uuid'])}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
                     
-                    @if($event->external)
+                    @if($event->external && ($event['contract_status_id'] < config('status.contract_angebot_erstellt')))
                         <x-forms.container>
                             <x-forms.text-area label="Import Buchung:" name="import-text" rows=9 placeholder="Buchungsinformationen aus PDF 'Name' bis 'Anzahl Personen' hier einfügen..."/>
                         </x-forms.container>
