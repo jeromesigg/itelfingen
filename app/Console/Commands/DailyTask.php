@@ -17,6 +17,7 @@ use jeremykenedy\Slack\Laravel\Facade as Slack;
 use App\Notifications\EventFeedbackNotification;
 use App\Notifications\EventLastInfosNotification;
 use App\Notifications\ApplicationInvoiceNotification;
+use App\Events\ApplicationCreatedEvent;
 
 class DailyTask extends Command
 {
@@ -52,7 +53,6 @@ class DailyTask extends Command
     public function handle()
     {
         $this->SendEventLastInfos();
-        // $this->SendFeedbackMails();
         $this->SendApplicationInvoices();
         $this->SendNextEventToSlack();
     }
@@ -100,9 +100,10 @@ class DailyTask extends Command
     public function SendApplicationInvoices()
     {
         $date = Carbon::today()->addweeks(-2);
-        $applications = Application::where('invoice_send', false)->whereNotNull('bexio_user_id')->where('created_at', '<=', $date)->where('refuse', false)->get();
+        $applications = Application::where('invoice_send', false)->where('created_at', '<=', $date)->where('refuse', false)->get();
 
         foreach ($applications as $application) {
+            ApplicationCreatedEvent::dispatch($application);
             $this->SendApplicationInvoice($application);
         }
         if (count($applications) > 0) {
@@ -114,7 +115,7 @@ class DailyTask extends Command
     {
         $pl_position = PricelistPosition::where('bexio_code', '=', 300)->first();
 
-        if (! isset($application['bexio_invoice_id'])) {
+        if (!isset($application['bexio_invoice_id']) && isset($application['bexio_user_id'])) {
             $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
                 ->withHeader('Accept: application/json')
                 ->withBearer(config('app.bexio_token'))

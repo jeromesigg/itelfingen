@@ -16,7 +16,7 @@
                             <x-forms.text label="Name:" name="name"/>
                         </x-forms.container>
                         <x-forms.container>
-                            <x-forms.textarea label="Beschreibung:" name="description" rows=15/>
+                            <x-forms.text-area label="Beschreibung:" name="description" rows=15/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.select label="Raum:" name="room_id" required=true :collection="$rooms_select"/>

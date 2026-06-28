@@ -301,4 +301,86 @@ class Helper
             'series' => $series,
         ];
     }
+
+    public static function parseFromMailText(string $text): array
+    {
+        $labels = ['Anfragenummer', 'Datum', 'Name', 'Gruppenart', 'Anzahl', 'Verpflegung', 'Sprache', 'Kommentar der Gruppe'];
+
+        $extract = function (string $field) use ($text, $labels): ?string {
+            $others = array_filter($labels, fn($l) => $l !== $field);
+            $lookahead = '(?=' . implode('|', array_map('preg_quote', $others)) . '|$)';
+            $pattern = '/' . preg_quote($field) . '\s+(.+?)' . $lookahead . '/s';
+            return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+        };
+
+        preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
+
+        return [
+            'buchungsnummer'  => 'A-' . $extract('Anfragenummer'),
+            'mietdauer_von'   => isset($dates[1]) ? self::convertDate($dates[1]) : null,
+            'mietdauer_bis'   => isset($dates[2]) ? self::convertDate($dates[2]) : null,
+            'name'            => $extract('Name'),
+            'gruppe'          => $extract('Gruppenart'),
+            'anzahl_personen' => preg_match('/(\d+)/', $extract('Anzahl') ?? '', $n) ? $n[1] : null,
+            'verpflegung'     => $extract('Verpflegung'),
+            'sprache'         => $extract('Sprache'),
+            'kommentar'       => $extract('Kommentar der Gruppe'),
+        ];
+    }
+
+    public static function parseFromText(string $text): array
+    {
+        $nameBlock = self::extractMultilineRaw($text, 'Name', 'Gruppe');
+        // return array_merge(['nameBlock' => $nameBlock]);
+        return array_merge(
+            self::parseName($nameBlock),
+            [
+                'gruppe'          => self::extract($text, '/Gruppe\s*:\s*(.+)/'),
+                'telefon'         => self::extract($text, '/Telefon\s*:\s*(.+)/'),
+                'mobil'           => self::extract($text, '/Mobil\s*:\s*(.+)/'),
+                'email'           => self::extract($text, '/E[\-\‐]Mail\s*:\s*(.+)/u'),
+                'mietdauer_von'   => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?(\d{2}\.\d{2}\.\d{4})/')),
+                'mietdauer_bis'   => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/')),
+                'naechte'         => self::extract($text, '/=\s*(\d+)\s*Nacht/'),
+                'anzahl_personen' => self::extract($text, '/Anzahl Personen\s*:\s*(\d+)/'),
+                'verpflegung'     => self::extract($text, '/Verpflegung\s*:\s*(.+)/'),
+            ]
+        );
+    }
+
+    private static function extract(string $text, string $pattern): ?string
+    {
+        return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+    }
+
+    private static function extractMultilineRaw(string $text, string $from, string $until): ?string
+    {
+        $pattern = '/' . $from . '\s*:\s*(.+?)(?=' . $until . '\s*:)/s';
+        return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+    }
+
+    private static function convertDate(string $date): string
+    {
+        return Carbon::createFromFormat('d.m.Y', $date)->format('Y-m-d');
+    }
+
+    private static function parseName(string $nameBlock): array
+    {
+        $lines = array_values(array_filter(array_map('trim', explode("\n", $nameBlock))));
+        $nameParts = explode(' ', $lines[0] ?? '');
+        $anrede    = $nameParts[0] ?? '';       
+        $vorname   = $nameParts[1] ?? '';       
+        $name      = $nameParts[2] ?? '';       
+
+        preg_match('/^(.+?)\s+(\d+\w*)$/', $lines[1] ?? '', $adresse);
+        $strasse     = $adresse[1] ?? '';
+        $hausnummer  = $adresse[2] ?? '';
+
+        preg_match('/(?:CH[\-‐])?(\d{4})\s+(.+)$/u', $lines[2] ?? '', $ort);
+        $plz  = $ort[1] ?? '';
+        $stadt = $ort[2] ?? '';
+
+        return compact('anrede', 'vorname', 'name', 'strasse', 'hausnummer', 'plz', 'stadt');
+    }
+
 }

@@ -6,63 +6,75 @@
         <header>
             <h3 class="text-3xl font-bold dark:text-white">Buchung erstellen</h3>
         </header>
-        <div>
-            <button class="btn btn-primary" onclick="createIntern()">Interne Buchung erstellen</button>
-            <button class="btn btn-primary" onclick="createExtern()">Externe Buchung erstellen</button>
-        </div>
+        <x-forms.row class="mt-4">
+            <x-forms.container class="col-md-2 pt-7">
+                <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="createIntern()">Interne Buchung erstellen</button>
+            </x-forms.container>
+            <x-forms.container class="col-md-8">
+                <x-forms.text label="Import Mail:" name="import-text" placeholder="Anfrage A-123456: Sa 01.01.2026 bis Mo 03.01.2026, Gruppe Sigg (Sonstige), ca. 12 Personen (Selbstkocher)."/>
+            </x-forms.container>
+            <x-forms.container class="col-md-2 pt-7">
+                <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="createExtern()">Externe Buchung erstellen</button>
+            </x-forms.container>
+        </x-forms.row>
         <br>
         <x-forms.form :action="route('admin.events.store')">
-            <div class="form-row">
+            <x-forms.row>
                 <div class="form-group col-md-6">
-                    <div class="form-row">
+                    <x-forms.row>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Start:" name="start_date" type="date" required=true onchange="Total_Change()"/>
                         </x-forms.container>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Ende:" name="end_date" type="date" required=true onchange="Total_Change()"/>
                         </x-forms.container>
-                    </div>
-                    <div class="form-row">
+                    </x-forms.row>
+                    
+                    <x-forms.row>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Name:" name="name" required=true/>
                         </x-forms.container>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Vorname:" name="firstname"/>
                         </x-forms.container>
-                    </div>
+                    </x-forms.row>
                     <x-forms.container>
                         <x-forms.text label="Gruppe/Anlass:" name="group_name"/>
                     </x-forms.container>
-                    <div class="form-row">
+                    
+                    <x-forms.row>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Email:" name="email" required=true type="email"/>
                         </x-forms.container>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Telefon:" name="telephone" />
                         </x-forms.container>
-                    </div>
-                    <div class="form-row">
+                    </x-forms.row>
+                    
+                    <x-forms.row>
                         <x-forms.container class="col-md-10">
                             <x-forms.text label="Strasse:" name="street" required=true/>
                         </x-forms.container>
                         <x-forms.container class="col-md-2">
                             <x-forms.text label="Nr.:" name="house_number"/>
                         </x-forms.container>
-                    </div>
-                    <div class="form-row">
+                    </x-forms.row>
+                    
+                    <x-forms.row>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="PLZ:" name="plz" required=true type="number"/>
                         </x-forms.container>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Ortschaft:" name="city" required=true/>
                         </x-forms.container>
-                    </div>
-                </div>
+                    </x-forms.row>
+                </x-forms.row>
                 <div class="form-group col-md-6" style="padding-left:30px">
                     <x-forms.container>
                         <x-forms.text-area label="Bemerkungen:" name="comment" rows=3/>
                     </x-forms.container>
-                    <div class="form-row">
+                    
+                    <x-forms.row>
                         <div class="col-md-3 form-group">
                             <x-forms.select label="Status:" name="event_status_id" :collection="$event_statuses"/>
                         </div>
@@ -72,8 +84,9 @@
                         <x-forms.container class="col-md-3">
                             <x-forms.text label="Externe Buchungs-Nr.:" name="foreign_key"/>
                         </x-forms.container>
-                    </div>
-                    <div class="form-row">
+                    </x-forms.row>
+                    
+                    <x-forms.row>
                         @foreach ($positions as $index => $position)
                             @if ($position['bexio_code']<50)
                                 <x-forms.hidden name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['id']}}" onChange="Total_Change()" value="1"/>
@@ -94,18 +107,19 @@
                             <label for="total" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total CHF</label>
                             <span id="total"></span>.-
                         </x-forms.container>
-                    </div>
-                    <div class="form-row">
+                    </x-forms.row>
+                    
+                    <x-forms.row>
                         <x-forms.container class="col-md-6">
                             <x-forms.select label="Verantwortlicher:" name="user_id" required=true :collection="$users"/>
                         </x-forms.container>
                         <x-forms.container class="col-md-6">
                             <x-forms.text label="Tür-Code:" name="code" type="number"/>
                         </x-forms.container>
-                    </div>
+                    </x-forms.row>
                 </div>
             </div>
-            <x-forms.button type="submit" class="btn btn-primary">
+            <x-forms.button type="submit" class="focus:outline-none text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen">
                 Buchung erstellen
             </x-forms.button>
         </x-forms.form>
@@ -131,17 +145,35 @@
 	    $('#event_status_id').val(@json(config('status.event_eigene')));
     }
     function createExtern() {
-        $('#name').val("Externe Buchung");
-	    $('#street').val("Itelfingen");
-	    $('#house_number').val("3");
-        $('#plz').val("6344");
-        $('#city').val("Meierskappel");
-        $('#email').val("verwalter@itelfingen.ch");
-        $('#total_people').val("0");
-        $('#total_days').val("0");
-        $('#total_amount').val("0");
-        $('#code').val("");
-        $('#event_status_id').val(@json(config('status.event_neu')));
+        const text = document.getElementById('import-text').value;
+
+        fetch('{{ route("events.parse") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({ text }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Felder befüllen
+            document.getElementById('foreign_key').value        = data.buchungsnummer ?? '';
+            document.getElementById('name').value        = data.name ?? '';
+            document.getElementById('firstname').value        = data.vorname ?? '';
+            document.getElementById('group_name').value        = data.gruppe ?? '';
+            document.getElementById('street').value        = data.strasse ?? 'Itelfingen';
+            document.getElementById('house_number').value        = data.hausnummer ?? '3';
+            document.getElementById('plz').value        = data.plz ?? '6344';
+            document.getElementById('city').value        = data.stadt ?? 'Meierskappel';
+            document.getElementById('email').value        = data.email ?? 'verwalter@itelfingen.ch';
+            document.getElementById('start_date').value = data.mietdauer_von ?? '';
+            document.getElementById('end_date').value = data.mietdauer_bis ?? '';
+            document.getElementById('position_2').value = data.anzahl_personen ?? '';
+            $('#event_status_id').val(@json(config('status.event_neu')));
+            Total_Change()
+        })
+        .catch(err => console.error('Fehler:', err));
     }
     function Total_Change() {
         var start_date = new Date(document.getElementById('start_date').value);

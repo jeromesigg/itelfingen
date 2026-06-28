@@ -15,6 +15,9 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+        if (!preg_match('/\s/', $input['content'])) {
+            abort(response()->view('errors.422', [], 422));
+        }
         $validator = Validator::make($input, [
             'name' => 'required',
             'email' => 'email|required',

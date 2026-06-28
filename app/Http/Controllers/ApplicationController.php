@@ -7,8 +7,6 @@ use App\Models\Homepage;
 use App\Models\Salutation;
 use App\Models\Application;
 use Illuminate\Http\Request;
-use Ixudra\Curl\Facades\Curl;
-use App\Events\ApplicationCreatedEvent;
 use App\Notifications\ApplicationCreatedNotification;
 
 class ApplicationController extends Controller
@@ -44,29 +42,13 @@ class ApplicationController extends Controller
     {
         //
         $input = $request->all();
+        if (!preg_match('/\s/', $input['why'])) {
+            abort(response()->view('errors.422', [], 422));
+        }
 
         $input['plz'] = $input['zipcode'];
-                $query = [
-            [
-                'field' => 'name_1',
-                'value' => $input['name'],
-            ],
-            [
-                'field' => 'name_2',
-                'value' => $input['firstname'] ?: '',
-            ],
-                [
-                    'field' => 'address',
-                    'value' => $input['street'] . ' ' . $input['house_number'],
-                ],
-            [
-                'field' => 'postcode',
-                'value' => $input['plz'],
-            ] ];
-
         $application = Application::create($input);
 
-        ApplicationCreatedEvent::dispatch($application);
         Notification::send($application, new ApplicationCreatedNotification($application));
 
         return redirect()->to(url()->previous())->with('success', 'Vielen Dank für deine Bewerbung. Wir werden sie überprüfen und melden uns in zwei Wochen.');

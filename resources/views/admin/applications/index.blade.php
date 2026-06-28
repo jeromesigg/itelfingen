@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered" style="width:100%" id="datatable">
+                <table class="table table-striped table-bordered text-gray-600 dark:text-gray-300" style="width:100%" id="datatable">
                     <thead>
                         <tr>
                             <th scope="col">Datum</th>
@@ -64,7 +64,6 @@
                     { data: 'firstname', name: 'firstname' },
                     { data: 'email', name: 'email' },
                     { data: 'street', name: 'street' },
-                    { data: 'house_number', name: 'house_number' },
                     { data: 'city', name: 'city' },
                     { data: 'organisation', name: 'organisation' },
                     { data: 'why', name: 'why' },

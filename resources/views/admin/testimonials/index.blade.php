@@ -18,7 +18,7 @@
                         <x-forms.text label="Funktion:" name="function"/>
                     </x-forms.container>
                     <x-forms.container>
-                        <x-forms.textarea label="Kommentar:" name="comment" rows=2/>
+                        <x-forms.text-area label="Kommentar:" name="comment" rows=2/>
                     </x-forms.container>
                     <x-forms.container>
                         <x-forms.button type="submit" class="btn btn-primary">
