@@ -25,22 +25,27 @@ class NewsletterController extends Controller
         return view('admin.newsletter.index', compact('title'));
     }
 
-    public function createDataTables()
+    public function createDataTablesTanStack(Request $request)
     {
-        $applications = Newsletter::get();
+        
+        $newsletter = Newsletter::get();
 
-        return DataTables::of($applications)
-            ->addColumn('name', function (Newsletter $newsletter) {
-                return '<a href='.\URL::route('newsletter.edit', $newsletter).'>'.$newsletter['name'].'</a>';
-            })
-            ->addColumn('bookings', function (Newsletter $newsletter) {
-                return $newsletter['bookings'] ? 'Ja' : 'Nein';
-            })
-            ->addColumn('members', function (Newsletter $newsletter) {
-                return $newsletter['members'] ? 'Ja' : 'Nein';
-            })
-            ->rawColumns(['name'])
-            ->make(true);
+        // Transformation der Daten (gleich wie Yajra, aber manuel)
+        $data = $newsletter->map(function (Newsletter $newsletter) {
+            return [
+                'name' => ' <a class="text-orientalpink" href='.\URL::route('newsletter.edit', $newsletter).'>'.$newsletter['name'] . '</a>',
+                'firstname' =>  $newsletter['firstname'],
+                'email' => $newsletter['email'],
+                'bookings' => $newsletter['bookings'] ? 'Ja' : 'Nein',
+                'members' => $newsletter['members'] ? 'Ja' : 'Nein',
+            ];
+        });
+
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
     }
 
     /**

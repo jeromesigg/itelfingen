@@ -7,64 +7,21 @@
                 <h3 class="text-3xl font-bold dark:text-white">{{$title}}</h3>
             </header>
 
-            <div class="form-row">
-                <div class="col-3">
-                    <a class="btn btn-primary" href="{{ route('newsletter.exportBookings') }}">Adressen (Buchungen)</a>
+            <div class="my-4 grid gap-4 grid-cols-4">
+                <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 sm:space-x-4">
+                    <a class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen" href="{{ route('newsletter.exportBookings') }}">Adressen (Buchungen)</a>
                 </div>
-                <div class="col-3">
-                    <a class="btn btn-primary" href="{{ route('newsletter.exportMembers') }}">Adressen (Genossenschaft)</a>
+                <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 sm:space-x-4">
+                    <a class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen"href="{{ route('newsletter.exportMembers') }}">Adressen (Genossenschaft)</a>
                 </div>
-                <div class="col-3">
-                    <a class="btn btn-primary" href="{{ route('newsletter.import') }}">Adressen importieren</a>
+                <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 sm:space-x-4">
+                    <a class="focus:outline-hidden text-white bg-gladegreen hover:bg-gladegreen hover:text-white focus:ring-4 focus:ring-gladegreen font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gladegreen dark:hover:bg-gladegreen dark:focus:ring-gladegreen" href="{{ route('newsletter.import') }}">Adressen importieren</a>
                 </div>
-                <div class="col-3">
-                </div>
-    
             </div>
             <br>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" style="width:100%" id="datatable">
-                    <thead>
-                        <tr>
-                            <th scope="col" >Name</th>
-                            <th scope="col">Vorname</th>
-                            <th scope="col">E-Mail</th>
-                            <th scope="col">Buchungen</th>
-                            <th scope="col">Genossenschaft</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div id="tanStackTable" data-vue-component="newsletter-table">
+                <newsletter-table />
             </div>
         </div>
     </div>
 @endsection
-
-@push('scripts')
-
-    <script type="module">
-        $(function () {
-            var table = $('#datatable').DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                pageLength: 25,
-                buttons: [],
-                language: {
-                    "url": "/lang/Datatables.json"
-                },
-                ajax: {
-                    url: "{!! route('newsletter.CreateDataTables') !!}",
-                },
-                order: [[ 0, "asc" ]],
-                columns: [
-                    { data: 'name', name: 'name' },
-                    { data: 'firstname', name: 'firstname' },
-                    { data: 'email', name: 'email' },
-                    { data: 'bookings', name: 'bookings' },
-                    { data: 'members', name: 'members' },
-                ]
-
-            });
-        });
-    </script>
-@endpush

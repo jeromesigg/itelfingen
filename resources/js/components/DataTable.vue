@@ -24,21 +24,23 @@
 
 
     <!-- Table -->
-      <table class="w-full text-sm text-left rtl:text-right text-body">
-        <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
+      <table class="w-full text-left rtl:text-right text-body">
+        <thead class="text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
           <tr>
             <th 
               v-for="header in table.getHeaderGroups()[0]?.headers"
               :key="header.id"
-              @click="() => { console.log('canSort:', header.column.getCanSort()); header.column.toggleSorting() }"
-               
-              :class="header.column.getCanSort() ? 'cursor-pointer select-none' : ''"
-              class="px-4 py-3 font-bold"
+              @click="toggleSort(header)"
+              :style="{ 'max-width': header.getSize() + 'px' }"
+              :class="header.column.getCanSort() ? 'cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600' : ''"
+              class="px-4 py-3 font-medium select-none"
             >
-              {{ header.column.columnDef.header }}
-              <span v-if="header.column.getIsSorted() === 'asc'">↑</span>
-              <span v-else-if="header.column.getIsSorted() === 'desc'">↓</span>
-              <span v-else-if="header.column.getCanSort()" class="opacity-30">↕</span>
+            <div class="flex items-center gap-2">
+                {{ header.column.columnDef.header }}
+                <span v-if="header.column.getCanSort()">
+                  {{ header.column.getIsSorted() === 'asc' ? '↑' : header.column.getIsSorted() === 'desc' ? '↓' : '↕' }}
+                </span>
+              </div>
             </th>
           </tr>
         </thead>
@@ -55,7 +57,8 @@
             <td 
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
-              class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm"
+              :style="{ 'max-width': cell.column.getSize() + 'px' }"
+              class="px-4 py-2 border border-gray-300 dark:border-gray-600"
               v-html="formatCellValue(cell.getValue())"
             ></td>
           </tr>
@@ -64,17 +67,8 @@
     </div>
 
     <!-- Page Size Selector -->
-    <div class="mb-4 flex items-center gap-2">
+    <div class="mb-4 mt-4 flex items-center gap-2">
       <label class="text-sm text-gray-600 dark:text-gray-400">Zeilen pro Seite:</label>
-      <!-- <select 
-        v-model.number="tableState.pagination.pageSize"
-        class="px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select> -->
       <select
           :value="table.getState().pagination.pageSize"
           @change="handlePageSizeChange"
@@ -148,6 +142,7 @@
 
 import { ref, computed, onMounted, watch } from 'vue'
 import {
+  createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -220,8 +215,9 @@ const table = useVueTable({
   //     ? updater(globalFilter.value) : updater
   // },
   onSortingChange: (updater) => {
-    sorting.value = typeof updater === 'function'
-      ? updater(sorting.value) : updater
+  const newValue = typeof updater === 'function'
+    ? updater(sorting.value) : updater
+  sorting.value = newValue
   },
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
@@ -259,7 +255,19 @@ async function loadData() {
   try {
     isLoading.value = true
     // Build query params
-    const params = new URLSearchParams({ ...props.filters,})
+    const params = new URLSearchParams({ 
+      ...props.filters,
+      pageIndex: pagination.value.pageIndex,
+      pageSize: pagination.value.pageSize,})
+
+    // Add sorting params
+    if (sorting.value.length > 0) {
+      sorting.value.forEach((sort, index) => {
+        params.append(`sort[${index}][id]`, sort.id)
+        params.append(`sort[${index}][desc]`, sort.desc ? '1' : '0')
+      })
+    }
+
     const response = await fetch(`${props.apiEndpoint}?${params}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       }
@@ -270,7 +278,6 @@ async function loadData() {
     const { data } = await response.json()
     tableData.value = data
     // Reset to first page
-    pagination.value.pageIndex = 0
   } catch (error) {
     console.error('Error loading table data:', error)
   } finally {
@@ -297,9 +304,35 @@ function previousPage()      { table.previousPage() }
 function nextPage()          { table.nextPage() }
 function goToPage(i)         { table.setPageIndex(i) }
 function handlePageSizeChange(e) { table.setPageSize(Number(e.target.value)) }
+function toggleSort(header) {
+  if (!header.column.getCanSort()) return
+  
+  const columnId = header.column.id
+  const currentSort = sorting.value.find(s => s.id === columnId)
+  
+  if (!currentSort) {
+    // First click: sort ascending
+    sorting.value = [{ id: columnId, desc: false }]
+  } else if (!currentSort.desc) {
+    // Second click: sort descending
+    sorting.value = [{ id: columnId, desc: true }]
+  } else {
+    // Third click: remove sort
+    sorting.value = []
+  }
+  
+}
 
 // ===== WATCHERS =====
-watch(() => props.filters, () => loadData(), { deep: true })
+watch(() => props.filters, () => {
+    pagination.value.pageIndex = 0
+    loadData()
+}, { deep: true })
+
+watch(sorting, () => {
+  pagination.value.pageIndex = 0
+  loadData()
+}, { deep: true })
 
 // ===== LIFECYCLE =====
 onMounted(() => {

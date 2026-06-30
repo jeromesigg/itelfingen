@@ -36,8 +36,7 @@ class AdminEventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-    {
+    public function index(){
         //
         $homepage = Homepage::FindOrFail(1);
         $event_type = 'admin';
@@ -73,8 +72,8 @@ class AdminEventController extends Controller
 
         return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title', 'homepage'));
     }
-
-      public function createDataTablesTanStack(Request $request)
+    
+    public function createDataTablesTanStack(Request $request)
     {
         $input = $request->all();
         $input['status'] = $input['status'] ?? 'Alle';
@@ -375,7 +374,7 @@ class AdminEventController extends Controller
                 'number' => $event['telephone'],
                 'firstname' => $event['firstname'],
                 'name' => $event['name'],
-                'date' => $event['start_date']->format('d.m.Y').' - '.$event['end_date']->format('d.m.Y'),
+                'date' => Carbon::parse($event['start_date'])->format('d.m.Y') .' - '. Carbon::parse($event['end_date'])->format('d.m.Y'),
             ]);
         }
     }

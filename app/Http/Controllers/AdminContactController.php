@@ -53,6 +53,41 @@ class AdminContactController extends Controller
             ->make(true);
     }
 
+    public function createDataTablesTanStack(Request $request)
+    {
+        
+        $input = $request->all();
+        if (! isset($input['done'])) {
+            $input['done'] = 'Alle';
+        }
+        $done = ! ($input['done'] != 'Alle');
+        $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
+
+        // Transformation der Daten (gleich wie Yajra, aber manuel)
+        $data = $contacts->map(function (Contact $contact) {
+            return [
+                'created_at' => [
+                    'display' => Carbon::parse($contact['created_at'])->format('d.m.Y'),
+                    'sort' => Carbon::parse($contact['created_at'])->toISOString(),
+                ],
+                'name' => $contact['name'],
+                'email' => $contact['email'],
+                'subject' =>  $contact['subject'],
+                'content' => $contact['content'],
+                'done' =>  $contact['done'] ? 'Ja' : 'Nein',
+                'user' => $contact->user['username'],
+                'actions' => '<form action="'.\URL::route('contacts.done', $contact).'" method="post">'.csrf_field().(!$contact['done'] ? '<button type="submit" class="btn btn-secondary btn-sm">Bearbeitet</button>' : '').'</form>',
+            ];
+        });
+
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
+    }
+
+
     public function done(Contact $contact)
     {
         //

@@ -34,21 +34,56 @@
 <script setup>
 import { ref } from 'vue'
 import DataTable from './DataTable.vue'
+import NewsletterTable from './NewsletterTable.vue'
+import { createColumnHelper } from '@tanstack/vue-table'
 
 const showApp = ref(false)
 const dateFilter = ref('Ab Heute')
 const statusFilter = ref('Alle')
 const apiEndpoint = '/events/datatable'  // ← ALS VARIABLE
+const columnHelper = createColumnHelper()
 
 const eventColumns = [
-  { accessorKey: 'start_date', header: 'Datum', enableSorting: true, },
-  { accessorKey: 'number', header: 'Nr.', enableSorting: true,  },
-  { accessorKey: 'name', header: 'Name', enableSorting: true,  },
-  { accessorKey: 'email', header: 'E-Mail', enableSorting: true,  },
-  { accessorKey: 'total_amount', header: 'Total', enableSorting: false, },
-  { accessorKey: 'comment', header: 'Bemerkung', enableSorting: false },
-  { accessorKey: 'comment_intern', header: 'Bemerkung Intern', enableSorting: false },
-  { accessorKey: 'status', header: 'Status', enableSorting: true },
+  columnHelper.accessor('start_date', {
+    header: 'Datum',
+    enableSorting: true,
+    size: 70,  
+  }),
+  columnHelper.accessor('number', {
+    header: 'Nr.',
+    enableSorting: true,
+    size: 20,  
+  }),
+  columnHelper.accessor('name', {
+    header: 'Name',
+    enableSorting: true,
+    size: 100, 
+  }),
+  columnHelper.accessor('email', {
+    header: 'E-Mail',
+    enableSorting: true,
+    size: 75,  
+  }),
+  columnHelper.accessor('total_amount', {
+    header: 'Total',
+    enableSorting: false,
+    size: 50,  
+  }),
+  columnHelper.accessor('comment', {
+    header: 'Bemerkung',
+    enableSorting: false,
+    size: 200, 
+  }),
+  columnHelper.accessor('comment_intern', {
+    header: 'Bemerkung Intern',
+    enableSorting: false,
+    size: 200, 
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    enableSorting: true,
+    size: 200, 
+  }),
 ]
 
 // Get contract statuses from window object (set in Blade)

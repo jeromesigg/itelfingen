@@ -56,22 +56,21 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/users', 'AdminUserController');
     Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
     Route::resource('admin/events', 'AdminEventController')->names('admin.events');
-    Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
     Route::get('events/datatable', ['as' => 'events.CreateDataTablesTanStack', 'uses' => 'AdminEventController@createDataTablesTanStack']);
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('admin.events.downloadParking');
 
     Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
-    Route::get('contacts/createDataTables', ['as' => 'contacts.CreateDataTables', 'uses' => 'AdminContactController@createDataTables']);
+    Route::get('contacts/datatable', ['as' => 'contacts.CreateDataTablesTanStack', 'uses' => 'AdminContactController@createDataTablesTanStack']);
     Route::resource('admin/faqs', 'AdminFaqController');
     Route::get('faqs/createDataTables', ['as' => 'faqs.CreateDataTables', 'uses' => 'AdminFaqController@createDataTables']);
     Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
     Route::resource('admin/positions', 'AdminPricelistPositionController');
     Route::resource('admin/applications', 'AdminApplicationController');
-    Route::get('applications/createDataTables', ['as' => 'applications.CreateDataTables', 'uses' => 'AdminApplicationController@createDataTables']);
+    Route::get('applications/datatable', ['as' => 'applications.CreateDataTablesTanStack', 'uses' => 'AdminApplicationController@createDataTablesTanStack']);
     Route::post('applications/{application}/refuse', ['as' => 'applications.refuse', 'uses' => 'AdminApplicationController@refuse']);
-    Route::get('newsletter/createDataTables', ['as' => 'newsletter.CreateDataTables', 'uses' => 'NewsletterController@createDataTables']);
+    Route::get('newsletter/datatable', ['as' => 'newsletter.CreateDataTablesTanStack', 'uses' => 'NewsletterController@createDataTablesTanStack']);
     Route::get('/admin/newsletter/export-bookings', ['as' => 'newsletter.exportBookings', 'uses' => 'NewsletterController@exportBookings']);
     Route::get('/admin/newsletter/export-members', ['as' => 'newsletter.exportMembers', 'uses' => 'NewsletterController@exportMembers']);
     Route::get('/admin/newsletter/import', ['as' => 'newsletter.import', 'uses' => 'NewsletterController@import']);

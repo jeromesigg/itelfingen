@@ -143,6 +143,10 @@
     --primary-soft: #e0f2fe;
     --primary: #3b82f6;
     --primary-strong: #1d4ed8;
+
+    --color-success-soft: var(--norway); /*#d1fae5; */
+    --color-success-subtle: var(--color-gladegreen); /*#10b981; */
+    --color-fg-success-strong: var(--ebonyclay); /*#047857; */
   }
 
 .dark {
@@ -195,6 +199,19 @@
 .text-uppercase {
     letter-spacing: .1em;
 }
+
+.text-fg-success-strong {
+    color: var(--color-fg-success-strong) !important;
+}
+
+.bg-success-soft {
+    background-color: var(--color-success-soft) !important;
+}
+
+.border-success-subtle {
+    border-color: var(--color-success-subtle) !important;
+}
+
 
 @layer components {
   /* DataTables Pagination */

@@ -95,7 +95,7 @@
                         <p>Danke! Noch ein Klick und deine Bewerbung ist bei uns eingegangen!</p>
                     </div>
                     <div>
-                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
+                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen">
                             Bewerbung absenden
                         </x-forms.button>
                     </div>
