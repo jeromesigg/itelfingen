@@ -1,19 +1,24 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Helper\HealthCheck;
+use Illuminate\Support\Facades\Schedule;
 
-/*
-|--------------------------------------------------------------------------
-| Console Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of your Closure based console
-| commands. Each Closure is bound to a command instance allowing a
-| simple approach to interacting with each command's IO methods.
-|
-*/
+Schedule::command('task:daily')
+    ->dailyAt('04:00')
+    ->onSuccess(fn () => HealthCheck::ping('job_daily'))
+    ->onFailure(fn () => HealthCheck::ping('job_daily', fail: true));
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->describe('Display an inspiring quote');
+Schedule::command('task:daily-evening')
+    ->dailyAt('19:00')
+    ->onSuccess(fn () => HealthCheck::ping('job_daily_evening'))
+    ->onFailure(fn () => HealthCheck::ping('job_daily_evening', fail: true));
+
+Schedule::command('task:weekly')
+    ->weeklyOn(0, '00:00') // 0 = Sonntag
+    ->onSuccess(fn () => HealthCheck::ping('job_weekly'))
+    ->onFailure(fn () => HealthCheck::ping('job_weekly', fail: true));
+
+Schedule::command('task:monthly')
+    ->monthlyOn(23, '02:00')
+    ->onSuccess(fn () => HealthCheck::ping('job_monthly'))
+    ->onFailure(fn () => HealthCheck::ping('job_monthly', fail: true));

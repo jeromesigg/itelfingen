@@ -26,9 +26,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('task:daily')->daily();
-        $schedule->command('task:weekly')->weekly();
-        $schedule->command('task:monthly')->monthly();
     }
 
     /**

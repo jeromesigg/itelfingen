@@ -30,8 +30,9 @@ class Helper
         if(!defined('FPDF_FONTPATH')){
             define('FPDF_FONTPATH', public_path('fonts/'));
         }
-        $fpdi = new FPDI;
-        $fpdi->AddFont('titilliumweb-light');
+        $fpdi = new FPDI;        
+        $fpdi->AddFont('titilliumweb-light', '', 'titilliumweb-light.php');
+        $fpdi->SetFont('titilliumweb-light', '', 12);
         // merger operations
         $count = $fpdi->setSourceFile($file);
 
