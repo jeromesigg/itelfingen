@@ -52,7 +52,8 @@ class DailyEveningTask extends Command
         foreach ($events as $event) {
             Notification::send($event, new EventFeedbackNotification($event));
             $event->update(['feedback_mail' => true]);
-        }        if (count($events) > 0) {
+        }       
+        if (count($events) > 0) {
             $this->info(count($events).' Feedback-Mails versendet.');
         }
     }

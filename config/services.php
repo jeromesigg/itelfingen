@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'healthchecks' => [
+        'job_daily' => env('JOB_DAILY'),
+        'job_daily_evening' => env('JOB_DAILY_EVENING'),
+        'job_weekly' => env('JOB_WEEKLY'),
+        'job_monthly' => env('JOB_MONTHLY'),
+],
+
 ];
