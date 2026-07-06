@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Faq;
 use App\Models\Event;
 use App\Models\EventCheckpoint;
+use App\Models\Faq;
+use App\Models\FaqChapter;
+use App\Models\Homepage;
 use App\Models\Person;
 use App\Models\Picture;
-use App\Models\Homepage;
-use App\Models\FaqChapter;
-use Illuminate\Http\Request;
 use App\Models\PricelistPosition;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -125,7 +126,12 @@ class HomeController extends Controller
     {
         $input = $request->all();    
         $event = Event::where('id', intval($input['id']))->where('plz', $input['plz'])->first();
-        if ($event === null) {
+        if ($event === null) { 
+            Log::warning('Fehlgeschlagener Booking-Login-Versuch', [
+                'ip' => $request->ip(),
+                'buchungsnummer' => $request->id,
+                'user_agent' => $request->userAgent(),
+            ]);
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
         }
 

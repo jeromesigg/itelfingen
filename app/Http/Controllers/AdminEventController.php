@@ -192,7 +192,7 @@ class AdminEventController extends Controller
         $contract_statuses = ContractStatus::pluck('name', 'id')->all();
         $event = Event::findOrFail($id);
         $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
-        $title = 'Buchung bearbeiten';
+        $title = str_pad($event['id'], 5, '0', STR_PAD_LEFT) . ' - Buchung bearbeiten';
 
         return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'title'));
     }
@@ -366,7 +366,7 @@ class AdminEventController extends Controller
                 'number' => $event['telephone'],
                 'firstname' => $event['firstname'],
                 'name' => $event['name'],
-                'date' => $event['start_date']->format('d.m.Y').' - '.$event['end_date']->format('d.m.Y'),
+                'date' => Carbon::parse($event['start_date'])->format('d.m.Y') .' - '. Carbon::parse($event['end_date'])->format('d.m.Y'),
             ]);
         }
     }
