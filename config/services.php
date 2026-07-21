@@ -35,6 +35,13 @@ return [
         'job_daily_evening' => env('JOB_DAILY_EVENING'),
         'job_weekly' => env('JOB_WEEKLY'),
         'job_monthly' => env('JOB_MONTHLY'),
-],
+
+    ],
+
+    'glutz' => [
+        'url' =>  env('GLUTZ_URL', 'NULL'),
+        'username' => env('GLUTZ_USERNAME', 'NULL'),
+        'password' => env('GLUTZ_PASSWORD', 'NULL'),
+    ]
 
 ];

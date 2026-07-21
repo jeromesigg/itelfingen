@@ -63,6 +63,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
     Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
+    Route::post('admin/events/createAPICode', [AdminEventController::class, 'createAPICode'])->name('events.createAPICode');
 
     Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
