@@ -357,22 +357,9 @@
             }).then((result) => {
                 console.log(result);
                 if (result.isConfirmed) Swal.fire({
-                    title: `${result.value.result}`
+                    title: `${result.value.success}`
                 });
             });
-            // const response = await fetch('{{ route("events.createAPICode") }}', {
-              //          method: 'POST',
-            //            headers: {
-            //                'Content-Type': 'application/json',
-            //                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            //            },
-            //            body: JSON.stringify({ event_id, code }),
-            //        })
-            //        .then(res => res.json())
-            //        .then(data => {
-            //            
-            //        })
-            //        .catch(err => console.error('Fehler:', err));
         }
 
         function Total_Change() {

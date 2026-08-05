@@ -73,4 +73,5 @@ class Event extends Model
 
         return $offer . $invoice . $cleaning_mail . $code;
     }
+
 }

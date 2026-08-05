@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Notification;
 use Carbon\Carbon;
+use app\Helper\GlutzAPI;
 use App\Models\Room;
 use App\Models\Event;
 use App\Models\Homepage;
@@ -55,6 +56,7 @@ class DailyTask extends Command
         $this->SendEventLastInfos();
         $this->SendApplicationInvoices();
         $this->SendNextEventToSlack();
+        $this->DeleteGlutzUsers();
     }
 
     public function SendEventLastInfos()
@@ -228,6 +230,21 @@ class DailyTask extends Command
         }
         if (count($events) > 0) {
             $this->info(count($events).' nächste Buchungen gemeldet.');
+        }
+    }
+
+    public function DeleteGlutzUsers()
+    {
+        $date = Carbon::today()->addDays(-3);
+        $events = Event::where('end_date', '<', $date)->whereNotNull('glut_user_id')->get();
+
+        foreach ($events as $event) {
+            if (GlutzAPI::deleteUser($event['glut_user_id'])){
+                $event->update(['glut_user_id' => null]);
+            }
+        }
+        if (count($events) > 0) {
+            $this->info(count($events).' alte Glutz-Nutzer gelöscht.');
         }
     }
 }

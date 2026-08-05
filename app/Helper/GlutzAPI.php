@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Event;
 use Illuminate\Support\Facades\Http;
 
+use function PHPUnit\Framework\isArray;
+
 class GlutzAPI
 {
     public static function getCredentials(): mixed
@@ -15,36 +17,37 @@ class GlutzAPI
         );
     }
 
-    public static function ApiRequest(string $method, array $params = []): mixed
+    public static function ApiRequest(string $method, array $params = [], int $id = 1, bool $returnResult = true): mixed
+    {
+        $response = self::ApiRequestCall($method, $params, $id);
+        $responseJson = $response->json();
+        if ($returnResult) {
+            return $responseJson['result'] ?? null;
+        }
+        else{
+            return $responseJson;
+        }
+    }
+
+    public static function ApiRequestCall(string $method, array $params = [], int $id = 1): mixed
     {
         $method = 'eAccess.' . $method;
         $credentials = self::getCredentials();
-        $response = Http::withHeader('Authorization', 'Basic ' . $credentials)
+        return Http::withHeader('Authorization', 'Basic ' . $credentials)
             ->withHeader('Accept', 'application/json')
             ->withBody(json_encode([
                 'jsonrpc' => '2.0',
                 'method'  => $method,
                 'params'  => $params,       
-                'id'      => 1,
+                'id'      => $id,
             ]), 'application/json')
             ->post(config('services.glutz.url'));
-        return $response->json();
     }
 
-    public static function getUser(Event $event, string $userName)
+    public static function getUser(Event $event, string $userName, string $code): mixed
     {
         if(!isset($event['glutz_user_id'])){
-            $response_user = Self::ApiRequest('createUser', [['label' => $userName]]);
-                ->withHeader('Accept', 'application/json')
-                ->withBody(json_encode([
-                    'jsonrpc' => '2.0',
-                    'method'  => 'eAccess.createUser',
-                    'params'  => [['label' => $userName]],
-                    'id'      => 1,
-                ]), 'application/json')
-                ->post(config('services.glutz.url'));
-            $responseData_user = $response_user->json();
-            $userId = $responseData_user['result'] ?? null;
+            $userId = Self::ApiRequest('createUser', [['label' => $userName]]);
             if (isset($userId)) {
                 $event->update(['glutz_user_id' => $userId]);
             }
@@ -52,157 +55,70 @@ class GlutzAPI
         else{
             $userId = $event['glutz_user_id'];
         }
+        Self::ApiRequest('setUserProperty', ["Code", $code, $userId]);
+        Self::ApiRequest('setUserProperty', ["Name", $event['name'], $userId]);
+        Self::ApiRequest('setUserProperty', ["Vorname", $event['firstname'], $userId]);
+        Self::ApiRequest('setUserProperty', ["Event ID", $event['id'], $userId]);
         return $userId;
     }
 
-    public static function setCode(int $userId,string $code, mixed $credentials): bool
+    public static function setCode(int $userId,string $code): mixed
     {
-        $response_code = Http::withHeader('Authorization', 'Basic ' . self::getCredentials())
-            ->withHeader('Accept', 'application/json')
-            ->withBody(json_encode([
-                'jsonrpc' => '2.0',
-                'method'  => 'eAccess.getModel',
-                'params'  => [
-                    'Codes',
-                    ['code' => $code]
-                ],
-                'id'      => 1,
-            ]), 'application/json')
-            ->post(config('services.glutz.url'));
-        $responseData_code = $response_code->json();
-        $result_code = $responseData_code['result'] ?? null;
-        if (($response_code->failed() || $result_code === null || !is_array($result_code) || empty($result_code))) {
-            $response_code = Http::withHeader('Authorization', 'Basic ' . self::getCredentials())
-                ->withHeader('Accept', 'application/json')
-                ->withBody(json_encode([
-                    'jsonrpc' => '2.0',
-                    'method'  => 'eAccess.setModel',
-                    'params'  => [
-                        'Codes',
-                        [['code' => $code,
-                        'userId' => $userId]],
-                    ],
-                    'id'      => 1,
-                ]), 'application/json')
-                ->post(config('services.glutz.url'));
-            $responseData_code = $response_code->json();
-            $result_code = $responseData_code['result'] ?? null;
+        $result_code = Self::ApiRequest('getModel', ['Codes', ['code' => $code]]);
+        if (($result_code === null || !is_array($result_code) || empty($result_code))) {
+            Self::ApiRequest('setModel', ['Codes', ['code' => $code, 'userId' => $userId]]);
         }
         else{
             if(!($result_code[0]['userId'] == $userId)){
-            // Türcode bereits vergeben, Fehler zurückgeben
-            return false;
+                // Türcode bereits vergeben, Fehler zurückgeben
+                return false;
             }
         }
         return true;
     }
 
-    public static function getAccessPointId(mixed $credentials): int
+    public static function getAccessPointId(): int
     {
-        $response_AccessPoint = Http::withHeader('Authorization', 'Basic ' . self::getCredentials())
-            ->withHeader('Accept', 'application/json')
-            ->withBody(json_encode([
-                'jsonrpc' => '2.0',
-                'method'  => 'eAccess.getAccessPoint',
-                'params'  => [['Access Point' => 'Hauseingang']],
-                'id'      => 1,
-            ]), 'application/json')
-            ->post(config('services.glutz.url'));
-        $responseData_AccessPoint = $response_AccessPoint->json();
-        $accessPointId = $responseData_AccessPoint['result'] ?? null; 
-        return $accessPointId;
+        return Self::ApiRequest('getAccessPoint', [['Access Point' => 'Hauseingang']]);
     }
 
-    public static function getAccessPointOfUser(int $userId, int $accessPointId, mixed $credentials): bool
+    public static function getAccessPointOfUser(int $userId, int $accessPointId): mixed
     {
         // getAccessPointsOfUser
-        $response_AccessPoint = Http::withHeader('Authorization', 'Basic ' . self::getCredentials())
-            ->withHeader('Accept', 'application/json')
-            ->withBody(json_encode([
-                'jsonrpc' => '2.0',
-                'method'  => 'eAccess.getAccessPointsOfUser',
-                'params'  => [$userId],
-                'id'      => 1,
-            ]), 'application/json')
-            ->post(config('services.glutz.url'));
-        $responseData_AccessPoint = $response_AccessPoint->json();
-        $accessPointId = $responseData_AccessPoint['result'] ?? null; 
-        if (($accessPointId === null || !is_array($accessPointId) || empty($accessPointId))) {
-        // setAccessPointsOfUser
-            $response_AccessPoint = Http::withHeader('Authorization', 'Basic ' . self::getCredentials())
-                ->withHeader('Accept', 'application/json')
-                ->withBody(json_encode([
-                    'jsonrpc' => '2.0',
-                    'method'  => 'eAccess.addAccessPointsToUser',
-                    'params'  => [[$accessPointId],
-                                    $userId,],
-                    'id'      => 1,
-                ]), 'application/json')
-                ->post(config('services.glutz.url'));
+        $accessPointResult = Self::ApiRequest('getAccessPointsOfUser', [(string) $userId], 2);
+        if (($accessPointResult === null || empty($accessPointResult))) {
+            // addAccessPointsToUser
+           return Self::ApiRequest('addAccessPointsToUser',[[$accessPointId], (string) $userId], 4);
         }
         return true;
     }
 
-    public static function setAccessPointsOfUser(Event $event, int $userId, int $accessPointId, mixed $credentials): array
+    public static function setAccessPointsOfUser(Event $event, int $userId, int $accessPointId): bool
     { 
         $checkIn  = Carbon::parse($event['start_date'])->startOfDay();   // 00:00:00.000
         $checkOut = Carbon::parse($event['end_date'])->endOfDay();     // 23:59:59.999
-        $body = json_encode([
-                    'jsonrpc' => '2.0',
-                    'method'  => 'eAccess.setAccessRightProperties',
-                    'params'  => [
-                        [$accessPointId],
-                        $userId,
-                        [
-                            'validFrom' =>  $checkIn->format('Y-m-d\TH:i:s.v'),
-                            'validTo'   =>  $checkOut->format('Y-m-d\TH:i:s.v'),
-                        ]
-                    ],
-                    'id'      => 1,
-                ]);
-        $response_AccessRight = Http::withHeader('Authorization', 'Basic ' . $credentials)
-                ->withHeader('Accept', 'application/json')
-                ->withBody($body, 'application/json')
-                ->post(config('services.glutz.url'));
-        return $response_AccessRight->json();
+        Self::ApiRequest('setAccessRightProperties',[[$accessPointId], (string) $userId, ['validFrom' =>  $checkIn->format('Y-m-d\TH:i:s.v'),'validTo'   =>  $checkOut->format('Y-m-d\TH:i:s.v'),]],4);
+        return true;
     }
 
-    public static function updateDevice(mixed $credentials): array
+    public static function updateDevice(): mixed
     {
         $result = [];
         // getDeviceEvaluationAndUpdateState
-        $response_Device = Http::withHeader('Authorization', 'Basic ' . $credentials)
-            ->withHeader('Accept', 'application/json')
-            ->withBody(json_encode([
-                'jsonrpc' => '2.0',
-                'method'  => 'eAccess.getDeviceEvaluationAndUpdateState',
-                'params'  => [],
-                'id'      => 1,
-            ]), 'application/json')
-            ->post(config('services.glutz.url'));
-        $responseData_Device = $response_Device->json();
-        $response_Result = $responseData_Device['result'] ?? null; 
-        if (!($response_Result === null || !is_array($response_Result) || empty($response_Result))) {
+        $response_Result = Self::ApiRequest('getDeviceEvaluationAndUpdateState',[]);
+        if (!($response_Result === null)) {
             $updateNeededId = $response_Result['updateNeeded'] ?? null;
-            if (isset($updateNeededId)) {
-                $responseUpdate = Http::withHeader('Authorization', 'Basic ' . $credentials)
-                    ->withHeader('Accept', 'application/json')
-                    ->withBody(json_encode([
-                        'jsonrpc' => '2.0',
-                        'method'  => 'eAccess.deviceAction',
-                        'params'  => [
-                            'DeviceUpdate',
-                            ['deviceid' => $updateNeededId]
-                        ],
-                        'id'      => 1,
-                    ]), 'application/json')
-                    ->post(config('services.glutz.url'));
-                $responseDataUpdate = $responseUpdate->json();
-                $resultUpdate = $responseDataUpdate['result'] ?? null;
+            if (isArray($updateNeededId) && !empty($updateNeededId)) {
+                $resultUpdate = Self::ApiRequest('deviceAction',['DeviceUpdate', ['deviceid' => $updateNeededId[0]]]);
                 $result = $resultUpdate;
             }
         }
         return $result;
 
+    }
+
+        public static function deleteUser(int $userId): mixed
+    {
+        return Self::ApiRequest('deleteUser',[(string) $userId]);
     }
 }

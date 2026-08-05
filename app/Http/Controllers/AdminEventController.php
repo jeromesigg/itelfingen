@@ -401,6 +401,8 @@ class AdminEventController extends Controller
         $request->validate(['code' => 'required|string|size:4']);
 
         $code = $request->input('code');
+
+        // Code überprüfen ob vom Event oder neuerstellt
         $event_id = $request->input('event_id');
         if (!is_numeric($event_id)) {
             return response()->json(['error' => 'Invalid event ID'], 400);
@@ -409,41 +411,44 @@ class AdminEventController extends Controller
         if (!$event) {
             return response()->json(['error' => 'Event not found'], 404);
         }
-        $userName = 'Besucher ' . $event['id'];
-        $userId = GlutzAPI::getUser($event, $userName);
+        $userName = 'Besucher ' . $event->number();
+        $userId = GlutzAPI::getUser($event, $userName, $code);
         if (isset($userId) ) {
+            
             $success = GlutzAPI::setCode($userId, $code);
             if (!$success) {
+                
                 return response()->json([
-                    'error' => 'Code bereits in verwendung für anderen User.',
-                    'User' => $userName,
+                    'error' => 'Code bereits in Verwendung für anderen User.'
                 ], 500);
             }
             else{
                 $accessPointId = GlutzAPI::getAccessPointId();
                 if(isset($accessPointId)){
-                    GlutzAPI::getAccessPointOfUser($userId, $accessPointId);
-                    GlutzAPI::setAccessPointsOfUser($event, $userId, $accessPointId);
-                   
-                    $result = GlutzAPI::updateDevice();
-                    if($result['isFinished'] ?? false){
-                        return response()->json([
-                            'success' => 'Code erfolgreich erstellt.',
-                            'User' => $userName,
-                        ], 200);
+                    if(GlutzAPI::getAccessPointOfUser($userId, $accessPointId)){
+                        GlutzAPI::setAccessPointsOfUser($event, $userId, $accessPointId);
+                    
+                        $result = GlutzAPI::updateDevice();
+                        if(empty($result['errorString'])){
+                            $event->update(['code' => $code]);
+                            return response()->json([
+                                'success' => 'Code erfolgreich erstellt.',
+                                'User' => $userName,
+                            ], 200);
+                        }
+                        else{
+                            return response()->json([
+                                'error' => 'Fehler beim Update des Gerätes.',
+                                'Meldung' => $result['errorString'] ?? 'Unbekannter Fehler',
+                            ], 500);
+                        }
                     }
                     else{
                         return response()->json([
-                            'error' => 'Fehler beim Update des Gerätes.',
-                            'Meldung' => $result['errorString'] ?? 'Unbekannter Fehler',
+                            'error' => 'AccessPoint nicht gefunden.',
+                            'User' => $userName,
                         ], 500);
                     }
-                }
-                else{
-                    return response()->json([
-                        'error' => 'AccessPoint nicht gefunden.',
-                        'User' => $userName,
-                    ], 500);
                 }
             }
         }

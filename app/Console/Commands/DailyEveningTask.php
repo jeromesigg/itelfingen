@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Notification;
 use Carbon\Carbon;
 use App\Models\Event;
+use App\Helper\GlutzAPI;
 use Illuminate\Console\Command;
 use App\Notifications\EventFeedbackNotification;
 
@@ -42,6 +43,7 @@ class DailyEveningTask extends Command
     public function handle()
     {
         $this->SendFeedbackMails();
+        $this->UpdateGlutzDevices();
     }
 
     public function SendFeedbackMails()
@@ -56,5 +58,10 @@ class DailyEveningTask extends Command
         if (count($events) > 0) {
             $this->info(count($events).' Feedback-Mails versendet.');
         }
+    }
+
+    public function UpdateGlutzDevices()
+    {
+         GlutzAPI::updateDevice();        
     }
 }
