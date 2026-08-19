@@ -42,6 +42,11 @@ return [
         'url' =>  env('GLUTZ_URL', 'NULL'),
         'username' => env('GLUTZ_USERNAME', 'NULL'),
         'password' => env('GLUTZ_PASSWORD', 'NULL'),
-    ]
+    ],
+
+    'bexio' => [
+        'client_id' => env('BEXIO_CLIENT_ID'),
+        'client_secret' => env('BEXIO_CLIENT_SECRET'),
+    ],
 
 ];

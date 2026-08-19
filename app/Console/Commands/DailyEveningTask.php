@@ -62,6 +62,7 @@ class DailyEveningTask extends Command
 
     public function UpdateGlutzDevices()
     {
-         GlutzAPI::updateDevice();        
+         $result = GlutzAPI::updateDevice();       
+         $this->info('Glutz-Geräte aktualisiert. Ergebnis: '.json_encode($result)); 
     }
 }

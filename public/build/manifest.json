@@ -8,7 +8,7 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CR-JiTdC.css",
+    "file": "assets/app-B6dt7xl6.css",
     "name": "app",
     "names": [
       "app.css"
@@ -22,6 +22,17 @@
       "assets/PPMigra-Regular-ZPNUBG7o.woff2",
       "assets/PPMigra-Regular-5UocUxhr.ttf",
       "assets/PPMigra-Regular-rfU2lMge.otf",
+      "assets/titillium-web-v19-latin_latin-ext-200-DQ_E3pEd.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-200italic-Do_QGeZq.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-300-BeIzda1I.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-300italic-BKsJAeMW.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-regular-DuEjM8vE.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-italic-B_tharN6.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-600-Cg6hIG02.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-600italic-B1sJN-mO.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-700-C_J2Ye2S.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-700italic-D04NOV1Z.woff2",
+      "assets/titillium-web-v19-latin_latin-ext-900-CrSjEMq6.woff2",
       "assets/events-bg-BozPqy6n.webp",
       "assets/provisorisch-doppelt-DLqk6ivk.svg",
       "assets/provisorisch_start-dScfS2Bt.svg",
@@ -47,7 +58,7 @@
     "src": "resources/images/login.webp"
   },
   "resources/js/app.js": {
-    "file": "assets/app-Q-e73Q6v.js",
+    "file": "assets/app-Ccv54FLm.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
@@ -67,6 +78,50 @@
   "resources/js/fonts/PPMigra-Regular.woff2": {
     "file": "assets/PPMigra-Regular-ZPNUBG7o.woff2",
     "src": "resources/js/fonts/PPMigra-Regular.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-200.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-200-DQ_E3pEd.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-200.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-200italic.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-200italic-Do_QGeZq.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-200italic.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-300.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-300-BeIzda1I.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-300.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-300italic.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-300italic-BKsJAeMW.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-300italic.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-600.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-600-Cg6hIG02.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-600.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-600italic.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-600italic-B1sJN-mO.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-600italic.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-700.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-700-C_J2Ye2S.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-700.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-700italic.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-700italic-D04NOV1Z.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-700italic.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-900.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-900-CrSjEMq6.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-900.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-italic.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-italic-B_tharN6.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-italic.woff2"
+  },
+  "resources/js/fonts/titillium-web-v19-latin_latin-ext-regular.woff2": {
+    "file": "assets/titillium-web-v19-latin_latin-ext-regular-DuEjM8vE.woff2",
+    "src": "resources/js/fonts/titillium-web-v19-latin_latin-ext-regular.woff2"
   },
   "resources/js/img/calendar/besetzt_end-provisorisch_start.svg": {
     "file": "assets/besetzt_end-provisorisch_start-CvpzCMGN.svg",
