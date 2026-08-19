@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\EventOfferSend;
+use App\Services\BexioApiService;
 use Carbon\Carbon;
 use Ixudra\Curl\Facades\Curl;
 
@@ -32,22 +33,13 @@ class EventOfferSendListener
         $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
         $title = 'Angebot vom '.$start_date.' bis '.$end_date;
 
-        Curl::to('https://api.bexio.com/2.0/kb_offer/'.$event['bexio_offer_id'].'/issue')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->post();
-        Curl::to('https://api.bexio.com/2.0/kb_offer/'.$event['bexio_offer_id'].'/send')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->withData(
-                [
+        app(BexioApiService::class)->post('kb_offer/'.$event['bexio_offer_id'].'/issue');
+        $data = [
                     'recipient_email' => config('mail.invoice_mail'),
                     'subject' => $title,
                     'message' => $event['firstname'].' '.$event['name'].': [Network Link]',
                     'mark_as_open' => true,
-                ]
-            )
-            ->asJson(true)
-            ->post();
+                ];
+        app(BexioApiService::class)->post('kb_offer/'.$event['bexio_offer_id'].'/send', $data);
     }
 }

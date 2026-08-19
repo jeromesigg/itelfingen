@@ -63,6 +63,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
     Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
+    Route::post('admin/events/createAPICode', [AdminEventController::class, 'createAPICode'])->name('events.createAPICode');
 
     Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
@@ -82,6 +83,23 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/checkpoints', 'AdminCheckpointController');
     Route::resource('admin/rooms', 'AdminRoomsController');
 });
+
+Route::get('/bexio/connect', function () {
+    $params = http_build_query([
+        'client_id' => config('services.bexio.client_id'),
+        'redirect_uri' => route('bexio.callback'),
+        'response_type' => 'code',
+        'scope' => 'openid offline_access contact_edit kb_invoice_edit kb_offer_edit article_show article_show', // deine benötigten Scopes
+    ]);
+
+    return redirect("https://auth.bexio.com/realms/bexio/protocol/openid-connect/auth?{$params}");
+})->middleware('auth.deploy');
+
+Route::get('/bexio/callback', function (Illuminate\Http\Request $request, \App\Services\BexioAuthService $auth) {
+    $auth->exchangeAuthorizationCode($request->get('code'), route('bexio.callback'));
+
+    return 'Bexio erfolgreich verbunden!';
+})->name('bexio.callback');
 
 // Route::get('admin/run-migrations', function () {
 //     return Artisan::call('migrate', ['--force' => true]);

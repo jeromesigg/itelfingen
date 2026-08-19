@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Notification;
 use Carbon\Carbon;
+use App\Helper\GlutzAPI;
 use App\Models\Room;
 use App\Models\Event;
 use App\Models\Homepage;
@@ -18,6 +19,7 @@ use App\Notifications\EventFeedbackNotification;
 use App\Notifications\EventLastInfosNotification;
 use App\Notifications\ApplicationInvoiceNotification;
 use App\Events\ApplicationCreatedEvent;
+use App\Services\BexioApiService;
 
 class DailyTask extends Command
 {
@@ -55,6 +57,7 @@ class DailyTask extends Command
         $this->SendEventLastInfos();
         $this->SendApplicationInvoices();
         $this->SendNextEventToSlack();
+        $this->DeleteGlutzUsers();
     }
 
     public function SendEventLastInfos()
@@ -116,11 +119,7 @@ class DailyTask extends Command
         $pl_position = PricelistPosition::where('bexio_code', '=', 300)->first();
 
         if (!isset($application['bexio_invoice_id']) && isset($application['bexio_user_id'])) {
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    [
+            $data = [
                         'title' => 'Dein Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen',
                         'contact_id' => $application->bexio_user_id,
                         'user_id' => 1,
@@ -137,40 +136,24 @@ class DailyTask extends Command
                                 'discount_in_percent' => 0,
                             ],
                         ],
-                    ]
-                )
-                ->asJson(true)
-                ->post();
+                    ];
+            $invoice = app(BexioApiService::class)->post('kb_invoice', $data);
             $title = 'Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen';
 
-            Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'].'/send')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    [
+            $data_send = [
                         'recipient_email' => config('mail.invoice_mail'),
                         'subject' => $title,
                         'message' => $application['firstname'].' '.$application['name'].': [Network Link]',
                         'mark_as_open' => true,
-                    ]
-                )
-                ->asJson(true)
-                ->post();
+                    ];
+            app(BexioApiService::class)->post('kb_invoice/'.$invoice['id'].'/send', $data_send);
                 
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $invoice = json_decode($invoice, true);
+            $invoice = app(BexioApiService::class)->get('kb_invoice/'.$invoice['id']);
             $application->update([
                 'bexio_invoice_id' => $invoice['id'],
             ]);
         } else {
-            $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'])
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->get();
-            $invoice = json_decode($invoice, true);
+            $invoice = app(BexioApiService::class)->get('kb_invoice/'.$application['bexio_invoice_id']);
         }
         if (isset($invoice['id'])) {
 
@@ -228,6 +211,21 @@ class DailyTask extends Command
         }
         if (count($events) > 0) {
             $this->info(count($events).' nächste Buchungen gemeldet.');
+        }
+    }
+
+    public function DeleteGlutzUsers()
+    {
+        $date = Carbon::today()->addDays(-3);
+        $events = Event::where('end_date', '<', $date)->whereNotNull('glutz_user_id')->get();
+
+        foreach ($events as $event) {
+            if (GlutzAPI::deleteUser($event['glutz_user_id'])){
+                $event->update(['glutz_user_id' => null]);
+            }
+        }
+        if (count($events) > 0) {
+            $this->info(count($events).' alte Glutz-Nutzer gelöscht.');
         }
     }
 }

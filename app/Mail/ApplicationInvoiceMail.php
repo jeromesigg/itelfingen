@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Application;
+use App\Services\BexioApiService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -39,12 +40,7 @@ class ApplicationInvoiceMail extends Mailable
     public function build()
     {
         $application = $this->application;
-
-        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$application['bexio_invoice_id'].'/pdf')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->get();
-        $invoice_pdf = json_decode($invoice_pdf, true);
+        $invoice_pdf = app(BexioApiService::class)->get('kb_invoice/'.$application['bexio_invoice_id'].'/pdf');
 
         return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link']])
             ->to($application['email'], $application['firstname'].' '.$application['name'])

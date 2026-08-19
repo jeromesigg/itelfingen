@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Event;
+use App\Services\BexioApiService;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -51,11 +52,7 @@ class SendEventInvoiceMail extends Mailable
             $number .= ' ('.$event['foreign_key'].')';
         }
 
-        $invoice_pdf = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$event['bexio_invoice_id'].'/pdf')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->asJson(true)
-            ->get();
+        $invoice_pdf = app(BexioApiService::class)->get('kb_invoice/'.$event['bexio_invoice_id'].'/pdf');
 
         return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link'], 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
