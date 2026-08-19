@@ -4,6 +4,7 @@ namespace App\View\Components\Bookings;
 
 use Closure;
 use App\Models\Event;
+use App\Services\BexioApiService;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
@@ -43,11 +44,7 @@ class Entry extends Component
                 ]];
                 break;
             case 'OfferSend':
-                $offer = Curl::to('https://api.bexio.com/2.0/kb_offer/'.$event['bexio_offer_id'])
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->get();
-                $offer = json_decode($offer, true);
+                $offer = app(BexioApiService::class)->get('kb_offer/'.$event['bexio_offer_id']);
                 $this->fulfilled = $event['contract_status_id'] >= config('status.contract_angebot_versendet'); 
                 $this->color =$this->fulfilled ? "text-green-500 dark:text-green-400" : "text-gray-500 dark:text-gray-400";
                 $this->path = "M11 16v-5.5A3.5 3.5 0 0 0 7.5 7m3.5 9H4v-5.5A3.5 3.5 0 0 1 7.5 7m3.5 9v4M7.5 7H14m0 0V4h2.5M14 7v3m-3.5 6H20v-6a3 3 0 0 0-3-3m-2 9v4m-8-6.5h1";
@@ -138,11 +135,7 @@ class Entry extends Component
                 $this->title = "Aufenthalt beendet";
                 $this->notification_type = "App\Notifications\EventFeedbackNotification" ;
                 $this->time = $event['end_date'];
-                $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$event['bexio_invoice_id'])
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->get();
-                $invoice = json_decode($invoice, true);
+                $invoice = app(BexioApiService::class)->get('kb_invoice/'.$event['bexio_invoice_id']);
                 $this->contents = [
                 [
                     'link'  =>'https://forms.gle/RMWyPzs8wauakQam9',

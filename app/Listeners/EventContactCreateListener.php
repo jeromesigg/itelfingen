@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\EventOfferCreate;
 use Ixudra\Curl\Facades\Curl;
+use App\Services\BexioApiService;
 
 class EventContactCreateListener
 {
@@ -45,20 +46,10 @@ class EventContactCreateListener
                     'field' => 'postcode',
                     'value' => $event->plz,
                 ], ];
-            $person = Curl::to('https://api.bexio.com/2.0/contact/search')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withContentType('application/json')
-                ->withData($query)
-                ->asJson(true)
-                ->post();
+            $person = app(BexioApiService::class)->post('contact/search', $query);
 
             if (count($person) === 0) {
-                $person = Curl::to('https://api.bexio.com/2.0/contact')
-                    ->withHeader('Accept: application/json')
-                    ->withBearer(config('app.bexio_token'))
-                    ->withContentType('application/json')
-                    ->withData([
+                $data=[
                         'contact_type_id' => '2',
                         'name_1' => $event->name,
                         'name_2' => $event->firstname,
@@ -72,9 +63,8 @@ class EventContactCreateListener
                         'remarks' => $event->comment,
                         'user_id' => 1,
                         'owner_id' => 1,
-                    ])
-                    ->asJson(true)
-                    ->post();
+                    ];
+                $person = app(BexioApiService::class)->post('contact', $data);
             } else {
                 $person = $person[0];
             }

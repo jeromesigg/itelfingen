@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Position;
 use Ixudra\Curl\Facades\Curl;
 use App\Events\EventOfferCreate;
+use App\Services\BexioApiService;
 use Illuminate\Support\Facades\Log;
 
 class EventOfferCreateListener
@@ -54,12 +55,7 @@ class EventOfferCreateListener
                     ];
                 }
             }
-            $offer = Curl::to('https://api.bexio.com/2.0/kb_offer')
-                ->withHeader('Accept: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withContentType('application/json')
-                ->withData(
-                    [
+            $data = [
                         'title' => $title,
                         'contact_id' => $event->bexio_user_id,
                         'user_id' => 1,
@@ -67,12 +63,10 @@ class EventOfferCreateListener
                         'is_valid_until' => now()->addMonth(),
                         'api_reference' => $event['id'],
                         'positions' => $positions_array,
-                    ]
-                )
-                ->asJson(true)
-                ->post();
+                    ];
+            $offer = app(BexioApiService::class)->post('kb_offer', $data);
 
-            if (! isset($offer['error_code'])) {
+            if (!isset($offer['error_code'])) {
                 $event->update([
                     'bexio_offer_id' => $offer['id'],
                     'contract_status_id' => config('status.contract_angebot_erstellt'),

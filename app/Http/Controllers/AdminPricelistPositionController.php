@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ArchiveStatus;
 use App\Models\PricelistPosition;
+use App\Services\BexioApiService;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 
@@ -25,12 +26,7 @@ class AdminPricelistPositionController extends Controller
     public function create()
     {
         //
-        $positions = Curl::to('https://api.bexio.com/2.0/article')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->withContentType('application/json')
-            ->asJson(true)
-            ->get();
+        $positions = app(BexioApiService::class)->postAction('article/');
 
         foreach ($positions as $position) {
             $position_db = PricelistPosition::where('bexio_id', $position['id']);

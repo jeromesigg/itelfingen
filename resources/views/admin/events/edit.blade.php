@@ -93,7 +93,15 @@
                                         <x-forms.select label="Verantwortlicher:" name="user_id" required=true :collection="$users"/>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-12 col-6">
-                                        <x-forms.text label="Tür-Code:" name="code" type="number"/>
+                                    
+                                        <x-forms.row>
+                                            <x-forms.container class="col-6">
+                                                <x-forms.text label="Tür-Code:" name="code" type="number"/>
+                                            </x-forms.container>
+                                            <x-forms.container class="col-6 mt-7">
+                                                <button type="button" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="CreateAPICode()">Code erstellen</button>
+                                            </x-forms.container>
+                                        </x-forms.row>
                                     </x-forms.container>
                                 </div>
                                     
@@ -303,6 +311,57 @@
             $('#additional_text').val(text);
         }
 
+        function CreateAPICode() {
+            const code = document.getElementById('code').value;
+            var event_id = @json($event['id']);
+            if(!code) {
+                alert('Bitte geben Sie einen Code ein.');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Türcode erstellen?',
+                text: "Wirklich den Türcode \"" + code + "\" für diese Buchung erstellen?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ja',
+                cancelButtonText: 'Abbrechen',
+                confirmButtonColor: 'blue',
+                cancelButtonColor: 'red',
+                showLoaderOnConfirm: true,
+                theme: 'auto',
+                preConfirm: async (login) => {
+                    try {
+                        const response = await fetch('{{ route("events.createAPICode") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            body: JSON.stringify({ event_id, code }),
+                        })
+                        const data = await response.json();
+                        if (!response.ok) {
+                            return Swal.showValidationMessage(`
+                                ${JSON.stringify(data)}
+                                `);
+                        }
+                        return data;
+                    } catch (error) {
+                        Swal.showValidationMessage(`
+                            Request failed: ${error}
+                        `);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                console.log(result);
+                if (result.isConfirmed) Swal.fire({
+                    title: `${result.value.success}`
+                });
+            });
+        }
+
         function Total_Change() {
             var start_date = new Date(document.getElementById('start_date').value);
             var end_date = new Date(document.getElementById('end_date').value);
@@ -396,5 +455,6 @@
         window.PrepareReminderMail = PrepareReminderMail;
         window.Total_Change = Total_Change;
         window.importExtern = importExtern;
+        window.CreateAPICode = CreateAPICode;
     </script>
 @endpush
