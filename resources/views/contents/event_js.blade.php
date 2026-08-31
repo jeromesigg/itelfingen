@@ -1,4 +1,10 @@
 <script type="module">
+	document.getElementById('calendarform').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-event-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
+    });
+
 	function wizard_step(i) {
 		if(i===1){
 			document.getElementById("wizard_calendar").style.display = "block";

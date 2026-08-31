@@ -234,7 +234,7 @@
                                                 <button type="button" class="btn btn-frontpage bg-gladegreen" onclick="wizard_step(1)">Zurück</button>
                                             </div>
                                             <div class="col-md-4 mb-1">
-                                                <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
+                                                <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen" id="submit-event-btn">
                                                     Reservieren
                                                 </x-forms.button>
                                             </div>
