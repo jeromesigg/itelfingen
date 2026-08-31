@@ -65,7 +65,7 @@
             <x-forms.text-area label="Nachricht:" name="content" required=true rows="8"/>
         </x-forms.container>
         <x-forms.container>
-          <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
+          <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen" id="submit-btn">
             Sende Nachricht
           </x-forms.button>
         </x-forms.container>
@@ -73,3 +73,13 @@
     </div>
   </div>
 </section>
+
+@push('scripts')
+  <script type="module">
+      document.getElementById('contact_form').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
+    });
+  </script>
+@endpush
