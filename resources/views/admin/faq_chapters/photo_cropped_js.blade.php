@@ -1,53 +1,82 @@
 <script type="module">
     var $modal = $('#modal');
     var image = document.getElementById('image');
-    var cropper;
-    $("body").on("change", ".old_photo_id", function(e){
-        var files = e.target.files;
-        var done = function (url) {
-            image.src = url;
-            $modal.modal('show');
+    <script type="module">
+        const modal = document.getElementById('modal');
+        const image = document.getElementById('image');
+        const cropButton = document.getElementById('crop');
+        const fileInput = document.querySelector('.old_photo_id');
+        let cropper;
+        let objectUrl;
+
+        const closeModal = function () {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modal.setAttribute('aria-hidden', 'true');
+
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+                objectUrl = null;
+            }
         };
-        var reader;
-        var file;
-        var url;
-        if (files && files.length > 0) {
-            file = files[0];
-            if (URL) {
-                done(URL.createObjectURL(file));
-            } else if (FileReader) {
-                reader = new FileReader();
-                reader.onload = function (e) {
-                    done(reader.result);
+
+        const openModal = function () {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.setAttribute('aria-hidden', 'false');
+            cropper = new Cropper(image, {
+                aspectRatio: 4,
+                viewMode: 3,
+                preview: '.preview'
+            });
+            modal.querySelector('[data-modal-dialog]').focus();
+        };
+
+        document.addEventListener('change', function (event) {
+            if (!event.target.matches('.old_photo_id') || !event.target.files.length) {
+                return;
+            }
+
+            objectUrl = URL.createObjectURL(event.target.files[0]);
+            image.src = objectUrl;
+            openModal();
+        });
+
+        cropButton.addEventListener('click', function () {
+            const canvas = cropper.getCroppedCanvas({
+                width: 780,
+                height: 220,
+            });
+
+            canvas.toBlob(function (blob) {
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function () {
+                    document.getElementById('new_photo_id').value = reader.result;
+                    closeModal();
+                    fileInput.value = '';
                 };
-                reader.readAsDataURL(file);
-            }
-        }
-    });
-    $modal.on('shown.bs.modal', function () {
-        cropper = new Cropper(image, {
-            aspectRatio: 4,
-            viewMode: 3,
-            preview: '.preview'
+            });
         });
-    }).on('hidden.bs.modal', function () {
-        cropper.destroy();
-        cropper = null;
-    });
-    $("#crop").click(function(){
-        canvas = cropper.getCroppedCanvas({
-            width: 780,
-            height: 220,
+
+        modal.querySelectorAll('[data-modal-close]').forEach(function (button) {
+            button.addEventListener('click', closeModal);
         });
-        canvas.toBlob(function(blob) {
-            url = URL.createObjectURL(blob);
-            var reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = function() {
-                var base64data = reader.result;
-                $("#new_photo_id").val(base64data);
-                $modal.modal('hide');
+
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                closeModal();
             }
         });
-    })
-</script>
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>

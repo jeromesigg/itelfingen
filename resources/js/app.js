@@ -38,6 +38,7 @@ import DataTable from './components/DataTable.vue'
 import NewsletterTable from './components/NewsletterTable.vue'
 import ApplicationTable from './components/ApplicationTable.vue'
 import ContactTable from './components/ContactTable.vue'
+import FAQTable from './components/FAQTable.vue'
 
 // Component Registry
 const components = {
@@ -45,6 +46,7 @@ const components = {
   'newsletter-table': NewsletterTable,
   'applications-table': ApplicationTable,
   'contacts-table': ContactTable,
+  'faqs-table': FAQTable,
   // Später: 'users-table': UsersTable, etc.
 }
 

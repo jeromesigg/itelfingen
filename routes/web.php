@@ -64,7 +64,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
     Route::get('contacts/datatable', ['as' => 'contacts.CreateDataTablesTanStack', 'uses' => 'AdminContactController@createDataTablesTanStack']);
     Route::resource('admin/faqs', 'AdminFaqController');
-    Route::get('faqs/createDataTables', ['as' => 'faqs.CreateDataTables', 'uses' => 'AdminFaqController@createDataTables']);
+    Route::get('faqs/datatable', ['as' => 'faqs.CreateDataTablesTanStack', 'uses' => 'AdminFaqController@createDataTablesTanStack']);
     Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
     Route::resource('admin/positions', 'AdminPricelistPositionController');
     Route::resource('admin/applications', 'AdminApplicationController');
@@ -78,20 +78,6 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/checkpoints', 'AdminCheckpointController');
     Route::resource('admin/rooms', 'AdminRoomsController');
 });
-
-// Route::get('admin/run-migrations', function () {
-//     return Artisan::call('migrate', ['--force' => true]);
-// });
-
-// Route::get('admin/run-migrations-seed', function () {
-//     return Artisan::call('migrate --seed', ['--force' => true]);
-// });
-
-// Route::get('admin/run-deployment', function () {
-//     Artisan::call('optimize:clear');
-
-//     return true;
-// });
 
 Route::get('/deploy', function () {
     // Migrationen erzwingen

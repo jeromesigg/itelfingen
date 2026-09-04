@@ -6,62 +6,56 @@
 @endsection
 
 @section('content')
-<div>
-    <div class="container mx-auto px-4">
+    <header>
+        <h3 class="text-3xl font-bold dark:text-white">FAQ Kapitel</h3>
+    </header>
 
-        <header>
-            <h3 class="text-3xl font-bold dark:text-white">FAQ Kapitel</h3>
-        </header>
-
-        <div class="row">
-            <div class="col-sm-3">
-                <x-forms.form :action="route('faq_chapters.store')" enctype="multipart/form-data" accept-charset="UTF-8">
-                    <x-forms.container>
-                        <x-forms.text label="Titel:" name="name" required=true/>
-                    </x-forms.container>
-                    <x-forms.container>
-                        <x-forms.text label="Symbol:" name="symbol"/>
-                    </x-forms.container>
-                    <x-forms.container>
-                        <x-forms.file label="Photo: " name="old_photo_id" class="old_photo_id"/>
-                        <x-forms.hidden name="new_photo_id" />
-                    </x-forms.container>
-                    <x-forms.container>
-                        <x-forms.button type="submit" class="btn btn-primary">
-                            FAQ Kapitel erstellen
-                        </x-forms.button>
-                    </x-forms.container>
-                </x-forms.form>
-            </div>
-            <div class="col-sm-9">
-                <table class="table">
-                    <thead>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-testcolor">
+        <x-forms.form :action="route('faq_chapters.store')" enctype="multipart/form-data" accept-charset="UTF-8">
+            <x-forms.container>
+                <x-forms.text label="Titel:" name="name" required=true/>
+            </x-forms.container>
+            <x-forms.container>
+                <x-forms.text label="Symbol:" name="symbol"/>
+            </x-forms.container>
+            <x-forms.container>
+                <x-forms.file label="Photo: " name="old_photo_id" class="old_photo_id"/>
+                <x-forms.hidden name="new_photo_id" />
+            </x-forms.container>
+            <x-forms.container>
+                <x-forms.button type="submit" class="btn btn-primary">
+                    FAQ Kapitel erstellen
+                </x-forms.button>
+            </x-forms.container>
+        </x-forms.form>
+        <div class="col-span-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Titel</th>
+                        <th scope="col">Foto</th>
+                        <th scope="col">Symbol</th>
+                        <th scope="col">Archiv-Status</th>
+                        <th scope="col">Sort-Index</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if($faq_chapters)
+                    @foreach ($faq_chapters as $faq_chapter)
                         <tr>
-                            <th scope="col">Titel</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Symbol</th>
-                            <th scope="col">Archiv-Status</th>
-                            <th scope="col">Sort-Index</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if($faq_chapters)
-                        @foreach ($faq_chapters as $faq_chapter)
-                            <tr>
-                                <td><a class="text-orientalpink" href="{{route('faq_chapters.edit', $faq_chapter->id)}}">{{$faq_chapter->name}}</a></td>
-                                <td><img height="50" src="{{$faq_chapter->photo ? $faq_chapter->photo->file : 'https://placehold.it/50x50'}}" alt=""></td>
-                                <td>{{$faq_chapter['symbol']}}</td>
-                                <td>{{$faq_chapter->archive_status['name']}}</td>
-                                <td>{{$faq_chapter['sort-index']}}</td>
-                                </tr>
-                        @endforeach
-                        @endif
-                    </tbody>
-                </table>
-            </div>
+                            <td><a class="text-orientalpink" href="{{route('faq_chapters.edit', $faq_chapter->id)}}">{{$faq_chapter->name}}</a></td>
+                            <td><img height="50" src="{{$faq_chapter->photo ? $faq_chapter->photo->file : 'https://placehold.it/50x50'}}" alt=""></td>
+                            <td>{{$faq_chapter['symbol']}}</td>
+                            <td>{{$faq_chapter->archive_status['name']}}</td>
+                            <td>{{$faq_chapter['sort-index']}}</td>
+                            </tr>
+                    @endforeach
+                    @endif
+                </tbody>
+            </table>
         </div>
     </div>
-    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -89,8 +83,7 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 @push('scripts')
     @include('admin/faq_chapters/photo_cropped_js')
-    @endpush
+@endpush

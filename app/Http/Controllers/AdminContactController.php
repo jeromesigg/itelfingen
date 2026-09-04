@@ -21,47 +21,19 @@ class AdminContactController extends Controller
         return view('admin.contacts.index', compact('title'));
     }
 
-    public function createDataTables(Request $request)
-    {
-        $input = $request->all();
-        $done = ! ($input['done'] != 'Alle');
-        $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
-
-        return DataTables::of($contacts)
-            ->editColumn('created_at', function (Contact $contact) {
-                return [
-                    'display' => Carbon::parse($contact['created_at'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($contact['created_at'])->diffInDays('01.01.2021'),
-                ];
-            })
-            ->editColumn('user', function (Contact $contact) {
-                return $contact->user ? $contact->user['username'] : '';
-            })
-            ->editColumn('done', function (Contact $contact) {
-                return $contact->done ? 'Ja' : 'Nein';
-            })
-            ->addColumn('Actions', function (Contact $contact) {
-                $buttons = '<form action="'.\URL::route('contacts.done', $contact).'" method="POST">'.csrf_field();
-                if (! $contact['done']) {
-                    $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Bearbeitet</button>';
-                }
-                $buttons .= '</form>';
-
-                return $buttons;
-            })
-            ->rawColumns(['name', 'Actions'])
-            ->make(true);
-    }
-
     public function createDataTablesTanStack(Request $request)
     {
         
         $input = $request->all();
-        if (! isset($input['done'])) {
-            $input['done'] = 'Alle';
+        if (!isset($input['status'])) {
+            $input['status'] = 'Alle';
         }
-        $done = ! ($input['done'] != 'Alle');
-        $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
+        if($input['status'] == 'Alle') {
+        $contacts = Contact::orderby('created_at', 'DESC')->get();
+        } else {
+            $done = ($input['status'] == 'Bearbeitet');
+            $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
+        }
 
         // Transformation der Daten (gleich wie Yajra, aber manuel)
         $data = $contacts->map(function (Contact $contact) {
@@ -75,7 +47,7 @@ class AdminContactController extends Controller
                 'subject' =>  $contact['subject'],
                 'content' => $contact['content'],
                 'done' =>  $contact['done'] ? 'Ja' : 'Nein',
-                'user' => $contact->user['username'],
+                'user' => $contact->user['username'] ?? '',
                 'actions' => '<form action="'.\URL::route('contacts.done', $contact).'" method="post">'.csrf_field().(!$contact['done'] ? '<button type="submit" class="btn btn-secondary btn-sm">Bearbeitet</button>' : '').'</form>',
             ];
         });

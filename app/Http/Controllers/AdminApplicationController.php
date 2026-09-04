@@ -22,48 +22,6 @@ class AdminApplicationController extends Controller
         return view('admin.applications.index', compact('title'));
     }
 
-    // public function createDataTables()
-    // {
-    //     $applications = Application::get();
-
-    //     return DataTables::of($applications)
-    //         ->addColumn('name', function (Application $applications) {
-    //             return '<a class="text-orientalpink" href='.\URL::route('applications.show', $applications).'>'.$applications['name'].'</a>';
-    //         })
-    //         ->addColumn('refuse', function (Application $application) {
-    //             return $application['refuse'] ? 'Ja' : 'Nein';
-    //         })
-    //         ->addColumn('invoice_send', function (Application $application) {
-    //             return $application['invoice_send'] ? 'Ja' : 'Nein';
-    //         })
-    //         ->addColumn('invoice_send', function (Application $application) {
-    //             return $application['invoice_send'] ? 'Ja' : 'Nein';
-    //         })
-    //         ->addColumn('city', function (Application $application) {
-    //             return $application['plz'].' '.$application['city'];
-    //         })
-    //         ->addColumn('Actions', function (Application $application) {
-    //             $buttons = '<form action="'.\URL::route('applications.refuse', $application).'" method="post">'.csrf_field();
-    //             if (! $application['invoice_send'] && ! $application['refuse']) {
-    //                 $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Ablehnen</button>';
-    //             }
-    //             $buttons .= '</form>';
-
-    //             return $buttons;
-    //         })
-    //         ->editColumn('street', function (Application $application) {
-    //             return $application['street'].' '.$application['house_number'];
-    //         })
-    //         ->editColumn('created_at', function (Application $application) {
-    //             return [
-    //                 'display' => Carbon::parse($application['created_at'])->format('d.m.Y'),
-    //                 'sort' => Carbon::parse($application['created_at'])->diffInDays('01.01.2022'),
-    //             ];
-    //         })
-    //         ->rawColumns(['Actions', 'name'])
-    //         ->make(true);
-    // }
-
     public function createDataTablesTanStack(Request $request)
     {
         

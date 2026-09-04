@@ -7,7 +7,7 @@
         <header>
             <h3 class="text-3xl font-bold dark:text-white">Anfragen</h3>
         </header>
-        <div id="filter_btns">
+        {{-- <div id="filter_btns">
             <div id="done_btn">
                 <div class="row" style="width: 20%">
                     <div class="col-md-6">
@@ -20,7 +20,7 @@
             </div>
         </div>
         <br>
-        <input type="hidden" value="Offen" id="done_btn_value">
+        <input type="hidden" value="Offen" id="done_btn_value"> --}}
         <div id="tanStackTable" data-vue-component="contacts-table">
             <contacts-table />
         </div>
@@ -30,11 +30,6 @@
 
 
 @push('scripts')
-
-    <script>
-        window.contractStatuses = ['Alle', 'Offen', 'Bearbeitet'];
-    
-    </script>
     {{-- <script type="module">
         $(function () {
             // Get the container element
