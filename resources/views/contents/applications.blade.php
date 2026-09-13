@@ -50,7 +50,7 @@
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
                 <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank" class="text-orientalpink">Statuten</a> als akzeptiert.</li>
             </ul>
-            <x-forms.form :action="route('application.store')">
+            <x-forms.form :action="route('application.store')" id='application_form'>
                 <x-honeypot />
                 <div class="form-row">
                   <x-forms.container class="col-md-4">
@@ -99,7 +99,7 @@
                         <p>Danke! Noch ein Klick und deine Bewerbung ist bei uns eingegangen!</p>
                     </div>
                     <div class="col-md-6">
-                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen">
+                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen" id="submit-btn">
                             Bewerbung absenden
                         </x-forms.button>
                     </div>
@@ -156,6 +156,11 @@
         });
 
 
+    });
+    document.getElementById('application_form').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
     });
     </script>
 
