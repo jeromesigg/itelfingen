@@ -6,8 +6,6 @@ use Carbon\Carbon;
 use App\Models\Event;
 use Illuminate\Support\Facades\Http;
 
-use function PHPUnit\Framework\isArray;
-
 class GlutzAPI
 {
     public static function getCredentials(): mixed
@@ -108,7 +106,7 @@ class GlutzAPI
         $response_Result = Self::ApiRequest('getDeviceEvaluationAndUpdateState',[]);
         if (!($response_Result === null)) {
             $updateNeededId = $response_Result['updateNeeded'] ?? null;
-            if (isArray($updateNeededId) && !empty($updateNeededId)) {
+            if (is_array($updateNeededId) && !empty($updateNeededId)) {
                 $resultUpdate = Self::ApiRequest('deviceAction',['DeviceUpdate', ['deviceid' => $updateNeededId[0]]]);
                 $result = $resultUpdate;
             }
