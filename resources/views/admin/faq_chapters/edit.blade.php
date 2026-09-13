@@ -44,31 +44,26 @@
                 @include('includes.form_error')
             </div>
         </div>
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Bild zuschneiden</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+        <div class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto bg-gray-950/60 p-4" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="w-full max-w-5xl rounded-lg bg-white shadow-xl dark:bg-gray-800" data-modal-dialog tabindex="-1" role="document">
+                <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white" id="modalLabel">Bild zuschneiden</h2>
+                    <button type="button" class="rounded-lg p-2 text-2xl leading-none text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700" data-modal-close aria-label="Schließen">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="grid gap-6 p-6 md:grid-cols-[minmax(0,2fr)_minmax(12rem,1fr)]">
+                    <div class="flex min-h-64 items-center justify-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-900">
+                        <img class="block max-h-[60vh] max-w-full" id="image" src="https://avatars0.githubusercontent.com/u/3456749" alt="Bildvorschau">
                     </div>
-                    <div class="modal-body">
-                        <div class="img-container">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="preview"></div>
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <p class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Vorschau</p>
+                        <div class="preview aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-900"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary" id="crop">Zuschneiden</button>
-                    </div>
+                </div>
+                <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-gray-700">
+                    <button type="button" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-gray-700" data-modal-close>Abbrechen</button>
+                    <button type="button" class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-strong focus:outline-hidden focus:ring-4 focus:ring-primary-soft" id="crop">Zuschneiden</button>
                 </div>
             </div>
         </div>
