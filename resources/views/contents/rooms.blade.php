@@ -3,7 +3,7 @@
         <div class="section-title">
             <p>Was dich erwartet</p>
         </div>
-        <div class="grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-8">
+        <div class="grid grid-cols-1 gap-4 sm:mt-8 lg:grid-cols-4 xl:gap-8">
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-xs dark:border-gray-700 dark:bg-gray-800">
                 <h3 class="mb-3 text-2xl font-semibold">Das Haus</h3>
                 <p class="sm:text-lg my-8">Modern, Zweistöckig und für bis zu 19 Personen.</p>

@@ -59,17 +59,17 @@
                       <x-forms.text label="Organisation:" name="organisation"/>
                   </x-forms.container>
                 </div>
-                <div class="grid md:grid-cols-12 gap-4">
-                    <x-forms.container class="md:col-span-5">
+                <div class="grid grid-cols-12 gap-4">
+                    <x-forms.container class="md:col-span-5 col-span-10">
                         <x-forms.text label="Strasse*:" name="street" required=true/>
                     </x-forms.container>
-                    <x-forms.container class="md:col-span-1 col-2">
+                    <x-forms.container class="md:col-span-1 col-span-2">
                         <x-forms.text label="Nr.:" name="house_number"/>
                     </x-forms.container>
-                    <x-forms.container class="col-md-2 col-2">
+                    <x-forms.container class="md:col-span-1 col-span-3">
                         <x-forms.text label="PLZ*:" name="zipcode" type="number" required=true class="autocomplete_txt"/>
                     </x-forms.container>
-                    <x-forms.container class="md:col-span-5">
+                    <x-forms.container class="md:col-span-5 col-span-9">
                         <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
                     </x-forms.container>
                     <x-forms.hidden name="city_id" class="autocomplete_txt"/>
