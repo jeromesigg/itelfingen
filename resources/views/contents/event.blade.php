@@ -251,3 +251,13 @@
     </div>
 
   </section>
+
+@push('scripts')
+  <script type="module">
+  	document.getElementById('calendarform').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-event-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
+    });
+  </script>
+@endpush
