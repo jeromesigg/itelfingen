@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ImageUpload;
 use App\Models\Photo;
 use App\Models\Picture;
 use Illuminate\Http\Request;
@@ -44,13 +45,12 @@ class AdminPicturesController extends Controller
         $input = $request->all();
 
         if ($file = $request->file('photo_id')) {
-            $name = time().'_'.$file->getClientOriginalName();
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
 
             if ($input['cropped_photo_id']) {
-                $name = time().'_cropped_'.$file->getClientOriginalName();
+                $name = ImageUpload::name($file, 'photo_id', '_cropped');
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
                 $photo_cropped = Photo::create(['file' => $name]);
@@ -100,14 +100,13 @@ class AdminPicturesController extends Controller
         $input = $request->all();
 
         if ($file = $request->file('photo_id')) {
-            $name = time().$file->getClientOriginalName();
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
 
             if ($input['cropped_photo_id']) {
-                $name = time().'_cropped_'.$file->getClientOriginalName();
+                $name = ImageUpload::name($file, 'photo_id', '_cropped');
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
                 $photo_cropped = Photo::create(['file' => $name]);

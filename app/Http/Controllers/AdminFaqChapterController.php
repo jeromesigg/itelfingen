@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\FaqChapter;
 use App\Models\Photo;
@@ -42,7 +43,7 @@ class AdminFaqChapterController extends Controller
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');
         if (($file = $request->file('old_photo_id')) && $input['new_photo_id']) {
-            $name = time().$file->getClientOriginalName();
+            $name = ImageUpload::name($file, 'old_photo_id');
             Image::make($input['new_photo_id'])->save('images/'.$name);
 
             $photo = Photo::create(['file' => $name]);
@@ -91,7 +92,7 @@ class AdminFaqChapterController extends Controller
         $input = $request->all();
         $file = $request->file('old_photo_id');
         if ($file && $input['new_photo_id']) {
-            $name = time().'_'.$file->getClientOriginalName();
+            $name = ImageUpload::name($file, 'old_photo_id');
             Image::make($input['new_photo_id'])->save('images/'.$name);
 
             $photo = Photo::create(['file' => $name]);

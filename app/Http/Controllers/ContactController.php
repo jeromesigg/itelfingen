@@ -30,7 +30,7 @@ class ContactController extends Controller
                 ->withInput();
         }
 
-        $contact = Contact::create($input);
+        $contact = Contact::create($request->only(['name', 'email', 'subject', 'content']));
         Notification::send($contact, new ContactCreatedNotification($contact));
 
         return redirect()->to(url()->previous().'#contact')->with('success_contact', 'Vielen Dank für die Nachricht. Wir werden uns so schnell wie möglich melden.');

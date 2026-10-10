@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\Person;
 use App\Models\Photo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class AdminPersonController extends Controller
 {
@@ -45,8 +45,7 @@ class AdminPersonController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = Str::uuid().'_'.$input['name'].'.jpg';
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
@@ -96,8 +95,7 @@ class AdminPersonController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = Str::uuid().'_'.$input['name'].'.jpg';
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;

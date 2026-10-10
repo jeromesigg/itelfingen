@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
+use Tests\Support\BookingScenario;
 use Tests\TestCase;
 
 /**
@@ -66,6 +67,45 @@ class CreateMultiDayEventTest extends TestCase
         $this->assertSame([20 => 1, 30 => 6, 40 => 4, 210 => 0], $amounts);
 
         Notification::assertSentTo($event, EventCreatedNotification::class);
+    }
+
+    public function test_marketing_comment_is_stored_and_shown_to_manager(): void
+    {
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'marketing_comment' => 'Empfehlung von Freunden',
+        ]));
+
+        $event = Event::sole();
+        $this->assertSame('Empfehlung von Freunden', $event->marketing_comment);
+
+        $s = BookingScenario::create();
+        $this->actingAs($s->user('verwalter'))->get("/admin/events/{$event->id}/edit")
+            ->assertOk()
+            ->assertSee('Empfehlung von Freunden');
+    }
+
+    public function test_booking_form_cannot_set_internal_fields(): void
+    {
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'code' => 1234,
+            'comment_intern' => 'von aussen',
+            'external' => 1,
+            'user_id' => 1,
+            'bexio_invoice_id' => 99,
+            'glutz_user_id' => 'fremd',
+            'event_status_id' => config('status.event_bestaetigt'),
+            'cleaning_mail' => 1,
+        ]))->assertRedirect(route('home').'#booking');
+
+        $event = Event::sole();
+        $this->assertNull($event->code);
+        $this->assertNull($event->comment_intern);
+        $this->assertFalse($event->external);
+        $this->assertNull($event->user_id);
+        $this->assertNull($event->bexio_invoice_id);
+        $this->assertNull($event->glutz_user_id);
+        $this->assertFalse($event->cleaning_mail);
+        $this->assertSame(config('status.event_neu'), $event->event_status_id);
     }
 
     public function test_one_day_booking_uses_day_rate(): void

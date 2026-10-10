@@ -15,12 +15,14 @@ class BasicAuthEnv
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = env('DEPLOY_USER');
-        $pass = env('DEPLOY_PASS');
+        // config() statt env(): env() liefert bei gecachter Config null, und null === null liess jeden durch.
+        $user = (string) config('services.deploy.user');
+        $pass = (string) config('services.deploy.password');
 
         if (
-            $request->getUser() !== $user ||
-            $request->getPassword() !== $pass
+            $user === '' || $pass === '' ||
+            ! hash_equals($user, (string) $request->getUser()) ||
+            ! hash_equals($pass, (string) $request->getPassword())
         ) {
             return response('Unauthorized.', 401, [
                 'WWW-Authenticate' => 'Basic realm="Deploy"',

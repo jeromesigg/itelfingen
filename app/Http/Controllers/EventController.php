@@ -31,7 +31,12 @@ class EventController extends Controller
                 ->withInput();
         }
 
-        $input = $request->all();
+        // Nur Felder des Buchungsformulars, keine internen Felder (Türcode, Bexio, Notizen, Status).
+        $input = $request->only([
+            'name', 'firstname', 'group', 'street', 'house_number', 'zipcode', 'city', 'email', 'telephone',
+            'comment', 'marketing_comment', 'terms', 'date', 'start_date', 'end_date', 'total_days', 'total_people', 'total_amount',
+            'discount', 'positions',
+        ]);
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
         $input['event_status_id'] = config('status.event_neu');
@@ -60,6 +65,7 @@ class EventController extends Controller
     {
         // $query = $request->get('term','');
         $cities = City::search($request->get('term'))->get();
+        $data = [];
         foreach ($cities as $city) {
             $data[] = ['name' => $city->name, 'plz' => $city->plz, 'id' => $city->id];
         }

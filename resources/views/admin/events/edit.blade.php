@@ -111,7 +111,10 @@
                             </x-forms.container>
                             <x-forms.container class="col-xl-4">
                                 <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=5/>
-                            </x-forms.container> 
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-6">
+                                <x-forms.text-area label="Aufmerksam geworden durch:" name="marketing_comment" rows=3/>
+                            </x-forms.container>
                         </div> 
                         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">

@@ -41,7 +41,11 @@ class ApplicationController extends Controller
     public function store(Request $request)
     {
         //
-        $input = $request->all();
+        // Nur Felder des Formulars, keine internen Felder (Bexio, Rechnung, Ablehnung).
+        $input = $request->only([
+            'name', 'firstname', 'organisation', 'street', 'house_number', 'zipcode', 'city', 'email', 'telephone',
+            'why', 'comment',
+        ]);
         if (!preg_match('/\s/', $input['why'])) {
             abort(response()->view('errors.422', [], 422));
         }

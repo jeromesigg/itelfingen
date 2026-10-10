@@ -49,4 +49,10 @@ return [
         'client_secret' => env('BEXIO_CLIENT_SECRET'),
     ],
 
+    // Basic-Auth für /deploy und /bexio/connect (Middleware auth.deploy). Leer = Zugang gesperrt.
+    'deploy' => [
+        'user' => env('DEPLOY_USER'),
+        'password' => env('DEPLOY_PASS'),
+    ],
+
 ];

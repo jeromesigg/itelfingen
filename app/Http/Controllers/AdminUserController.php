@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArchiveStatus;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\ArchiveStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Admins verwalten alle Benutzer (create/store/destroy nur in der Routengruppe role:admin).
+ * Team und Verwalter sehen und bearbeiten nur ihr eigenes Profil, ohne Rolle und Status.
+ */
 class AdminUserController extends Controller
 {
     /**
@@ -20,7 +24,7 @@ class AdminUserController extends Controller
     {
         //
         $user = Auth::user();
-        if ($user->isTeam() && ! $user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $users = User::whereId($user->id)->get();
             $roles = Role::whereId($user->role_id)->pluck('name', 'id')->all();
         } else {
@@ -33,23 +37,6 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-        if (! Auth::user()->isAdmin()) {
-            $roles = Role::where('is_admin', false)->pluck('name', 'id')->all();
-        } else {
-            $roles = Role::pluck('name', 'id')->all();
-        }
-
-        return view('admin.users.create', compact('roles'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @return \Illuminate\Http\Response
@@ -57,33 +44,19 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         //
-        if (trim($request->password) == '') {
-            $input = $request->except('password');
-        } else {
-            $input = $request->all();
+        $input = $request->only(['username', 'fullname', 'phone', 'role_id']);
+        if (trim($request->password ?? '') != '') {
             $input['password'] = bcrypt($request->password);
-        }
-
-        if ($file = $request->file('signature')) {
-            $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
-            $input['signature'] = $path;
         }
         $input['is_active'] = 1;
 
-        User::create($input);
+        $user = User::create($input);
+
+        if ($file = $request->file('signature')) {
+            $user->update(['signature' => $this->storeSignature($user, $file)]);
+        }
 
         return redirect('/admin/users');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -95,12 +68,14 @@ class AdminUserController extends Controller
     public function edit($id)
     {
         //
-        if (Auth::user()->isTeam() && ! Auth::user()->isAdmin()) {
+        $user = $this->findEditable($id);
+        if (! Auth::user()->isAdmin()) {
             $roles = Role::whereId(Auth::user()->role_id)->pluck('name', 'id')->all();
         } else {
             $roles = Role::pluck('name', 'id')->all();
         }
-        $user = User::findOrFail($id);
+        // Das Formular zeigt den Status als Archiv-Status, gespeichert wird is_active.
+        $user->archive_status_id = $user->is_active ? config('status.aktiv') : config('status.archiviert');
         $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
 
         return view('admin.users.edit', compact('user', 'roles', 'archive_statuses'));
@@ -115,24 +90,23 @@ class AdminUserController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $user = User::findOrFail($id);
+        $user = $this->findEditable($id);
 
-        if (trim($request->password) == '') {
-            $input = $request->except('password');
-        } else {
-            $input = $request->all();
+        $input = $request->only(['username', 'fullname', 'phone']);
+        if (trim($request->password ?? '') != '') {
             $input['password'] = bcrypt($request->password);
         }
-
         if ($file = $request->file('signature')) {
-            $path = Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
-            $input['signature'] = $path;
+            $input['signature'] = $this->storeSignature($user, $file);
         }
-        if($input['archive_status_id'] == config('status.aktiv')) {
-            $input['archive_status_id'] = 1;
-        }
-        else {
-            $input['archive_status_id'] = 0;
+        // Rolle und Status setzt nur ein Admin.
+        if (Auth::user()->isAdmin()) {
+            if ($request->filled('role_id')) {
+                $input['role_id'] = $request->role_id;
+            }
+            if ($request->filled('archive_status_id')) {
+                $input['is_active'] = $request->archive_status_id == config('status.aktiv');
+            }
         }
 
         $user->update($input);
@@ -156,7 +130,26 @@ class AdminUserController extends Controller
 
     public function get_signature(User $user)
     {
+        abort_unless(Auth::user()->isAdmin() || $user->is(Auth::user()), 403);
+        abort_if(empty($user->signature), 404);
+
         /**this will force download your file**/
         return Storage::download($user->signature);
+    }
+
+    /**
+     * Admins bearbeiten alle Benutzer, alle anderen nur sich selbst.
+     */
+    private function findEditable($id): User
+    {
+        $user = User::findOrFail($id);
+        abort_unless(Auth::user()->isAdmin() || $user->is(Auth::user()), 403);
+
+        return $user;
+    }
+
+    private function storeSignature(User $user, $file): string
+    {
+        return Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
     }
 }

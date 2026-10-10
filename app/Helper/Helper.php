@@ -206,19 +206,29 @@ class Helper
 
     public static function GetChart($time_frame)
     {
-        switch ($time_frame) {
-            case 'quarter':
-                $time_frame_SQL = "concat(DATE_FORMAT(start_date, '%Y'),'-Q', QUARTER(start_date)) as timeframe";
-                break;
-            case 'monthly':
-                $time_frame_SQL = "concat(LEFT(DATE_FORMAT(start_date, '%M'),3), ' ', DATE_FORMAT(start_date, '%Y')) as timeframe";
-                break;
-            case 'daily':
-                $time_frame_SQL = 'start_date as timeframe';
-                break;
-            default:
-                $time_frame_SQL = "DATE_FORMAT(start_date, '%Y') as timeframe";
-                break;
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            // Nur für die Tests (SQLite kennt weder DATE_FORMAT noch Monatsnamen).
+            $time_frame_SQL = match ($time_frame) {
+                'quarter' => "strftime('%Y', start_date) || '-Q' || ((cast(strftime('%m', start_date) as integer) + 2) / 3) as timeframe",
+                'monthly' => "strftime('%m %Y', start_date) as timeframe",
+                'daily' => 'start_date as timeframe',
+                default => "strftime('%Y', start_date) as timeframe",
+            };
+        } else {
+            switch ($time_frame) {
+                case 'quarter':
+                    $time_frame_SQL = "concat(DATE_FORMAT(start_date, '%Y'),'-Q', QUARTER(start_date)) as timeframe";
+                    break;
+                case 'monthly':
+                    $time_frame_SQL = "concat(LEFT(DATE_FORMAT(start_date, '%M'),3), ' ', DATE_FORMAT(start_date, '%Y')) as timeframe";
+                    break;
+                case 'daily':
+                    $time_frame_SQL = 'start_date as timeframe';
+                    break;
+                default:
+                    $time_frame_SQL = "DATE_FORMAT(start_date, '%Y') as timeframe";
+                    break;
+            }
         }
 
         $events_nights = Event::select(

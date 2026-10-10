@@ -35,6 +35,22 @@ class ContactTest extends TestCase
         Notification::assertSentTo($contact, ContactCreatedNotification::class);
     }
 
+    public function test_contact_form_cannot_set_internal_fields(): void
+    {
+        $this->from(route('home'))->post('/contacts', [
+            'name' => 'Max Muster',
+            'email' => 'max@example.com',
+            'subject' => 'Anfrage',
+            'content' => 'Ist das Haus im Mai frei?',
+            'done' => 1,
+            'user_id' => 1,
+        ]);
+
+        $contact = Contact::sole();
+        $this->assertFalse((bool) $contact->done);
+        $this->assertNull($contact->user_id);
+    }
+
     public function test_message_without_whitespace_is_rejected_as_spam(): void
     {
         $this->post('/contacts', [

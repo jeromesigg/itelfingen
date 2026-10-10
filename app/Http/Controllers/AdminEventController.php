@@ -90,12 +90,17 @@ class AdminEventController extends Controller
             ->orderby('start_date')->get();
 
         return DataTables::of($events)
-            ->addColumn('name', function (Event $event) {
-                return $event['firstname'] . ' <a class="text-orientalpink" href='.\URL::route('admin.events.edit', $event).'>'.$event['name'].'</a>' .
-                    '<br>' . $event['group_name'];
+            // Werte aus dem öffentlichen Formular immer escapen, die Spalten werden als HTML ausgegeben.
+            ->addColumn('name', function (Event $event) use ($request) {
+                $name = e($event['name']);
+                if ($request->user()->canManageBookings()) {
+                    $name = '<a class="text-orientalpink" href="'.\URL::route('admin.events.edit', $event).'">'.$name.'</a>';
+                }
+
+                return e($event['firstname']).' '.$name.'<br>'.e($event['group_name']);
             })
             ->addColumn('number', function (Event $event) {
-                return $event->number().'<br>'.$event['foreign_key'];
+                return $event->number().'<br>'.e($event['foreign_key']);
             })
             ->editColumn('start_date', function (Event $event) {
                 return [
@@ -120,6 +125,8 @@ class AdminEventController extends Controller
                 return $event->contract_status ? $event->contract_status['name'] : '';
             })
             ->rawColumns(['name', 'status', 'number'])
+            // Nur die Spalten der Tabelle, keine internen Felder wie Türcode oder Bexio-IDs.
+            ->only(['id', 'start_date', 'end_date', 'number', 'name', 'email', 'total_amount', 'comment', 'comment_intern', 'status', 'user', 'contract_status'])
             ->make(true);
     }
 
@@ -312,7 +319,7 @@ class AdminEventController extends Controller
     public function api()
     {
         //
-        $events = Event::where('end_date', '>', now())->where('event_status_id', '<', config('status.event_storniert'))->where('external', 'false')->get();
+        $events = Event::where('end_date', '>', now())->where('event_status_id', '<', config('status.event_storniert'))->where('external', false)->get();
         $events_return = [];
         foreach ($events as $event) {
             $status = ($event['event_status_id'] === config('status.event_bestaetigt') || $event['event_status_id'] === config('status.event_eigene'));
@@ -353,6 +360,11 @@ class AdminEventController extends Controller
         if(preg_match('/^\+/', $number)) {
             $number = substr($number, 3);
         }
+        // Nur Ziffern: % und _ wären sonst LIKE-Platzhalter. Zu kurze Nummern passen auf zu viele Buchungen.
+        $number = preg_replace('/\D/', '', $number);
+        if (strlen($number) < 6) {
+            return response()->json(['error' => 'No event found with this number'], 404);
+        }
         $event = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
         //
         if ($event->isEmpty()) {
@@ -376,7 +388,7 @@ class AdminEventController extends Controller
         if (!is_numeric($days) || $days < 1) {
             $days = 1;
         }
-        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', ['5', '50'])->get();
+        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', [config('status.event_neu'), config('status.event_storniert')])->get();
         //
         return response()->json([
             'isFree' => $events->isEmpty(),

@@ -161,10 +161,13 @@ class HomeController extends Controller
         return response()->download($outputFile);
     }
 
-    public function bookings_checkpointDone(Request $request)
+    public function bookings_checkpointDone(Request $request, string $uuid)
     {
-        $checkpoint_id = $request->get('checkpoint_id');
-        $checkpoint = EventCheckpoint::findOrFail($checkpoint_id);
+        // Nur Checkpoints der Buchung mit dieser UUID, sonst könnte jeder fremde Checklisten abhaken.
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        $checkpoint = EventCheckpoint::whereKey($request->get('checkpoint_id'))
+            ->whereHas('event_room', fn ($query) => $query->where('event_id', $event->id))
+            ->firstOrFail();
         $checkpoint->done = !$checkpoint->done;
         $checkpoint->save();
         $event_room = $checkpoint->event_room;

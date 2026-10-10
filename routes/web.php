@@ -31,7 +31,7 @@ Route::get('bookings/{uuid}', 'HomeController@bookings_uuid')->name('bookings.uu
 Route::get('bookings/{uuid}/checklist', 'HomeController@bookings_checklist')->name('bookings.checklist');
 Route::get('admin/bookings/{uuid}/DownloadLastInfos', 'HomeController@DownloadLastInfos')->name('bookings.downloadLastInfos');
 Route::get('admin/events/{uuid}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
-Route::post('bookings/checkpoint/done', 'HomeController@bookings_checkpointDone')->name('bookings.checkpointDone');
+Route::post('bookings/{uuid}/checkpoint/done', 'HomeController@bookings_checkpointDone')->name('bookings.checkpointDone');
 
 Auth::routes();
 
@@ -43,35 +43,34 @@ Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventCo
 
 Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'] )->middleware(ProtectAgainstSpam::class);
 
-Route::group(['middleware' => 'admin'], function () {
+// Berechtigungen nach Stufe, siehe tests/README.md ("Berechtigungen") und App\Http\Middleware\Role.
+
+// Team, Verwalter und Admin: Dashboard, Graphen, Buchungen ansehen, eigenes Profil
+Route::group(['middleware' => 'role:team'], function () {
     Route::get('/admin', 'AdminController@index');
     Route::get('/admin/changes', ['as' => 'admin.changes', 'uses' => 'AdminController@changes']);
     Route::get('/admin/bookings', ['as' => 'admin.bookings', 'uses' => 'AdminController@bookings']);
+    Route::get('admin/events', 'AdminEventController@index')->name('admin.events.index');
+    Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
+    // Nicht-Admins sehen und bearbeiten nur sich selbst (Prüfung im Controller)
+    Route::resource('admin/users', 'AdminUserController')->only(['index', 'edit', 'update']);
+    Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
+});
+
+// Verwalter und Admin: Buchungen bearbeiten, Anfragen, Bewerbungen, Checkliste, Newsletter, Exporte
+Route::group(['middleware' => 'role:verwalter'], function () {
     Route::get('/admin/bookings/export-csv', ['as' => 'admin.exportcsv', 'uses' => 'AdminController@exportCSV']);
+    // Bemerkung und Mail-Text auf der Buchungsseite (gespeichert in der Homepage)
     Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
     Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@MailTextUpdate')->name('admin.homepages.mail_text_update');
-    Route::resource('admin/homepages', 'AdminHomepageController');
-    Route::resource('admin/pictures', 'AdminPicturesController');
-    Route::resource('admin/eventstatuses', 'AdminEventStatusesController');
-    Route::resource('admin/testimonials', 'AdminTestimonialController');
-    Route::resource('admin/people', 'AdminPersonController');
-    Route::resource('admin/histories', 'AdminHistoryController');
-    Route::resource('admin/users', 'AdminUserController');
-    Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
-    Route::resource('admin/events', 'AdminEventController')->names('admin.events');
-    Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
+    Route::resource('admin/events', 'AdminEventController')->except(['index'])->names('admin.events');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
-    Route::get('admin/events/{event}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
     Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
     Route::post('admin/events/createAPICode', [AdminEventController::class, 'createAPICode'])->name('events.createAPICode');
 
     Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
     Route::get('contacts/createDataTables', ['as' => 'contacts.CreateDataTables', 'uses' => 'AdminContactController@createDataTables']);
-    Route::resource('admin/faqs', 'AdminFaqController');
-    Route::get('faqs/createDataTables', ['as' => 'faqs.CreateDataTables', 'uses' => 'AdminFaqController@createDataTables']);
-    Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
-    Route::resource('admin/positions', 'AdminPricelistPositionController');
     Route::resource('admin/applications', 'AdminApplicationController');
     Route::get('applications/createDataTables', ['as' => 'applications.CreateDataTables', 'uses' => 'AdminApplicationController@createDataTables']);
     Route::post('applications/{application}/refuse', ['as' => 'applications.refuse', 'uses' => 'AdminApplicationController@refuse']);
@@ -84,11 +83,30 @@ Route::group(['middleware' => 'admin'], function () {
     Route::resource('admin/rooms', 'AdminRoomsController');
 });
 
-Route::get('/bexio/connect', function () {
+// Nur Admin: Inhalte der Webseite und Benutzerverwaltung
+Route::group(['middleware' => 'role:admin'], function () {
+    Route::resource('admin/homepages', 'AdminHomepageController');
+    Route::resource('admin/pictures', 'AdminPicturesController');
+    Route::resource('admin/testimonials', 'AdminTestimonialController');
+    Route::resource('admin/people', 'AdminPersonController');
+    Route::resource('admin/histories', 'AdminHistoryController');
+    Route::resource('admin/faqs', 'AdminFaqController');
+    Route::get('faqs/createDataTables', ['as' => 'faqs.CreateDataTables', 'uses' => 'AdminFaqController@createDataTables']);
+    Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
+    Route::resource('admin/positions', 'AdminPricelistPositionController');
+    Route::resource('admin/users', 'AdminUserController')->only(['store', 'destroy']);
+});
+
+Route::get('/bexio/connect', function (Illuminate\Http\Request $request) {
+    // state verknüpft den Callback mit dieser Weiterleitung, sonst könnte jemand ein fremdes Bexio-Konto verbinden.
+    $state = Illuminate\Support\Str::random(40);
+    $request->session()->put('bexio_oauth_state', $state);
+
     $params = http_build_query([
         'client_id' => config('services.bexio.client_id'),
         'redirect_uri' => route('bexio.callback'),
         'response_type' => 'code',
+        'state' => $state,
         'scope' => 'openid offline_access contact_edit kb_invoice_edit kb_offer_edit article_show article_show', // deine benötigten Scopes
     ]);
 
@@ -96,6 +114,9 @@ Route::get('/bexio/connect', function () {
 })->middleware('auth.deploy');
 
 Route::get('/bexio/callback', function (Illuminate\Http\Request $request, \App\Services\BexioAuthService $auth) {
+    $state = (string) $request->session()->pull('bexio_oauth_state');
+    abort_if($state === '' || ! hash_equals($state, (string) $request->get('state')), 403);
+
     $auth->exchangeAuthorizationCode($request->get('code'), route('bexio.callback'));
 
     return 'Bexio erfolgreich verbunden!';

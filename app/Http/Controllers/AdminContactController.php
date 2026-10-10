@@ -49,7 +49,7 @@ class AdminContactController extends Controller
 
                 return $buttons;
             })
-            ->rawColumns(['name', 'Actions'])
+            ->rawColumns(['Actions'])
             ->make(true);
     }
 

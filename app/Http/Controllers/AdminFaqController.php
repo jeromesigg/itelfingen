@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\Faq;
 use App\Models\FaqChapter;
@@ -73,8 +74,7 @@ class AdminFaqController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = time().str_replace(' ', '', $file->getClientOriginalName());
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
         }
@@ -124,8 +124,7 @@ class AdminFaqController extends Controller
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = time().str_replace(' ', '', $file->getClientOriginalName());
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
