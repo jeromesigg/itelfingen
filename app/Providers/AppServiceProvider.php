@@ -35,7 +35,9 @@ class AppServiceProvider extends ServiceProvider
             \Swift_Preferences::getInstance()->setTempDir(storage_path().'/tmp');
         } else {
         }
-        DB::statement("SET lc_time_names = 'de_CH'");
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement("SET lc_time_names = 'de_CH'");
+        }
 
         RateLimiter::for('booking-login', function (Request $request) {
             return [

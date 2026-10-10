@@ -2,38 +2,60 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Artisan;
+use App\Models\Contact;
+use App\Notifications\ContactCreatedNotification;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
+/**
+ * Öffentliches Kontaktformular (POST contacts).
+ */
 class ContactTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        Artisan::call('migrate --seed');
+
+        Notification::fake();
+        config(['honeypot.enabled' => false]);
     }
 
-    public function tearDown(): void
+    public function test_contact_form_stores_message_and_notifies(): void
     {
-        Artisan::call('migrate:reset');
-        parent::tearDown();
+        $this->from(route('home'))->post('/contacts', [
+            'name' => 'Max Muster',
+            'email' => 'max@example.com',
+            'subject' => 'Anfrage',
+            'content' => 'Ist das Haus im Mai frei?',
+        ])->assertRedirect(route('home').'#contact')->assertSessionHas('success_contact');
+
+        $contact = Contact::sole();
+        $this->assertSame('Max Muster', $contact->name);
+        $this->assertFalse((bool) $contact->done);
+        Notification::assertSentTo($contact, ContactCreatedNotification::class);
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    public function test_message_without_whitespace_is_rejected_as_spam(): void
     {
-        $response = $this->post('/contacts', [
-            'name' => 'Jerome Sigg',
-            'email' => 'jerome.sigg@gmail.com',
-            'subject' => 'Test',
-            'content' => 'Inhalt',
-            'g-recaptcha-response' => '1',
-        ]);
+        $this->post('/contacts', [
+            'name' => 'Bot',
+            'email' => 'bot@example.com',
+            'subject' => 'x',
+            'content' => 'klicke-hier-www.spam.example',
+        ])->assertStatus(422);
 
-        $response->assertStatus(200);
+        $this->assertSame(0, Contact::count());
+    }
+
+    public function test_invalid_email_is_rejected(): void
+    {
+        $this->from(route('home'))->post('/contacts', [
+            'name' => 'Max Muster',
+            'email' => 'keine-adresse',
+            'subject' => 'Anfrage',
+            'content' => 'Ist das Haus frei?',
+        ])->assertSessionHasErrors('email', null, 'contact');
+
+        $this->assertSame(0, Contact::count());
     }
 }

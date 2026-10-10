@@ -20,6 +20,8 @@ class CheckpointFactory extends Factory
             //
             'name' => fake()->unique()->words(2, true),
             'description' => fake()->sentence,
+            'sort-index' => fake()->numberBetween(1, 100),
+            'room_id' => \App\Models\Room::factory(),
             'archive_status_id' => 1,
         ];
     }

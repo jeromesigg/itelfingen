@@ -19,6 +19,7 @@ class RoomFactory extends Factory
         return [
             //
             'name' => fake()->unique()->words(2, true),
+            'sort-index' => fake()->numberBetween(1, 100),
             'archive_status_id' => 1,
         ];
     }

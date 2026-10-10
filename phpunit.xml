@@ -1,31 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
->
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerWarnings="true">
     <testsuites>
         <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
+            <directory>tests/Unit</directory>
         </testsuite>
         <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
+            <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./app</directory>
-        </whitelist>
-    </filter>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
     <php>
-        <server name="APP_ENV" value="testing"/>
-        <server name="BCRYPT_ROUNDS" value="4"/>
-        <server name="CACHE_DRIVER" value="array"/>
-        <server name="DB_CONNECTION" value="sqlite"/>
-        <server name="DB_DATABASE" value=":memory:"/>
-        <server name="MAIL_MAILER" value="array"/>
-        <server name="QUEUE_CONNECTION" value="sync"/>
-        <server name="SESSION_DRIVER" value="array"/>
-        <server name="TELESCOPE_ENABLED" value="false"/>
+        <!-- force="true": Werte aus der Shell oder .env dürfen Tests nie auf echte Dienste umleiten. -->
+        <env name="APP_ENV" value="testing" force="true"/>
+        <env name="APP_NAME" value="Itelfingen" force="true"/>
+        <env name="APP_URL" value="http://localhost" force="true"/>
+        <env name="APP_KEY" value="base64:oX+/+DJxLW1xjpzrEWtIYiSSHntWOdCDx/hPBa+O8Co=" force="true"/>
+        <env name="APP_DEBUG" value="true" force="true"/>
+        <env name="APPLICATION_ENABLED" value="true" force="true"/>
+        <env name="BCRYPT_ROUNDS" value="4" force="true"/>
+        <env name="CACHE_DRIVER" value="array" force="true"/>
+        <env name="CACHE_STORE" value="array" force="true"/>
+        <env name="MAIL_MAILER" value="array" force="true"/>
+        <env name="QUEUE_CONNECTION" value="sync" force="true"/>
+        <env name="TELESCOPE_ENABLED" value="false" force="true"/>
+        <env name="SESSION_DRIVER" value="array" force="true"/>
+        <!-- Tests laufen nie gegen die Dev-/Prod-Datenbank, siehe Tests\TestCase::beforeRefreshingDatabase() -->
+        <env name="DB_CONNECTION" value="sqlite" force="true"/>
+        <env name="DB_DATABASE" value=":memory:" force="true"/>
+        <env name="DATABASE_URL" value="" force="true"/>
+        <env name="DB_URL" value="" force="true"/>
+        <!-- Werte, die Seeder und Code zwingend brauchen -->
+        <env name="ADMIN_PASSWORD" value="password" force="true"/>
+        <env name="API_TOKEN" value="test-api-token" force="true"/>
+        <env name="DEPLOY_USER" value="deploy" force="true"/>
+        <env name="DEPLOY_PASS" value="deploy-secret" force="true"/>
+        <!-- Externe Dienste: keine echten Endpunkte -->
+        <env name="DEFAULT_SLACK_WEBHOOK_ENDPOINT" value="" force="true"/>
+        <env name="GLUTZ_URL" value="http://glutz.test" force="true"/>
+        <env name="GLUTZ_USERNAME" value="glutz" force="true"/>
+        <env name="GLUTZ_PASSWORD" value="glutz" force="true"/>
+        <env name="BEXIO_CLIENT_ID" value="bexio-client" force="true"/>
+        <env name="BEXIO_CLIENT_SECRET" value="bexio-secret" force="true"/>
+        <env name="BEXIO_TOKEN" value="" force="true"/>
+        <env name="RECAPTCHA_SECRET_KEY" value="" force="true"/>
+        <env name="JOB_DAILY" value="" force="true"/>
+        <env name="JOB_DAILY_EVENING" value="" force="true"/>
+        <env name="JOB_WEEKLY" value="" force="true"/>
+        <env name="JOB_MONTHLY" value="" force="true"/>
     </php>
 </phpunit>
