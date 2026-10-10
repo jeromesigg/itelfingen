@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
-use App\Models\Checkpoint;
-use Illuminate\Http\Request;
 use App\Models\ArchiveStatus;
+use App\Models\Checkpoint;
+use App\Models\Room;
+use Illuminate\Http\Request;
 
 class AdminCheckpointController extends Controller
 {

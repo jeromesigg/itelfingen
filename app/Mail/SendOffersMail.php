@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
-use NumberFormatter;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use NumberFormatter;
 
 class SendOffersMail extends Mailable
 {
@@ -15,7 +15,7 @@ class SendOffersMail extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Event
+     * @var Event
      */
     protected $event;
 
@@ -55,8 +55,9 @@ class SendOffersMail extends Mailable
             $number .= ' ('.$event['foreign_key'].')';
         }
 
-        $fmt = new NumberFormatter( 'de_DE', NumberFormatter::CURRENCY );
-        $total = $fmt->formatCurrency($this->total, "CHF");
+        $fmt = new NumberFormatter('de_DE', NumberFormatter::CURRENCY);
+        $total = $fmt->formatCurrency($this->total, 'CHF');
+
         return $this->markdown('emails.events.offers', ['event' => $event, 'link' => $this->link, 'total' => $total, 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))

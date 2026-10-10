@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Http;
 
 class BexioApiService
 {
@@ -12,7 +12,7 @@ class BexioApiService
     public function get(string $endpoint, array $query = [])
     {
         $response = $this->request()->get("https://api.bexio.com/2.0/{$endpoint}", $query);
-                
+
         $this->validateResponse($response);
 
         return $response->json();
@@ -20,7 +20,7 @@ class BexioApiService
 
     public function post(string $endpoint, array $data = [])
     {
-        $body = empty($data) ? new \stdClass() : $data;
+        $body = empty($data) ? new \stdClass : $data;
         $response = $this->request()->post("https://api.bexio.com/2.0/{$endpoint}", $body);
 
         $this->validateResponse($response);

@@ -14,7 +14,7 @@ class BexioAuthService
     {
         $token = BexioToken::first();
 
-        if (!$token) {
+        if (! $token) {
             throw new \RuntimeException('Kein Bexio-Token vorhanden. Bitte zuerst den Authorization Code Flow durchführen.');
         }
 
@@ -34,7 +34,7 @@ class BexioAuthService
             'refresh_token' => $token->refresh_token,
         ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             Log::error('Bexio Token Refresh fehlgeschlagen', [
                 'status' => $response->status(),
                 'body' => $response->body(),

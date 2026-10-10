@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BexioToken extends Model
 {
     //
-        protected $fillable = ['access_token', 'refresh_token', 'expires_at'];
+    protected $fillable = ['access_token', 'refresh_token', 'expires_at'];
 
     protected $casts = [
         'expires_at' => 'datetime',

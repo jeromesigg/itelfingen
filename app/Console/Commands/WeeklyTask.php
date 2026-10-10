@@ -49,13 +49,13 @@ class WeeklyTask extends Command
         $events_open_offers = Event::where('start_date', '>', Carbon::today())
             ->where('contract_status_id', '=', config('status.contract_angebot_versendet'))
             ->orderby('start_date')->get();
-            
-        $tempArray = array();
+
+        $tempArray = [];
         $date_offer = Carbon::today()->addMonths(-2);
-        foreach($events_open_offers as $event) { 
-            foreach($event->notifications as $notification) {
-                if(($notification['type'] == "App\Notifications\EventOfferSendNotification") && ($notification['created_at'] < $date_offer)) {
-					$event['name'] = $event['name'] . ' (' . Carbon::parse($notification['created_at'])->isoFormat('L') . ')'; 
+        foreach ($events_open_offers as $event) {
+            foreach ($event->notifications as $notification) {
+                if (($notification['type'] == "App\Notifications\EventOfferSendNotification") && ($notification['created_at'] < $date_offer)) {
+                    $event['name'] = $event['name'].' ('.Carbon::parse($notification['created_at'])->isoFormat('L').')';
                     $tempArray[] = $event;
                     break;
                 }

@@ -11,9 +11,9 @@ class EventCheckpoint extends Model
 
     //
     protected $fillable = [
-        'event_rooms_id', 'checkpoint_id', 'done'
+        'event_rooms_id', 'checkpoint_id', 'done',
     ];
-    
+
     public function event_room()
     {
         return $this->belongsTo(EventRoom::class);

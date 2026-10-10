@@ -6,7 +6,6 @@ use App\Events\EventInvoiceCreate;
 use App\Helper\Helper;
 use App\Services\BexioApiService;
 use Carbon\Carbon;
-use Ixudra\Curl\Facades\Curl;
 
 class EventInvoiceCreateListener
 {
@@ -23,7 +22,7 @@ class EventInvoiceCreateListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\EventInvoiceCreate  $event
+     * @param  EventInvoiceCreate  $event
      * @return void
      */
     public function handle(EventInvoiceCreate $eventInvoice)

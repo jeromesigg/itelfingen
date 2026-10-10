@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * Buchung, wie sie nach dem öffentlichen Buchungsformular in der DB steht.
  *
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
+ * @extends Factory<Event>
  */
 class EventFactory extends Factory
 {

@@ -7,6 +7,7 @@ use App\Helper\Helper;
 use App\Models\Contact;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
@@ -14,7 +15,7 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function __construct()
     {
@@ -89,7 +90,6 @@ class AdminController extends Controller
         $bookingChartQuarter = Helper::getChart('quarter');
         $bookingChartMonthly = Helper::getChart('monthly');
         $bookingHeatMap = Helper::getChart('heatmap');
-
 
         $title = 'Auslastung';
 

@@ -11,6 +11,7 @@ use App\Models\Person;
 use App\Models\Picture;
 use App\Models\PricelistPosition;
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -30,7 +31,7 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
     public function index()
     {
@@ -117,21 +118,22 @@ class HomeController extends Controller
         if ($event === null) {
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
         }
-        $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
 
         return view('contents.bookings_show', compact('homepage', 'title', 'event'));
     }
 
     public function bookings_check(Request $request)
     {
-        $input = $request->all();    
+        $input = $request->all();
         $event = Event::where('id', intval($input['id']))->where('plz', $input['plz'])->first();
-        if ($event === null) { 
+        if ($event === null) {
             Log::warning('Fehlgeschlagener Booking-Login-Versuch', [
                 'ip' => $request->ip(),
                 'buchungsnummer' => $request->id,
                 'user_agent' => $request->userAgent(),
             ]);
+
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
         }
 
@@ -145,7 +147,7 @@ class HomeController extends Controller
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
         }
         $homepage = Homepage::FindOrFail(1);
-        $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
 
         return view('contents.bookings_checklist', compact('homepage', 'title', 'event'));
     }
@@ -168,19 +170,20 @@ class HomeController extends Controller
         $checkpoint = EventCheckpoint::whereKey($request->get('checkpoint_id'))
             ->whereHas('event_room', fn ($query) => $query->where('event_id', $event->id))
             ->firstOrFail();
-        $checkpoint->done = !$checkpoint->done;
+        $checkpoint->done = ! $checkpoint->done;
         $checkpoint->save();
         $event_room = $checkpoint->event_room;
         $done = ($event_room->event_checkpoints_open()->count() === 0);
         $event_room->done = $done;
         $event_room->save();
+
         return response()->json([
             'data' => [
-                'checkpoint_done' =>  $checkpoint->done,
-                'room_id' =>  $event_room->id,
-                'room_done' =>  $event_room->done,
+                'checkpoint_done' => $checkpoint->done,
+                'room_id' => $event_room->id,
+                'room_done' => $event_room->done,
                 'success' => true,
-            ]
-          ]);
+            ],
+        ]);
     }
 }

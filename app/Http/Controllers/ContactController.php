@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Validator;
-use Notification;
 use App\Models\Contact;
-use App\Rules\ReCaptcha;
-use Illuminate\Http\Request;
 use App\Notifications\ContactCreatedNotification;
+use Illuminate\Http\Request;
+use Notification;
+use Validator;
 
 class ContactController extends Controller
 {
@@ -15,7 +14,7 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        if (!preg_match('/\s/', $input['content'])) {
+        if (! preg_match('/\s/', $input['content'])) {
             abort(response()->view('errors.422', [], 422));
         }
         $validator = Validator::make($input, [

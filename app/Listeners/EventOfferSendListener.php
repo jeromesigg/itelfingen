@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\EventOfferSend;
 use App\Services\BexioApiService;
 use Carbon\Carbon;
-use Ixudra\Curl\Facades\Curl;
 
 class EventOfferSendListener
 {
@@ -22,7 +21,7 @@ class EventOfferSendListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\EventOfferSend  $event
+     * @param  EventOfferSend  $event
      * @return void
      */
     public function handle(EventOfferSend $eventOffer)
@@ -35,11 +34,11 @@ class EventOfferSendListener
 
         app(BexioApiService::class)->post('kb_offer/'.$event['bexio_offer_id'].'/issue');
         $data = [
-                    'recipient_email' => config('mail.invoice_mail'),
-                    'subject' => $title,
-                    'message' => $event['firstname'].' '.$event['name'].': [Network Link]',
-                    'mark_as_open' => true,
-                ];
+            'recipient_email' => config('mail.invoice_mail'),
+            'subject' => $title,
+            'message' => $event['firstname'].' '.$event['name'].': [Network Link]',
+            'mark_as_open' => true,
+        ];
         app(BexioApiService::class)->post('kb_offer/'.$event['bexio_offer_id'].'/send', $data);
     }
 }

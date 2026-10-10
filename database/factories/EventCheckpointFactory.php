@@ -8,7 +8,7 @@ use App\Models\EventRoom;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EventCheckpoint>
+ * @extends Factory<EventCheckpoint>
  */
 class EventCheckpointFactory extends Factory
 {

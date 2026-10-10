@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\EventOfferCreate;
-use Ixudra\Curl\Facades\Curl;
 use App\Services\BexioApiService;
 
 class EventContactCreateListener
@@ -21,7 +20,7 @@ class EventContactCreateListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\EventOfferCreate  $event
+     * @param  EventOfferCreate  $event
      * @return void
      */
     public function handle(EventOfferCreate $eventOffer)
@@ -40,7 +39,7 @@ class EventContactCreateListener
                 ],
                 [
                     'field' => 'address',
-                    'value' => $event->street . ' ' . $event->house_number,
+                    'value' => $event->street.' '.$event->house_number,
                 ],
                 [
                     'field' => 'postcode',
@@ -49,21 +48,21 @@ class EventContactCreateListener
             $person = app(BexioApiService::class)->post('contact/search', $query);
 
             if (count($person) === 0) {
-                $data=[
-                        'contact_type_id' => '2',
-                        'name_1' => $event->name,
-                        'name_2' => $event->firstname,
-                        'street_name' => $event->street,
-                        'house_number' => $event->house_number ?: '',
-                        'postcode' => $event->plz,
-                        'city' => $event->city,
-                        'country_id' => 1,
-                        'mail' => $event->email,
-                        'phone_mobile' => $event->telephone,
-                        'remarks' => $event->comment,
-                        'user_id' => 1,
-                        'owner_id' => 1,
-                    ];
+                $data = [
+                    'contact_type_id' => '2',
+                    'name_1' => $event->name,
+                    'name_2' => $event->firstname,
+                    'street_name' => $event->street,
+                    'house_number' => $event->house_number ?: '',
+                    'postcode' => $event->plz,
+                    'city' => $event->city,
+                    'country_id' => 1,
+                    'mail' => $event->email,
+                    'phone_mobile' => $event->telephone,
+                    'remarks' => $event->comment,
+                    'user_id' => 1,
+                    'owner_id' => 1,
+                ];
                 $person = app(BexioApiService::class)->post('contact', $data);
             } else {
                 $person = $person[0];

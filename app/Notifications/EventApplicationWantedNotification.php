@@ -6,6 +6,7 @@ use App\Mail\ApplicationWanted;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class EventApplicationWantedNotification extends Notification
@@ -43,7 +44,7 @@ class EventApplicationWantedNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

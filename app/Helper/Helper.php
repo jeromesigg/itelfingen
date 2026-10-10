@@ -2,7 +2,6 @@
 
 namespace App\Helper;
 
-use App\Charts\BookingChart;
 use App\Models\Event;
 use App\Models\Position;
 use App\Models\PricelistPosition;
@@ -21,16 +20,16 @@ class Helper
         // fill data
         Helper::fillPDF(storage_path('app/files/Parkkarte.pdf'), $outputFile, $event);
 
-        //output to browser
+        // output to browser
         return $outputFile;
     }
 
     public static function fillPDF($file, $outputFile, Event $event)
     {
-        if(!defined('FPDF_FONTPATH')){
+        if (! defined('FPDF_FONTPATH')) {
             define('FPDF_FONTPATH', public_path('fonts/'));
         }
-        $fpdi = new FPDI;        
+        $fpdi = new Fpdi;
         $fpdi->AddFont('titilliumweb-light', '', 'titilliumweb-light.php');
         $fpdi->SetFont('titilliumweb-light', '', 12);
         // merger operations
@@ -247,24 +246,24 @@ class Helper
         $chart[0] = $timeframe;
         $chart[1] = $days;
         $chart[2] = $stays;
-        
+
         if ($time_frame === 'heatmap') {
             $chart = Helper::GetHeatmap();
         }
+
         return $chart;
     }
 
     public static function GetHeatmap()
     {
-        $year = Carbon::now()->year-1;
-        $events = Event::where('event_status_id', '=', config('status.event_bestaetigt'))->whereYear('start_date', '=',$year )->get();
+        $year = Carbon::now()->year - 1;
+        $events = Event::where('event_status_id', '=', config('status.event_bestaetigt'))->whereYear('start_date', '=', $year)->get();
 
         $days = collect();
 
-        $formatWeek = fn (int $w) => 'KW ' . str_pad($w, 2, '0', STR_PAD_LEFT);
+        $formatWeek = fn (int $w) => 'KW '.str_pad($w, 2, '0', STR_PAD_LEFT);
 
         $weeks = collect(range(1, 53))->map($formatWeek);
-
 
         foreach ($events as $event) {
             $period = CarbonPeriod::create(
@@ -280,10 +279,10 @@ class Helper
                 $current = $days->get($weekday, []);
 
                 $current[$week] = ($current[$week] ?? 0) + $event->total_people;
-                $days->put($weekday, $current); 
+                $days->put($weekday, $current);
             }
         }
-            
+
         // Reihenfolge Mo–So fixieren
         $weekdayMap = [
             1 => 'Mo',
@@ -297,18 +296,19 @@ class Helper
 
         $series = collect($weekdayMap)->map(function ($label, $weekday) use ($days, $weeks) {
             $weekData = collect($days->get($weekday, []));
+
             return [
                 'name' => $label,
-                'data' => $weeks->map(fn($week) => [
-                        'x' => $week,
-                        'y' => $weekData->get($week, 0),
-                    ])
+                'data' => $weeks->map(fn ($week) => [
+                    'x' => $week,
+                    'y' => $weekData->get($week, 0),
+                ])
                     ->values(),
             ];
         })->values();
 
         return [
-            'year'   => $year,
+            'year' => $year,
             'series' => $series,
         ];
     }
@@ -318,43 +318,45 @@ class Helper
         $labels = ['Anfragenummer', 'Datum', 'Name', 'Gruppenart', 'Anzahl', 'Verpflegung', 'Sprache', 'Kommentar der Gruppe'];
 
         $extract = function (string $field) use ($text, $labels): ?string {
-            $others = array_filter($labels, fn($l) => $l !== $field);
-            $lookahead = '(?=' . implode('|', array_map('preg_quote', $others)) . '|$)';
-            $pattern = '/' . preg_quote($field) . '\s+(.+?)' . $lookahead . '/s';
+            $others = array_filter($labels, fn ($l) => $l !== $field);
+            $lookahead = '(?='.implode('|', array_map('preg_quote', $others)).'|$)';
+            $pattern = '/'.preg_quote($field).'\s+(.+?)'.$lookahead.'/s';
+
             return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
         };
 
         preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
 
         return [
-            'buchungsnummer'  => 'A-' . $extract('Anfragenummer'),
-            'mietdauer_von'   => isset($dates[1]) ? self::convertDate($dates[1]) : null,
-            'mietdauer_bis'   => isset($dates[2]) ? self::convertDate($dates[2]) : null,
-            'name'            => $extract('Name'),
-            'gruppe'          => $extract('Gruppenart'),
+            'buchungsnummer' => 'A-'.$extract('Anfragenummer'),
+            'mietdauer_von' => isset($dates[1]) ? self::convertDate($dates[1]) : null,
+            'mietdauer_bis' => isset($dates[2]) ? self::convertDate($dates[2]) : null,
+            'name' => $extract('Name'),
+            'gruppe' => $extract('Gruppenart'),
             'anzahl_personen' => preg_match('/(\d+)/', $extract('Anzahl') ?? '', $n) ? $n[1] : null,
-            'verpflegung'     => $extract('Verpflegung'),
-            'sprache'         => $extract('Sprache'),
-            'kommentar'       => $extract('Kommentar der Gruppe'),
+            'verpflegung' => $extract('Verpflegung'),
+            'sprache' => $extract('Sprache'),
+            'kommentar' => $extract('Kommentar der Gruppe'),
         ];
     }
 
     public static function parseFromText(string $text): array
     {
         $nameBlock = self::extractMultilineRaw($text, 'Name', 'Gruppe');
+
         // return array_merge(['nameBlock' => $nameBlock]);
         return array_merge(
             self::parseName($nameBlock),
             [
-                'gruppe'          => self::extract($text, '/Gruppe\s*:\s*(.+)/'),
-                'telefon'         => self::extract($text, '/Telefon\s*:\s*(.+)/'),
-                'mobil'           => self::extract($text, '/Mobil\s*:\s*(.+)/'),
-                'email'           => self::extract($text, '/E[\-\‐]Mail\s*:\s*(.+)/u'),
-                'mietdauer_von'   => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?(\d{2}\.\d{2}\.\d{4})/')),
-                'mietdauer_bis'   => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/')),
-                'naechte'         => self::extract($text, '/=\s*(\d+)\s*Nacht/'),
+                'gruppe' => self::extract($text, '/Gruppe\s*:\s*(.+)/'),
+                'telefon' => self::extract($text, '/Telefon\s*:\s*(.+)/'),
+                'mobil' => self::extract($text, '/Mobil\s*:\s*(.+)/'),
+                'email' => self::extract($text, '/E[\-\‐]Mail\s*:\s*(.+)/u'),
+                'mietdauer_von' => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?(\d{2}\.\d{2}\.\d{4})/')),
+                'mietdauer_bis' => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/')),
+                'naechte' => self::extract($text, '/=\s*(\d+)\s*Nacht/'),
                 'anzahl_personen' => self::extract($text, '/Anzahl Personen\s*:\s*(\d+)/'),
-                'verpflegung'     => self::extract($text, '/Verpflegung\s*:\s*(.+)/'),
+                'verpflegung' => self::extract($text, '/Verpflegung\s*:\s*(.+)/'),
             ]
         );
     }
@@ -366,7 +368,8 @@ class Helper
 
     private static function extractMultilineRaw(string $text, string $from, string $until): ?string
     {
-        $pattern = '/' . $from . '\s*:\s*(.+?)(?=' . $until . '\s*:)/s';
+        $pattern = '/'.$from.'\s*:\s*(.+?)(?='.$until.'\s*:)/s';
+
         return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
     }
 
@@ -379,19 +382,18 @@ class Helper
     {
         $lines = array_values(array_filter(array_map('trim', explode("\n", $nameBlock))));
         $nameParts = explode(' ', $lines[0] ?? '');
-        $anrede    = $nameParts[0] ?? '';       
-        $vorname   = $nameParts[1] ?? '';       
-        $name      = $nameParts[2] ?? '';       
+        $anrede = $nameParts[0] ?? '';
+        $vorname = $nameParts[1] ?? '';
+        $name = $nameParts[2] ?? '';
 
         preg_match('/^(.+?)\s+(\d+\w*)$/', $lines[1] ?? '', $adresse);
-        $strasse     = $adresse[1] ?? '';
-        $hausnummer  = $adresse[2] ?? '';
+        $strasse = $adresse[1] ?? '';
+        $hausnummer = $adresse[2] ?? '';
 
         preg_match('/(?:CH[\-‐])?(\d{4})\s+(.+)$/u', $lines[2] ?? '', $ort);
-        $plz  = $ort[1] ?? '';
+        $plz = $ort[1] ?? '';
         $stadt = $ort[2] ?? '';
 
         return compact('anrede', 'vorname', 'name', 'strasse', 'hausnummer', 'plz', 'stadt');
     }
-
 }

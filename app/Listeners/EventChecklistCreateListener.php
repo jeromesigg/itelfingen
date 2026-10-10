@@ -2,9 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Models\Room;
 use App\Events\EventInvoiceCreate;
-use App\Models\Checkpoint;
+use App\Models\Room;
 
 class EventChecklistCreateListener
 {

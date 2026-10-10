@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Notification;
 use Validator;
 
@@ -51,9 +52,9 @@ class EventController extends Controller
             $input['start_date'] = new Carbon($input['start_date']);
             $input['end_date'] = new Carbon($input['end_date']);
         }
-        $input['uuid'] = \Illuminate\Support\Str::uuid();
-        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
-        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
+        $input['uuid'] = Str::uuid();
+        $input['phonenumber_query'] = str_replace(' ', '', $input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         Notification::send($event, new EventCreatedNotification($event));

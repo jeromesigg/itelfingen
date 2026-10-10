@@ -2,41 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use Notification;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Event;
-use App\Helper\Helper;
-use App\Helper\GlutzAPI;
-use App\Models\Homepage;
-use App\Models\Position;
-use App\Models\Newsletter;
-use App\Models\EventStatus;
 use App\Events\EventCreated;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use App\Events\EventOfferSend;
-use App\Models\ContractStatus;
+use App\Events\EventInvoiceCreate;
 use App\Events\EventInvoiceSend;
 use App\Events\EventOfferCreate;
+use App\Events\EventOfferSend;
+use App\Helper\GlutzAPI;
+use App\Helper\Helper;
+use App\Models\ContractStatus;
+use App\Models\Event;
+use App\Models\EventStatus;
+use App\Models\Homepage;
+use App\Models\Newsletter;
+use App\Models\Position;
 use App\Models\PricelistPosition;
-use App\Events\EventInvoiceCreate;
-use Yajra\DataTables\Facades\DataTables;
-use App\Notifications\EventOfferSendNotification;
-use Spatie\IcalendarGenerator\Components\Calendar;
-use App\Notifications\EventInvoiceSendNotification;
+use App\Models\User;
+use App\Notifications\EventApplicationWantedNotification;
 use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
-use App\Notifications\EventApplicationWantedNotification;
+use App\Notifications\EventInvoiceSendNotification;
+use App\Notifications\EventOfferSendNotification;
+use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Str;
+use Notification;
+use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as Event_ICAL;
 use Spatie\IcalendarGenerator\Enums\EventStatus as EventStatus_ICAL;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminEventController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    public function index(): Application|Factory|View
     {
         //
         $homepage = Homepage::FindOrFail(1);
@@ -133,7 +138,7 @@ class AdminEventController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Application|Factory|View
      */
     public function create()
     {
@@ -150,7 +155,7 @@ class AdminEventController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|Redirector
      */
     public function store(Request $request)
     {
@@ -168,9 +173,9 @@ class AdminEventController extends Controller
             $input['start_date'] = new Carbon($input['start_date']);
             $input['end_date'] = new Carbon($input['end_date']);
         }
-        $input['uuid'] = \Illuminate\Support\Str::uuid();
-        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
-        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
+        $input['uuid'] = Str::uuid();
+        $input['phonenumber_query'] = str_replace(' ', '', $input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event['event_status_id'] == config('status.event_eigene')) {
@@ -184,7 +189,7 @@ class AdminEventController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Application|Factory|View
      */
     public function edit($id)
     {
@@ -199,7 +204,7 @@ class AdminEventController extends Controller
         $contract_statuses = ContractStatus::pluck('name', 'id')->all();
         $event = Event::findOrFail($id);
         $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
-        $title = str_pad($event['id'], 5, '0', STR_PAD_LEFT) . ' - Buchung bearbeiten';
+        $title = str_pad($event['id'], 5, '0', STR_PAD_LEFT).' - Buchung bearbeiten';
 
         return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'title'));
     }
@@ -208,7 +213,7 @@ class AdminEventController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(Request $request, Event $event)
     {
@@ -225,9 +230,9 @@ class AdminEventController extends Controller
         if ($input['contract_status_id'] == config('status.contract_storniert')) {
             $input['event_status_id'] = config('status.event_storniert');
         }
-        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
-        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
-        
+        $input['phonenumber_query'] = str_replace(' ', '', $input['telephone']);
+        $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
+
         $event->update($input);
         $additional_text = $input['additional_text'] ?? '';
 
@@ -251,14 +256,14 @@ class AdminEventController extends Controller
                     $event->update([
                         'event_status_id' => config('status.event_bestaetigt'),
                         'contract_status_id' => config('status.contract_rechnung_erstellt'), ]);
-                    
+
                     Newsletter::updateOrCreate(
                         ['email' => $event['email']],
                         [
-                        'firstname' => $event['firstname'],
-                        'name' => $event['name'],
-                        'bookings' => true
-                    ]);
+                            'firstname' => $event['firstname'],
+                            'name' => $event['name'],
+                            'bookings' => true,
+                        ]);
                 }
                 break;
             case '5':
@@ -302,7 +307,7 @@ class AdminEventController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|Redirector
      */
     public function destroy($id)
     {
@@ -354,10 +359,10 @@ class AdminEventController extends Controller
             'Content-Disposition' => 'attachment; filename="itelfingen.ics"',
         ]);
     }
-    
-    public function getPhoneNumber($api_token,$number)
+
+    public function getPhoneNumber($api_token, $number)
     {
-        if(preg_match('/^\+/', $number)) {
+        if (preg_match('/^\+/', $number)) {
             $number = substr($number, 3);
         }
         // Nur Ziffern: % und _ wären sonst LIKE-Platzhalter. Zu kurze Nummern passen auf zu viele Buchungen.
@@ -371,24 +376,25 @@ class AdminEventController extends Controller
             return response()->json([
                 'error' => 'No event found with this number',
             ], 404);
-        }
-        else {
+        } else {
             $event = $event->first();
+
             return response()->json([
                 'number' => $event['telephone'],
                 'firstname' => $event['firstname'],
                 'name' => $event['name'],
-                'date' => Carbon::parse($event['start_date'])->format('d.m.Y') .' - '. Carbon::parse($event['end_date'])->format('d.m.Y'),
+                'date' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.Carbon::parse($event['end_date'])->format('d.m.Y'),
             ]);
         }
     }
 
     public function isFree($api_token, int $days)
     {
-        if (!is_numeric($days) || $days < 1) {
+        if (! is_numeric($days) || $days < 1) {
             $days = 1;
         }
         $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', [config('status.event_neu'), config('status.event_storniert')])->get();
+
         //
         return response()->json([
             'isFree' => $events->isEmpty(),
@@ -416,46 +422,44 @@ class AdminEventController extends Controller
 
         // Code überprüfen ob vom Event oder neuerstellt
         $event_id = $request->input('event_id');
-        if (!is_numeric($event_id)) {
+        if (! is_numeric($event_id)) {
             return response()->json(['error' => 'Invalid event ID'], 400);
         }
         $event = Event::find($event_id);
-        if (!$event) {
+        if (! $event) {
             return response()->json(['error' => 'Event not found'], 404);
         }
-        $userName = 'Besucher ' . $event->number();
+        $userName = 'Besucher '.$event->number();
         $userId = GlutzAPI::getUser($event, $userName, $code);
-        if (isset($userId) ) {
-            
+        if (isset($userId)) {
+
             $success = GlutzAPI::setCode($userId, $code);
-            if (!$success) {
-                
+            if (! $success) {
+
                 return response()->json([
-                    'error' => 'Code bereits in Verwendung für anderen User.'
+                    'error' => 'Code bereits in Verwendung für anderen User.',
                 ], 500);
-            }
-            else{
+            } else {
                 $accessPointId = GlutzAPI::getAccessPointId();
-                if(isset($accessPointId)){
-                    if(GlutzAPI::getAccessPointOfUser($userId, $accessPointId)){
+                if (isset($accessPointId)) {
+                    if (GlutzAPI::getAccessPointOfUser($userId, $accessPointId)) {
                         GlutzAPI::setAccessPointsOfUser($event, $userId, $accessPointId);
-                    
+
                         $result = GlutzAPI::updateDevice();
-                        if(empty($result['errorString'])){
+                        if (empty($result['errorString'])) {
                             $event->update(['code' => $code]);
+
                             return response()->json([
                                 'success' => 'Code erfolgreich erstellt.',
                                 'User' => $userName,
                             ], 200);
-                        }
-                        else{
+                        } else {
                             return response()->json([
                                 'error' => 'Fehler beim Update des Gerätes.',
                                 'Meldung' => $result['errorString'] ?? 'Unbekannter Fehler',
                             ], 500);
                         }
-                    }
-                    else{
+                    } else {
                         return response()->json([
                             'error' => 'AccessPoint nicht gefunden.',
                             'User' => $userName,

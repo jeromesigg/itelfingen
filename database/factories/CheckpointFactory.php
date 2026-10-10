@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Checkpoint;
+use App\Models\Room;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Checkpoint>
+ * @extends Factory<Checkpoint>
  */
 class CheckpointFactory extends Factory
 {
@@ -21,7 +23,7 @@ class CheckpointFactory extends Factory
             'name' => fake()->unique()->words(2, true),
             'description' => fake()->sentence,
             'sort-index' => fake()->numberBetween(1, 100),
-            'room_id' => \App\Models\Room::factory(),
+            'room_id' => Room::factory(),
             'archive_status_id' => 1,
         ];
     }

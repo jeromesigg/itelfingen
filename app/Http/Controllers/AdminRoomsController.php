@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArchiveStatus;
 use App\Models\Room;
 use Illuminate\Http\Request;
-use App\Models\ArchiveStatus;
 
 class AdminRoomsController extends Controller
 {

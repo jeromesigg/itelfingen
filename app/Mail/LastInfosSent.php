@@ -15,7 +15,7 @@ class LastInfosSent extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Event
+     * @var Event
      */
     protected $event;
 

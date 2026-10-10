@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AdminEventController;
+use App\Services\BexioAuthService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 use Spatie\Honeypot\ProtectAgainstSpam;
 
 /*
@@ -24,7 +27,7 @@ Route::post('applications/store', ['as' => 'application.store', 'uses' => 'Appli
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('about_us', 'HomeController@about_us')->name('about_us');
 Route::middleware('throttle:booking-login')->group(function () {
-    Route::get('/bookings/login',  'HomeController@bookings_login')->name('bookings.login');
+    Route::get('/bookings/login', 'HomeController@bookings_login')->name('bookings.login');
     Route::post('/bookings/login', 'HomeController@bookings_check')->name('bookings.check');
 });
 Route::get('bookings/{uuid}', 'HomeController@bookings_uuid')->name('bookings.uuid');
@@ -37,11 +40,11 @@ Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 
-//fullcalender
+// fullcalender
 Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create'])->middleware(ProtectAgainstSpam::class);
 Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventController@searchResponseCity']);
 
-Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'] )->middleware(ProtectAgainstSpam::class);
+Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'])->middleware(ProtectAgainstSpam::class);
 
 // Berechtigungen nach Stufe, siehe tests/README.md ("Berechtigungen") und App\Http\Middleware\Role.
 
@@ -97,9 +100,9 @@ Route::group(['middleware' => 'role:admin'], function () {
     Route::resource('admin/users', 'AdminUserController')->only(['store', 'destroy']);
 });
 
-Route::get('/bexio/connect', function (Illuminate\Http\Request $request) {
+Route::get('/bexio/connect', function (Request $request) {
     // state verknüpft den Callback mit dieser Weiterleitung, sonst könnte jemand ein fremdes Bexio-Konto verbinden.
-    $state = Illuminate\Support\Str::random(40);
+    $state = Str::random(40);
     $request->session()->put('bexio_oauth_state', $state);
 
     $params = http_build_query([
@@ -113,7 +116,7 @@ Route::get('/bexio/connect', function (Illuminate\Http\Request $request) {
     return redirect("https://auth.bexio.com/realms/bexio/protocol/openid-connect/auth?{$params}");
 })->middleware('auth.deploy');
 
-Route::get('/bexio/callback', function (Illuminate\Http\Request $request, \App\Services\BexioAuthService $auth) {
+Route::get('/bexio/callback', function (Request $request, BexioAuthService $auth) {
     $state = (string) $request->session()->pull('bexio_oauth_state');
     abort_if($state === '' || ! hash_equals($state, (string) $request->get('state')), 403);
 

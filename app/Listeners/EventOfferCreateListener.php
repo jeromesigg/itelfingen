@@ -2,11 +2,10 @@
 
 namespace App\Listeners;
 
-use Carbon\Carbon;
-use App\Models\Position;
-use Ixudra\Curl\Facades\Curl;
 use App\Events\EventOfferCreate;
+use App\Models\Position;
 use App\Services\BexioApiService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class EventOfferCreateListener
@@ -41,7 +40,7 @@ class EventOfferCreateListener
                 $amount = $position['amount'];
                 if ($position->pricelist_position['bexio_code'] > 200) {
                     $amount = max($position['amount'] - 3, 0) * $event['total_days'];
-                }  elseif ($position->pricelist_position['bexio_code'] > 20)   {
+                } elseif ($position->pricelist_position['bexio_code'] > 20) {
                     $amount = $event['total_days'] * $position['amount'];
                 }
                 if ($amount > 0) {
@@ -56,23 +55,22 @@ class EventOfferCreateListener
                 }
             }
             $data = [
-                        'title' => $title,
-                        'contact_id' => $event->bexio_user_id,
-                        'user_id' => 1,
-                        'is_valid_from' => now(),
-                        'is_valid_until' => now()->addMonth(),
-                        'api_reference' => $event['id'],
-                        'positions' => $positions_array,
-                    ];
+                'title' => $title,
+                'contact_id' => $event->bexio_user_id,
+                'user_id' => 1,
+                'is_valid_from' => now(),
+                'is_valid_until' => now()->addMonth(),
+                'api_reference' => $event['id'],
+                'positions' => $positions_array,
+            ];
             $offer = app(BexioApiService::class)->post('kb_offer', $data);
 
-            if (!isset($offer['error_code'])) {
+            if (! isset($offer['error_code'])) {
                 $event->update([
                     'bexio_offer_id' => $offer['id'],
                     'contract_status_id' => config('status.contract_angebot_erstellt'),
                 ]);
-            }
-            else{
+            } else {
                 Log::channel('emergency')->error($offer);
             }
         }

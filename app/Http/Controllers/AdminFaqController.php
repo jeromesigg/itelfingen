@@ -8,6 +8,7 @@ use App\Models\Faq;
 use App\Models\FaqChapter;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminFaqController extends Controller
@@ -15,7 +16,7 @@ class AdminFaqController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -56,7 +57,7 @@ class AdminFaqController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -67,7 +68,7 @@ class AdminFaqController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -78,10 +79,10 @@ class AdminFaqController extends Controller
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
         }
-        $index = FAQ::all()->count();
+        $index = Faq::all()->count();
         $input['sort-index'] = $index + 1;
         $input['archive_status_id'] = config('status.aktiv');
-        FAQ::create($input);
+        Faq::create($input);
 
         return redirect('/admin/faqs');
     }
@@ -90,7 +91,7 @@ class AdminFaqController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -101,14 +102,14 @@ class AdminFaqController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
         //
         $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
         $faq_chapters = FaqChapter::pluck('name', 'id')->all();
-        $faq = FAQ::findOrFail($id);
+        $faq = Faq::findOrFail($id);
 
         return view('admin.faqs.edit', compact('archive_statuses', 'faq', 'faq_chapters'));
     }
@@ -117,7 +118,7 @@ class AdminFaqController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -130,7 +131,7 @@ class AdminFaqController extends Controller
             $input['photo_id'] = $photo->id;
         }
 
-        FAQ::whereId($id)->first()->update($input);
+        Faq::whereId($id)->first()->update($input);
 
         return redirect('/admin/faqs');
     }
@@ -139,12 +140,12 @@ class AdminFaqController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
         //
-        $faq = FAQ::findOrFail($id);
+        $faq = Faq::findOrFail($id);
 
         $faq->delete();
 
