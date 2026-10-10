@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 10.10.2026: **190 Testfälle in 15 Dateien**, Laufzeit rund 5 Sekunden.
+Stand 10.10.2026: **192 Testfälle in 15 Dateien**, Laufzeit rund 5 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -29,6 +29,9 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 - **Datenbank:** immer SQLite im Arbeitsspeicher, nie die Datenbank aus der `.env`. `tests/TestCase.php` bricht ab, falls die Config gecacht ist und auf MySQL zeigt.
 - **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz, Slack und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`.
+- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint` und `phpunit` (PHP 8.3), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
+- **Code-Stil:** Laravel Pint (`pint.json`, Preset `laravel`): `vendor/bin/pint --test` prüft, `vendor/bin/pint` korrigiert. Der Git-Hook `.githooks/pre-commit` formatiert gestagte PHP-Dateien beim Commit; `composer install` aktiviert ihn (`git config core.hooksPath .githooks`). Teilweise gestagte PHP-Dateien blockieren den Commit. VS Code formatiert beim Speichern (`.vscode/settings.json`, Erweiterung "Laravel Pint").
+- **git blame:** Der Formatierungs-Commit steht in `.git-blame-ignore-revs`. GitHub berücksichtigt das automatisch, lokal einmal `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
 
 ---
 
@@ -75,7 +78,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 | Bereich | Datei | Fälle | Prüft |
 |---|---|---:|---|
-| Grundlagen | `TestInfrastructureTest` | 7 | Test-DB, Schutz vor echter DB, Seeder, Szenario, Startseite, Dashboard |
+| Grundlagen | `TestInfrastructureTest` | 9 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
 | Öffentlich | `CreateMultiDayEventTest` | 6 | Buchungsformular |
 | Öffentlich | `ContactTest` | 4 | Kontaktformular |
 | Öffentlich | `ApplicationTest` | 4 | Bewerbung Genossenschaft |
@@ -99,6 +102,8 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 |---|---|
 | `test_runs_against_sqlite_in_memory` | Tests laufen gegen SQLite in-memory |
 | `test_refuses_to_refresh_a_real_database` | `TestCase` bricht ab, wenn die Verbindung nicht SQLite in-memory ist |
+| `test_booting_the_app_does_not_connect_to_the_database` | App-Start ohne Datenbank (composer install, Docker-Build, CI) |
+| `test_mysql_connection_gets_german_month_names` | `lc_time_names = 'de_CH'` beim Aufbau einer MySQL-Verbindung (Monatsnamen in den Graphen) |
 | `test_seeder_creates_master_data` | Rollen, Homepage 1, Admin, Preisliste |
 | `test_scenario_creates_users_with_expected_rights` | Rollen im Szenario, Positionen der Buchung |
 | `test_database_is_reset_between_tests` | DB wird zwischen Tests zurückgesetzt |

@@ -6,9 +6,6 @@
          displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnTestsThatTriggerWarnings="true">
     <testsuites>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
@@ -30,6 +27,8 @@
         <env name="CACHE_DRIVER" value="array" force="true"/>
         <env name="CACHE_STORE" value="array" force="true"/>
         <env name="MAIL_MAILER" value="array" force="true"/>
+        <env name="MAIL_FROM_ADDRESS" value="test@example.com" force="true"/>
+        <env name="MAIL_FROM_NAME" value="Itelfingen" force="true"/>
         <env name="QUEUE_CONNECTION" value="sync" force="true"/>
         <env name="TELESCOPE_ENABLED" value="false" force="true"/>
         <env name="SESSION_DRIVER" value="array" force="true"/>

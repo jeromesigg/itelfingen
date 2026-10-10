@@ -8,7 +8,9 @@
 /storage/contracts/*
 /storage/app/google-calendar
 /vendor
-/.vscode
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/extensions.json
 .env
 .env.backup
 .phpunit.result.cache

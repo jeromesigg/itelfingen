@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,9 +35,13 @@ class AppServiceProvider extends ServiceProvider
             \Swift_Preferences::getInstance()->setTempDir(storage_path().'/tmp');
         } else {
         }
-        if (DB::connection()->getDriverName() === 'mysql') {
-            DB::statement("SET lc_time_names = 'de_CH'");
-        }
+        // Deutsche Monatsnamen in DATE_FORMAT (Auslastungs-Graphen). Erst beim Verbindungsaufbau setzen,
+        // sonst bräuchte jeder App-Start eine Datenbank (composer install, Docker-Build, CI).
+        Event::listen(function (ConnectionEstablished $event) {
+            if ($event->connection->getDriverName() === 'mysql') {
+                $event->connection->statement("SET lc_time_names = 'de_CH'");
+            }
+        });
 
         RateLimiter::for('booking-login', function (Request $request) {
             return [

@@ -7,6 +7,11 @@ use App\Models\Homepage;
 use App\Models\PricelistPosition;
 use App\Models\Role;
 use App\Models\User;
+use App\Providers\AppServiceProvider;
+use Illuminate\Database\Events\ConnectionEstablished;
+use Illuminate\Database\MySqlConnection;
+use Illuminate\Support\Facades\DB;
+use Mockery;
 use RuntimeException;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -36,6 +41,33 @@ class TestInfrastructureTest extends TestCase
         } finally {
             config(['database.default' => 'sqlite']);
         }
+    }
+
+    public function test_booting_the_app_does_not_connect_to_the_database(): void
+    {
+        // composer install (package:discover), Docker-Build und CI starten die App ohne Datenbank.
+        config([
+            'database.default' => 'mysql',
+            'database.connections.mysql.host' => '127.0.0.1',
+            'database.connections.mysql.port' => 1,
+        ]);
+
+        try {
+            (new AppServiceProvider($this->app))->boot();
+            $this->assertTrue(true);
+        } finally {
+            DB::purge('mysql');
+            config(['database.default' => 'sqlite']);
+        }
+    }
+
+    public function test_mysql_connection_gets_german_month_names(): void
+    {
+        $connection = Mockery::mock(MySqlConnection::class)->shouldIgnoreMissing();
+        $connection->shouldReceive('getDriverName')->andReturn('mysql');
+        $connection->shouldReceive('statement')->once()->with("SET lc_time_names = 'de_CH'");
+
+        event(new ConnectionEstablished($connection));
     }
 
     public function test_seeder_creates_master_data(): void
