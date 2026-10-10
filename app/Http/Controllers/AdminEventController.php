@@ -81,9 +81,9 @@ class AdminEventController extends Controller
 
     public function createDataTables(Request $request)
     {
-        $input = $request->all();
-        $contract_status = ContractStatus::where('name', '=', $input['status'])->first();
-        $date = $input['date'] != 'Alle' ? Carbon::today() : null;
+        // Filter aus der Tabelle; ohne Angabe: alle offenen Status, nur künftige Buchungen.
+        $contract_status = ContractStatus::where('name', '=', $request->input('status'))->first();
+        $date = $request->input('date') != 'Alle' ? Carbon::today() : null;
         $events = Event::when($contract_status, function ($query, $contract_status) {
             $query->where('contract_status_id', '=', $contract_status['id']);
         }, function ($query) {

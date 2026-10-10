@@ -26,8 +26,8 @@ class AdminContactController extends Controller
 
     public function createDataTables(Request $request)
     {
-        $input = $request->all();
-        $done = ! ($input['done'] != 'Alle');
+        // Filter aus der Tabelle; ohne Angabe: offene Anfragen.
+        $done = $request->input('done') == 'Alle';
         $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
 
         return DataTables::of($contacts)

@@ -40,8 +40,6 @@
         <!-- Werte, die Seeder und Code zwingend brauchen -->
         <env name="ADMIN_PASSWORD" value="password" force="true"/>
         <env name="API_TOKEN" value="test-api-token" force="true"/>
-        <env name="DEPLOY_USER" value="deploy" force="true"/>
-        <env name="DEPLOY_PASS" value="deploy-secret" force="true"/>
         <!-- Externe Dienste: keine echten Endpunkte -->
         <env name="DEFAULT_SLACK_WEBHOOK_ENDPOINT" value="" force="true"/>
         <env name="GLUTZ_URL" value="http://glutz.test" force="true"/>

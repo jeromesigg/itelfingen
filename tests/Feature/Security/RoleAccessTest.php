@@ -17,7 +17,7 @@ class RoleAccessTest extends TestCase
     private const LEVELS = ['team' => 1, 'verwalter' => 2, 'admin' => 3];
 
     /**
-     * Platzhalter in den URIs: {event}, {contact}, {application}, {room}, {checkpoint}, {self}, {other}.
+     * Platzhalter in den URIs: {event}, {contact}, {application}, {room}, {checkpoint}, {newsletter}, {position}, {self}, {other}.
      *
      * @return array<string, array{string, string, string}>
      */
@@ -63,6 +63,7 @@ class RoleAccessTest extends TestCase
             'faq chapters index' => ['GET', '/admin/faq_chapters', 'admin'],
             'pricelist index' => ['GET', '/admin/positions', 'admin'],
             'other user edit' => ['GET', '/admin/users/{other}/edit', 'admin'],
+            'maintenance' => ['GET', '/admin/maintenance', 'admin'],
         ];
     }
 
@@ -82,18 +83,20 @@ class RoleAccessTest extends TestCase
             'booking mail text' => ['PATCH', '/admin/homepages/1/mail_text_update', 'verwalter'],
             'contact done' => ['POST', '/contacts/{contact}/done', 'verwalter'],
             'application refuse' => ['POST', '/applications/{application}/refuse', 'verwalter'],
-            'application destroy' => ['DELETE', '/admin/applications/{application}', 'verwalter'],
             'rooms store' => ['POST', '/admin/rooms', 'verwalter'],
             'rooms destroy' => ['DELETE', '/admin/rooms/{room}', 'verwalter'],
             'checkpoints store' => ['POST', '/admin/checkpoints', 'verwalter'],
-            'newsletter store' => ['POST', '/admin/newsletter', 'verwalter'],
+            'newsletter update' => ['PATCH', '/admin/newsletter/{newsletter}', 'verwalter'],
+            'newsletter destroy' => ['DELETE', '/admin/newsletter/{newsletter}', 'verwalter'],
 
             'homepage update' => ['PATCH', '/admin/homepages/1', 'admin'],
-            'pricelist store' => ['POST', '/admin/positions', 'admin'],
+            'pricelist update' => ['PATCH', '/admin/positions/{position}', 'admin'],
             'faqs store' => ['POST', '/admin/faqs', 'admin'],
             'users store' => ['POST', '/admin/users', 'admin'],
             'other user update' => ['PATCH', '/admin/users/{other}', 'admin'],
             'other user destroy' => ['DELETE', '/admin/users/{other}', 'admin'],
+            'maintenance migrate' => ['POST', '/admin/maintenance/migrate', 'admin'],
+            'maintenance clear cache' => ['POST', '/admin/maintenance/clear-cache', 'admin'],
         ];
     }
 
@@ -211,6 +214,8 @@ class RoleAccessTest extends TestCase
             '{application}' => $s->application->id,
             '{room}' => $s->room->id,
             '{checkpoint}' => $s->checkpoint->id,
+            '{newsletter}' => $s->newsletter->id,
+            '{position}' => $s->pricelistPosition->id,
             '{self}' => $s->user($role)->id,
             '{other}' => 1,
         ]);

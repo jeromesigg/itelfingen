@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 10.10.2026: **192 Testfälle in 15 Dateien**, Laufzeit rund 5 Sekunden.
+Stand 10.10.2026: **221 Testfälle in 20 Dateien**, Laufzeit rund 7 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -41,7 +41,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 | Datei | Zweck |
 |---|---|
-| `phpunit.xml` | SQLite in-memory, Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN`, `DEPLOY_*` |
+| `phpunit.xml` | SQLite in-memory, Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN` |
 | `tests/TestCase.php` | `RefreshDatabase` mit `TestingSeeder`, Schutz vor echter DB, `withoutVite()`, keine echten HTTP-Aufrufe |
 | `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210 |
 
@@ -78,6 +78,8 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 | Bereich | Datei | Fälle | Prüft |
 |---|---|---:|---|
+| Smoke | `Smoke/AllRoutesSmokeTest` | 6 | Jede GET-Route pro Rolle ohne Serverfehler |
+| Smoke | `Smoke/PagesRenderTest` | 4 | Jeder Menü-Link pro Rolle lädt (200), öffentliche Seiten |
 | Grundlagen | `TestInfrastructureTest` | 9 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
 | Öffentlich | `CreateMultiDayEventTest` | 6 | Buchungsformular |
 | Öffentlich | `ContactTest` | 4 | Kontaktformular |
@@ -85,13 +87,16 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Öffentlich | `PublicApiTest` | 9 | Ortssuche, API-Antworten (Kalender, Verfügbarkeit, Telefonnummer) |
 | Login | `AuthTest` | 4 | Login, Registrierung |
 | Admin | `ChecklistAdminTest` | 3 | Räume und Checkpunkte bearbeiten |
-| Sicherheit | `Security/RoleAccessTest` | 93 | Jede Admin-Route pro Rolle (inkl. kein Serverfehler), Navigation |
+| Admin | `NewsletterTest` | 3 | Newsletter-Empfänger bearbeiten und löschen |
+| Admin | `MaintenanceTest` | 10 | Wartungsseite: Migrationen, Cache, nur Admin, nur POST |
+| Kundenbereich | `CustomerBookingPageTest` | 4 | Buchungsübersicht mit Bexio-Links, auch wenn Bexio fehlt |
+| Sicherheit | `Security/RoleAccessTest` | 97 | Jede Admin-Route pro Rolle (inkl. kein Serverfehler), Navigation |
 | Sicherheit | `Security/UserManagementTest` | 17 | Benutzer: Admin alle, sonst nur eigenes Profil |
 | Sicherheit | `Security/XssTest` | 5 | Eingaben aus öffentlichen Formularen in Admin-Tabellen |
-| Sicherheit | `Security/DeployRouteTest` | 6 | Basic-Auth für `/deploy` und `/bexio/connect` |
+| Sicherheit | `Security/DeployRouteTest` | 2 | Alte Wartungs-URLs `/deploy` und `/bexio/connect` sind weg |
 | Sicherheit | `Security/ApiTokenTest` | 14 | API-Token |
 | Sicherheit | `Security/CustomerChecklistTest` | 5 | Checkliste im Kundenbereich nur für die eigene Buchung |
-| Sicherheit | `Security/BexioOAuthTest` | 4 | Bexio verbinden mit `state` |
+| Sicherheit | `Security/BexioOAuthTest` | 6 | Bexio verbinden (nur Admin, Wartungsseite) mit `state` |
 | Sicherheit | `Security/ImageUploadTest` | 9 | Bild-Uploads nach `public/images` |
 
 ### Grundlagen
@@ -109,6 +114,15 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | `test_database_is_reset_between_tests` | DB wird zwischen Tests zurückgesetzt |
 | `test_home_page_renders` | Startseite über den ganzen Stack |
 | `test_admin_dashboard_renders_for_admin` | Dashboard für Admin |
+
+### Smoke
+
+**[`AllRoutesSmokeTest`](Feature/Smoke/AllRoutesSmokeTest.php)**: liest alle GET-Routen aus dem Router und ruft jede als anonym, registriert (ohne Rolle), Gast, Team, Verwalter und Admin auf; erwartet keinen Status >= 500. Jede Route zusätzlich mit Randfällen (FAQ und Person ohne Foto, stornierte Buchung ohne Positionen, Benutzer ohne Rolle). Bexio ist verbunden, aber gefakt.
+- **Neue Route mit Parameter:** Wert in `routeParameters()` ergänzen (der Test sagt welcher fehlt).
+- `EXCLUDED`: bewusst nicht aufgerufene Routen mit Grund. `KNOWN_ISSUES`: bekannte Serverfehler; der Test wird rot, wenn ein neuer dazukommt oder ein bekannter behoben ist.
+- Findet nur Abstürze. Berechtigungen prüft `Security/RoleAccessTest`.
+
+**[`PagesRenderTest`](Feature/Smoke/PagesRenderTest.php)**: liest die Links aus der Admin-Navigation pro Rolle (Team 5, Verwalter 10, Admin 20) und erwartet für jede 200; dazu die öffentlichen Seiten.
 
 ### Öffentliche Formulare
 
@@ -159,6 +173,12 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 **[`ChecklistAdminTest`](Feature/ChecklistAdminTest.php)**: Checkpunkt bearbeiten (Ansicht war eine Kopie der FAQ-Ansicht), Raum bearbeiten.
 
+**[`NewsletterTest`](Feature/NewsletterTest.php)**: Empfänger bearbeiten (Ansicht nutzte noch `Form::` aus Laravel Collective), Checkboxen Buchungen/Genossenschaft, löschen.
+
+**[`MaintenanceTest`](Feature/MaintenanceTest.php)**: Wartungsseite `admin/maintenance` zeigt offene Migrationen; Migrationen ausführen und Cache leeren nur per POST und nur als Admin; Ausgabe wird angezeigt. Artisan ist gefakt.
+
+**[`CustomerBookingPageTest`](Feature/CustomerBookingPageTest.php)**: Kundenbereich `bookings/{uuid}` fragt Bexio nur, wenn Offerte/Rechnung existieren, zeigt deren Links und lädt auch, wenn Bexio nicht erreichbar oder nicht verbunden ist.
+
 ### Sicherheit
 
 **[`RoleAccessTest`](Feature/Security/RoleAccessTest.php)**: setzt die Berechtigungstabelle unten durch. Jede Route steht mit ihrer Mindeststufe (`team` < `verwalter` < `admin`) in `pages()` bzw. `actions()`; **neue Admin-Routen dort eintragen**.
@@ -192,13 +212,13 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 **[`XssTest`](Feature/Security/XssTest.php)**: Namen, Gruppe, Fremdschlüssel aus Buchung, Kontakt und Bewerbung werden in den Admin-Tabellen escaped; die Buchungstabelle liefert nur ihre Spalten (kein Türcode, keine Bexio-IDs, keine UUID); Team bekommt keine Bearbeiten-Links.
 
-**[`DeployRouteTest`](Feature/Security/DeployRouteTest.php)**: `/deploy` und `/bexio/connect` nur mit `DEPLOY_USER`/`DEPLOY_PASS`; ohne konfigurierte Werte gesperrt. Artisan ist gefakt, es wird nie migriert.
+**[`DeployRouteTest`](Feature/Security/DeployRouteTest.php)**: die früheren Wartungs-URLs `/deploy` (migrierte per GET) und `/bexio/connect` geben 404; ersetzt durch die Wartungsseite. Artisan ist gefakt.
 
 **[`ApiTokenTest`](Feature/Security/ApiTokenTest.php)**: alle API-Routen mit gültigem Token erreichbar, mit falschem 401 ohne den Token zurückzugeben; ohne `API_TOKEN` gesperrt (früher Standardwert `1234`); Telefonnummer-Suche.
 
 **[`CustomerChecklistTest`](Feature/Security/CustomerChecklistTest.php)**: Gäste haken nur Checkpoints ihrer eigenen Buchung ab (`POST bookings/{uuid}/checkpoint/done`).
 
-**[`BexioOAuthTest`](Feature/Security/BexioOAuthTest.php)**: der Callback nimmt nur einen Code mit dem `state` der eigenen Weiterleitung an, einmalig. Bexio ist mit `Http::fake()` ersetzt.
+**[`BexioOAuthTest`](Feature/Security/BexioOAuthTest.php)**: Bexio verbinden nur als Admin über `admin/bexio/connect` (Knopf und Verbindungsstatus auf der Wartungsseite); der Callback nimmt nur einen Code mit dem `state` der eigenen Weiterleitung an, einmalig, und leitet zurück zur Wartungsseite. Bexio ist mit `Http::fake()` ersetzt.
 
 **[`ImageUploadTest`](Feature/Security/ImageUploadTest.php)**: FAQ, Geschichte und Bilder speichern nur echte Bilder unter einem Namen des Servers (`App\Helper\ImageUpload`). Läuft in einem Temp-Verzeichnis statt `public/`.
 

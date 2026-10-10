@@ -8,10 +8,19 @@ use App\Models\Contact;
 use App\Models\Event;
 use App\Models\EventCheckpoint;
 use App\Models\EventRoom;
+use App\Models\Faq;
+use App\Models\FaqChapter;
+use App\Models\History;
+use App\Models\Newsletter;
+use App\Models\Person;
+use App\Models\Photo;
+use App\Models\Picture;
 use App\Models\Position;
 use App\Models\PricelistPosition;
 use App\Models\Room;
+use App\Models\Testimonial;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Typischer Betrieb des Buchungstools: alle Rollen, Buchungen in verschiedenen Zuständen,
@@ -55,6 +64,29 @@ class BookingScenario
 
     public Application $application;
 
+    // Inhalte der Webseite (Admin)
+    public FaqChapter $faqChapter;
+
+    public Faq $faq;
+
+    /** Randfall: FAQ ohne Foto */
+    public Faq $faqWithoutPhoto;
+
+    public History $history;
+
+    public Testimonial $testimonial;
+
+    public Person $person;
+
+    /** Randfall: Person ohne Foto */
+    public Person $personWithoutPhoto;
+
+    public Picture $picture;
+
+    public PricelistPosition $pricelistPosition;
+
+    public Newsletter $newsletter;
+
     public static function create(): self
     {
         $s = new self;
@@ -85,6 +117,8 @@ class BookingScenario
         $s->contact = Contact::factory()->create();
         $s->application = Application::factory()->create();
 
+        $s->createContent();
+
         return $s;
     }
 
@@ -106,6 +140,28 @@ class BookingScenario
     public function user(string $role): User
     {
         return $this->{$role}->fresh();
+    }
+
+    /**
+     * Inhalte der Webseite, je ein typisches Objekt und Randfälle ohne Foto.
+     */
+    private function createContent(): void
+    {
+        Model::unguarded(function () {
+            $aktiv = config('status.aktiv');
+            $photo = fn (string $file) => Photo::create(['file' => $file])->id;
+
+            $this->faqChapter = FaqChapter::create(['name' => 'Anreise', 'sort-index' => 1, 'symbol' => 'fa-car', 'archive_status_id' => $aktiv, 'photo_id' => $photo('kapitel.png')]);
+            $this->faq = Faq::create(['name' => 'Wo parkieren?', 'description' => 'Beim Haus', 'faq_chapter_id' => $this->faqChapter->id, 'photo_id' => $photo('faq.jpg'), 'sort-index' => 1, 'archive_status_id' => $aktiv]);
+            $this->faqWithoutPhoto = Faq::create(['name' => 'Gibt es WLAN?', 'description' => 'Ja', 'faq_chapter_id' => $this->faqChapter->id, 'sort-index' => 2, 'archive_status_id' => $aktiv]);
+            $this->history = History::create(['title' => 'Gründung', 'shorttitle' => '1950', 'subtitle' => 'Die Anfänge', 'description' => 'Text', 'sort-index' => 1, 'archive_status_id' => $aktiv, 'photo_id' => $photo('geschichte.jpg')]);
+            $this->testimonial = Testimonial::create(['name' => 'Familie Muster', 'function' => 'Gäste', 'comment' => 'Wunderbar', 'sort-index' => 1, 'archive_status_id' => $aktiv]);
+            $this->person = Person::create(['name' => 'Hans Haus', 'function' => 'Hauswart', 'sort-index' => 1, 'archive_status_id' => $aktiv, 'photo_id' => $photo('person.jpg')]);
+            $this->personWithoutPhoto = Person::create(['name' => 'Ohne Foto', 'function' => 'Kasse', 'sort-index' => 2, 'archive_status_id' => $aktiv]);
+            $this->picture = Picture::create(['name' => 'Aussicht', 'photo_id' => $photo('bild.jpg'), 'cropped_photo_id' => $photo('bild_cropped.jpg')]);
+            $this->pricelistPosition = PricelistPosition::where('bexio_code', 30)->sole();
+            $this->newsletter = Newsletter::create(['name' => 'Muster', 'firstname' => 'Eva', 'email' => 'eva@example.com', 'bookings' => true, 'members' => false]);
+        });
     }
 
     /**

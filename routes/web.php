@@ -3,10 +3,8 @@
 use App\Http\Controllers\AdminEventController;
 use App\Services\BexioAuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use Spatie\Honeypot\ProtectAgainstSpam;
 
 /*
@@ -46,6 +44,10 @@ Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventCo
 
 Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'])->middleware(ProtectAgainstSpam::class);
 
+// Nur Routen, die es im Controller mit View gibt (Route::resource registriert sonst auch leere Methoden).
+// Erfasst wird bei diesen Bereichen direkt auf der Übersichtsseite, deshalb ohne create/show.
+$crudOnIndex = ['index', 'store', 'edit', 'update', 'destroy'];
+
 // Berechtigungen nach Stufe, siehe tests/README.md ("Berechtigungen") und App\Http\Middleware\Role.
 
 // Team, Verwalter und Admin: Dashboard, Graphen, Buchungen ansehen, eigenes Profil
@@ -61,60 +63,51 @@ Route::group(['middleware' => 'role:team'], function () {
 });
 
 // Verwalter und Admin: Buchungen bearbeiten, Anfragen, Bewerbungen, Checkliste, Newsletter, Exporte
-Route::group(['middleware' => 'role:verwalter'], function () {
+Route::group(['middleware' => 'role:verwalter'], function () use ($crudOnIndex) {
     Route::get('/admin/bookings/export-csv', ['as' => 'admin.exportcsv', 'uses' => 'AdminController@exportCSV']);
     // Bemerkung und Mail-Text auf der Buchungsseite (gespeichert in der Homepage)
     Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
     Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@MailTextUpdate')->name('admin.homepages.mail_text_update');
-    Route::resource('admin/events', 'AdminEventController')->except(['index'])->names('admin.events');
+    Route::resource('admin/events', 'AdminEventController')->only(['create', 'store', 'edit', 'update', 'destroy'])->names('admin.events');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
     Route::post('admin/events/createAPICode', [AdminEventController::class, 'createAPICode'])->name('events.createAPICode');
 
-    Route::resource('admin/contacts', 'AdminContactController')->names('admin.contacts');
+    Route::resource('admin/contacts', 'AdminContactController')->only(['index'])->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
     Route::get('contacts/createDataTables', ['as' => 'contacts.CreateDataTables', 'uses' => 'AdminContactController@createDataTables']);
-    Route::resource('admin/applications', 'AdminApplicationController');
+    Route::resource('admin/applications', 'AdminApplicationController')->only(['index', 'show']);
     Route::get('applications/createDataTables', ['as' => 'applications.CreateDataTables', 'uses' => 'AdminApplicationController@createDataTables']);
     Route::post('applications/{application}/refuse', ['as' => 'applications.refuse', 'uses' => 'AdminApplicationController@refuse']);
     Route::get('newsletter/createDataTables', ['as' => 'newsletter.CreateDataTables', 'uses' => 'NewsletterController@createDataTables']);
     Route::get('/admin/newsletter/export-bookings', ['as' => 'newsletter.exportBookings', 'uses' => 'NewsletterController@exportBookings']);
     Route::get('/admin/newsletter/export-members', ['as' => 'newsletter.exportMembers', 'uses' => 'NewsletterController@exportMembers']);
     Route::get('/admin/newsletter/import', ['as' => 'newsletter.import', 'uses' => 'NewsletterController@import']);
-    Route::resource('admin/newsletter', 'NewsletterController');
-    Route::resource('admin/checkpoints', 'AdminCheckpointController');
-    Route::resource('admin/rooms', 'AdminRoomsController');
+    Route::resource('admin/newsletter', 'NewsletterController')->only(['index', 'edit', 'update', 'destroy']);
+    Route::resource('admin/checkpoints', 'AdminCheckpointController')->only($crudOnIndex);
+    Route::resource('admin/rooms', 'AdminRoomsController')->only($crudOnIndex);
 });
 
 // Nur Admin: Inhalte der Webseite und Benutzerverwaltung
-Route::group(['middleware' => 'role:admin'], function () {
-    Route::resource('admin/homepages', 'AdminHomepageController');
-    Route::resource('admin/pictures', 'AdminPicturesController');
-    Route::resource('admin/testimonials', 'AdminTestimonialController');
-    Route::resource('admin/people', 'AdminPersonController');
-    Route::resource('admin/histories', 'AdminHistoryController');
-    Route::resource('admin/faqs', 'AdminFaqController');
+Route::group(['middleware' => 'role:admin'], function () use ($crudOnIndex) {
+    Route::resource('admin/homepages', 'AdminHomepageController')->only(['index', 'edit', 'update']);
+    Route::resource('admin/pictures', 'AdminPicturesController')->except(['show']);
+    Route::resource('admin/testimonials', 'AdminTestimonialController')->only($crudOnIndex);
+    Route::resource('admin/people', 'AdminPersonController')->only($crudOnIndex);
+    Route::resource('admin/histories', 'AdminHistoryController')->only($crudOnIndex);
+    Route::resource('admin/faqs', 'AdminFaqController')->only($crudOnIndex);
     Route::get('faqs/createDataTables', ['as' => 'faqs.CreateDataTables', 'uses' => 'AdminFaqController@createDataTables']);
-    Route::resource('admin/faq_chapters', 'AdminFaqChapterController');
-    Route::resource('admin/positions', 'AdminPricelistPositionController');
+    Route::resource('admin/faq_chapters', 'AdminFaqChapterController')->only($crudOnIndex);
+    // create: Artikel aus Bexio abgleichen
+    Route::resource('admin/positions', 'AdminPricelistPositionController')->only(['index', 'create', 'edit', 'update', 'destroy']);
     Route::resource('admin/users', 'AdminUserController')->only(['store', 'destroy']);
+
+    // Wartung: Aktionen nur per POST
+    Route::get('admin/maintenance', 'MaintenanceController@index')->name('admin.maintenance');
+    Route::post('admin/maintenance/migrate', 'MaintenanceController@migrate')->name('admin.maintenance.migrate');
+    Route::post('admin/maintenance/clear-cache', 'MaintenanceController@clearCache')->name('admin.maintenance.clear-cache');
+    Route::get('admin/bexio/connect', 'MaintenanceController@connectBexio')->name('admin.bexio.connect');
 });
-
-Route::get('/bexio/connect', function (Request $request) {
-    // state verknüpft den Callback mit dieser Weiterleitung, sonst könnte jemand ein fremdes Bexio-Konto verbinden.
-    $state = Str::random(40);
-    $request->session()->put('bexio_oauth_state', $state);
-
-    $params = http_build_query([
-        'client_id' => config('services.bexio.client_id'),
-        'redirect_uri' => route('bexio.callback'),
-        'response_type' => 'code',
-        'state' => $state,
-        'scope' => 'openid offline_access contact_edit kb_invoice_edit kb_offer_edit article_show article_show', // deine benötigten Scopes
-    ]);
-
-    return redirect("https://auth.bexio.com/realms/bexio/protocol/openid-connect/auth?{$params}");
-})->middleware('auth.deploy');
 
 Route::get('/bexio/callback', function (Request $request, BexioAuthService $auth) {
     $state = (string) $request->session()->pull('bexio_oauth_state');
@@ -122,32 +115,5 @@ Route::get('/bexio/callback', function (Request $request, BexioAuthService $auth
 
     $auth->exchangeAuthorizationCode($request->get('code'), route('bexio.callback'));
 
-    return 'Bexio erfolgreich verbunden!';
+    return redirect()->route('admin.maintenance')->with('maintenance_output', 'Bexio erfolgreich verbunden.');
 })->name('bexio.callback');
-
-// Route::get('admin/run-migrations', function () {
-//     return Artisan::call('migrate', ['--force' => true]);
-// });
-
-// Route::get('admin/run-migrations-seed', function () {
-//     return Artisan::call('migrate --seed', ['--force' => true]);
-// });
-
-// Route::get('admin/run-deployment', function () {
-//     Artisan::call('optimize:clear');
-
-//     return true;
-// });
-
-Route::get('/deploy', function () {
-    // Migrationen erzwingen
-    Artisan::call('migrate', ['--force' => true]);
-
-    // Optional: Cache-Handling
-    Artisan::call('optimize:clear');
-
-    return response()->json([
-        'status' => 'ok',
-        'message' => 'Deployment erfolgreich durchgeführt 🚀',
-    ]);
-})->middleware('auth.deploy');

@@ -6,7 +6,9 @@ use App\Models\Event;
 use App\Services\BexioApiService;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\Component;
+use Throwable;
 
 class Entry extends Component
 {
@@ -52,7 +54,7 @@ class Entry extends Component
                 ]];
                 break;
             case 'OfferSend':
-                $offer = app(BexioApiService::class)->get('kb_offer/'.$event['bexio_offer_id']);
+                $offer = $this->bexioDocument('kb_offer', $event['bexio_offer_id']);
                 $this->fulfilled = $event['contract_status_id'] >= config('status.contract_angebot_versendet');
                 $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M11 16v-5.5A3.5 3.5 0 0 0 7.5 7m3.5 9H4v-5.5A3.5 3.5 0 0 1 7.5 7m3.5 9v4M7.5 7H14m0 0V4h2.5M14 7v3m-3.5 6H20v-6a3 3 0 0 0-3-3m-2 9v4m-8-6.5h1';
@@ -143,7 +145,7 @@ class Entry extends Component
                 $this->title = 'Aufenthalt beendet';
                 $this->notification_type = "App\Notifications\EventFeedbackNotification";
                 $this->time = $event['end_date'];
-                $invoice = app(BexioApiService::class)->get('kb_invoice/'.$event['bexio_invoice_id']);
+                $invoice = $this->bexioDocument('kb_invoice', $event['bexio_invoice_id']);
                 $this->contents = [
                     [
                         'link' => 'https://forms.gle/RMWyPzs8wauakQam9',
@@ -166,6 +168,25 @@ class Entry extends Component
                         'path' => 'M4.5 17H4a1 1 0 0 1-1-1 3 3 0 0 1 3-3h1m0-3.05A2.5 2.5 0 1 1 9 5.5M19.5 17h.5a1 1 0 0 0 1-1 3 3 0 0 0-3-3h-1m0-3.05a2.5 2.5 0 1 0-2-4.45m.5 13.5h-7a1 1 0 0 1-1-1 3 3 0 0 1 3-3h3a3 3 0 0 1 3 3 1 1 0 0 1-1 1Zm-1-9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z',
                     ]);
                 break;
+        }
+    }
+
+    /**
+     * Offerte oder Rechnung aus Bexio für den Link im Kundenbereich.
+     * Ohne ID wird Bexio nicht gefragt; ist Bexio nicht erreichbar, erscheint die Seite ohne Link.
+     */
+    private function bexioDocument(string $endpoint, $id): ?array
+    {
+        if (empty($id)) {
+            return null;
+        }
+
+        try {
+            return app(BexioApiService::class)->get($endpoint.'/'.$id);
+        } catch (Throwable $e) {
+            Log::warning('Bexio im Kundenbereich nicht erreichbar', ['endpoint' => $endpoint, 'id' => $id, 'error' => $e->getMessage()]);
+
+            return null;
         }
     }
 

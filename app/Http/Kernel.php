@@ -4,7 +4,6 @@ namespace App\Http;
 
 use App\Http\Middleware\APIToken;
 use App\Http\Middleware\Authenticate;
-use App\Http\Middleware\BasicAuthEnv;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -87,6 +86,5 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'role' => Role::class,
         'api_token' => APIToken::class,
-        'auth.deploy' => BasicAuthEnv::class,
     ];
 }
