@@ -21,7 +21,7 @@ use Spatie\Honeypot\ProtectAgainstSpam;
 Route::get('impressum', 'HomeController@impressum')->name('impressum');
 Route::get('faq', 'HomeController@faq')->name('faq');
 Route::get('applications', 'ApplicationController@index')->name('applications');
-Route::post('applications/store', ['as' => 'application.store', 'uses' => 'ApplicationController@store'])->middleware(ProtectAgainstSpam::class);
+Route::post('applications/store', ['as' => 'application.store', 'uses' => 'ApplicationController@store'])->middleware(['throttle:public-forms', ProtectAgainstSpam::class]);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('about_us', 'HomeController@about_us')->name('about_us');
 Route::middleware('throttle:booking-login')->group(function () {
@@ -34,15 +34,16 @@ Route::get('admin/bookings/{uuid}/DownloadLastInfos', 'HomeController@DownloadLa
 Route::get('admin/events/{uuid}/DownloadParking', 'AdminEventController@DownloadParking')->name('events.downloadParking');
 Route::post('bookings/{uuid}/checkpoint/done', 'HomeController@bookings_checkpointDone')->name('bookings.checkpointDone');
 
-Auth::routes();
+// Nur Login/Logout: Konten legt ein Admin an, Benutzer haben keine E-Mail-Adresse für einen Reset.
+Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
 
 // Route::get('/home', 'HomeController@index')->name('home');
 
 // fullcalender
-Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create'])->middleware(ProtectAgainstSpam::class);
+Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create'])->middleware(['throttle:public-forms', ProtectAgainstSpam::class]);
 Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventController@searchResponseCity']);
 
-Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'])->middleware(ProtectAgainstSpam::class);
+Route::post('contacts', ['as' => 'contacts.store', 'uses' => 'ContactController@store'])->middleware(['throttle:public-forms', ProtectAgainstSpam::class]);
 
 // Nur Routen, die es im Controller mit View gibt (Route::resource registriert sonst auch leere Methoden).
 // Erfasst wird bei diesen Bereichen direkt auf der Übersichtsseite, deshalb ohne create/show.

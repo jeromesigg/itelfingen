@@ -13,20 +13,21 @@ class ContactController extends Controller
     //
     public function store(Request $request)
     {
-        $input = $request->all();
-        if (! preg_match('/\s/', $input['content'])) {
-            abort(response()->view('errors.422', [], 422));
-        }
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'email' => 'email|required',
-            'content' => 'required',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'content' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return redirect()->to(url()->previous().'#contact')
                 ->withErrors($validator, 'contact')
                 ->withInput();
+        }
+        // Nachrichten ohne Leerzeichen (ein Wort, ein Link) sind fast immer Spam.
+        if (! preg_match('/\s/', $request->input('content'))) {
+            abort(response()->view('errors.422', [], 422));
         }
 
         $contact = Contact::create($request->only(['name', 'email', 'subject', 'content']));

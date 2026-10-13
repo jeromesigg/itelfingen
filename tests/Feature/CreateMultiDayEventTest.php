@@ -129,6 +129,28 @@ class CreateMultiDayEventTest extends TestCase
         );
     }
 
+    public function test_incomplete_booking_is_rejected_without_server_error(): void
+    {
+        // Bots schicken leere oder halbe Formulare; das darf keinen 500er geben.
+        $this->from(route('home'))->post('/event/create', [])
+            ->assertRedirect(route('home').'#booking')
+            ->assertSessionHasErrors(['name', 'street', 'zipcode', 'city', 'email', 'total_days', 'total_people', 'terms'], null, 'event');
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['start_date' => null]))
+            ->assertSessionHasErrors('start_date', null, 'event');
+
+        $this->assertSame(0, Event::count());
+    }
+
+    public function test_booking_without_optional_fields(): void
+    {
+        $data = $this->bookingData();
+        unset($data['group'], $data['telephone'], $data['firstname'], $data['comment']);
+
+        $this->from(route('home'))->post('/event/create', $data)->assertSessionHasNoErrors();
+
+        $this->assertSame('', Event::sole()->phonenumber_query);
+    }
+
     public function test_invalid_zipcode_is_rejected(): void
     {
         $this->from(route('home'))->post('/event/create', $this->bookingData(['zipcode' => 123]))

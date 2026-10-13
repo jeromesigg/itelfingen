@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 13.10.2026: **386 Testfälle in 36 Dateien** (67 Unit, 319 Feature), Laufzeit rund 11 Sekunden.
+Stand 13.10.2026: **418 Testfälle in 39 Dateien** (67 Unit, 351 Feature), Laufzeit rund 12 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -92,24 +92,27 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Grundlagen | `FormPreselectionTest` | 10 | Auswahlfelder wählen den gespeicherten Wert vor (Status, Rolle, Archiv) |
 | Grundlagen | `StatusDisplayTest` | 17 | Statusspalte, Schritte im Kundenbereich, Monatsmail, leere Status |
 | Grundlagen | `TestInfrastructureTest` | 10 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
-| Öffentlich | `CreateMultiDayEventTest` | 6 | Buchungsformular |
-| Öffentlich | `ContactTest` | 4 | Kontaktformular |
-| Öffentlich | `ApplicationTest` | 4 | Bewerbung Genossenschaft |
+| Öffentlich | `CreateMultiDayEventTest` | 8 | Buchungsformular |
+| Öffentlich | `ContactTest` | 5 | Kontaktformular |
+| Öffentlich | `ApplicationTest` | 5 | Bewerbung Genossenschaft |
 | Öffentlich | `PublicApiTest` | 9 | Ortssuche, API-Antworten (Kalender, Verfügbarkeit, Telefonnummer) |
-| Login | `AuthTest` | 4 | Login, Registrierung |
+| Login | `AuthTest` | 6 | Login; Registrierung, Passwort-Reset und -Bestätigung abgeschaltet |
 | Admin | `ChecklistAdminTest` | 3 | Räume und Checkpunkte bearbeiten |
 | Admin | `NewsletterTest` | 3 | Newsletter-Empfänger bearbeiten und löschen |
 | Admin | `MaintenanceTest` | 10 | Wartungsseite: Migrationen, Cache, nur Admin, nur POST |
 | Kundenbereich | `CustomerBookingPageTest` | 4 | Buchungsübersicht mit Bexio-Links, auch wenn Bexio fehlt |
 | Kundenbereich | `CustomerLoginTest` | 5 | Login mit Buchungsnummer und PLZ, Fehlermeldung, Rate-Limit |
-| Fachlogik | `EventWorkflowTest` | 14 | Buttons 1-6: Offerte, Rechnung, Versand über Bexio; Putzfirma-Mail |
+| Fachlogik | `EventWorkflowTest` | 15 | Buttons 1-6: Offerte, Rechnung, Versand über Bexio; Putzfirma-Mail |
 | Fachlogik | `DoorCodeTest` | 6 | Türcode in Glutz (JSON-RPC) |
 | Fachlogik | `ScheduledTasksTest` | 15 | Einplanung und Inhalt der täglichen, wöchentlichen und monatlichen Tasks |
 | Fachlogik | `NotificationMailsTest` | 17 | Jede Mail wird gebaut und versendet: Betreff, Empfänger, Anhänge |
 | Fachlogik | `ExternalBookingImportTest` | 7 | Externe Buchung aus Anfrage-Mail oder Buchungs-PDF übernehmen |
 | Fachlogik | `ExportsTest` | 3 | CSV-Exporte Buchungen und Newsletter, Newsletter-Import |
 | Sicherheit | `Security/RoleAccessTest` | 97 | Jede Admin-Route pro Rolle (inkl. kein Serverfehler), Navigation |
-| Sicherheit | `Security/UserManagementTest` | 18 | Benutzer: Admin alle, sonst nur eigenes Profil |
+| Sicherheit | `Security/UserManagementTest` | 28 | Benutzer: Admin alle, sonst nur eigenes Profil; Validierung Benutzername/Passwort |
+| Sicherheit | `Security/PublicFormRateLimitTest` | 5 | Öffentliche Formulare: 5 pro Minute, 20 pro Stunde je IP |
+| Sicherheit | `Security/SecurityHeadersTest` | 5 | X-Frame-Options, nosniff, Referrer-/Permissions-Policy, HSTS nur Prod/HTTPS |
+| Fachlogik | `BexioTokenTest` | 5 | Tokens verschlüsselt, Migration für Altbestand, Erneuerung mit Sperre |
 | Sicherheit | `Security/XssTest` | 5 | Eingaben aus öffentlichen Formularen in Admin-Tabellen |
 | Sicherheit | `Security/DeployRouteTest` | 2 | Alte Wartungs-URLs `/deploy` und `/bexio/connect` sind weg |
 | Sicherheit | `Security/ApiTokenTest` | 14 | API-Token |
@@ -245,6 +248,12 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | `test_empty_password_keeps_old_password` | Leeres Passwort ändert nichts |
 
 **[`XssTest`](Feature/Security/XssTest.php)**: Namen, Gruppe, Fremdschlüssel aus Buchung, Kontakt und Bewerbung werden in den Admin-Tabellen escaped; die Buchungstabelle liefert nur ihre Spalten (kein Türcode, keine Bexio-IDs, keine UUID); Team bekommt keine Bearbeiten-Links.
+
+**[`PublicFormRateLimitTest`](Feature/Security/PublicFormRateLimitTest.php)**: Buchung, Kontakt und Bewerbung teilen sich das Limit "public-forms" (AppServiceProvider) pro IP. Die Formulare validieren vor dem Zugriff auf Felder; leere Anfragen ergeben Fehlermeldungen statt 500.
+
+**[`SecurityHeadersTest`](Feature/Security/SecurityHeadersTest.php)**: Middleware `SecurityHeaders` (global). Bewusst ohne Content-Security-Policy wegen Inline-JavaScript.
+
+**[`BexioTokenTest`](Feature/BexioTokenTest.php)**: `access_token`/`refresh_token` mit Cast `encrypted`; die Migration `encrypt_bexio_tokens` verschlüsselt Klartext-Zeilen (mehrfach ausführbar). Erneuerung unter `Cache::lock('bexio-token-refresh')` mit erneuter Prüfung, weil Bexio den Refresh-Token rotiert; simuliert wird ein zweiter Prozess, der inzwischen erneuert hat.
 
 **[`DeployRouteTest`](Feature/Security/DeployRouteTest.php)**: die früheren Wartungs-URLs `/deploy` (migrierte per GET) und `/bexio/connect` geben 404; ersetzt durch die Wartungsseite. Artisan ist gefakt.
 

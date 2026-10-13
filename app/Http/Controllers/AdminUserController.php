@@ -48,7 +48,7 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate(['role_id' => ['nullable', Rule::enum(UserRole::class)]]);
+        $request->validate($this->rules() + ['password' => ['required', 'string', 'min:10']]);
         $input = $request->only(['username', 'fullname', 'phone', 'role_id']);
         if (trim($request->password ?? '') != '') {
             $input['password'] = bcrypt($request->password);
@@ -96,7 +96,7 @@ class AdminUserController extends Controller
     {
         //
         $user = $this->findEditable($id);
-        $request->validate(['role_id' => ['nullable', Rule::enum(UserRole::class)]]);
+        $request->validate($this->rules($user) + ['password' => ['nullable', 'string', 'min:10']]);
 
         $input = $request->only(['username', 'fullname', 'phone']);
         if (trim($request->password ?? '') != '') {
@@ -154,8 +154,23 @@ class AdminUserController extends Controller
         return $user;
     }
 
+    /**
+     * Benutzername eindeutig und ohne Pfadzeichen; Passwort-Regel je nach Anlegen/Bearbeiten im Aufrufer.
+     */
+    private function rules(?User $user = null): array
+    {
+        return [
+            'username' => ['required', 'string', 'max:255', 'regex:/^[\pL\pN ._-]+$/u', Rule::unique('users', 'username')->ignore($user?->id)],
+            'fullname' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'role_id' => ['nullable', Rule::enum(UserRole::class)],
+            'signature' => ['nullable', 'file', 'mimes:png,jpg,jpeg,pdf', 'max:4096'],
+        ];
+    }
+
     private function storeSignature(User $user, $file): string
     {
-        return Storage::putFileAs('signature/'.$user->username, $file, $user->username.'.'.$file->extension(), ['disk' => 'local']);
+        // Ordner nach ID: der Benutzername gehört nicht in einen Dateipfad.
+        return Storage::putFileAs('signature/'.$user->id, $file, 'unterschrift.'.$file->extension(), ['disk' => 'local']);
     }
 }

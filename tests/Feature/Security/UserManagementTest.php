@@ -134,6 +134,81 @@ class UserManagementTest extends TestCase
 
         $user = User::where('username', 'mit_unterschrift')->sole();
         Storage::disk('local')->assertExists($user->signature);
+        // Ordner nach ID, nicht nach Benutzername (der Name landete sonst ungeprüft im Pfad)
+        $this->assertStringStartsWith("signature/{$user->id}/", $user->signature);
+    }
+
+    public function test_duplicate_username_is_rejected_without_server_error(): void
+    {
+        $s = BookingScenario::create();
+
+        $this->actingAs($s->user('admin'))->from('/admin/users')->post('/admin/users', [
+            'username' => 'team', 'password' => 'passwort123', 'role_id' => UserRole::Team->value,
+        ])->assertRedirect('/admin/users')->assertSessionHasErrors('username');
+        $this->actingAs($s->user('admin'))->from("/admin/users/{$s->gast->id}/edit")->patch("/admin/users/{$s->gast->id}", [
+            'username' => 'team',
+        ])->assertSessionHasErrors('username');
+
+        $this->assertSame(1, User::where('username', 'team')->count());
+    }
+
+    public function test_own_username_can_stay_unchanged(): void
+    {
+        $s = BookingScenario::create();
+
+        $this->actingAs($s->user('team'))->patch("/admin/users/{$s->team->id}", [
+            'username' => 'team', 'fullname' => 'Neu',
+        ])->assertSessionHasNoErrors();
+    }
+
+    public function test_password_needs_ten_characters(): void
+    {
+        $s = BookingScenario::create();
+
+        $this->actingAs($s->user('admin'))->post('/admin/users', [
+            'username' => 'kurz', 'password' => '1', 'role_id' => UserRole::Team->value,
+        ])->assertSessionHasErrors('password');
+        $this->actingAs($s->user('team'))->patch("/admin/users/{$s->team->id}", [
+            'username' => 'team', 'password' => '123456789',
+        ])->assertSessionHasErrors('password');
+
+        $this->assertNull(User::where('username', 'kurz')->first());
+        $this->assertTrue(Hash::check('password', $s->team->fresh()->password));
+    }
+
+    public static function usernames(): array
+    {
+        return [
+            'Pfad nach oben' => ['../../app', false],
+            'Schrägstrich' => ['team/admin', false],
+            'Backslash' => ['team\\admin', false],
+            'leer' => ['', false],
+            'mit Leerzeichen und Umlaut' => ['Jürg Müller', true],
+            'mit Punkt und Bindestrich' => ['j.muster-2', true],
+        ];
+    }
+
+    #[DataProvider('usernames')]
+    public function test_username_characters(string $username, bool $valid): void
+    {
+        $s = BookingScenario::create();
+
+        $response = $this->actingAs($s->user('admin'))->post('/admin/users', [
+            'username' => $username, 'password' => 'passwort123', 'role_id' => UserRole::Team->value,
+        ]);
+
+        $valid ? $response->assertSessionHasNoErrors() : $response->assertSessionHasErrors('username');
+    }
+
+    public function test_edit_form_does_not_require_password(): void
+    {
+        $s = BookingScenario::create();
+
+        $html = $this->actingAs($s->user('team'))->get("/admin/users/{$s->team->id}/edit")->getContent();
+
+        preg_match('/<input[^>]*name="password"[^>]*>/', $html, $field);
+        $this->assertNotEmpty($field);
+        $this->assertStringNotContainsString('required', $field[0]);
     }
 
     public function test_unknown_role_is_rejected(): void

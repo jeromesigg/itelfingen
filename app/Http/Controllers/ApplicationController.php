@@ -42,6 +42,15 @@ class ApplicationController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'zipcode' => 'required|numeric|gte:1000|lte:9999',
+            'city' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'why' => 'required|string',
+        ]);
+
         // Nur Felder des Formulars, keine internen Felder (Bexio, Rechnung, Ablehnung).
         $input = $request->only([
             'name', 'firstname', 'organisation', 'street', 'house_number', 'zipcode', 'city', 'email', 'telephone',

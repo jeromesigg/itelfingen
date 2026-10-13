@@ -51,6 +51,15 @@ class ContactTest extends TestCase
         $this->assertNull($contact->user_id);
     }
 
+    public function test_incomplete_message_is_rejected_without_server_error(): void
+    {
+        $this->from(route('home'))->post('/contacts', [])
+            ->assertRedirect(route('home').'#contact')
+            ->assertSessionHasErrors(['name', 'email', 'subject', 'content'], null, 'contact');
+
+        $this->assertSame(0, Contact::count());
+    }
+
     public function test_message_without_whitespace_is_rejected_as_spam(): void
     {
         $this->post('/contacts', [

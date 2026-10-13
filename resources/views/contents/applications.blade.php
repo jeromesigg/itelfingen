@@ -26,6 +26,16 @@
                     </strong>
                 </div>
             @endif
+            @if ($errors->any())
+                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                    <strong>Bitte prüfe deine Angaben:</strong>
+                    <ul class="mt-1.5 list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <h3 class="text-3xl  dark:text-white">Ich möchte Genossenschafter/in werden... </h3>
             <p class="mb-3 text-lg md:text-xl dark:text-gray-400">
                 Wir freuen uns über dein Interesse an der Genossenschaft Ferienhaus Itelfingen.

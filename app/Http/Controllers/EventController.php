@@ -19,8 +19,19 @@ class EventController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'zipcode' => 'numeric|gte:1000|lte:9999',
-            'total_people' => 'gt:0|lte:19',
+            'name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'zipcode' => 'required|numeric|gte:1000|lte:9999',
+            'city' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'terms' => 'accepted',
+            // Tagesbuchung (0 Tage) mit "date", sonst Anreise und Abreise
+            'total_days' => 'required|integer|min:0',
+            'date' => 'nullable|required_if:total_days,0|date',
+            'start_date' => 'nullable|required_unless:total_days,0|date',
+            'end_date' => 'nullable|required_unless:total_days,0|date|after_or_equal:start_date',
+            'total_people' => 'required|gt:0|lte:19',
+            'positions' => 'nullable|array',
         ], [
             'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
             'zipcode.gte' => 'Die Postleitzahl muss grösser oder gleich 1000 sein.',
@@ -41,7 +52,7 @@ class EventController extends Controller
             'discount', 'positions',
         ]);
         $input['plz'] = $input['zipcode'];
-        $input['group_name'] = $input['group'];
+        $input['group_name'] = $input['group'] ?? null;
         $input['event_status_id'] = BookingState::Neu;
         $input['contract_status_id'] = ContractState::Offen;
         $one_day = false;
@@ -55,10 +66,9 @@ class EventController extends Controller
             $input['end_date'] = new Carbon($input['end_date']);
         }
         $input['uuid'] = Str::uuid();
-        $input['phonenumber_query'] = str_replace(' ', '', $input['telephone']);
-        $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
+        $input['phonenumber_query'] = str_replace([' ', '-'], '', $input['telephone'] ?? '');
         $event = Event::create($input);
-        EventCreated::dispatch($event, $one_day, $input['positions']);
+        EventCreated::dispatch($event, $one_day, $input['positions'] ?? []);
         Notification::send($event, new EventCreatedNotification($event));
 
         return redirect()->to(url()->previous().'#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden. Schau auch in deinem Spam-Ordner nach.');

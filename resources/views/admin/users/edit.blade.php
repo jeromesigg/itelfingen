@@ -27,7 +27,7 @@
                         </x-forms.container>
                         @endif
                         <x-forms.container>
-                            <x-forms.text label="Password:" name="password" required=true type="password"/>
+                            <x-forms.text label="Passwort (leer lassen = unverändert, mindestens 10 Zeichen):" name="password" type="password"/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.button type="submit" class="btn btn-primary">

@@ -25,23 +25,37 @@ class AuthTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_logged_in_user_is_redirected_away_from_login_and_register(): void
+    public function test_logged_in_user_is_redirected_away_from_login(): void
     {
         $s = BookingScenario::create();
 
         $this->actingAs($s->user('team'))->get('/login')->assertRedirect('/');
-        $this->actingAs($s->user('team'))->get('/register')->assertRedirect('/');
     }
 
-    public function test_registered_user_waits_for_activation(): void
+    public function test_self_registration_is_disabled(): void
     {
+        // Konten legt nur ein Admin an (Benutzerverwaltung).
+        $this->get('/register')->assertNotFound();
         $this->post('/register', [
-            'username' => 'neu_registriert',
+            'username' => 'eindringling',
             'password' => 'passwort123',
             'password_confirmation' => 'passwort123',
-        ])->assertRedirect('/login');
+        ])->assertNotFound();
 
-        $this->assertGuest();
-        $this->assertDatabaseHas('users', ['username' => 'neu_registriert', 'role_id' => null, 'is_active' => false]);
+        $this->assertDatabaseMissing('users', ['username' => 'eindringling']);
+    }
+
+    public function test_password_reset_and_confirm_are_disabled(): void
+    {
+        // Benutzer haben keine E-Mail-Adresse, ein Reset per Mail kann nicht funktionieren.
+        foreach (['/password/reset', '/password/reset/token', '/password/confirm'] as $uri) {
+            $this->get($uri)->assertNotFound();
+        }
+        $this->post('/password/email', ['email' => 'x@example.com'])->assertNotFound();
+    }
+
+    public function test_login_page_renders(): void
+    {
+        $this->get('/login')->assertOk();
     }
 }

@@ -7,7 +7,6 @@ use App\Events\EventOfferCreate;
 use App\Models\Position;
 use App\Services\BexioApiService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class EventOfferCreateListener
 {
@@ -79,16 +78,12 @@ class EventOfferCreateListener
                 'api_reference' => $event['id'],
                 'positions' => $positions_array,
             ];
+            // Fehler von Bexio wirft BexioApiService selbst (RequestException bzw. RuntimeException).
             $offer = app(BexioApiService::class)->post('kb_offer', $data);
-
-            if (! isset($offer['error_code'])) {
-                $event->update([
-                    'bexio_offer_id' => $offer['id'],
-                    'contract_status_id' => ContractState::AngebotErstellt,
-                ]);
-            } else {
-                Log::channel('emergency')->error($offer);
-            }
+            $event->update([
+                'bexio_offer_id' => $offer['id'],
+                'contract_status_id' => ContractState::AngebotErstellt,
+            ]);
         }
     }
 }

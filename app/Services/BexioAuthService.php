@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\BexioToken;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -19,7 +20,14 @@ class BexioAuthService
         }
 
         if ($token->isExpired()) {
-            $token = $this->refreshToken($token);
+            // Nur ein Prozess erneuert gleichzeitig: Bexio macht den alten Refresh-Token ungültig,
+            // ein zweiter Refresh mit dem alten würde scheitern und die Verbindung trennen.
+            $token = Cache::lock('bexio-token-refresh', 30)->block(15, function () {
+                // Inzwischen kann ein anderer Prozess erneuert haben.
+                $current = BexioToken::firstOrFail();
+
+                return $current->isExpired() ? $this->refreshToken($current) : $current;
+            });
         }
 
         return $token->access_token;

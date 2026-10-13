@@ -70,6 +70,17 @@ class ApplicationTest extends TestCase
         $this->assertNull($application->bexio_invoice_id);
     }
 
+    public function test_incomplete_application_is_rejected_without_server_error(): void
+    {
+        $this->from('/applications')->post('/applications/store', [])
+            ->assertRedirect('/applications')
+            ->assertSessionHasErrors(['name', 'street', 'zipcode', 'city', 'email', 'why']);
+
+        $this->assertSame(0, Application::count());
+        // Die Seite zeigt, was fehlt (bisher zeigte sie keine Fehler an).
+        $this->get('/applications')->assertSee('Bitte prüfe deine Angaben');
+    }
+
     public function test_reason_without_whitespace_is_rejected_as_spam(): void
     {
         $this->post('/applications/store', $this->applicationData(['why' => 'spam-link']))->assertStatus(422);

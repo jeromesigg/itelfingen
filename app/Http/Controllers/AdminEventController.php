@@ -317,11 +317,7 @@ class AdminEventController extends Controller
     public function destroy($id)
     {
         //
-        $event = Event::findOrFail($id);
-        if ($event->contract_signed) {
-            unlink(public_path().$event->contract_signed->file);
-        }
-        $event->delete();
+        Event::findOrFail($id)->delete();
 
         return redirect('/admin/events');
     }

@@ -43,6 +43,12 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
+        // Öffentliche Formulare (Buchung, Kontakt, Bewerbung) lösen Mails, Slack und Einträge aus.
+        RateLimiter::for('public-forms', fn (Request $request) => [
+            Limit::perMinute(5)->by('form-minute:'.$request->ip()),
+            Limit::perHour(20)->by('form-hour:'.$request->ip()),
+        ]);
+
         RateLimiter::for('booking-login', function (Request $request) {
             return [
                 // Max 5 Versuche pro Minute pro IP

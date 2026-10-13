@@ -252,6 +252,15 @@ class EventWorkflowTest extends TestCase
         Http::assertNothingSent();
     }
 
+    public function test_manager_deletes_booking(): void
+    {
+        $event = $this->s->cancelledEvent;
+
+        $this->actingAs($this->s->user('verwalter'))->delete("/admin/events/{$event->id}")->assertRedirect('/admin/events');
+
+        $this->assertNull($event->fresh());
+    }
+
     public function test_cleaning_mail_is_sent_and_marked(): void
     {
         $event = $this->s->confirmedEvent;
