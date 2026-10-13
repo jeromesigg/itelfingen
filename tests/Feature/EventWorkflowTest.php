@@ -139,7 +139,7 @@ class EventWorkflowTest extends TestCase
             // Regeln siehe tests/README.md (Haus 1, Erwachsene 6, Kinder 4, Parkplätze 5, Endreinigung 1; 2 Nächte)
             return $r['contact_id'] === 77
                 && $positions[1020]['amount'] == 1          // Hausmiete: Menge wie erfasst
-                && $positions[1030]['amount'] == 12         // Personen: Menge × Nächte
+                && $positions[1030]['amount'] === 12        // Personen: Menge × Nächte (als Ganzzahl an Bexio)
                 && $positions[1040]['amount'] == 8
                 && $positions[1210]['amount'] == 4          // Parkplätze: (5 − 3 inbegriffen) × Nächte
                 && $positions[1220]['amount'] == 1          // übrige Zusatzkosten: fix

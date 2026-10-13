@@ -15,6 +15,22 @@ class EventOfferCreateListener
     private const PARKING_INCLUDED = 3;
 
     /**
+     * Menge einer Position in der Offerte: Hausmiete (20) und Zusatzkosten (> 200) fix,
+     * Personen/Nutzung (21-200) pro Nacht, Parkplätze pro Tag, wobei drei im Preis inbegriffen sind.
+     */
+    public static function offerAmount(int $bexioCode, int|float $amount, int $nights): int|float
+    {
+        if ($bexioCode === self::PARKING_CODE) {
+            return max($amount - self::PARKING_INCLUDED, 0) * $nights;
+        }
+        if ($bexioCode > 20 && $bexioCode <= 200) {
+            return $amount * $nights;
+        }
+
+        return $amount;
+    }
+
+    /**
      * Create the event listener.
      *
      * @return void
@@ -41,15 +57,7 @@ class EventOfferCreateListener
             $positions = Position::with('pricelist_position')->where('event_id', $event['id'])->get()->sortBy('pricelist_position.bexio_code');
             $positions_array = [];
             foreach ($positions as $position) {
-                // Hausmiete (20) und Zusatzkosten (> 200) fix, Personen/Nutzung pro Nacht,
-                // Parkplätze pro Tag, wobei drei im Preis inbegriffen sind.
-                $code = $position->pricelist_position['bexio_code'];
-                $amount = $position['amount'];
-                if ($code == self::PARKING_CODE) {
-                    $amount = max($position['amount'] - self::PARKING_INCLUDED, 0) * $event['total_days'];
-                } elseif ($code > 20 && $code <= 200) {
-                    $amount = $event['total_days'] * $position['amount'];
-                }
+                $amount = self::offerAmount($position->pricelist_position['bexio_code'], $position['amount'], $event['total_days']);
                 if ($amount > 0) {
                     $positions_array[] = [
                         'amount' => $amount,

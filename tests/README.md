@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 10.10.2026: **289 Testfälle in 27 Dateien**, Laufzeit rund 8 Sekunden.
+Stand 13.10.2026: **347 Testfälle in 32 Dateien** (58 Unit, 289 Feature), Laufzeit rund 12 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -21,6 +21,7 @@ Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ```bash
 vendor/bin/phpunit                                        # alle Tests
+vendor/bin/phpunit --testsuite Unit                       # nur Unit-Tests (ohne Datenbank, unter 1 Sekunde)
 vendor/bin/phpunit tests/Feature/ContactTest.php          # eine Datei
 vendor/bin/phpunit --filter test_contact_form             # einzelne Tests
 ```
@@ -42,6 +43,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Datei | Zweck |
 |---|---|
 | `phpunit.xml` | SQLite in-memory, Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN` |
+| `tests/UnitTestCase.php` | Basis für Unit-Tests, die Laravel brauchen (config, Validator), aber keine Datenbank; eine DB-Abfrage bricht den Test ab |
 | `tests/TestCase.php` | `RefreshDatabase` mit `TestingSeeder`, Schutz vor echter DB, `withoutVite()`, keine echten HTTP-Aufrufe |
 | `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210 |
 
@@ -78,6 +80,11 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 | Bereich | Datei | Fälle | Prüft |
 |---|---|---:|---|
+| Unit | `Unit/OfferAmountTest` | 11 | Mengenregel der Offerte (`EventOfferCreateListener::offerAmount`) |
+| Unit | `Unit/ExternalBookingParserTest` | 19 | Parser Anfrage-Mail und Buchungs-PDF: Zeilenenden, Namen, Anrede, Adressen, fehlende Felder |
+| Unit | `Unit/UserRoleTest` | 10 | Rollenstufen pro Rolle und aktiv/inaktiv, unbekannte Stufe |
+| Unit | `Unit/ModelHelpersTest` | 7 | Buchungsnummer, Ablauf des Bexio-Tokens (60 s Puffer) |
+| Unit | `Unit/ImageUploadTest` | 11 | Bildendung aus dem Inhalt, PHP/SVG/HTML abgelehnt |
 | Smoke | `Smoke/AllRoutesSmokeTest` | 6 | Jede GET-Route pro Rolle ohne Serverfehler |
 | Smoke | `Smoke/PagesRenderTest` | 4 | Jeder Menü-Link pro Rolle lädt (200), öffentliche Seiten |
 | Grundlagen | `TestInfrastructureTest` | 10 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
@@ -284,8 +291,8 @@ Bestätigt am 10.10.2026.
 
 ## Neuen Test schreiben
 
-1. Ort wählen: `tests/Feature/Security` für Berechtigungen, `tests/Feature/Smoke` für seitenweite Prüfungen, sonst `tests/Feature`.
-2. Von `Tests\TestCase` erben, Testdaten mit `BookingScenario` oder den Factories.
+1. Ort wählen: `tests/Unit` für reine Logik ohne Datenbank und HTTP (Regeln, Parser, Hilfsmethoden), `tests/Feature/Security` für Berechtigungen, `tests/Feature/Smoke` für seitenweite Prüfungen, sonst `tests/Feature`.
+2. Unit: von `PHPUnit\Framework\TestCase` erben, oder von `Tests\UnitTestCase`, wenn `config()` oder der Validator gebraucht wird. Feature: von `Tests\TestCase` erben, Testdaten mit `BookingScenario` oder den Factories.
 3. Bei Fehlern zuerst den Test (rot), dann den Fix.
 4. Methoden `test_<englisch_snake_case>`, Erklärungen auf Deutsch.
 5. Externe Dienste nie wirklich aufrufen (`Http::fake()`, `Notification::fake()`, `Mail::fake()`).

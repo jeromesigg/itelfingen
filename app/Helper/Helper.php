@@ -14,6 +14,9 @@ use setasign\Fpdi\Fpdi;
 
 class Helper
 {
+    /** Anreden im Buchungs-PDF */
+    private const SALUTATIONS = ['Frau', 'Herr'];
+
     public static function PrintParking(Event $event)
     {
         $outputFile = Storage::disk('local')->path('files/Parkkarten/Parkkarte_'.str_pad($event['id'], 5, '0', STR_PAD_LEFT).'.pdf');
@@ -327,15 +330,14 @@ class Helper
 
         preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
 
-        // "Vorname Nachname" in einem Feld: letztes Wort als Nachname, der Rest als Vorname.
-        $nameParts = preg_split('/\s+/u', $extract('Name') ?? '', -1, PREG_SPLIT_NO_EMPTY);
-        $lastName = array_pop($nameParts);
+        [$firstname, $lastName] = self::splitName($extract('Name') ?? '');
+        $number = $extract('Anfragenummer');
 
         return [
-            'buchungsnummer' => 'A-'.$extract('Anfragenummer'),
+            'buchungsnummer' => $number ? 'A-'.$number : null,
             'mietdauer_von' => isset($dates[1]) ? self::convertDate($dates[1]) : null,
             'mietdauer_bis' => isset($dates[2]) ? self::convertDate($dates[2]) : null,
-            'vorname' => $nameParts ? implode(' ', $nameParts) : null,
+            'vorname' => $firstname,
             'name' => $lastName,
             'gruppe' => $extract('Gruppenart'),
             'anzahl_personen' => preg_match('/(\d+)/', $extract('Anzahl') ?? '', $n) ? $n[1] : null,
@@ -385,13 +387,28 @@ class Helper
         return $date === null ? null : Carbon::createFromFormat('d.m.Y', $date)->format('Y-m-d');
     }
 
+    /**
+     * "Vorname Nachname" in einem Feld: letztes Wort als Nachname, der Rest als Vorname.
+     *
+     * @return array{?string, ?string} [Vorname, Nachname]
+     */
+    private static function splitName(string $fullName): array
+    {
+        $parts = preg_split('/\s+/u', trim($fullName), -1, PREG_SPLIT_NO_EMPTY);
+        $lastName = array_pop($parts);
+
+        return [$parts ? implode(' ', $parts) : null, $lastName];
+    }
+
     private static function parseName(string $nameBlock): array
     {
         $lines = array_values(array_filter(array_map('trim', explode("\n", $nameBlock))));
-        $nameParts = explode(' ', $lines[0] ?? '');
-        $anrede = $nameParts[0] ?? '';
-        $vorname = $nameParts[1] ?? '';
-        $name = $nameParts[2] ?? '';
+        $nameParts = preg_split('/\s+/u', $lines[0] ?? '', -1, PREG_SPLIT_NO_EMPTY);
+        // Anrede nur, wenn das PDF eine angibt; sonst ist das erste Wort schon der Vorname.
+        $anrede = in_array($nameParts[0] ?? '', self::SALUTATIONS, true) ? array_shift($nameParts) : '';
+        [$vorname, $name] = self::splitName(implode(' ', $nameParts));
+        $vorname ??= '';
+        $name ??= '';
 
         preg_match('/^(.+?)\s+(\d+\w*)$/', $lines[1] ?? '', $adresse);
         $strasse = $adresse[1] ?? '';
