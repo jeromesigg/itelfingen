@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 10.10.2026: **221 Testfälle in 20 Dateien**, Laufzeit rund 7 Sekunden.
+Stand 10.10.2026: **282 Testfälle in 26 Dateien**, Laufzeit rund 8 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -28,7 +28,7 @@ vendor/bin/phpunit --filter test_contact_form             # einzelne Tests
 Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpunit`.
 
 - **Datenbank:** immer SQLite im Arbeitsspeicher, nie die Datenbank aus der `.env`. `tests/TestCase.php` bricht ab, falls die Config gecacht ist und auf MySQL zeigt.
-- **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz, Slack und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`.
+- **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`. Der Google-Kalender läuft nicht über `Http`: `TestCase` ersetzt `GoogleCalendarService` durch `Tests\Support\FakeGoogleCalendar`. Google Sheets und Slack (DailyTask) per Facade-Mock (`Sheets::shouldReceive`, `Slack::shouldReceive`), Slack-Benachrichtigungen entfallen mangels Webhook.
 - **CI:** `.github/workflows/tests.yml` mit den Jobs `pint` und `phpunit` (PHP 8.3), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
 - **Code-Stil:** Laravel Pint (`pint.json`, Preset `laravel`): `vendor/bin/pint --test` prüft, `vendor/bin/pint` korrigiert. Der Git-Hook `.githooks/pre-commit` formatiert gestagte PHP-Dateien beim Commit; `composer install` aktiviert ihn (`git config core.hooksPath .githooks`). Teilweise gestagte PHP-Dateien blockieren den Commit. VS Code formatiert beim Speichern (`.vscode/settings.json`, Erweiterung "Laravel Pint").
 - **git blame:** Der Formatierungs-Commit steht in `.git-blame-ignore-revs`. GitHub berücksichtigt das automatisch, lokal einmal `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
@@ -80,7 +80,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 |---|---|---:|---|
 | Smoke | `Smoke/AllRoutesSmokeTest` | 6 | Jede GET-Route pro Rolle ohne Serverfehler |
 | Smoke | `Smoke/PagesRenderTest` | 4 | Jeder Menü-Link pro Rolle lädt (200), öffentliche Seiten |
-| Grundlagen | `TestInfrastructureTest` | 9 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
+| Grundlagen | `TestInfrastructureTest` | 10 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
 | Öffentlich | `CreateMultiDayEventTest` | 6 | Buchungsformular |
 | Öffentlich | `ContactTest` | 4 | Kontaktformular |
 | Öffentlich | `ApplicationTest` | 4 | Bewerbung Genossenschaft |
@@ -90,6 +90,12 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Admin | `NewsletterTest` | 3 | Newsletter-Empfänger bearbeiten und löschen |
 | Admin | `MaintenanceTest` | 10 | Wartungsseite: Migrationen, Cache, nur Admin, nur POST |
 | Kundenbereich | `CustomerBookingPageTest` | 4 | Buchungsübersicht mit Bexio-Links, auch wenn Bexio fehlt |
+| Kundenbereich | `CustomerLoginTest` | 5 | Login mit Buchungsnummer und PLZ, Fehlermeldung, Rate-Limit |
+| Fachlogik | `EventWorkflowTest` | 14 | Buttons 1-6: Offerte, Rechnung, Versand über Bexio; Putzfirma-Mail |
+| Fachlogik | `DoorCodeTest` | 6 | Türcode in Glutz (JSON-RPC) |
+| Fachlogik | `ScheduledTasksTest` | 15 | Einplanung und Inhalt der täglichen, wöchentlichen und monatlichen Tasks |
+| Fachlogik | `NotificationMailsTest` | 17 | Jede Mail wird gebaut und versendet: Betreff, Empfänger, Anhänge |
+| Fachlogik | `ExportsTest` | 3 | CSV-Exporte Buchungen und Newsletter, Newsletter-Import |
 | Sicherheit | `Security/RoleAccessTest` | 97 | Jede Admin-Route pro Rolle (inkl. kein Serverfehler), Navigation |
 | Sicherheit | `Security/UserManagementTest` | 17 | Benutzer: Admin alle, sonst nur eigenes Profil |
 | Sicherheit | `Security/XssTest` | 5 | Eingaben aus öffentlichen Formularen in Admin-Tabellen |
@@ -179,6 +185,20 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 **[`CustomerBookingPageTest`](Feature/CustomerBookingPageTest.php)**: Kundenbereich `bookings/{uuid}` fragt Bexio nur, wenn Offerte/Rechnung existieren, zeigt deren Links und lädt auch, wenn Bexio nicht erreichbar oder nicht verbunden ist.
 
+### Fachlogik
+
+**[`EventWorkflowTest`](Feature/EventWorkflowTest.php)**: Formular "Buchung bearbeiten" mit den echten Button-Werten. 1 speichert (nur Positionen dieser Buchung), 2 legt Kontakt und Offerte in Bexio an (Mengenregeln siehe unten), 3 versendet die Offerte, 4 erstellt die Rechnung (Buchung bestätigt, Google-Kalender, Checkliste, Newsletter), 5 versendet die Rechnung, 6 Info Genossenschaft. Ein Test liest alle Buttons aus der View in jedem Vertragsstatus und prüft, dass der Controller sie kennt.
+
+**[`DoorCodeTest`](Feature/DoorCodeTest.php)**: Besucher in Glutz anlegen bzw. wiederverwenden, Code setzen, Hauseingang vom Anreisetag 00:00 bis Abreisetag 23:59 freigeben; vergebener Code, ungültiger Code, Glutz nicht erreichbar (JSON-Fehler 502).
+
+**[`ScheduledTasksTest`](Feature/ScheduledTasksTest.php)**: Einplanung (Cron-Ausdrücke) und Lauf ohne Daten. Täglich: letzte Infos 2 Wochen vor Anreise (nur bestätigt mit Türcode, einmal), Rechnung für Bewerbungen nach 2 Wochen (Bexio, Google Sheet, Newsletter), Slack-Hinweis 2 Tage vorher, Glutz-Besucher 3 Tage nach Abreise löschen. Abends: Feedback-Mail einmal. Wöchentlich/monatlich: Inhalt der Übersichtsmails. Slack und Google Sheets sind per Facade-Mock ersetzt.
+
+**[`NotificationMailsTest`](Feature/NotificationMailsTest.php)**: alle 11 Benachrichtigungen über den array-Mailer, mit Anhängen (Hausordnung, Rechnung, Kalender-Einladung, Infos, Parkkarte); Türcode in den letzten Infos; externe Buchungsnummer im Betreff. Eigenes Storage-Verzeichnis mit Platzhalter-PDFs (die Vorlagen liegen nicht im Repo).
+
+**[`ExportsTest`](Feature/ExportsTest.php)**: `Excel::fake()`; Buchungsexport ohne Stornos und ohne Personendaten, Newsletter getrennt nach Buchungen und Mitgliedern, Import ohne Duplikate.
+
+**[`CustomerLoginTest`](Feature/CustomerLoginTest.php)**: Buchungsnummer (auch mit führenden Nullen) und PLZ führen zur Buchung; Fehlermeldung erscheint; höchstens 3 Versuche pro Buchung und Stunde.
+
 ### Sicherheit
 
 **[`RoleAccessTest`](Feature/Security/RoleAccessTest.php)**: setzt die Berechtigungstabelle unten durch. Jede Route steht mit ihrer Mindeststufe (`team` < `verwalter` < `admin`) in `pages()` bzw. `actions()`; **neue Admin-Routen dort eintragen**.
@@ -243,6 +263,19 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 Umsetzung: Middleware `role:team|verwalter|admin` (`App\Http\Middleware\Role`) auf den Routengruppen in `routes/web.php`; `User::hasRoleLevel()`. Eingeloggte ohne Recht bekommen 403, Gäste die Login-Seite.
 
 Wer diese Regeln ändert, muss auch die Tests anpassen.
+
+### Offerte: Mengen pro Position (EventOfferCreateListener, festgehalten in EventWorkflowTest)
+
+Bestätigt am 10.10.2026.
+
+| Position (bexio_code) | Menge in der Offerte |
+|---|---|
+| Hausmiete (20) | wie in der Buchung erfasst |
+| Personen/Nutzung (21-200) | erfasste Menge × Anzahl Nächte |
+| Parkplätze (210) | (erfasste Menge − 3 inbegriffene, mindestens 0) × Anzahl Nächte |
+| übrige Zusatzkosten (> 200) | fix, wie erfasst |
+| Menge 0 | Position entfällt |
+| Rabatt | nur auf Positionen ab Code 100 |
 
 ---
 

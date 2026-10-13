@@ -39,8 +39,8 @@ class FeedbackMail extends Mailable
         $name = $this->event['firstname'].' '.$this->event['name'];
         $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
         $number = str_pad($this->event['id'], 5, '0', STR_PAD_LEFT);
-        if (isset($event['foreign_key'])) {
-            $number .= ' ('.$event['foreign_key'].')';
+        if (isset($this->event['foreign_key'])) {
+            $number .= ' ('.$this->event['foreign_key'].')';
         }
 
         return $this->markdown('emails.events.feedback', ['event' => $this->event])

@@ -127,7 +127,7 @@
                                 @case(config('status.contract_offen'))  
                                     <x-forms.container class="col-xl-2 col-6">
                                         <x-forms.button type="submit" class="focus:outline-none text-white bg-norway hover:bg-norway hover:text-white focus:ring-4 focus:ring-norway font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-norway dark:hover:bg-norway dark:focus:ring-norway" name="submit" value="2 Angebot erstellen">
-                                            {{config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen'}}
+                                            2 Angebot erstellen
                                         </x-forms.button>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6"/>

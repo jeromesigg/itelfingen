@@ -5,12 +5,12 @@ namespace App\Helper;
 use App\Models\Event;
 use App\Models\Position;
 use App\Models\PricelistPosition;
+use App\Services\GoogleCalendarService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\Fpdi;
-use Spatie\GoogleCalendar\Event as Event_API;
 
 class Helper
 {
@@ -104,11 +104,7 @@ class Helper
 
     public static function EventToGoogleCalendar(Event $event)
     {
-        $event_api = new Event_API;
-        $event_api->name = $event['firstname'].' '.$event['name'].' - '.$event['group_name'].' - '.$event['telephone'];
-        $event_api->startDate = Carbon::parse($event->start_date);
-        $event_api->endDate = Carbon::parse($event->end_date)->addDay();
-        $event_api->save();
+        app(GoogleCalendarService::class)->addBooking($event);
     }
 
     public static function GetEventUserCheck(Event $event)

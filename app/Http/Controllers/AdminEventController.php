@@ -224,7 +224,8 @@ class AdminEventController extends Controller
         $input['late_checkout'] = $request->has('late_checkout');
         if (isset($input['positions'])) {
             foreach ($input['positions'] as $index => $plposition) {
-                Position::where('id', $index)->update(['amount' => $plposition]);
+                // Nur Positionen dieser Buchung, die IDs kommen aus dem Formular.
+                $event->positions()->whereKey($index)->update(['amount' => $plposition]);
             }
         }
         if ($input['contract_status_id'] == config('status.contract_storniert')) {
@@ -468,5 +469,10 @@ class AdminEventController extends Controller
                 }
             }
         }
+
+        // Glutz lieferte keinen Besucher oder keinen Zugangspunkt: JSON-Fehler statt leerer Antwort.
+        return response()->json([
+            'error' => 'Glutz nicht erreichbar oder unvollständige Antwort. Bitte später erneut versuchen.',
+        ], 502);
     }
 }

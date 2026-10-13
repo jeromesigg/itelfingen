@@ -8,12 +8,14 @@ use App\Models\PricelistPosition;
 use App\Models\Role;
 use App\Models\User;
 use App\Providers\AppServiceProvider;
+use App\Services\GoogleCalendarService;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Database\MySqlConnection;
 use Illuminate\Support\Facades\DB;
 use Mockery;
 use RuntimeException;
 use Tests\Support\BookingScenario;
+use Tests\Support\FakeGoogleCalendar;
 use Tests\TestCase;
 
 /**
@@ -70,12 +72,17 @@ class TestInfrastructureTest extends TestCase
         event(new ConnectionEstablished($connection));
     }
 
+    public function test_google_calendar_is_faked(): void
+    {
+        $this->assertInstanceOf(FakeGoogleCalendar::class, app(GoogleCalendarService::class));
+    }
+
     public function test_seeder_creates_master_data(): void
     {
         $this->assertSame(4, Role::count());
         $this->assertNotNull(Homepage::find(1));
         $this->assertTrue(User::find(1)->isAdmin());
-        $this->assertSame([20, 30, 40, 50, 210], PricelistPosition::pluck('bexio_code')->all());
+        $this->assertSame([20, 30, 40, 50, 210, 220, 300], PricelistPosition::pluck('bexio_code')->all());
     }
 
     public function test_scenario_creates_users_with_expected_rights(): void

@@ -75,7 +75,7 @@ class GlutzAPI
         return true;
     }
 
-    public static function getAccessPointId(): int
+    public static function getAccessPointId(): ?int
     {
         return self::ApiRequest('getAccessPoint', [['Access Point' => 'Hauseingang']]);
     }

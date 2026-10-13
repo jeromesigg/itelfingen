@@ -125,8 +125,14 @@ class HomeController extends Controller
 
     public function bookings_check(Request $request)
     {
-        $input = $request->all();
-        $event = Event::where('id', intval($input['id']))->where('plz', $input['plz'])->first();
+        $failed = fn () => redirect()->route('bookings.login')
+            ->withErrors(['login' => 'Die eingegebenen Daten sind nicht korrekt.'])
+            ->withInput($request->only('id'));
+
+        if (! is_numeric($request->input('id')) || ! is_numeric($request->input('plz'))) {
+            return $failed();
+        }
+        $event = Event::where('id', intval($request->input('id')))->where('plz', $request->input('plz'))->first();
         if ($event === null) {
             Log::warning('Fehlgeschlagener Booking-Login-Versuch', [
                 'ip' => $request->ip(),
@@ -134,7 +140,7 @@ class HomeController extends Controller
                 'user_agent' => $request->userAgent(),
             ]);
 
-            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
+            return $failed();
         }
 
         return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);

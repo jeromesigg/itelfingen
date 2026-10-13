@@ -11,7 +11,6 @@ use App\Models\Newsletter;
 use App\Models\PricelistPosition;
 use App\Models\Room;
 use App\Notifications\ApplicationInvoiceNotification;
-use App\Notifications\EventFeedbackNotification;
 use App\Notifications\EventLastInfosNotification;
 use App\Services\BexioApiService;
 use Carbon\Carbon;
@@ -83,19 +82,6 @@ class DailyTask extends Command
             $event->update(['last_info' => true]);
         }        if (count($events) > 0) {
             $this->info(count($events).' Letzte Infos-Emails versendet.');
-        }
-    }
-
-    public function SendFeedbackMails()
-    {
-        $date = Carbon::today();
-        $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
-
-        foreach ($events as $event) {
-            Notification::send($event, new EventFeedbackNotification($event));
-            $event->update(['feedback_mail' => true]);
-        }        if (count($events) > 0) {
-            $this->info(count($events).' Feedback-Mails versendet.');
         }
     }
 

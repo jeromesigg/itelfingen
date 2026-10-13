@@ -15,14 +15,17 @@ class TestingSeeder extends Seeder
     {
         $this->call(BasisdatenSeeder::class);
 
-        // EventCreatedListener erwartet die Codes 20 (Übernachtung), 50 (Tagesnutzung) und 210 (Reinigung).
-        // Codes < 100 sind Personen-/Nutzungspositionen, > 200 Zusatzkosten (siehe EventOfferCreateListener).
+        // EventCreatedListener erwartet die Codes 20 (Hausmiete), 50 (Tagesnutzung) und 210 (Parkplätze).
+        // Codes 21-200 werden pro Nacht verrechnet, > 200 sind Zusatzkosten (siehe EventOfferCreateListener).
         $positions = [
-            ['bexio_code' => 20, 'name' => 'Hausmiete pro Nacht', 'price' => 300, 'show' => false],
-            ['bexio_code' => 30, 'name' => 'Erwachsene pro Nacht', 'price' => 20, 'show' => true],
-            ['bexio_code' => 40, 'name' => 'Kinder pro Nacht', 'price' => 10, 'show' => true],
-            ['bexio_code' => 50, 'name' => 'Tagesnutzung', 'price' => 150, 'show' => false],
-            ['bexio_code' => 210, 'name' => 'Reinigung', 'price' => 200, 'show' => false],
+            ['bexio_code' => 20, 'bexio_id' => 1020, 'name' => 'Hausmiete pro Nacht', 'price' => 300, 'show' => false],
+            ['bexio_code' => 30, 'bexio_id' => 1030, 'name' => 'Erwachsene pro Nacht', 'price' => 20, 'show' => true],
+            ['bexio_code' => 40, 'bexio_id' => 1040, 'name' => 'Kinder pro Nacht', 'price' => 10, 'show' => true],
+            ['bexio_code' => 50, 'bexio_id' => 1050, 'name' => 'Tagesnutzung', 'price' => 150, 'show' => false],
+            ['bexio_code' => 210, 'bexio_id' => 1210, 'name' => 'Parkplatz pro Tag', 'price' => 5, 'show' => false],
+            ['bexio_code' => 220, 'bexio_id' => 1220, 'name' => 'Endreinigung', 'price' => 150, 'show' => false],
+            // Genossenschaftsschein, Rechnung für Bewerbungen (DailyTask)
+            ['bexio_code' => 300, 'bexio_id' => 1300, 'name' => 'Genossenschaftsschein', 'price' => 500, 'show' => false],
         ];
         foreach ($positions as $position) {
             PricelistPosition::create($position + ['archive_status_id' => config('status.aktiv')]);

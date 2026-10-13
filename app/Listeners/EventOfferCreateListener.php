@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class EventOfferCreateListener
 {
+    private const PARKING_CODE = 210;
+
+    private const PARKING_INCLUDED = 3;
+
     /**
      * Create the event listener.
      *
@@ -37,10 +41,13 @@ class EventOfferCreateListener
             $positions = Position::with('pricelist_position')->where('event_id', $event['id'])->get()->sortBy('pricelist_position.bexio_code');
             $positions_array = [];
             foreach ($positions as $position) {
+                // Hausmiete (20) und Zusatzkosten (> 200) fix, Personen/Nutzung pro Nacht,
+                // Parkplätze pro Tag, wobei drei im Preis inbegriffen sind.
+                $code = $position->pricelist_position['bexio_code'];
                 $amount = $position['amount'];
-                if ($position->pricelist_position['bexio_code'] > 200) {
-                    $amount = max($position['amount'] - 3, 0) * $event['total_days'];
-                } elseif ($position->pricelist_position['bexio_code'] > 20) {
+                if ($code == self::PARKING_CODE) {
+                    $amount = max($position['amount'] - self::PARKING_INCLUDED, 0) * $event['total_days'];
+                } elseif ($code > 20 && $code <= 200) {
                     $amount = $event['total_days'] * $position['amount'];
                 }
                 if ($amount > 0) {

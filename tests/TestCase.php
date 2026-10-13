@@ -2,11 +2,14 @@
 
 namespace Tests;
 
+use App\Services\GoogleCalendarService;
 use Database\Seeders\TestingSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
+use Tests\Support\FakeGoogleCalendar;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -27,9 +30,19 @@ abstract class TestCase extends BaseTestCase
 
         // Kein Test darf echte Dienste (Bexio, Glutz, Slack, Healthchecks) erreichen.
         Http::preventStrayRequests();
+        // Der Google-Client läuft nicht über Http und würde mit lokalen Zugangsdaten echte Einträge anlegen.
+        $this->app->instance(GoogleCalendarService::class, new FakeGoogleCalendar);
 
         // Excel-Downloads (maatwebsite/excel) löschen ihre Temp-Datei erst nach dem Senden, was im Test nie passiert.
         config(['excel.temporary_files.local_path' => sys_get_temp_dir().'/laravel-excel-tests']);
+    }
+
+    protected function tearDown(): void
+    {
+        // Temp-Dateien der Excel-Downloads (siehe setUp) nicht liegen lassen.
+        File::deleteDirectory(sys_get_temp_dir().'/laravel-excel-tests');
+
+        parent::tearDown();
     }
 
     /**
