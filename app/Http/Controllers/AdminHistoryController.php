@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\History;
@@ -53,7 +54,7 @@ class AdminHistoryController extends Controller
         $input['shorttitle'] = Str::slug($input['title'], '_');
         $index = History::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         History::create($input);
 
         return redirect('/admin/histories');

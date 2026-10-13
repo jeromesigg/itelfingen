@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
+use App\Enums\BookingState;
+use App\Enums\ContractState;
+use App\Enums\UserRole;
 use App\Events\EventCreated;
 use App\Events\EventInvoiceCreate;
 use App\Events\EventInvoiceSend;
@@ -87,7 +91,7 @@ class AdminEventController extends Controller
         $events = Event::when($contract_status, function ($query, $contract_status) {
             $query->where('contract_status_id', '=', $contract_status['id']);
         }, function ($query) {
-            $query->where('contract_status_id', '<', config('status.contract_storniert'));
+            $query->whereIn('contract_status_id', ContractState::before(ContractState::Storniert));
         })
             ->when($date, function ($query, $date) {
                 $query->where('start_date', '>=', $date);
@@ -145,8 +149,8 @@ class AdminEventController extends Controller
         //
         $homepages = Homepage::all();
         $event_statuses = EventStatus::pluck('name', 'id')->all();
-        $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
-        $positions = PricelistPosition::where([['show', true], ['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
+        $users = User::where('role_id', UserRole::Verwalter)->pluck('username', 'id')->all();
+        $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
         $title = 'Buchung erstellen';
 
         return view('admin.events.create', compact('event_statuses', 'homepages', 'users', 'positions', 'title'));
@@ -162,7 +166,7 @@ class AdminEventController extends Controller
         //
         $input = $request->all();
         $input['external'] = isset($input['foreign_key']);
-        $input['contract_status_id'] = config('status.contract_offen');
+        $input['contract_status_id'] = ContractState::Offen;
         $one_day = false;
         if ($input['total_days'] < 1) {
             $input['start_date'] = new Carbon($input['start_date']);
@@ -178,7 +182,7 @@ class AdminEventController extends Controller
         $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
-        if ($event['event_status_id'] == config('status.event_eigene')) {
+        if ($event->event_status_id === BookingState::Eigene) {
             Helper::EventToGoogleCalendar($event);
         }
 
@@ -203,7 +207,7 @@ class AdminEventController extends Controller
         $event_statuses = EventStatus::pluck('name', 'id')->all();
         $contract_statuses = ContractStatus::pluck('name', 'id')->all();
         $event = Event::findOrFail($id);
-        $users = User::where('role_id', config('status.role_Verwalter'))->pluck('username', 'id')->all();
+        $users = User::where('role_id', UserRole::Verwalter)->pluck('username', 'id')->all();
         $title = str_pad($event['id'], 5, '0', STR_PAD_LEFT).' - Buchung bearbeiten';
 
         return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'title'));
@@ -228,8 +232,8 @@ class AdminEventController extends Controller
                 $event->positions()->whereKey($index)->update(['amount' => $plposition]);
             }
         }
-        if ($input['contract_status_id'] == config('status.contract_storniert')) {
-            $input['event_status_id'] = config('status.event_storniert');
+        if (ContractState::tryFrom((int) ($input['contract_status_id'] ?? 0)) === ContractState::Storniert) {
+            $input['event_status_id'] = BookingState::Storniert;
         }
         $input['phonenumber_query'] = str_replace(' ', '', $input['telephone']);
         $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
@@ -246,7 +250,7 @@ class AdminEventController extends Controller
                     EventOfferSend::dispatch($event);
                     Notification::send($event, new EventOfferSendNotification($event, $additional_text));
 
-                    $event->update(['contract_status_id' => config('status.contract_angebot_versendet')]);
+                    $event->update(['contract_status_id' => ContractState::AngebotVersendet]);
                 }
                 break;
             case '4':
@@ -255,8 +259,8 @@ class AdminEventController extends Controller
                     Notification::send($event, new EventInvoiceCreatedNotification($event, $additional_text));
 
                     $event->update([
-                        'event_status_id' => config('status.event_bestaetigt'),
-                        'contract_status_id' => config('status.contract_rechnung_erstellt'), ]);
+                        'event_status_id' => BookingState::Bestaetigt,
+                        'contract_status_id' => ContractState::RechnungErstellt, ]);
 
                     Newsletter::updateOrCreate(
                         ['email' => $event['email']],
@@ -273,7 +277,7 @@ class AdminEventController extends Controller
                     Notification::send($event, new EventInvoiceSendNotification($event, $additional_text));
 
                     $event->update([
-                        'contract_status_id' => config('status.contract_rechnung_versendet'), ]);
+                        'contract_status_id' => ContractState::RechnungVersendet, ]);
                 }
                 break;
             case '6':
@@ -325,10 +329,10 @@ class AdminEventController extends Controller
     public function api()
     {
         //
-        $events = Event::where('end_date', '>', now())->where('event_status_id', '<', config('status.event_storniert'))->where('external', false)->get();
+        $events = Event::where('end_date', '>', now())->whereIn('event_status_id', BookingState::notCancelled())->where('external', false)->get();
         $events_return = [];
         foreach ($events as $event) {
-            $status = ($event['event_status_id'] === config('status.event_bestaetigt') || $event['event_status_id'] === config('status.event_eigene'));
+            $status = $event->bookingState()->isOccupied();
             $events_return[] = [
                 'id' => $event['id'],
                 'begins_at' => $event['start_date'],
@@ -345,7 +349,7 @@ class AdminEventController extends Controller
         //
         $calendar = Calendar::create(config('app.name'))
             ->withoutTimezone();
-        $events = Event::where('end_date', '>', now())->where('event_status_id', '<', config('status.event_storniert'))->get();
+        $events = Event::where('end_date', '>', now())->whereIn('event_status_id', BookingState::notCancelled())->get();
         foreach ($events as $event) {
             $start = Carbon::parse($event->start_date);
             $end = Carbon::parse($event->end_date)->addDays(1);
@@ -394,7 +398,7 @@ class AdminEventController extends Controller
         if (! is_numeric($days) || $days < 1) {
             $days = 1;
         }
-        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', [config('status.event_neu'), config('status.event_storniert')])->get();
+        $events = Event::where('start_date', '<=', Carbon::today()->addDays($days))->where('end_date', '>=', Carbon::today())->whereNotIn('event_status_id', [BookingState::Neu, BookingState::Storniert])->get();
 
         //
         return response()->json([

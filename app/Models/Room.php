@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ArchiveState;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,10 @@ class Room extends Model
         'name', 'sort-index', 'archive_status_id',
     ];
 
+    protected $casts = [
+        'archive_status_id' => ArchiveState::class,
+    ];
+
     public function archive_status()
     {
         return $this->belongsTo(ArchiveStatus::class);
@@ -21,6 +26,6 @@ class Room extends Model
 
     public function checkpoints()
     {
-        return $this->hasMany(Checkpoint::class)->where('archive_status_id', '=', config('status.aktiv'))->orderBy('sort-index');
+        return $this->hasMany(Checkpoint::class)->where('archive_status_id', '=', ArchiveState::Aktiv)->orderBy('sort-index');
     }
 }

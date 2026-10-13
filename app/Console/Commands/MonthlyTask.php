@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\BookingState;
 use App\Mail\MonthlyMail;
 use App\Models\Event;
 use Carbon\Carbon;
@@ -45,8 +46,8 @@ class MonthlyTask extends Command
         $events = Event::where('start_date', '<=', $date)
             ->where('start_date', '>', Carbon::today())
             ->where(function ($query) {
-                $query->where('event_status_id', '<>', config('status.event_storniert'))
-                    ->orwhere('event_status_id', '=', config('status.event_storniert'))->where('cleaning_mail', true);
+                $query->where('event_status_id', '<>', BookingState::Storniert)
+                    ->orwhere('event_status_id', '=', BookingState::Storniert)->where('cleaning_mail', true);
             })
             ->orderby('start_date')->get();
 

@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Bookings;
 
+use App\Enums\ContractState;
 use App\Models\Event;
 use App\Services\BexioApiService;
 use Closure;
@@ -41,7 +42,7 @@ class Entry extends Component
         $this->time = null;
         switch ($type) {
             case 'Created':
-                $this->fulfilled = $event['contract_status_id'] >= config('status.contract_offen');
+                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::Offen);
                 $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'm11.5 11.5 2.071 1.994M4 10h5m11 0h-1.5M12 7V4M7 7V4m10 3V4m-7 13H8v-2l5.227-5.292a1.46 1.46 0 0 1 2.065 2.065L10 17Zm-5 3h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z';
                 $this->title = 'Buchung erstellt';
@@ -55,7 +56,7 @@ class Entry extends Component
                 break;
             case 'OfferSend':
                 $offer = $this->bexioDocument('kb_offer', $event['bexio_offer_id']);
-                $this->fulfilled = $event['contract_status_id'] >= config('status.contract_angebot_versendet');
+                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::AngebotVersendet);
                 $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M11 16v-5.5A3.5 3.5 0 0 0 7.5 7m3.5 9H4v-5.5A3.5 3.5 0 0 1 7.5 7m3.5 9v4M7.5 7H14m0 0V4h2.5M14 7v3m-3.5 6H20v-6a3 3 0 0 0-3-3m-2 9v4m-8-6.5h1';
                 $this->title = 'Angebot versendet';
@@ -76,7 +77,7 @@ class Entry extends Component
                 }
                 break;
             case 'InvoiceCreated':
-                $this->fulfilled = $event['contract_status_id'] >= config('status.contract_rechnung_erstellt');
+                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::RechnungErstellt);
                 $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'm8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z';
                 $this->title = 'Buchung definitiv';
@@ -139,7 +140,7 @@ class Entry extends Component
                     ], ];
                 break;
             case 'Feedback':
-                $this->fulfilled = $event['contract_status_id'] >= config('status.contract_rechnung_versendet');
+                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::RechnungVersendet);
                 $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M10 3v4a1 1 0 0 1-1 1H5m8-2h3m-3 3h3m-4 3v6m4-3H8M19 4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1ZM8 12v6h8v-6H8Z';
                 $this->title = 'Aufenthalt beendet';

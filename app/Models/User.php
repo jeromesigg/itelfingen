@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -34,6 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
+        'role_id' => UserRole::class,
         'email_verified_at' => 'datetime',
     ];
 
@@ -47,7 +49,7 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->role?->is_admin == 1 && $this->is_active == 1;
+        return $this->role_id?->isAdmin() && $this->is_active == 1;
     }
 
     /**
@@ -55,12 +57,12 @@ class User extends Authenticatable
      */
     public function isTeam()
     {
-        return ($this->role?->is_team == 1 || $this->role?->is_admin == 1) && $this->is_active == 1;
+        return $this->role_id?->hasAdminArea() && $this->is_active == 1;
     }
 
     public function isManager()
     {
-        return $this->role_id == config('status.role_Verwalter') && $this->is_active == 1;
+        return $this->role_id === UserRole::Verwalter && $this->is_active == 1;
     }
 
     /**

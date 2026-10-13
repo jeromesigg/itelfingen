@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Security;
 
+use App\Enums\UserRole;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -128,7 +129,7 @@ class RoleAccessTest extends TestCase
                 continue;
             }
             $response = $this->actingAs($s->user($role))->call($method, $this->uri($uri, $s, $role), [
-                'role_id' => config('status.role_Administrator'),
+                'role_id' => UserRole::Administrator->value,
                 'password' => 'gehackt123',
                 'name' => 'Geändert',
             ]);
@@ -138,7 +139,7 @@ class RoleAccessTest extends TestCase
 
         // Nichts davon darf etwas verändert haben.
         $this->assertNotSame('Geändert', $s->event->fresh()?->name);
-        $this->assertTrue($s->team->fresh()->role_id === config('status.role_Team'));
+        $this->assertTrue($s->team->fresh()->role_id === UserRole::Team);
     }
 
     #[DataProvider('pages')]

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ArchiveState;
 use App\Models\PricelistPosition;
 use Illuminate\Database\Seeder;
 
@@ -28,7 +29,7 @@ class TestingSeeder extends Seeder
             ['bexio_code' => 300, 'bexio_id' => 1300, 'name' => 'Genossenschaftsschein', 'price' => 500, 'show' => false],
         ];
         foreach ($positions as $position) {
-            PricelistPosition::create($position + ['archive_status_id' => config('status.aktiv')]);
+            PricelistPosition::create($position + ['archive_status_id' => ArchiveState::Aktiv]);
         }
     }
 }

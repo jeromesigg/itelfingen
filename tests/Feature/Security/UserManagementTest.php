@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Security;
 
+use App\Enums\ArchiveState;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -47,9 +49,9 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($user)->patch("/admin/users/{$user->id}", [
             'username' => $user->username,
-            'role_id' => config('status.role_Administrator'),
+            'role_id' => UserRole::Administrator->value,
             'is_active' => 1,
-            'archive_status_id' => config('status.aktiv'),
+            'archive_status_id' => ArchiveState::Aktiv->value,
         ]);
 
         $this->assertSame($roleId, $user->fresh()->role_id);
@@ -77,7 +79,7 @@ class UserManagementTest extends TestCase
         $this->actingAs($s->user($role))->post('/admin/users', [
             'username' => 'eindringling',
             'password' => 'passwort123',
-            'role_id' => config('status.role_Administrator'),
+            'role_id' => UserRole::Administrator->value,
         ])->assertForbidden();
         $this->actingAs($s->user($role))->delete("/admin/users/{$s->admin->id}")->assertForbidden();
 
@@ -100,7 +102,7 @@ class UserManagementTest extends TestCase
             'username' => 'neue_verwalterin',
             'fullname' => 'Neue Verwalterin',
             'password' => 'passwort123',
-            'role_id' => config('status.role_Verwalter'),
+            'role_id' => UserRole::Verwalter->value,
         ])->assertRedirect('/admin/users');
 
         $user = User::where('username', 'neue_verwalterin')->sole();
@@ -126,12 +128,31 @@ class UserManagementTest extends TestCase
         $this->actingAs($s->user('admin'))->post('/admin/users', [
             'username' => 'mit_unterschrift',
             'password' => 'passwort123',
-            'role_id' => config('status.role_Verwalter'),
+            'role_id' => UserRole::Verwalter->value,
             'signature' => UploadedFile::fake()->image('unterschrift.png'),
         ])->assertRedirect('/admin/users');
 
         $user = User::where('username', 'mit_unterschrift')->sole();
         Storage::disk('local')->assertExists($user->signature);
+    }
+
+    public function test_unknown_role_is_rejected(): void
+    {
+        $s = BookingScenario::create();
+
+        // Mit dem Enum-Cast würde eine unbekannte Rollen-ID sonst einen Serverfehler auslösen.
+        $this->actingAs($s->user('admin'))->from('/admin/users')->post('/admin/users', [
+            'username' => 'falsche_rolle',
+            'password' => 'passwort123',
+            'role_id' => 4,
+        ])->assertRedirect('/admin/users')->assertSessionHasErrors('role_id');
+        $this->actingAs($s->user('admin'))->from("/admin/users/{$s->team->id}/edit")->patch("/admin/users/{$s->team->id}", [
+            'username' => $s->team->username,
+            'role_id' => 4,
+        ])->assertSessionHasErrors('role_id');
+
+        $this->assertNull(User::where('username', 'falsche_rolle')->first());
+        $this->assertSame(UserRole::Team, $s->team->fresh()->role_id);
     }
 
     public function test_admin_deactivates_user(): void
@@ -140,8 +161,8 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($s->user('admin'))->patch("/admin/users/{$s->team->id}", [
             'username' => $s->team->username,
-            'role_id' => $s->team->role_id,
-            'archive_status_id' => config('status.archiviert'),
+            'role_id' => $s->team->role_id->value,
+            'archive_status_id' => ArchiveState::Archiviert->value,
         ])->assertRedirect('/admin/users');
 
         $this->assertFalse((bool) $s->team->fresh()->is_active);
@@ -153,11 +174,11 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($s->user('admin'))->patch("/admin/users/{$s->team->id}", [
             'username' => $s->team->username,
-            'role_id' => config('status.role_Verwalter'),
-            'archive_status_id' => config('status.aktiv'),
+            'role_id' => UserRole::Verwalter->value,
+            'archive_status_id' => ArchiveState::Aktiv->value,
         ])->assertRedirect('/admin/users');
 
-        $this->assertSame(config('status.role_Verwalter'), $s->team->fresh()->role_id);
+        $this->assertSame(UserRole::Verwalter, $s->team->fresh()->role_id);
         $this->assertTrue((bool) $s->team->fresh()->is_active);
     }
 

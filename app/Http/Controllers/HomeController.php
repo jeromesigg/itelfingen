@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
+use App\Enums\BookingState;
 use App\Models\Event;
 use App\Models\EventCheckpoint;
 use App\Models\Faq;
@@ -37,8 +39,8 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $pictures = Picture::all();
-        $positions = PricelistPosition::where([['show', true], ['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
-        $events = Event::where('event_status_id', '<', config('status.event_storniert'))->where('end_date', '>=', Carbon::now())->get();
+        $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
+        $events = Event::whereIn('event_status_id', BookingState::notCancelled())->where('end_date', '>=', Carbon::now())->get();
         $event_type = 'guest';
         $discount = config('app.discount_enabled');
         $application_enabled = config('app.application_enabled');
@@ -88,7 +90,7 @@ class HomeController extends Controller
     public function about_us()
     {
         $homepage = Homepage::FindOrFail(1);
-        $people = Person::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        $people = Person::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
 
         return view('contents.about_us', compact('homepage', 'people'));
     }
@@ -97,8 +99,8 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $title = 'FAQ';
-        $faqs = Faq::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
-        $faq_chapters = FaqChapter::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        $faqs = Faq::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
+        $faq_chapters = FaqChapter::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
 
         return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs', 'title'));
     }

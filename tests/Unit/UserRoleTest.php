@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Enums\UserRole;
 use App\Models\Role;
 use App\Models\User;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -15,10 +16,10 @@ class UserRoleTest extends UnitTestCase
     private function user(?string $role, bool $active = true): User
     {
         $roles = [
-            'admin' => ['id' => config('status.role_Administrator'), 'is_admin' => 1, 'is_team' => 0],
-            'team' => ['id' => config('status.role_Team'), 'is_admin' => 0, 'is_team' => 1],
-            'gast' => ['id' => config('status.role_Gast'), 'is_admin' => 0, 'is_team' => 0],
-            'verwalter' => ['id' => config('status.role_Verwalter'), 'is_admin' => 0, 'is_team' => 1],
+            'admin' => ['id' => UserRole::Administrator, 'is_admin' => 1, 'is_team' => 0],
+            'team' => ['id' => UserRole::Team, 'is_admin' => 0, 'is_team' => 1],
+            'gast' => ['id' => UserRole::Gast, 'is_admin' => 0, 'is_team' => 0],
+            'verwalter' => ['id' => UserRole::Verwalter, 'is_admin' => 0, 'is_team' => 1],
         ];
         $user = (new User)->forceFill(['role_id' => $role ? $roles[$role]['id'] : null, 'is_active' => $active ? 1 : 0]);
 

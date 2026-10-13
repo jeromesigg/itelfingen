@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Events\EventCreated;
 use App\Models\City;
 use App\Models\Event;
@@ -40,8 +42,8 @@ class EventController extends Controller
         ]);
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'];
-        $input['event_status_id'] = config('status.event_neu');
-        $input['contract_status_id'] = config('status.contract_offen');
+        $input['event_status_id'] = BookingState::Neu;
+        $input['contract_status_id'] = ContractState::Offen;
         $one_day = false;
         if ($input['total_days'] < 1) {
             $input['start_date'] = new Carbon($input['date']);

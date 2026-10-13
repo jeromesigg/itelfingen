@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Mail\WeeklyMail;
 use App\Models\Contact;
 use App\Models\Event;
@@ -43,11 +45,11 @@ class WeeklyTask extends Command
     public function handle()
     {
         $date = Carbon::today()->addMonths(4);
-        $events_new = Event::where('contract_status_id', '<', config('status.contract_angebot_erstellt'))
-            ->where('event_status_id', '<>', config('status.event_eigene'))
+        $events_new = Event::whereIn('contract_status_id', ContractState::before(ContractState::AngebotErstellt))
+            ->where('event_status_id', '<>', BookingState::Eigene)
             ->orderby('start_date')->get();
         $events_open_offers = Event::where('start_date', '>', Carbon::today())
-            ->where('contract_status_id', '=', config('status.contract_angebot_versendet'))
+            ->where('contract_status_id', '=', ContractState::AngebotVersendet)
             ->orderby('start_date')->get();
 
         $tempArray = [];
@@ -67,16 +69,16 @@ class WeeklyTask extends Command
         $events_no_cleaning_mail = Event::where('start_date', '<=', $date)
             ->where('start_date', '>', Carbon::today())
             ->where('cleaning_mail', false)
-            ->where('event_status_id', '=', config('status.event_bestaetigt'))
+            ->where('event_status_id', '=', BookingState::Bestaetigt)
             ->orderby('start_date')->get();
         $events_no_code = Event::where('start_date', '<=', $date)
             ->where('start_date', '>', Carbon::today())
-            ->where('event_status_id', '=', config('status.event_bestaetigt'))
+            ->where('event_status_id', '=', BookingState::Bestaetigt)
             ->whereNull('code')
             ->orderby('start_date')->get();
         $events_no_invoice = Event::where('end_date', '<', Carbon::today())
-            ->where('event_status_id', '=', config('status.event_bestaetigt'))
-            ->where('contract_status_id', '=', config('status.contract_rechnung_erstellt'))
+            ->where('event_status_id', '=', BookingState::Bestaetigt)
+            ->where('contract_status_id', '=', ContractState::RechnungErstellt)
             ->orderby('start_date')->get();
         $contacts_new = Contact::where('done', false)->get();
 

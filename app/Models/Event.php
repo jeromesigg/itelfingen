@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Helper\Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +22,8 @@ class Event extends Model
     ];
 
     protected $casts = [
+        'contract_status_id' => ContractState::class,
+        'event_status_id' => BookingState::class,
         'terms' => 'boolean',
         'cleaning_mail' => 'boolean',
         'last_info' => 'boolean',
@@ -57,6 +61,18 @@ class Event extends Model
     {
         // Ohne Webhook false: sonst wählt Laravel die Slack-Bot-API und die Benachrichtigung bricht ab.
         return config('slack.endpoint') ?: false;
+    }
+
+    /** Buchungsstatus; leere Spalte wie früher als kleinster Status (neu). */
+    public function bookingState(): BookingState
+    {
+        return $this->event_status_id ?? BookingState::Neu;
+    }
+
+    /** Vertragsstatus; leere Spalte wie früher als kleinster Status (offen). */
+    public function contractState(): ContractState
+    {
+        return $this->contract_status_id ?? ContractState::Offen;
     }
 
     public function number()

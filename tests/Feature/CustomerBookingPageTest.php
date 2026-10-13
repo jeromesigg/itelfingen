@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ContractState;
 use App\Models\BexioToken;
 use Illuminate\Support\Facades\Http;
 use Tests\Support\BookingScenario;
@@ -42,7 +43,7 @@ class CustomerBookingPageTest extends TestCase
         $s->confirmedEvent->update([
             'bexio_offer_id' => 11,
             'bexio_invoice_id' => 22,
-            'contract_status_id' => config('status.contract_rechnung_versendet'),
+            'contract_status_id' => ContractState::RechnungVersendet,
         ]);
 
         $this->get("/bookings/{$s->confirmedEvent->uuid}")

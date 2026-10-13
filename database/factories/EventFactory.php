@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -36,8 +38,8 @@ class EventFactory extends Factory
             'end_date' => (clone $start)->modify("+$days days")->format('Y-m-d'),
             'total_days' => $days,
             'total_people' => fake()->numberBetween(1, 19),
-            'event_status_id' => config('status.event_neu'),
-            'contract_status_id' => config('status.contract_offen'),
+            'event_status_id' => BookingState::Neu,
+            'contract_status_id' => ContractState::Offen,
             'terms' => true,
             'uuid' => (string) Str::uuid(),
         ];
@@ -46,16 +48,16 @@ class EventFactory extends Factory
     public function confirmed(): static
     {
         return $this->state([
-            'event_status_id' => config('status.event_bestaetigt'),
-            'contract_status_id' => config('status.contract_rechnung_erstellt'),
+            'event_status_id' => BookingState::Bestaetigt,
+            'contract_status_id' => ContractState::RechnungErstellt,
         ]);
     }
 
     public function cancelled(): static
     {
         return $this->state([
-            'event_status_id' => config('status.event_storniert'),
-            'contract_status_id' => config('status.contract_storniert'),
+            'event_status_id' => BookingState::Storniert,
+            'contract_status_id' => ContractState::Storniert,
         ]);
     }
 

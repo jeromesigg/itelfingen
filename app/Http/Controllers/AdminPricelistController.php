@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
 use App\Models\Pricelist;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class AdminPricelistController extends Controller
         $input = $request->all();
         $index = Pricelist::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         Pricelist::create($input);
 
         return redirect('/admin/pricelists');

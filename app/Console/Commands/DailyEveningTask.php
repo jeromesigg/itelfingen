@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\BookingState;
 use App\Helper\GlutzAPI;
 use App\Models\Event;
 use App\Notifications\EventFeedbackNotification;
@@ -49,7 +50,7 @@ class DailyEveningTask extends Command
     public function SendFeedbackMails()
     {
         $date = Carbon::today()->addDays(1);
-        $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
+        $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', BookingState::Bestaetigt)->get();
 
         foreach ($events as $event) {
             Notification::send($event, new EventFeedbackNotification($event));

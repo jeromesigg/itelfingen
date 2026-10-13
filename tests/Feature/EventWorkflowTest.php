@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Models\BexioToken;
 use App\Models\Event;
 use App\Models\Newsletter;
@@ -67,6 +69,8 @@ class EventWorkflowTest extends TestCase
             'name', 'firstname', 'group_name', 'email', 'street', 'house_number', 'plz', 'city', 'telephone',
             'event_status_id', 'contract_status_id', 'start_date', 'end_date', 'total_days', 'total_people', 'comment',
         ]), ['submit' => $button], $overrides);
+        // Wie im Browser: Enum-Spalten als Zahl
+        $data = array_map(fn ($value) => $value instanceof \BackedEnum ? $value->value : $value, $data);
 
         return $this->actingAs($this->s->user('verwalter'))
             ->from("/admin/events/{$event->id}/edit")
@@ -109,9 +113,9 @@ class EventWorkflowTest extends TestCase
 
     public function test_cancelling_the_contract_cancels_the_booking(): void
     {
-        $this->submit($this->s->event, '1 Buchung updaten', ['contract_status_id' => config('status.contract_storniert')]);
+        $this->submit($this->s->event, '1 Buchung updaten', ['contract_status_id' => ContractState::Storniert]);
 
-        $this->assertSame(config('status.event_storniert'), $this->s->event->fresh()->event_status_id);
+        $this->assertSame(BookingState::Storniert, $this->s->event->fresh()->event_status_id);
     }
 
     public function test_create_offer_creates_contact_and_offer_in_bexio(): void
@@ -127,7 +131,7 @@ class EventWorkflowTest extends TestCase
         $event->refresh();
         $this->assertSame(77, $event->bexio_user_id);
         $this->assertSame(11, $event->bexio_offer_id);
-        $this->assertSame(config('status.contract_angebot_erstellt'), $event->contract_status_id);
+        $this->assertSame(ContractState::AngebotErstellt, $event->contract_status_id);
 
         Http::assertSent(fn (Request $r) => $r->url() === 'https://api.bexio.com/2.0/contact' && $r['name_1'] === $event->name);
         Http::assertSent(function (Request $r) {
@@ -174,11 +178,11 @@ class EventWorkflowTest extends TestCase
     {
         // Der Button in der View hat den Wert " 3 Angebot versenden" (mit Leerzeichen); TrimStrings rettet ihn.
         $event = $this->s->event;
-        $event->update(['bexio_user_id' => 77, 'bexio_offer_id' => 11, 'contract_status_id' => config('status.contract_angebot_erstellt')]);
+        $event->update(['bexio_user_id' => 77, 'bexio_offer_id' => 11, 'contract_status_id' => ContractState::AngebotErstellt]);
 
         $this->submit($event->fresh(), ' 3 Angebot versenden', ['additional_text' => 'Bis bald']);
 
-        $this->assertSame(config('status.contract_angebot_versendet'), $event->fresh()->contract_status_id);
+        $this->assertSame(ContractState::AngebotVersendet, $event->fresh()->contract_status_id);
         // GET: die Benachrichtigung holt den Link der Offerte für die Mail
         $this->assertSame(['POST kb_offer/11/issue', 'POST kb_offer/11/send', 'GET kb_offer/11'], $this->bexioRequests());
         Notification::assertSentTo($event, EventOfferSendNotification::class);
@@ -195,14 +199,14 @@ class EventWorkflowTest extends TestCase
     public function test_create_invoice_confirms_booking(): void
     {
         $event = $this->s->event;
-        $event->update(['bexio_user_id' => 77, 'bexio_offer_id' => 11, 'contract_status_id' => config('status.contract_angebot_versendet')]);
+        $event->update(['bexio_user_id' => 77, 'bexio_offer_id' => 11, 'contract_status_id' => ContractState::AngebotVersendet]);
 
         $this->submit($event->fresh(), '4 Rechnung erstellen');
 
         $event->refresh();
         $this->assertSame(22, $event->bexio_invoice_id);
-        $this->assertSame(config('status.event_bestaetigt'), $event->event_status_id);
-        $this->assertSame(config('status.contract_rechnung_erstellt'), $event->contract_status_id);
+        $this->assertSame(BookingState::Bestaetigt, $event->event_status_id);
+        $this->assertSame(ContractState::RechnungErstellt, $event->contract_status_id);
         $this->assertContains('POST kb_offer/11/invoice', $this->bexioRequests());
         Http::assertSent(fn (Request $r) => $r->url() === 'https://api.bexio.com/2.0/kb_invoice/22'
             && $r['is_valid_to'] === now()->parse($event->end_date)->addDays(30)->toDateString());
@@ -233,7 +237,7 @@ class EventWorkflowTest extends TestCase
 
         $this->submit($event->fresh(), '5 Rechnung versenden');
 
-        $this->assertSame(config('status.contract_rechnung_versendet'), $event->fresh()->contract_status_id);
+        $this->assertSame(ContractState::RechnungVersendet, $event->fresh()->contract_status_id);
         $this->assertSame(['POST kb_invoice/22', 'POST kb_invoice/22/issue', 'POST kb_invoice/22/send', 'GET kb_invoice/22'], $this->bexioRequests());
         Notification::assertSentTo($event, EventInvoiceSendNotification::class);
     }

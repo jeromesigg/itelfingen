@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ArchiveState;
 use Illuminate\Database\Eloquent\Model;
 
 class Faq extends Model
@@ -14,6 +15,10 @@ class Faq extends Model
         'photo_id',
         'sort-index',
         'archive_status_id',
+    ];
+
+    protected $casts = [
+        'archive_status_id' => ArchiveState::class,
     ];
 
     public function archive_status()

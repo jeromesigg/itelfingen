@@ -2,6 +2,7 @@
 
 namespace Tests\Support;
 
+use App\Enums\ArchiveState;
 use App\Models\Application;
 use App\Models\Checkpoint;
 use App\Models\Contact;
@@ -148,7 +149,7 @@ class BookingScenario
     private function createContent(): void
     {
         Model::unguarded(function () {
-            $aktiv = config('status.aktiv');
+            $aktiv = ArchiveState::Aktiv;
             $photo = fn (string $file) => Photo::create(['file' => $file])->id;
 
             $this->faqChapter = FaqChapter::create(['name' => 'Anreise', 'sort-index' => 1, 'symbol' => 'fa-car', 'archive_status_id' => $aktiv, 'photo_id' => $photo('kapitel.png')]);

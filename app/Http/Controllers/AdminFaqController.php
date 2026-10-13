@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\Faq;
@@ -81,7 +82,7 @@ class AdminFaqController extends Controller
         }
         $index = Faq::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         Faq::create($input);
 
         return redirect('/admin/faqs');

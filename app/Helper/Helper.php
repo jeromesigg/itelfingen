@@ -2,6 +2,8 @@
 
 namespace App\Helper;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Models\Event;
 use App\Models\Position;
 use App\Models\PricelistPosition;
@@ -112,11 +114,11 @@ class Helper
 
     public static function GetEventUserCheck(Event $event)
     {
-        switch ($event->event_status['id']) {
-            case config('status.event_eigene'):
+        switch ($event->event_status_id) {
+            case BookingState::Eigene:
                 $user = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Interne Buchung';
                 break;
-            case config('status.event_storniert'):
+            case BookingState::Storniert:
                 $user = '<i class="fa-solid fa-xmark" style="color: indianred"></i> Storniert';
                 break;
             default:
@@ -131,7 +133,7 @@ class Helper
     public static function GetEventCleaningMailCheck(Event $event)
     {
         $cleaning_mail = '';
-        if ($event->event_status['id'] != config('status.event_storniert')) {
+        if ($event->event_status_id !== BookingState::Storniert) {
             $cleaning_mail = $event->cleaning_mail ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Putzmail versendet' :
                 '<i class="fa-solid fa-xmark" style="color: indianred"></i> Kein Putzmail versendet';
             $cleaning_mail .= '<br>';
@@ -143,7 +145,7 @@ class Helper
     public static function GetEventCodeCheck(Event $event)
     {
         $code = '';
-        if ($event->event_status['id'] != config('status.event_eigene') && $event->event_status['id'] != config('status.event_storniert')) {
+        if ($event->event_status_id !== BookingState::Eigene && $event->event_status_id !== BookingState::Storniert) {
             $code = $event->code ? '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> Turcode: '.$event->code :
             '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Kein Code zugewiesen';
             $code .= '<br>';
@@ -155,14 +157,14 @@ class Helper
     public static function GetEventOfferStatus(Event $event)
     {
         $offer = '';
-        if ($event->event_status['id'] != config('status.event_eigene') && $event->event_status['id'] != config('status.event_storniert')) {
+        if ($event->event_status_id !== BookingState::Eigene && $event->event_status_id !== BookingState::Storniert) {
             if ($event->bexio_offer_id) {
                 $offer = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.'<a target="_blank" href="https://office.bexio.com/index.php/kb_offer/show/id/'.$event['bexio_offer_id'].'">Angebot</a> ';
-                switch ($event->contract_status['id']) {
-                    case config('status.contract_angebot_erstellt') :
+                switch ($event->contract_status_id) {
+                    case ContractState::AngebotErstellt :
                         $offer .= 'erstellt';
                         break;
-                    case config('status.contract_angebot_versendet') :
+                    case ContractState::AngebotVersendet :
                         $offer .= 'erstellt & versendet';
                         break;
                     default:
@@ -181,15 +183,15 @@ class Helper
     public static function GetEventInvoiceStatus(Event $event)
     {
         $invoice = '';
-        if ($event->event_status['id'] != config('status.event_eigene') && $event->event_status['id'] != config('status.event_storniert')) {
+        if ($event->event_status_id !== BookingState::Eigene && $event->event_status_id !== BookingState::Storniert) {
 
             if ($event->bexio_invoice_id) {
                 $invoice = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.'<a target="_blank" href="https://office.bexio.com/index.php/kb_invoice/show/id/'.$event['bexio_invoice_id'].'">Rechnung</a> ';
-                switch ($event->contract_status['id']) {
-                    case config('status.contract_rechnung_erstellt'):
+                switch ($event->contract_status_id) {
+                    case ContractState::RechnungErstellt:
                         $invoice .= 'erstellt';
                         break;
-                    case config('status.contract_rechnung_versendet'):
+                    case ContractState::RechnungVersendet:
                         $invoice .= 'erstellt & versendet';
                         break;
                 }
@@ -234,7 +236,7 @@ class Helper
             DB::raw('sum(total_people*total_days) as stays'),
             DB::raw($time_frame_SQL),
         )
-            ->where('event_status_id', '=', config('status.event_bestaetigt'))
+            ->where('event_status_id', '=', BookingState::Bestaetigt)
             ->groupBy('timeframe')
             ->orderBy('start_date', 'ASC');
 
@@ -256,7 +258,7 @@ class Helper
     public static function GetHeatmap()
     {
         $year = Carbon::now()->year - 1;
-        $events = Event::where('event_status_id', '=', config('status.event_bestaetigt'))->whereYear('start_date', '=', $year)->get();
+        $events = Event::where('event_status_id', '=', BookingState::Bestaetigt)->whereYear('start_date', '=', $year)->get();
 
         $days = collect();
 

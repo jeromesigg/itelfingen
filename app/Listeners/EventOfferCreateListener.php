@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Enums\ContractState;
 use App\Events\EventOfferCreate;
 use App\Models\Position;
 use App\Services\BexioApiService;
@@ -83,7 +84,7 @@ class EventOfferCreateListener
             if (! isset($offer['error_code'])) {
                 $event->update([
                     'bexio_offer_id' => $offer['id'],
-                    'contract_status_id' => config('status.contract_angebot_erstellt'),
+                    'contract_status_id' => ContractState::AngebotErstellt,
                 ]);
             } else {
                 Log::channel('emergency')->error($offer);

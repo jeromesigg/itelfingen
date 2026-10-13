@@ -142,7 +142,7 @@
 	    $('#total_days').val("0");
 	    $('#total_amount').val("0");
         $('#code').val("290393");
-	    $('#event_status_id').val(@json(config('status.event_eigene')));
+	    $('#event_status_id').val(@json(\App\Enums\BookingState::Eigene->value));
     }
     function createExtern() {
         const text = document.getElementById('import-text').value;
@@ -170,7 +170,7 @@
             document.getElementById('start_date').value = data.mietdauer_von ?? '';
             document.getElementById('end_date').value = data.mietdauer_bis ?? '';
             document.getElementById('position_2').value = data.anzahl_personen ?? '';
-            $('#event_status_id').val(@json(config('status.event_neu')));
+            $('#event_status_id').val(@json(\App\Enums\BookingState::Neu->value));
             Total_Change()
         })
         .catch(err => console.error('Fehler:', err));

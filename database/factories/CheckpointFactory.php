@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ArchiveState;
 use App\Models\Checkpoint;
 use App\Models\Room;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +25,7 @@ class CheckpointFactory extends Factory
             'description' => fake()->sentence,
             'sort-index' => fake()->numberBetween(1, 100),
             'room_id' => Room::factory(),
-            'archive_status_id' => 1,
+            'archive_status_id' => ArchiveState::Aktiv,
         ];
     }
 }

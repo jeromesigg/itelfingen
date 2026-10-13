@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
@@ -56,8 +58,8 @@ class CreateMultiDayEventTest extends TestCase
         $this->assertSame('Cevi Zürich', $event->group_name);
         $this->assertSame(8000, $event->plz);
         $this->assertSame('0791234567', $event->phonenumber_query);
-        $this->assertSame(config('status.event_neu'), $event->event_status_id);
-        $this->assertSame(config('status.contract_offen'), $event->contract_status_id);
+        $this->assertSame(BookingState::Neu, $event->event_status_id);
+        $this->assertSame(ContractState::Offen, $event->contract_status_id);
         $this->assertNotNull($event->uuid);
 
         // Hausmiete 1x, Personen wie erfasst, Reinigung mit 0
@@ -93,7 +95,7 @@ class CreateMultiDayEventTest extends TestCase
             'user_id' => 1,
             'bexio_invoice_id' => 99,
             'glutz_user_id' => 'fremd',
-            'event_status_id' => config('status.event_bestaetigt'),
+            'event_status_id' => BookingState::Bestaetigt->value,
             'cleaning_mail' => 1,
         ]))->assertRedirect(route('home').'#booking');
 
@@ -105,7 +107,7 @@ class CreateMultiDayEventTest extends TestCase
         $this->assertNull($event->bexio_invoice_id);
         $this->assertNull($event->glutz_user_id);
         $this->assertFalse($event->cleaning_mail);
-        $this->assertSame(config('status.event_neu'), $event->event_status_id);
+        $this->assertSame(BookingState::Neu, $event->event_status_id);
     }
 
     public function test_one_day_booking_uses_day_rate(): void

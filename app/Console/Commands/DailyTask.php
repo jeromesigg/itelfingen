@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\ArchiveState;
+use App\Enums\BookingState;
 use App\Events\ApplicationCreatedEvent;
 use App\Helper\GlutzAPI;
 use App\Models\Application;
@@ -61,12 +63,12 @@ class DailyTask extends Command
     public function SendEventLastInfos()
     {
         $date = Carbon::today()->addWeeks(2);
-        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
+        $events = Event::where('last_info', false)->whereNotNull('code')->where('start_date', '<=', $date)->where('event_status_id', '=', BookingState::Bestaetigt)->get();
         $homepage = Homepage::FindOrFail(1);
         $additional_text = $homepage['additional_mail_text'] ? $homepage['additional_mail_text'] : '';
         foreach ($events as $event) {
             if ($event->event_rooms->count() === 0) {
-                $rooms = Room::where('archive_status_id', config('status.aktiv'))->orderBy('sort-index')->get();
+                $rooms = Room::where('archive_status_id', ArchiveState::Aktiv)->orderBy('sort-index')->get();
                 foreach ($rooms as $room) {
                     $event_room = $event->event_rooms()->create([
                         'room_id' => $room->id,
@@ -184,7 +186,7 @@ class DailyTask extends Command
     public function SendNextEventToSlack()
     {
         $date = Carbon::today()->addDays(2);
-        $events = Event::where('start_date', '=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
+        $events = Event::where('start_date', '=', $date)->where('event_status_id', '=', BookingState::Bestaetigt)->get();
 
         foreach ($events as $event) {
             $end_date = Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y');

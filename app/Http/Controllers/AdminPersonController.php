@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\Person;
@@ -53,7 +54,7 @@ class AdminPersonController extends Controller
         }
         $index = Person::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         Person::create($input);
 
         return redirect('/admin/people');

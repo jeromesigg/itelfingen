@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
+use App\Enums\UserRole;
 use App\Models\ArchiveStatus;
 use App\Models\Role;
 use App\Models\User;
@@ -9,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 /**
  * Admins verwalten alle Benutzer (create/store/destroy nur in der Routengruppe role:admin).
@@ -45,6 +48,7 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate(['role_id' => ['nullable', Rule::enum(UserRole::class)]]);
         $input = $request->only(['username', 'fullname', 'phone', 'role_id']);
         if (trim($request->password ?? '') != '') {
             $input['password'] = bcrypt($request->password);
@@ -76,7 +80,7 @@ class AdminUserController extends Controller
             $roles = Role::pluck('name', 'id')->all();
         }
         // Das Formular zeigt den Status als Archiv-Status, gespeichert wird is_active.
-        $user->archive_status_id = $user->is_active ? config('status.aktiv') : config('status.archiviert');
+        $user->archive_status_id = $user->is_active ? ArchiveState::Aktiv : ArchiveState::Archiviert;
         $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
 
         return view('admin.users.edit', compact('user', 'roles', 'archive_statuses'));
@@ -92,6 +96,7 @@ class AdminUserController extends Controller
     {
         //
         $user = $this->findEditable($id);
+        $request->validate(['role_id' => ['nullable', Rule::enum(UserRole::class)]]);
 
         $input = $request->only(['username', 'fullname', 'phone']);
         if (trim($request->password ?? '') != '') {
@@ -106,7 +111,7 @@ class AdminUserController extends Controller
                 $input['role_id'] = $request->role_id;
             }
             if ($request->filled('archive_status_id')) {
-                $input['is_active'] = $request->archive_status_id == config('status.aktiv');
+                $input['is_active'] = ArchiveState::tryFrom($request->integer('archive_status_id')) === ArchiveState::Aktiv;
             }
         }
 

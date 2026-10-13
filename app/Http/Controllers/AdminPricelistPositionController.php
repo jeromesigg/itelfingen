@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
 use App\Models\PricelistPosition;
 use App\Services\BexioApiService;
@@ -39,7 +40,7 @@ class AdminPricelistPositionController extends Controller
                     'bexio_id' => $position['id'],
                     'bexio_code' => $position['intern_code'],
                     'price' => $position['sale_price'],
-                    'archive_status_id' => config('status.aktiv'),
+                    'archive_status_id' => ArchiveState::Aktiv,
                     'show' => true, ]);
             }
         }

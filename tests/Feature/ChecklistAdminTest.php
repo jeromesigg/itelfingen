@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ArchiveState;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
 
@@ -30,7 +31,7 @@ class ChecklistAdminTest extends TestCase
             'description' => 'Auch das Blech',
             'room_id' => $s->room->id,
             'sort-index' => 3,
-            'archive_status_id' => config('status.aktiv'),
+            'archive_status_id' => ArchiveState::Aktiv->value,
         ])->assertRedirect('/admin/checkpoints');
 
         $checkpoint = $s->checkpoint->fresh();

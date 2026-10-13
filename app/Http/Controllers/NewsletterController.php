@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Exports\ExportNewsletterBookings;
 use App\Exports\ExportNewsletterMembers;
 use App\Models\Event;
@@ -119,7 +121,7 @@ class NewsletterController extends Controller
 
     public function import()
     {
-        $events = Event::where('event_status_id', config('status.event_bestaetigt'))->where('contract_status_id', '>=', config('status.contract_rechnung_erstellt'))->get();
+        $events = Event::where('event_status_id', BookingState::Bestaetigt)->where('contract_status_id', '>=', ContractState::RechnungErstellt->value)->get();
         foreach ($events as $event) {
             Newsletter::updateOrCreate(
                 ['email' => $event['email']],

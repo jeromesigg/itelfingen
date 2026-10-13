@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 13.10.2026: **347 Testfälle in 32 Dateien** (58 Unit, 289 Feature), Laufzeit rund 12 Sekunden.
+Stand 13.10.2026: **386 Testfälle in 36 Dateien** (67 Unit, 319 Feature), Laufzeit rund 11 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -84,9 +84,13 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Unit | `Unit/ExternalBookingParserTest` | 19 | Parser Anfrage-Mail und Buchungs-PDF: Zeilenenden, Namen, Anrede, Adressen, fehlende Felder |
 | Unit | `Unit/UserRoleTest` | 10 | Rollenstufen pro Rolle und aktiv/inaktiv, unbekannte Stufe |
 | Unit | `Unit/ModelHelpersTest` | 7 | Buchungsnummer, Ablauf des Bexio-Tokens (60 s Puffer) |
+| Unit | `Unit/EnumsTest` | 9 | Regeln der Status-Enums (Reihenfolge, belegt, Rechte der Rollen) |
 | Unit | `Unit/ImageUploadTest` | 11 | Bildendung aus dem Inhalt, PHP/SVG/HTML abgelehnt |
 | Smoke | `Smoke/AllRoutesSmokeTest` | 6 | Jede GET-Route pro Rolle ohne Serverfehler |
 | Smoke | `Smoke/PagesRenderTest` | 4 | Jeder Menü-Link pro Rolle lädt (200), öffentliche Seiten |
+| Grundlagen | `EnumTablesTest` | 2 | Enum-Werte = Zeilen der Status-Tabellen, Rollen-Flags = Enum-Rechte |
+| Grundlagen | `FormPreselectionTest` | 10 | Auswahlfelder wählen den gespeicherten Wert vor (Status, Rolle, Archiv) |
+| Grundlagen | `StatusDisplayTest` | 17 | Statusspalte, Schritte im Kundenbereich, Monatsmail, leere Status |
 | Grundlagen | `TestInfrastructureTest` | 10 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
 | Öffentlich | `CreateMultiDayEventTest` | 6 | Buchungsformular |
 | Öffentlich | `ContactTest` | 4 | Kontaktformular |
@@ -105,7 +109,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Fachlogik | `ExternalBookingImportTest` | 7 | Externe Buchung aus Anfrage-Mail oder Buchungs-PDF übernehmen |
 | Fachlogik | `ExportsTest` | 3 | CSV-Exporte Buchungen und Newsletter, Newsletter-Import |
 | Sicherheit | `Security/RoleAccessTest` | 97 | Jede Admin-Route pro Rolle (inkl. kein Serverfehler), Navigation |
-| Sicherheit | `Security/UserManagementTest` | 17 | Benutzer: Admin alle, sonst nur eigenes Profil |
+| Sicherheit | `Security/UserManagementTest` | 18 | Benutzer: Admin alle, sonst nur eigenes Profil |
 | Sicherheit | `Security/XssTest` | 5 | Eingaben aus öffentlichen Formularen in Admin-Tabellen |
 | Sicherheit | `Security/DeployRouteTest` | 2 | Alte Wartungs-URLs `/deploy` und `/bexio/connect` sind weg |
 | Sicherheit | `Security/ApiTokenTest` | 14 | API-Token |
@@ -253,6 +257,23 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 **[`ImageUploadTest`](Feature/Security/ImageUploadTest.php)**: FAQ, Geschichte und Bilder speichern nur echte Bilder unter einem Namen des Servers (`App\Helper\ImageUpload`). Läuft in einem Temp-Verzeichnis statt `public/`.
 
 ---
+
+## Status und Rollen: Enums
+
+Die festen IDs aus dem früheren `config/status.php` sind PHP-Enums in `app/Enums` und als Casts an den Models:
+
+| Enum | Spalte | Werte |
+|---|---|---|
+| `ArchiveState` | `archive_status_id` (Inhalte, Räume, Checkpunkte, Preisliste) | Aktiv 1, Archiviert 2 |
+| `UserRole` | `users.role_id` | Administrator 1, Team 2, Gast 3, Verwalter 5 |
+| `BookingState` | `events.event_status_id` | Neu 5, Bestaetigt 10, Eigene 20, Storniert 50 |
+| `ContractState` | `events.contract_status_id` | Offen 5, AngebotErstellt 7, AngebotVersendet 10, RechnungErstellt 20, RechnungVersendet 30, Storniert 50 |
+
+- Reihenfolge über Methoden: `ContractState::isAtLeast()`, `isBefore()`, `before()`; `BookingState::isOccupied()`, `notCancelled()`. Nie `<`/`>`/`==` mit einem Enum und einer Zahl.
+- Leere Spalten: `$event->bookingState()` und `$event->contractState()` fallen auf Neu bzw. Offen zurück (wie früher `null < x`).
+- In Request-Daten von Tests `->value`, in Models, Abfragen und Assertions das Enum.
+- Die Select-Komponente wandelt Enums für die Vorauswahl um (`FormPreselectionTest`).
+- Rechte der Rollen kommen aus `UserRole` (keine Abfrage der Tabelle `roles`); `EnumTablesTest` prüft, dass sie zu den Flags `is_admin`/`is_team` passen.
 
 ## Fachliche Regeln, die die Tests festhalten
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\FaqChapter;
@@ -42,7 +43,7 @@ class AdminFaqChapterController extends Controller
         $input = $request->all();
         $index = FaqChapter::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         if (($file = $request->file('old_photo_id')) && $input['new_photo_id']) {
             $name = ImageUpload::name($file, 'old_photo_id');
             Image::make($input['new_photo_id'])->save('images/'.$name);
