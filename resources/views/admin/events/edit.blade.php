@@ -449,6 +449,14 @@
                 document.getElementById('telephone').value        = data.telefon ?? (data.mobil ?? '');
                 document.getElementById('start_date').value = data.mietdauer_von ?? '';
                 document.getElementById('end_date').value = data.mietdauer_bis ?? '';
+                // Kommentar der Gruppe (nur Anfrage-Mail) in die Bemerkungen; anhängen statt überschreiben,
+                // damit ein zweiter Import (Buchungs-PDF) nichts verliert.
+                if (data.kommentar) {
+                    const comment = document.getElementById('comment');
+                    if (!comment.value.includes(data.kommentar)) {
+                        comment.value = comment.value ? comment.value + "\n\n" + data.kommentar : data.kommentar;
+                    }
+                }
                 Total_Change()
             })
             .catch(err => console.error('Fehler:', err));

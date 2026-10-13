@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 10.10.2026: **282 Testfälle in 26 Dateien**, Laufzeit rund 8 Sekunden.
+Stand 10.10.2026: **289 Testfälle in 27 Dateien**, Laufzeit rund 8 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -95,6 +95,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Fachlogik | `DoorCodeTest` | 6 | Türcode in Glutz (JSON-RPC) |
 | Fachlogik | `ScheduledTasksTest` | 15 | Einplanung und Inhalt der täglichen, wöchentlichen und monatlichen Tasks |
 | Fachlogik | `NotificationMailsTest` | 17 | Jede Mail wird gebaut und versendet: Betreff, Empfänger, Anhänge |
+| Fachlogik | `ExternalBookingImportTest` | 7 | Externe Buchung aus Anfrage-Mail oder Buchungs-PDF übernehmen |
 | Fachlogik | `ExportsTest` | 3 | CSV-Exporte Buchungen und Newsletter, Newsletter-Import |
 | Sicherheit | `Security/RoleAccessTest` | 97 | Jede Admin-Route pro Rolle (inkl. kein Serverfehler), Navigation |
 | Sicherheit | `Security/UserManagementTest` | 17 | Benutzer: Admin alle, sonst nur eigenes Profil |
@@ -194,6 +195,8 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 **[`ScheduledTasksTest`](Feature/ScheduledTasksTest.php)**: Einplanung (Cron-Ausdrücke) und Lauf ohne Daten. Täglich: letzte Infos 2 Wochen vor Anreise (nur bestätigt mit Türcode, einmal), Rechnung für Bewerbungen nach 2 Wochen (Bexio, Google Sheet, Newsletter), Slack-Hinweis 2 Tage vorher, Glutz-Besucher 3 Tage nach Abreise löschen. Abends: Feedback-Mail einmal. Wöchentlich/monatlich: Inhalt der Übersichtsmails. Slack und Google Sheets sind per Facade-Mock ersetzt.
 
 **[`NotificationMailsTest`](Feature/NotificationMailsTest.php)**: alle 11 Benachrichtigungen über den array-Mailer, mit Anhängen (Hausordnung, Rechnung, Kalender-Einladung, Infos, Parkkarte); Türcode in den letzten Infos; externe Buchungsnummer im Betreff. Eigenes Storage-Verzeichnis mit Platzhalter-PDFs (die Vorlagen liegen nicht im Repo).
+
+**[`ExternalBookingImportTest`](Feature/ExternalBookingImportTest.php)**: `admin/events/parse` mit anonymisierten Beispielen beider Formate (Anfrage-Mail mit Tabs, Buchungs-PDF mit typografischen Bindestrichen). Leere Felder bleiben leer (statt die nächste Zeile zu nehmen), fehlende Mietdauer führt nicht zu einem Fehler, Feldnamen zählen nur am Zeilenanfang, der Kommentar reicht bis zum Ende. Der Name aus der Anfrage-Mail wird geteilt (letztes Wort = Nachname). Ablauf: zuerst Anfrage-Mail, später Buchungs-PDF; das Formular übernimmt den Kommentar in die Bemerkungen (angehängt, nicht überschrieben).
 
 **[`ExportsTest`](Feature/ExportsTest.php)**: `Excel::fake()`; Buchungsexport ohne Stornos und ohne Personendaten, Newsletter getrennt nach Buchungen und Mitgliedern, Import ohne Duplikate.
 

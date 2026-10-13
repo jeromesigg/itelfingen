@@ -313,21 +313,30 @@ class Helper
     {
         $labels = ['Anfragenummer', 'Datum', 'Name', 'Gruppenart', 'Anzahl', 'Verpflegung', 'Sprache', 'Kommentar der Gruppe'];
 
+        // Feldnamen zählen nur am Zeilenanfang. Der Kommentar ist das letzte Feld und reicht bis zum Ende,
+        // damit er selbst Wörter wie "Anzahl" oder "Name" enthalten darf.
         $extract = function (string $field) use ($text, $labels): ?string {
             $others = array_filter($labels, fn ($l) => $l !== $field);
-            $lookahead = '(?='.implode('|', array_map('preg_quote', $others)).'|$)';
-            $pattern = '/'.preg_quote($field).'\s+(.+?)'.$lookahead.'/s';
+            $lookahead = $field === 'Kommentar der Gruppe'
+                ? '(?=\z)'
+                : '(?=\n\h*(?:'.implode('|', array_map(fn ($l) => preg_quote($l, '/'), $others)).')\h|\z)';
+            $pattern = '/^\h*'.preg_quote($field, '/').'\h+(.+?)'.$lookahead.'/msu';
 
             return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
         };
 
         preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
 
+        // "Vorname Nachname" in einem Feld: letztes Wort als Nachname, der Rest als Vorname.
+        $nameParts = preg_split('/\s+/u', $extract('Name') ?? '', -1, PREG_SPLIT_NO_EMPTY);
+        $lastName = array_pop($nameParts);
+
         return [
             'buchungsnummer' => 'A-'.$extract('Anfragenummer'),
             'mietdauer_von' => isset($dates[1]) ? self::convertDate($dates[1]) : null,
             'mietdauer_bis' => isset($dates[2]) ? self::convertDate($dates[2]) : null,
-            'name' => $extract('Name'),
+            'vorname' => $nameParts ? implode(' ', $nameParts) : null,
+            'name' => $lastName,
             'gruppe' => $extract('Gruppenart'),
             'anzahl_personen' => preg_match('/(\d+)/', $extract('Anzahl') ?? '', $n) ? $n[1] : null,
             'verpflegung' => $extract('Verpflegung'),
@@ -344,22 +353,24 @@ class Helper
         return array_merge(
             self::parseName($nameBlock),
             [
-                'gruppe' => self::extract($text, '/Gruppe\s*:\s*(.+)/'),
-                'telefon' => self::extract($text, '/Telefon\s*:\s*(.+)/'),
-                'mobil' => self::extract($text, '/Mobil\s*:\s*(.+)/'),
-                'email' => self::extract($text, '/E[\-\‐]Mail\s*:\s*(.+)/u'),
-                'mietdauer_von' => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?(\d{2}\.\d{2}\.\d{4})/')),
-                'mietdauer_bis' => self::convertDate(self::extract($text, '/Mietdauer\s*:.*?[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/')),
-                'naechte' => self::extract($text, '/=\s*(\d+)\s*Nacht/'),
-                'anzahl_personen' => self::extract($text, '/Anzahl Personen\s*:\s*(\d+)/'),
-                'verpflegung' => self::extract($text, '/Verpflegung\s*:\s*(.+)/'),
+                // \h statt \s: nur Leerzeichen derselben Zeile, sonst nimmt ein leeres Feld die nächste Zeile.
+                'gruppe' => self::extract($text, '/Gruppe\h*:\h*(.+)/u'),
+                'telefon' => self::extract($text, '/Telefon\h*:\h*(.+)/u'),
+                'mobil' => self::extract($text, '/Mobil\h*:\h*(.+)/u'),
+                'email' => self::extract($text, '/E[\-‐]Mail\h*:\h*(.+)/u'),
+                'mietdauer_von' => self::convertDate(self::extract($text, '/Mietdauer\h*:.*?(\d{2}\.\d{2}\.\d{4})/u')),
+                'mietdauer_bis' => self::convertDate(self::extract($text, '/Mietdauer\h*:.*?[\-‐]\h*\w+\h+(\d{2}\.\d{2}\.\d{4})/u')),
+                'naechte' => self::extract($text, '/=\h*(\d+)\h*N(?:a|ä)cht/u'),
+                'anzahl_personen' => self::extract($text, '/Anzahl Personen\h*:\h*(\d+)/u'),
+                'verpflegung' => self::extract($text, '/Verpflegung\h*:\h*(.+)/u'),
             ]
         );
     }
 
     private static function extract(string $text, string $pattern): ?string
     {
-        return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+        // Leere Felder als null, damit das Formular seinen Ersatzwert nimmt (z. B. Mobil statt Telefon).
+        return preg_match($pattern, $text, $m) && trim($m[1]) !== '' ? trim($m[1]) : null;
     }
 
     private static function extractMultilineRaw(string $text, string $from, string $until): ?string
@@ -369,9 +380,9 @@ class Helper
         return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
     }
 
-    private static function convertDate(string $date): string
+    private static function convertDate(?string $date): ?string
     {
-        return Carbon::createFromFormat('d.m.Y', $date)->format('Y-m-d');
+        return $date === null ? null : Carbon::createFromFormat('d.m.Y', $date)->format('Y-m-d');
     }
 
     private static function parseName(string $nameBlock): array
