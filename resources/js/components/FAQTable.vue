@@ -22,11 +22,13 @@ const columnHelper = createColumnHelper()
 
 const faqsColumns = [
   columnHelper.accessor('image', {
+    meta: { html: true },
     header: 'Bild',
     enableSorting: false,
     size: 100,
   }),
   columnHelper.accessor('name', {
+    meta: { html: true },
     header: 'Name',
     enableSorting: true,
     size: 100,

@@ -13,13 +13,18 @@
       </section>
         <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
             @if(session()->has('success'))
-                <div class="alert alert-dismissable alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <strong>
-                        {!! session()->get('success') !!}
-                    </strong>
+                <x-alert type="success">
+                    <strong>{!! session()->get('success') !!}</strong>
+                </x-alert>
+            @endif
+            @if ($errors->any())
+                <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                    <strong>Bitte prüfe deine Angaben:</strong>
+                    <ul class="mt-1.5 list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
             <h3 class="text-3xl  dark:text-white">Ich möchte Genossenschafter/in werden... </h3>
@@ -46,7 +51,7 @@
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
                 <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank" class="text-orientalpink">Statuten</a> als akzeptiert.</li>
             </ul>
-            <x-forms.form :action="route('application.store')">
+            <x-forms.form :action="route('application.store')" id='application_form'>
                 <x-honeypot />
                 <div class="grid md:grid-cols-3 gap-4">
                   <x-forms.container >
@@ -95,7 +100,7 @@
                         <p>Danke! Noch ein Klick und deine Bewerbung ist bei uns eingegangen!</p>
                     </div>
                     <div>
-                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen">
+                        <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen" id="submit-btn">
                             Bewerbung absenden
                         </x-forms.button>
                     </div>
@@ -158,6 +163,11 @@
         });
 
 
+    });
+    document.getElementById('application_form').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
     });
     </script>
 

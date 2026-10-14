@@ -93,7 +93,15 @@
                                         <x-forms.select label="Verantwortlicher:" name="user_id" required=true :collection="$users"/>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-12 col-6">
-                                        <x-forms.text label="Tür-Code:" name="code" type="number"/>
+                                    
+                                        <x-forms.row>
+                                            <x-forms.container class="col-6">
+                                                <x-forms.text label="Tür-Code:" name="code" type="number"/>
+                                            </x-forms.container>
+                                            <x-forms.container class="col-6 mt-7">
+                                                <button type="button" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="CreateAPICode()">Code erstellen</button>
+                                            </x-forms.container>
+                                        </x-forms.row>
                                     </x-forms.container>
                                 </div>
                                     
@@ -103,7 +111,10 @@
                             </x-forms.container>
                             <x-forms.container class="col-xl-4">
                                 <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=5/>
-                            </x-forms.container> 
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-6">
+                                <x-forms.text-area label="Aufmerksam geworden durch:" name="marketing_comment" rows=3/>
+                            </x-forms.container>
                         </div> 
                         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
@@ -113,16 +124,16 @@
                                 </x-forms.button>
                             </x-forms.container>
                             @switch($event['contract_status_id'])
-                                @case(config('status.contract_offen'))  
+                                @case(\App\Enums\ContractState::Offen)  
                                     <x-forms.container class="col-xl-2 col-6">
                                         <x-forms.button type="submit" class="focus:outline-hidden text-white bg-norway hover:bg-norway hover:text-white focus:ring-4 focus:ring-norway font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-norway dark:hover:bg-norway dark:focus:ring-norway" name="submit" value="2 Angebot erstellen">
-                                            {{config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen'}}
+                                            2 Angebot erstellen
                                         </x-forms.button>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6"/>
                                     <x-forms.container class="col-xl-2 col-6"/>
                                     @break
-                                @case(config('status.contract_angebot_erstellt'))
+                                @case(\App\Enums\ContractState::AngebotErstellt)
                                     <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -133,7 +144,7 @@
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6"/>
                                     @break
-                                @case(config('status.contract_angebot_versendet'))
+                                @case(\App\Enums\ContractState::AngebotVersendet)
                                     <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -148,7 +159,7 @@
                                         </x-forms.button>
                                     </x-forms.container>
                                     @break
-                                @case(config('status.contract_rechnung_erstellt'))
+                                @case(\App\Enums\ContractState::RechnungErstellt)
                                     <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -161,7 +172,7 @@
                                         </x-forms.button>
                                     </x-forms.container>
                                     @break
-                                @case(config('status.contract_rechnung_versendet'))
+                                @case(\App\Enums\ContractState::RechnungVersendet)
                                 <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -219,8 +230,17 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <a href="{{route('admin.events.downloadParking', $event['uuid'])}}" class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
+                        <a href="{{route('events.downloadParking', $event['uuid'])}}" class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
+                    
+                    @if($event->external && $event->contractState()->isBefore(\App\Enums\ContractState::AngebotErstellt))
+                        <x-forms.container>
+                            <x-forms.text-area label="Import Buchung:" name="import-text" rows=9 placeholder="Buchungsinformationen aus PDF 'Name' bis 'Anzahl Personen' hier einfügen..."/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <button class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith" onclick="importExtern()">Externe Buchung importieren</button>
+                        </x-forms.container>
+                    @endif
                     <br><br>
                     <table class="table">
                         <tbody>
@@ -294,6 +314,57 @@
             $('#additional_text').val(text);
         }
 
+        function CreateAPICode() {
+            const code = document.getElementById('code').value;
+            var event_id = @json($event['id']);
+            if(!code) {
+                alert('Bitte geben Sie einen Code ein.');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Türcode erstellen?',
+                text: "Wirklich den Türcode \"" + code + "\" für diese Buchung erstellen?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ja',
+                cancelButtonText: 'Abbrechen',
+                confirmButtonColor: 'blue',
+                cancelButtonColor: 'red',
+                showLoaderOnConfirm: true,
+                theme: 'auto',
+                preConfirm: async (login) => {
+                    try {
+                        const response = await fetch('{{ route("events.createAPICode") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            body: JSON.stringify({ event_id, code }),
+                        })
+                        const data = await response.json();
+                        if (!response.ok) {
+                            return Swal.showValidationMessage(`
+                                ${JSON.stringify(data)}
+                                `);
+                        }
+                        return data;
+                    } catch (error) {
+                        Swal.showValidationMessage(`
+                            Request failed: ${error}
+                        `);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                console.log(result);
+                if (result.isConfirmed) Swal.fire({
+                    title: `${result.value.success}`
+                });
+            });
+        }
+
         function Total_Change() {
             var start_date = new Date(document.getElementById('start_date').value);
             var end_date = new Date(document.getElementById('end_date').value);
@@ -339,7 +410,7 @@
         }
 
         $("#contract_status_id").change(function(e) {
-            if($(this).val() == {{config('status.contract_storniert')}}){
+            if($(this).val() == {{ \App\Enums\ContractState::Storniert->value }}){
                 var event = @json($event);
                 if(event['cleaning_mail']){
                     e.preventDefault(); //cancel default action
@@ -353,8 +424,48 @@
             }
         });
 
+        function importExtern() {
+            const text = document.getElementById('import-text').value;
+
+            fetch('{{ route("events.parse") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({ text }),
+            })
+            .then(res => res.json())
+            .then(data => {
+                // Felder befüllen
+                document.getElementById('name').value        = data.name ?? '';
+                document.getElementById('firstname').value        = data.vorname ?? '';
+                document.getElementById('group_name').value        = data.gruppe ?? '';
+                document.getElementById('street').value        = data.strasse ?? 'Itelfingen';
+                document.getElementById('house_number').value        = data.hausnummer ?? '3';
+                document.getElementById('plz').value        = data.plz ?? '6344';
+                document.getElementById('city').value        = data.stadt ?? 'Meierskappel';
+                document.getElementById('email').value        = data.email ?? 'verwalter@itelfingen.ch';
+                document.getElementById('telephone').value        = data.telefon ?? (data.mobil ?? '');
+                document.getElementById('start_date').value = data.mietdauer_von ?? '';
+                document.getElementById('end_date').value = data.mietdauer_bis ?? '';
+                // Kommentar der Gruppe (nur Anfrage-Mail) in die Bemerkungen; anhängen statt überschreiben,
+                // damit ein zweiter Import (Buchungs-PDF) nichts verliert.
+                if (data.kommentar) {
+                    const comment = document.getElementById('comment');
+                    if (!comment.value.includes(data.kommentar)) {
+                        comment.value = comment.value ? comment.value + "\n\n" + data.kommentar : data.kommentar;
+                    }
+                }
+                Total_Change()
+            })
+            .catch(err => console.error('Fehler:', err));
+        }
+
         window.PrepareMail = PrepareMail;
         window.PrepareReminderMail = PrepareReminderMail;
         window.Total_Change = Total_Change;
+        window.importExtern = importExtern;
+        window.CreateAPICode = CreateAPICode;
     </script>
 @endpush

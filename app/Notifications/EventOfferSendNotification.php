@@ -2,12 +2,12 @@
 
 namespace App\Notifications;
 
-use Carbon\Carbon;
-use App\Models\Event;
-use App\Mail\EventCreated;
 use App\Mail\SendOffersMail;
+use App\Models\Event;
+use App\Services\BexioApiService;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Ixudra\Curl\Facades\Curl;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class EventOfferSendNotification extends Notification
@@ -30,11 +30,8 @@ class EventOfferSendNotification extends Notification
         //
         $this->event = $event;
         $this->additional_text = $additional_text;
-        $offer = Curl::to('https://api.bexio.com/2.0/kb_offer/'.$event['bexio_offer_id'])
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->get();
-        $offer = json_decode($offer, true);
+
+        $offer = app(BexioApiService::class)->get('kb_offer/'.$event['bexio_offer_id']);
         $this->offer = $offer;
     }
 
@@ -53,7 +50,7 @@ class EventOfferSendNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

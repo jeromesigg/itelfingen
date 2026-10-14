@@ -14,7 +14,7 @@ class ApplicationCreated extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Application
+     * @var Application
      */
     protected $application;
 

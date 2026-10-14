@@ -6,6 +6,7 @@ use App\Mail\CleaningSent;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class EventCleaningSentNotification extends Notification
@@ -46,7 +47,7 @@ class EventCleaningSentNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

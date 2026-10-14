@@ -50,11 +50,13 @@ const eventColumns = [
     size: 70,  
   }),
   columnHelper.accessor('number', {
+    meta: { html: true },
     header: 'Nr.',
     enableSorting: true,
     size: 20,  
   }),
   columnHelper.accessor('name', {
+    meta: { html: true },
     header: 'Name',
     enableSorting: true,
     size: 100, 
@@ -80,6 +82,7 @@ const eventColumns = [
     size: 200, 
   }),
   columnHelper.accessor('status', {
+    meta: { html: true },
     header: 'Status',
     enableSorting: true,
     size: 200, 

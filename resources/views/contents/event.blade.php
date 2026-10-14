@@ -15,27 +15,27 @@
             </div>
         @endif
         @if ($errors->event->any())
-            <div class="alert alert-danger">
-                <ul>
+            <x-alert>
+                <ul class="list-disc list-inside">
                     @foreach ($errors->event->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
-            </div>
+            </x-alert>
         @endif
 
         <div class="hk-reservation hk-reservation__step1" id="reservation_form">
             <div class="hk-reservation__container">
-                <x-forms.form :action="route('event.create')" id='calendarform' lang="de-CH">
+                <x-forms.form :action="route('event.create')" id='calendarform' lang="de-CH" scope="event">
                     <x-honeypot />
                     <div class="hk-calendar" id="wizard_calendar">
                         <h3 class="text-3xl dark:text-white mb-2.5">Verfügbarkeit</h3>
-                        <div id="reservation_error_date" style="display: none" class="alert alert-danger">
-                            Es muss ein Datum gewählt werden.
-                        </div>
-                        <div id="reservation_error" style="display: none" class="alert alert-danger">
+                        <x-alert id="reservation_error_date" style="display: none">
+                            Es muss mindestens eine Übernachtung gewählt werden.
+                        </x-alert>
+                        <x-alert id="reservation_error" style="display: none">
                             An diesem Datum kann nicht reserviert werden.
-                        </div>
+                        </x-alert>
                         <div id="discount_message"  style="display: none" class="flex items-center w-full p-4 text-body text-fg-success-strong bg-success-soft rounded-base shadow-xs border border-success-subtle" role="alert">
                             <svg class="w-6 h-6 text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.122 17.645a7.185 7.185 0 0 1-2.656 2.495 7.06 7.06 0 0 1-3.52.853 6.617 6.617 0 0 1-3.306-.718 6.73 6.73 0 0 1-2.54-2.266c-2.672-4.57.287-8.846.887-9.668A4.448 4.448 0 0 0 8.07 6.31 4.49 4.49 0 0 0 7.997 4c1.284.965 6.43 3.258 5.525 10.631 1.496-1.136 2.7-3.046 2.846-6.216 1.43 1.061 3.985 5.462 1.754 9.23Z"/></svg>
                             <div class="ms-2.5 text-sm border-s border-default ps-3.5">Sie profitieren von 50% Buchungs-Rabatt.</div>
@@ -213,7 +213,7 @@
                                 </x-forms.button>
                             </div>
                             <div class="md:col-span-2 mb-1">
-                                <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen">
+                                <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen" id="submit-event-btn">
                                     Reservieren
                                 </x-forms.button>
                             </div>
@@ -226,3 +226,13 @@
     </div>
 
   </section>
+
+@push('scripts')
+  <script type="module">
+  	document.getElementById('calendarform').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-event-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
+    });
+  </script>
+@endpush

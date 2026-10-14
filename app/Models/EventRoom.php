@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EventRoom extends Model
 {
-    //
+    use HasFactory;
+
     protected $fillable = [
-        'room_id', 'event_id', 'done'
+        'room_id', 'event_id', 'done',
     ];
 
     public function room()
@@ -24,8 +26,8 @@ class EventRoom extends Model
     public function event_checkpoints()
     {
         return $this->hasMany(EventCheckpoint::class);
-    }    
-    
+    }
+
     public function event_checkpoints_open()
     {
         return $this->event_checkpoints()->where('done', false);

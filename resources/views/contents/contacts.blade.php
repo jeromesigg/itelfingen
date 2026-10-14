@@ -5,7 +5,7 @@
         <p>So findest du uns:</p>
       </div>
       <div >
-        <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
+        <iframe loading="lazy" style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
       </div>
       <div class="info">
         <div class="address">
@@ -35,20 +35,20 @@
           </div>
       @endif
       @if ($errors->contact->any())
-        <div class="alert alert-danger">
-            <ul>
+        <x-alert>
+            <ul class="list-disc list-inside">
                 @foreach ($errors->contact->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-        </div>
+        </x-alert>
       @endif
       <p class="mb-3 text-lg">
         Fragen, Anregungen? Wir freuen uns über Deine Nachricht. <br>
         Solltest du Fragen zu einer Buchung (Verfügbarkeit, Preis) haben, erstelle bitte direkt eine <a href="/#booking" class="text-red-300 hover:underline">Buchungsanfrage</a>.
       </p>
       
-      <x-forms.form :action="route('contacts.store')" id='contact_form'>
+      <x-forms.form :action="route('contacts.store')" id='contact_form' scope="contact">
         <x-honeypot />
         <div class="form-row">
           <x-forms.container class="col-md-6">
@@ -62,10 +62,10 @@
             <x-forms.text label="Betreff:" name="subject" required=true />
         </x-forms.container>
         <x-forms.container>
-            <x-forms.textarea label="Nachricht:" name="content" required=true rows="8"/>
+            <x-forms.text-area label="Nachricht:" name="content" required=true rows="8"/>
         </x-forms.container>
         <x-forms.container>
-          <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen">
+          <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen" id="submit-btn">
             Sende Nachricht
           </x-forms.button>
         </x-forms.container>
@@ -73,3 +73,13 @@
     </div>
   </div>
 </section>
+
+@push('scripts')
+  <script type="module">
+      document.getElementById('contact_form').addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Wird gesendet...';
+    });
+  </script>
+@endpush

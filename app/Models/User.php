@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
+        'role_id' => UserRole::class,
         'email_verified_at' => 'datetime',
     ];
 
@@ -41,18 +44,44 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    /**
+     * Selbst registrierte Benutzer haben keine Rolle, deshalb überall null-sicher.
+     */
     public function isAdmin()
     {
-        return $this->role['is_admin'] == 1 && $this->is_active == 1;
+        return $this->role_id?->isAdmin() && $this->is_active == 1;
     }
 
+    /**
+     * Zugang zum Admin-Bereich überhaupt (Team, Verwalter und Admin).
+     */
     public function isTeam()
     {
-        return ($this->role['is_team'] == 1 || $this->role['is_admin'] == 1) && $this->is_active == 1;
+        return $this->role_id?->hasAdminArea() && $this->is_active == 1;
     }
 
     public function isManager()
     {
-        return ($this->role['id'] == config('status.role_Verwalter')) && ($this->is_active);
+        return $this->role_id === UserRole::Verwalter && $this->is_active == 1;
+    }
+
+    /**
+     * Buchungen, Anfragen, Bewerbungen, Checkliste und Newsletter bearbeiten (Verwalter und Admin).
+     */
+    public function canManageBookings()
+    {
+        return $this->isAdmin() || $this->isManager();
+    }
+
+    /**
+     * Stufe für die Middleware "role": team < verwalter < admin.
+     */
+    public function hasRoleLevel(string $level)
+    {
+        return match ($level) {
+            'admin' => $this->isAdmin(),
+            'verwalter' => $this->canManageBookings(),
+            'team' => $this->isTeam(),
+        };
     }
 }

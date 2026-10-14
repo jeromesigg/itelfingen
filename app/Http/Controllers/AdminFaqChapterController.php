@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
 use App\Models\FaqChapter;
 use App\Models\Photo;
@@ -42,7 +43,7 @@ class AdminFaqChapterController extends Controller
         $input = $request->all();
         $index = FaqChapter::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         if (! empty($input['new_photo_id'])) {
             $name = time().'_faq_chapter.png';
             File::ensureDirectoryExists(public_path('images'));

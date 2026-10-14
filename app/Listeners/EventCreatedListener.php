@@ -51,12 +51,10 @@ class EventCreatedListener
         }
 
         foreach ($positions as $position) {
-            $new_position = Position::FirstOrCreate([
+            Position::updateOrCreate([
                 'event_id' => $event->event['id'],
                 'pricelist_position_id' => $position['id'],
-            ]);
-
-            $new_position->update(['amount' => $position['amount']]);
+            ], ['amount' => $position['amount'] ?? 0]); // leeres Formularfeld kommt als null
         }
     }
 }

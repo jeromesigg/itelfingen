@@ -27,6 +27,7 @@ const applicationsColumns = [
     size: 100,
   }),
   columnHelper.accessor('name', {
+    meta: { html: true },
     header: 'Name',
     enableSorting: true,
     size: 100,
@@ -77,6 +78,7 @@ const applicationsColumns = [
     size: 60,
   }),
   columnHelper.accessor('actions', {
+    meta: { html: true },
     header: 'Aktionen',
     enableSorting: false,
     size: 60,

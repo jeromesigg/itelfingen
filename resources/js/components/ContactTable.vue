@@ -69,6 +69,7 @@
       size: 80,
     }),
     columnHelper.accessor('actions', {
+      meta: { html: true },
       header: 'Aktionen',
       enableSorting: false,
       size: 60,

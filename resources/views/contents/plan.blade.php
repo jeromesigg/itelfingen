@@ -7,7 +7,7 @@
             <div class="flex flex-col lg:items-center lg:flex-row gap-y-8 sm:gap-y-12 lg:gap-x-16 xl:gap-x-24">
               <div>
                 <img class="object-cover w-full rounded-lg shadow-lg"
-                  src="images/Erdgeschoss.webp" alt="">
+                  src="images/Erdgeschoss.webp" alt="Erdgeschoss" loading="lazy">
               </div>
               <div class="w-full space-y-6 lg:max-w-lg shrink-0 xl:max-w-64">
                 <div class="space-y-3">
@@ -21,7 +21,7 @@
             <div class="flex flex-col lg:items-center lg:flex-row gap-y-8 sm:gap-y-12 lg:gap-x-16 xl:gap-x-24">
               <div class="lg:order-2">
                 <img class="object-cover w-full rounded-lg shadow-lg"
-                src="images/Obergeschoss.webp" alt="">
+                src="images/Obergeschoss.webp" alt="Obergeschoss" loading="lazy">
               </div>
       
               <div class="w-full space-y-6 lg:max-w-lg shrink-0 xl:max-w-64 lg:order-1">

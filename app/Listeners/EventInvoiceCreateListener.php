@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\EventInvoiceCreate;
 use App\Helper\Helper;
+use App\Services\BexioApiService;
 use Carbon\Carbon;
-use Ixudra\Curl\Facades\Curl;
 
 class EventInvoiceCreateListener
 {
@@ -22,41 +22,24 @@ class EventInvoiceCreateListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\EventInvoiceCreate  $event
+     * @param  EventInvoiceCreate  $event
      * @return void
      */
     public function handle(EventInvoiceCreate $eventInvoice)
     {
         //
         $event = $eventInvoice->event;
-        $invoice = Curl::to('https://api.bexio.com/2.0/kb_offer/'.$event['bexio_offer_id'].'/invoice')
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->post();
-
-        $invoice = json_decode($invoice, true);
-        if (! isset($invoice['error_code'])) {
-            $event->update([
-                'bexio_invoice_id' => $invoice['id'], ]);
-        } else {
-            abort($invoice['error_code'], $invoice['message']);
-        }
+        // Fehler von Bexio wirft BexioApiService selbst (RequestException bzw. RuntimeException).
+        $invoice = app(BexioApiService::class)->postAction('kb_offer/'.$event['bexio_offer_id'].'/invoice');
+        $event->update(['bexio_invoice_id' => $invoice['id']]);
 
         if (isset($invoice['id'])) {
-            $response = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$invoice['id'])
-                ->withHeader('Accept: application/json')
-                ->withHeader('Content-Type: application/json')
-                ->withBearer(config('app.bexio_token'))
-                ->withData(
-                    [
-                        'is_valid_from' => Carbon::create($event->end_date)->toDateString(),
-                        'is_valid_to' => Carbon::create($event->end_date)->addDays(30)->toDateString(),
-                        'api_reference' => $event['id'],
-                    ]
-                )
-                ->asJson(true)
-                ->post();
-
+            $data = [
+                'is_valid_from' => Carbon::create($event->end_date)->toDateString(),
+                'is_valid_to' => Carbon::create($event->end_date)->addDays(30)->toDateString(),
+                'api_reference' => $event['id'],
+            ];
+            $response = app(BexioApiService::class)->post('kb_invoice/'.$invoice['id'], $data);
             Helper::EventToGoogleCalendar($event);
         }
     }

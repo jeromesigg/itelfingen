@@ -59,8 +59,11 @@
               :key="cell.id"
               :style="{ 'max-width': cell.column.getSize() + 'px' }"
               class="px-4 py-2 border border-gray-300 dark:border-gray-600"
-              v-html="formatCellValue(cell.getValue())"
-            ></td>
+            >
+              <!-- HTML nur für Spalten mit meta.html (vom Server escaped), sonst als Text: Werte aus öffentlichen Formularen -->
+              <span v-if="cell.column.columnDef.meta?.html" v-html="formatCellValue(cell.getValue())"></span>
+              <template v-else>{{ formatCellValue(cell.getValue()) }}</template>
+            </td>
           </tr>
         </tbody>
       </table>

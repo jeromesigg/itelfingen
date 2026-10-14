@@ -4,10 +4,11 @@ namespace App\Notifications;
 
 use App\Mail\SendEventInvoiceMail;
 use App\Models\Event;
+use App\Services\BexioApiService;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Ixudra\Curl\Facades\Curl;
 
 class EventInvoiceSendNotification extends Notification
 {
@@ -29,11 +30,7 @@ class EventInvoiceSendNotification extends Notification
         //
         $this->event = $event;
         $this->additional_text = $additional_text;
-        $invoice = Curl::to('https://api.bexio.com/2.0/kb_invoice/'.$event['bexio_invoice_id'])
-            ->withHeader('Accept: application/json')
-            ->withBearer(config('app.bexio_token'))
-            ->get();
-        $invoice = json_decode($invoice, true);
+        $invoice = app(BexioApiService::class)->get('kb_invoice/'.$event['bexio_invoice_id']);
         $this->invoice = $invoice;
     }
 
@@ -52,7 +49,7 @@ class EventInvoiceSendNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

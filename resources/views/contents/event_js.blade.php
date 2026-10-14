@@ -9,6 +9,10 @@
 				$('#reservation_error_date').show();
 				setTimeout(function() { $('#reservation_error_date').hide(); }, 5000);
 			}
+			else if(Agenda.start === Agenda.end || Agenda.end === null){
+				$('#reservation_error_date').show();
+				setTimeout(function() { $('#reservation_error_date').hide(); }, 5000);
+			}
 			else{
 				document.getElementById("wizard_formular").style.display = "block";
 				document.getElementById("wizard_calendar").style.display = "none";
@@ -93,10 +97,39 @@
 
 	window.onload = function() {
 		Agenda.load(@json($events_json), @json($event_type))
+		restoreBooking()
 		if(document.getElementById('total_amount') != undefined){
 			Total_Change()
 		}
     };
+
+	// Nach einem Validierungsfehler sind die Felder wieder gefüllt (old()): gewählte Daten im Kalender
+	// markieren und direkt das Formular zeigen, damit Fehlermeldung und Eingaben sichtbar sind.
+	function restoreBooking() {
+		if (Agenda.mode !== 'guest' || !document.getElementById('start_date')) {
+			return;
+		}
+		var parse = function(value) {
+			var parts = value.split('-').map(Number);
+			return new Date(parts[0], parts[1] - 1, parts[2]);
+		};
+		var start = $('#start_date').val(), end = $('#end_date').val(), date = $('#date').val();
+		if (start && end) {
+			Agenda.start = parse(start);
+			Agenda.end = parse(end);
+		} else if (date) {
+			Agenda.start = parse(date);
+			Agenda.end = parse(date);
+		} else {
+			return;
+		}
+		Agenda.date = new Date(Agenda.start.getFullYear(), Agenda.start.getMonth(), 1);
+		Agenda.apply();
+		Agenda.getDays();
+		if (@json($errors->event->any())) {
+			wizard_step(2);
+		}
+	}
 
 	function addDays(date, days) {
 		var result = new Date(date);
@@ -138,6 +171,12 @@
 			cpy.push.apply(cpy, arguments);
 			callback.apply({}, cpy);
 		}
+	}
+	function formatDateToISO(date) {
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+		return `${year}-${month}-${day}`;
 	}
 
 	var Agenda = {
@@ -207,6 +246,7 @@
 			this.apply();
 		},
 		change: function() {
+			console.log(this.start, this.end, this.today);
 			if (Date.parse(this.start) > Date.parse(this.end)) {
 				this.end = new Date(this.today);
 				$('#reservation_error').show();
@@ -283,13 +323,13 @@
 				}
 				$('#days').text('(' + days + ' ' + text+')');
 				$("#start_date_text").text(this.start.toLocaleDateString('de-CH', options));
-				$("#start_date").val(this.start.toLocaleString());
+				$("#start_date").val(formatDateToISO(this.start))
 				$("#end_date_text").text(this.end.toLocaleDateString('de-CH', options));
-				$("#end_date").val(this.end.toLocaleString());
+				$("#end_date").val(formatDateToISO(this.end));
 			}
 			else{
 				$("#date_text").text(this.start.toLocaleDateString('de-CH', options));
-				$("#date").val(this.start.toLocaleString());
+				$("#date").val(formatDateToISO(this.start));
 				$('#days').text('1 Tag');
 			}
 			Total_Change();

@@ -22,6 +22,7 @@ const columnHelper = createColumnHelper()
 
 const newsletterColumns = [
   columnHelper.accessor('name', {
+    meta: { html: true },
     header: 'Name',
     enableSorting: true,
     size: 200,

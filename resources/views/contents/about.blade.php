@@ -3,18 +3,18 @@
     <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
 
         @if($homepage['green_text'])
-            <div class="alert alert-dismissable alert-success section-title">
+            <x-alert type="success" class="section-title">
                 <p>
                     {{$homepage['green_text']}}
                 </p>
-            </div>
+            </x-alert>
             <br>
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2 order-1 order-lg-2">
                 <div class="about-img">
-                    <img src="images/about-bg.webp" alt="">
+                    <img src="images/about-bg.webp" alt="" loading="lazy">
                 </div>
             </div>
 

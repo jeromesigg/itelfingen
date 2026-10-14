@@ -16,10 +16,10 @@
                             <x-forms.text label="Beschreibung:" name="subtitle"/>
                         </x-forms.container>
                         <x-forms.container>
-                            <x-forms.textarea label="Adresse:" name="address" required=true rows=3/>
+                            <x-forms.text-area label="Adresse:" name="address" required=true rows=3/>
                         </x-forms.container>
                         <x-forms.container>
-                            <x-forms.textarea label="Post-Adresse:" name="postaddress" required=true rows=3/>
+                            <x-forms.text-area label="Post-Adresse:" name="postaddress" required=true rows=3/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.text label="E-Mail:" name="email"/>

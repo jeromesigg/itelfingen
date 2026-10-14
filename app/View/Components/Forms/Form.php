@@ -24,13 +24,20 @@ class Form extends Component
      * Request method.
      */
     public $model;
+
+    /**
+     * Kennung bei mehreren Formularen auf einer Seite (siehe OldInput).
+     */
+    public ?string $scope;
+
     /**
      * Create a new component instance.
      */
-    public function __construct(string $method = 'POST', $model = [])
+    public function __construct(string $method = 'POST', $model = [], ?string $scope = null)
     {
         $this->method = strtoupper($method);
         $this->model = $model;
+        $this->scope = $scope;
         $this->spoofMethod = in_array($this->method, ['PUT', 'PATCH', 'DELETE']);
     }
 

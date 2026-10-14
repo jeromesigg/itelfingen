@@ -30,4 +30,23 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'healthchecks' => [
+        'job_daily' => env('JOB_DAILY'),
+        'job_daily_evening' => env('JOB_DAILY_EVENING'),
+        'job_weekly' => env('JOB_WEEKLY'),
+        'job_monthly' => env('JOB_MONTHLY'),
+
+    ],
+
+    'glutz' => [
+        'url' => env('GLUTZ_URL', 'NULL'),
+        'username' => env('GLUTZ_USERNAME', 'NULL'),
+        'password' => env('GLUTZ_PASSWORD', 'NULL'),
+    ],
+
+    'bexio' => [
+        'client_id' => env('BEXIO_CLIENT_ID'),
+        'client_secret' => env('BEXIO_CLIENT_SECRET'),
+    ],
+
 ];

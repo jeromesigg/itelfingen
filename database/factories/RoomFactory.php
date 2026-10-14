@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Enums\ArchiveState;
+use App\Models\Room;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Room>
+ * @extends Factory<Room>
  */
 class RoomFactory extends Factory
 {
@@ -19,7 +21,8 @@ class RoomFactory extends Factory
         return [
             //
             'name' => fake()->unique()->words(2, true),
-            'archive_status_id' => 1,
+            'sort-index' => fake()->numberBetween(1, 100),
+            'archive_status_id' => ArchiveState::Aktiv,
         ];
     }
 }

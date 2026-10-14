@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Newsletter;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use Yajra\DataTables\Facades\DataTables;
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Exports\ExportNewsletterBookings;
 use App\Exports\ExportNewsletterMembers;
 use App\Models\Event;
+use App\Models\Newsletter;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NewsletterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -27,14 +29,15 @@ class NewsletterController extends Controller
 
     public function createDataTablesTanStack(Request $request)
     {
-        
+
         $newsletter = Newsletter::get();
 
         // Transformation der Daten (gleich wie Yajra, aber manuel)
         $data = $newsletter->map(function (Newsletter $newsletter) {
             return [
-                'name' => ' <a class="text-orientalpink" href='.\URL::route('newsletter.edit', $newsletter).'>'.$newsletter['name'] . '</a>',
-                'firstname' =>  $newsletter['firstname'],
+                // HTML-Spalte (meta.html): Namen stammen aus Buchungen und Bewerbungen, also escapen
+                'name' => '<a class="text-orientalpink" href="'.route('newsletter.edit', $newsletter).'">'.e($newsletter['name']).'</a>',
+                'firstname' => $newsletter['firstname'],
                 'email' => $newsletter['email'],
                 'bookings' => $newsletter['bookings'] ? 'Ja' : 'Nein',
                 'members' => $newsletter['members'] ? 'Ja' : 'Nein',
@@ -51,7 +54,7 @@ class NewsletterController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -61,8 +64,7 @@ class NewsletterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -72,8 +74,7 @@ class NewsletterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Newsletter  $newsletter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Newsletter $newsletter)
     {
@@ -83,8 +84,7 @@ class NewsletterController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Newsletter  $newsletter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Newsletter $newsletter)
     {
@@ -97,9 +97,7 @@ class NewsletterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Newsletter  $newsletter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Newsletter $newsletter)
     {
@@ -116,8 +114,7 @@ class NewsletterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Newsletter  $newsletter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Newsletter $newsletter)
     {
@@ -129,24 +126,25 @@ class NewsletterController extends Controller
 
     public function import()
     {
-        $events = Event::where('event_status_id', config('status.event_bestaetigt'))->where('contract_status_id', '>=', config('status.contract_rechnung_erstellt'))->get();
-        foreach($events as $event){
+        $events = Event::where('event_status_id', BookingState::Bestaetigt)->where('contract_status_id', '>=', ContractState::RechnungErstellt->value)->get();
+        foreach ($events as $event) {
             Newsletter::updateOrCreate(
                 ['email' => $event['email']],
                 [
-                'firstname' => $event['firstname'],
-                'name' => $event['name'],
-                'bookings' => true
-            ]);
+                    'firstname' => $event['firstname'],
+                    'name' => $event['name'],
+                    'bookings' => true,
+                ]);
         }
+
         return redirect('/admin/newsletter');
     }
-    
+
     public function exportBookings()
     {
         return Excel::download(new ExportNewsletterBookings, 'newsletter_bookings.csv', \Maatwebsite\Excel\Excel::CSV);
     }
-    
+
     public function exportMembers()
     {
         return Excel::download(new ExportNewsletterMembers, 'newsletter_members.csv', \Maatwebsite\Excel\Excel::CSV);

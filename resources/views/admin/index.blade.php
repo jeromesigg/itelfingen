@@ -30,7 +30,7 @@
                     <div class="grid grid-cols-2 gap-4 ">
                         <div class="title">
                             <strong>
-                                @if (Auth::user()->isManager())
+                                @if (Auth::user()->canManageBookings())
                                     <a class="text-orientalpink" href="{{route('admin.events.edit', $event->id)}}">{{$event->number()}} <br> {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
                                 @else
                                     {{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
@@ -66,7 +66,7 @@
                   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
                       <div class="title">
                           <strong>
-                              @if (Auth::user()->isManager())
+                              @if (Auth::user()->canManageBookings())
                                   <a class="text-orientalpink"  href="{{route('admin.events.edit', $event->id)}}">{{$event->number()}} <br> {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}</a>
                               @else
                                   {{$event->number()}}: {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}
@@ -100,7 +100,7 @@
               <div class="feed d-flex justify-content-between">
               <div class="feed-body d-flex justify-content-between">
                   <div class="content">
-                      @if (Auth::user()->isManager())
+                      @if (Auth::user()->canManageBookings())
                           <a class="text-orientalpink" href="{{route('admin.contacts.index')}}"><strong>{{$contact->firstname}} {{$contact->name}}</strong> </a><br><small>{{$contact->subject}}</small>
                       @else
                           <strong>{{$contact->firstname}} {{$contact->name}}</strong><br><small>{{$contact->subject}}</small>

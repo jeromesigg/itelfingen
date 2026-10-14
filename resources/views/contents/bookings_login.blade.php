@@ -4,7 +4,7 @@
 
   <div class="bg-[url(../images/login.webp)] bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply bg-opacity-60">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen">
-        <a href="/home" class="flex items-center mb-6 text-2xl font-semibold text-white">
+        <a href="/" class="flex items-center mb-6 text-2xl font-semibold text-white">
             <img class="w-8 h-8 mr-2" src="/img/logo_small.png" alt="logo">
             Ferienhaus Itelfingen    
         </a>
@@ -15,22 +15,15 @@
                 </h1>
                   <form class="space-y-4 md:space-y-6" method="POST" action="{{ route('bookings.check') }}">
                     @csrf
-                    @error('username')
+                    @if($errors->any())
                         <p class="mt-2 text-sm text-red-600 dark:text-red-500" role="alert">
-                            @if($errors->any())
-                                <strong>{{$errors->first()}}</strong>
-                            @endif
+                            <strong>{{ $errors->first() }}</strong>
                         </p>
-                    @enderror
+                    @endif
                     <div>
                         <label for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Buchungs-Nummer</label>
-                        <input type="text" name="id" id="id" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="00123" required>
+                        <input type="text" name="id" id="id" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="00123" value="{{ old('id') }}" required>
                     </div>
-                    @error('password')
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-500" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </p>
-                    @enderror 
                     <div>
                         <label for="plz" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Postleitzahl des Buchers</label>
                         <input type="plz" name="plz"  placeholder="6344" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>

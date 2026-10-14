@@ -9,7 +9,7 @@
       <div class="relative h-56 overflow-hidden rounded-lg md:h-192">
         @foreach ($pictures as $key=>$picture)
           <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="{{$picture->photo->file}}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="{{$picture->name}}">
+              <img src="{{$picture->photo->file}}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="{{$picture->name}}" loading="lazy">
           </div>
         @endforeach    
       </div>

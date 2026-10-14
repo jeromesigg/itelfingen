@@ -5,6 +5,7 @@
         <p>Unsere Preise</p>
       </div>
 
+      {{-- Tailwind-Raster (RemoveBootstrap), Inhalte von develop: keine Tagesaufenthalte mehr, Buchungsbedingungen --}}
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pricelist-container">
         <div>
           <div class="card card_title-line_white_mobile" style="width: 100%">
@@ -21,34 +22,26 @@
                 Fr. {{config('pricelist.other_kids')}}.- pro Nacht und Person (6-16 Jahren)
               </p>
             </div>
-              @if($application_enabled)
-                  <a type="button" class="btn btn-dark" href="{{route('applications')}}" target="_blank">Genossenschafter:in werden</a>
-                  <br>
-              @endif
           </div>
         </div>
         <div>
-          <div class="card card_title-line_white">
-            <div class="card_content">
-              <h3 class="text-3xl">Tagesaufenthalte (ohne Übernachtung)</h3>
-              <p class="card_text">
-                  Reinigungs- und Buchungspauschale {{config('pricelist.cleaning')/2}}.-<br>
-                  Tagespauschale Fr. {{config('pricelist.daily')}}.-
-              </p>
-            </div>
-          </div>
           <div class="card">
             <div class="card_content">
+              <h3 class="text-3xl">Buchungsbedingungen</h3>
               <ul class="card_list">
+                <li>Das Ferienhaus muss mindestens für eine Übernachtung gebucht werden. </li>
                 <li>Im Preis sind alle Taxen für Strom, Warmwasser und Heizung enthalten. </li>
                 <li>Drei Parkplätze sind im Preis enthalten. Jeder weitere kostet 5.- pro Tag (bis zu 5 weitere Plätze). </li>
                 <li>Die Annullationskosten betragen ab 3 Monaten vor Mietbeginn bei einer definitiven Buchung 50% des Totalbetrags, ab 14 Tage vor Mietbeginn 100% des Totalbetrags. </li>
                 <li>Über die Feiertage (Weihnachten, Neujahr und Ostern) liegt die Mindestanforderung für eine Buchung bei zwei Übernachtungen für 10 Personen. </li>
-                </ul>
-              </div>
+              </ul>
             </div>
           </div>
-
+        </div>
       </div>
+      @if($application_enabled)
+          <a type="button" class="btn btn-dark" href="{{route('applications')}}" target="_blank">Genossenschafter:in werden</a>
+          <br>
+      @endif
     </div>
   </section><!-- End pricelist Section -->

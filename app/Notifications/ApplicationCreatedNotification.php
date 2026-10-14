@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Mail\ApplicationCreated;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use jeremykenedy\Slack\Laravel\Facade as Slack;
@@ -41,7 +42,7 @@ class ApplicationCreatedNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
@@ -52,7 +53,7 @@ class ApplicationCreatedNotification extends Notification
      * Get the Slack representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\SlackMessage
+     * @return SlackMessage
      */
     public function toSlack($notifiable)
     {
@@ -79,7 +80,7 @@ class ApplicationCreatedNotification extends Notification
             'name' => $application->firstname.' '.$application->name,
             'e-mail' => $application->email,
             'gruppe' => $application->organisation,
-            'strasse' => $application->street .' '.$application->house_number,
+            'strasse' => $application->street.' '.$application->house_number,
             'ort' => $application->plz.' '.$application->city,
             'telefon' => $application->telephone,
             'wieso' => $application->why,
