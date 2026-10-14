@@ -5,7 +5,7 @@
             <div class="me-8 flex items-start sm:items-center">
                 <div class="text-gray-500 dark:text-gray-400">
                     <p class="mb-1 text-sm  sm:text-base">                                
-                        <a class="text-orientalpink text-bold" href="{{Auth::user()->isManager() ? route('admin.events.edit', $event->id) : '#'}}">{{$event->number()}}, {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}:</a>
+                        <a class="text-orientalpink text-bold" href="{{Auth::user()->canManageBookings() ? route('admin.events.edit', $event->id) : '#'}}">{{$event->number()}}, {{Carbon\Carbon::parse($event->start_date)->format('d.m.Y')}} - {{Carbon\Carbon::parse($event->end_date)->format('d.m.Y')}}:</a>
                         {{$event->firstname}} {{$event->name}} 
                         {{$event->group_name ? ', ' . $event->group_name : ''}}
                         {{$event->comment ? ' - ' . $event->comment : ''}}

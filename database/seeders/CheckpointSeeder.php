@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Room;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CheckpointSeeder extends Seeder
@@ -15,8 +14,8 @@ class CheckpointSeeder extends Seeder
     {
         //
         Room::factory()
-        ->count(10)
-        ->hasCheckpoints(10)
-        ->create();
+            ->count(10)
+            ->hasCheckpoints(10)
+            ->create();
     }
 }

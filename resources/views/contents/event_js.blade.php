@@ -99,10 +99,39 @@
 
 	window.onload = function() {
 		Agenda.load(@json($events_json), @json($event_type))
+		restoreBooking()
 		if(document.getElementById('total_amount') != undefined){
 			Total_Change()
 		}
     };
+
+	// Nach einem Validierungsfehler sind die Felder wieder gefüllt (old()): gewählte Daten im Kalender
+	// markieren und direkt das Formular zeigen, damit Fehlermeldung und Eingaben sichtbar sind.
+	function restoreBooking() {
+		if (Agenda.mode !== 'guest' || !document.getElementById('start_date')) {
+			return;
+		}
+		var parse = function(value) {
+			var parts = value.split('-').map(Number);
+			return new Date(parts[0], parts[1] - 1, parts[2]);
+		};
+		var start = $('#start_date').val(), end = $('#end_date').val(), date = $('#date').val();
+		if (start && end) {
+			Agenda.start = parse(start);
+			Agenda.end = parse(end);
+		} else if (date) {
+			Agenda.start = parse(date);
+			Agenda.end = parse(date);
+		} else {
+			return;
+		}
+		Agenda.date = new Date(Agenda.start.getFullYear(), Agenda.start.getMonth(), 1);
+		Agenda.apply();
+		Agenda.getDays();
+		if (@json($errors->event->any())) {
+			wizard_step(2);
+		}
+	}
 
 	function addDays(date, days) {
 		var result = new Date(date);

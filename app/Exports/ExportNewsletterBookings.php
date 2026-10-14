@@ -3,14 +3,15 @@
 namespace App\Exports;
 
 use App\Models\Newsletter;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ExportNewsletterBookings implements FromCollection, WithHeadings
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return Collection
+     */
     public function collection()
     {
         return Newsletter::where('bookings', true)->get(['email', 'firstname', 'name', 'bookings', 'created_at', 'updated_at']);

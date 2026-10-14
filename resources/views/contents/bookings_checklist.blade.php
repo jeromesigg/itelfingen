@@ -80,7 +80,7 @@
       var checkpoint_id = $(this).attr('id');
       $.ajax({
               type:'POST',
-              url: "{!! route('bookings.checkpointDone') !!}",
+              url: "{!! route('bookings.checkpointDone', $event->uuid) !!}",
               headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
               data: { "checkpoint_id" : checkpoint_id },
               success: function(data){

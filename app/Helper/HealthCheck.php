@@ -18,7 +18,7 @@ class HealthCheck
         try {
             Http::timeout(5)->get($fail ? "{$url}/fail" : $url);
         } catch (\Throwable $e) {
-            Log::warning("Healthcheck-Ping für {$jobName} fehlgeschlagen: " . $e->getMessage());
+            Log::warning("Healthcheck-Ping für {$jobName} fehlgeschlagen: ".$e->getMessage());
         }
     }
 }

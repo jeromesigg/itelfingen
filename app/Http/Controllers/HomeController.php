@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
+use App\Enums\BookingState;
 use App\Models\Event;
 use App\Models\EventCheckpoint;
 use App\Models\Faq;
@@ -11,6 +13,7 @@ use App\Models\Person;
 use App\Models\Picture;
 use App\Models\PricelistPosition;
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -30,14 +33,14 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
     public function index()
     {
         $homepage = Homepage::FindOrFail(1);
         $pictures = Picture::all();
-        $positions = PricelistPosition::where([['show', true], ['archive_status_id', config('status.aktiv')]])->orderby('bexio_code')->get();
-        $events = Event::where('event_status_id', '<', config('status.event_storniert'))->where('end_date', '>=', Carbon::now())->get();
+        $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
+        $events = Event::whereIn('event_status_id', BookingState::notCancelled())->where('end_date', '>=', Carbon::now())->get();
         $event_type = 'guest';
         $discount = config('app.discount_enabled');
         $application_enabled = config('app.application_enabled');
@@ -87,7 +90,7 @@ class HomeController extends Controller
     public function about_us()
     {
         $homepage = Homepage::FindOrFail(1);
-        $people = Person::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        $people = Person::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
 
         return view('contents.about_us', compact('homepage', 'people'));
     }
@@ -96,8 +99,8 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $title = 'FAQ';
-        $faqs = Faq::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
-        $faq_chapters = FaqChapter::where('archive_status_id', config('status.aktiv'))->orderby('sort-index')->get();
+        $faqs = Faq::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
+        $faq_chapters = FaqChapter::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
 
         return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs', 'title'));
     }
@@ -117,22 +120,29 @@ class HomeController extends Controller
         if ($event === null) {
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
         }
-        $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
 
         return view('contents.bookings_show', compact('homepage', 'title', 'event'));
     }
 
     public function bookings_check(Request $request)
     {
-        $input = $request->all();    
-        $event = Event::where('id', intval($input['id']))->where('plz', $input['plz'])->first();
-        if ($event === null) { 
+        $failed = fn () => redirect()->route('bookings.login')
+            ->withErrors(['login' => 'Die eingegebenen Daten sind nicht korrekt.'])
+            ->withInput($request->only('id'));
+
+        if (! is_numeric($request->input('id')) || ! is_numeric($request->input('plz'))) {
+            return $failed();
+        }
+        $event = Event::where('id', intval($request->input('id')))->where('plz', $request->input('plz'))->first();
+        if ($event === null) {
             Log::warning('Fehlgeschlagener Booking-Login-Versuch', [
                 'ip' => $request->ip(),
                 'buchungsnummer' => $request->id,
                 'user_agent' => $request->userAgent(),
             ]);
-            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.')->withInput();
+
+            return $failed();
         }
 
         return redirect()->route('bookings.uuid', ['uuid' => $event['uuid']]);
@@ -145,7 +155,7 @@ class HomeController extends Controller
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
         }
         $homepage = Homepage::FindOrFail(1);
-        $title = 'Deine Buchung Nr. '. str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
 
         return view('contents.bookings_checklist', compact('homepage', 'title', 'event'));
     }
@@ -161,23 +171,27 @@ class HomeController extends Controller
         return response()->download($outputFile);
     }
 
-    public function bookings_checkpointDone(Request $request)
+    public function bookings_checkpointDone(Request $request, string $uuid)
     {
-        $checkpoint_id = $request->get('checkpoint_id');
-        $checkpoint = EventCheckpoint::findOrFail($checkpoint_id);
-        $checkpoint->done = !$checkpoint->done;
+        // Nur Checkpoints der Buchung mit dieser UUID, sonst könnte jeder fremde Checklisten abhaken.
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        $checkpoint = EventCheckpoint::whereKey($request->get('checkpoint_id'))
+            ->whereHas('event_room', fn ($query) => $query->where('event_id', $event->id))
+            ->firstOrFail();
+        $checkpoint->done = ! $checkpoint->done;
         $checkpoint->save();
         $event_room = $checkpoint->event_room;
         $done = ($event_room->event_checkpoints_open()->count() === 0);
         $event_room->done = $done;
         $event_room->save();
+
         return response()->json([
             'data' => [
-                'checkpoint_done' =>  $checkpoint->done,
-                'room_id' =>  $event_room->id,
-                'room_done' =>  $event_room->done,
+                'checkpoint_done' => $checkpoint->done,
+                'room_id' => $event_room->id,
+                'room_done' => $event_room->done,
                 'success' => true,
-            ]
-          ]);
+            ],
+        ]);
     }
 }

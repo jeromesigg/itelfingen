@@ -17,7 +17,7 @@ return new class extends Migration
             //
             $table->integer('total_people')->nullable()->after('total_days');
         });
-        DB::statement('UPDATE events set events.total_people = (SELECT sum(positions.amount) FROM positions where (positions.pricelist_position_id <5) and (positions.event_id = events.id)) where total_people is null;');
+        DB::statement('UPDATE events SET total_people = (SELECT sum(positions.amount) FROM positions where (positions.pricelist_position_id <5) and (positions.event_id = events.id)) where total_people is null;');
     }
 
     /**

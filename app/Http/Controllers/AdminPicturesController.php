@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\ImageUpload;
 use App\Models\Photo;
 use App\Models\Picture;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Intervention\Image\Facades\Image;
 
 class AdminPicturesController extends Controller
@@ -12,7 +14,7 @@ class AdminPicturesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -25,7 +27,7 @@ class AdminPicturesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -36,7 +38,7 @@ class AdminPicturesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -44,13 +46,12 @@ class AdminPicturesController extends Controller
         $input = $request->all();
 
         if ($file = $request->file('photo_id')) {
-            $name = time().'_'.$file->getClientOriginalName();
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
 
             if ($input['cropped_photo_id']) {
-                $name = time().'_cropped_'.$file->getClientOriginalName();
+                $name = ImageUpload::name($file, 'photo_id', '_cropped');
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
                 $photo_cropped = Photo::create(['file' => $name]);
@@ -67,7 +68,7 @@ class AdminPicturesController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -78,7 +79,7 @@ class AdminPicturesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -92,7 +93,7 @@ class AdminPicturesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -100,14 +101,13 @@ class AdminPicturesController extends Controller
         $input = $request->all();
 
         if ($file = $request->file('photo_id')) {
-            $name = time().$file->getClientOriginalName();
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
 
             if ($input['cropped_photo_id']) {
-                $name = time().'_cropped_'.$file->getClientOriginalName();
+                $name = ImageUpload::name($file, 'photo_id', '_cropped');
                 Image::make($input['cropped_photo_id'])->save('images/'.$name);
 
                 $photo_cropped = Photo::create(['file' => $name]);
@@ -123,7 +123,7 @@ class AdminPicturesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

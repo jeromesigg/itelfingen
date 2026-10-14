@@ -7,7 +7,6 @@ use App\Services\BexioApiService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Ixudra\Curl\Facades\Curl;
 
 class ApplicationInvoiceMail extends Mailable
 {
@@ -16,9 +15,10 @@ class ApplicationInvoiceMail extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Application
+     * @var Application
      */
     protected $application;
+
     protected $invoice;
 
     /**

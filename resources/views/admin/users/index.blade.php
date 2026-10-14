@@ -11,7 +11,7 @@
             <div class="row">
                 @if (Auth::user()->isAdmin())
                     <div class="col-sm-3">
-                        <x-forms.form :action="route('users.create')" autocomplete="off">
+                        <x-forms.form :action="route('users.store')" autocomplete="off">
                             <x-forms.container>
                                 <x-forms.text label="Username:" name="username" required=true/>
                             </x-forms.container>
@@ -49,7 +49,7 @@
                             @foreach ($users as $user)
                                 <tr>
                                     <td><a class="text-orientalpink" href="{{route('users.edit', $user->id)}}">{{$user->username}}</a></td>
-                                    <td>{{$user->role['name']}}</td>
+                                    <td>{{$user->role?->name ?? 'Keine Rolle'}}</td>
                                     <td>{{$user->is_active ? 'Aktiv' : 'Archiviert'}}</td>
                                     </tr>
                             @endforeach

@@ -111,7 +111,10 @@
                             </x-forms.container>
                             <x-forms.container class="col-xl-4">
                                 <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=5/>
-                            </x-forms.container> 
+                            </x-forms.container>
+                            <x-forms.container class="col-xl-6">
+                                <x-forms.text-area label="Aufmerksam geworden durch:" name="marketing_comment" rows=3/>
+                            </x-forms.container>
                         </div> 
                         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
                         <div class="form-row">
@@ -121,16 +124,16 @@
                                 </x-forms.button>
                             </x-forms.container>
                             @switch($event['contract_status_id'])
-                                @case(config('status.contract_offen'))  
+                                @case(\App\Enums\ContractState::Offen)  
                                     <x-forms.container class="col-xl-2 col-6">
                                         <x-forms.button type="submit" class="focus:outline-none text-white bg-norway hover:bg-norway hover:text-white focus:ring-4 focus:ring-norway font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-norway dark:hover:bg-norway dark:focus:ring-norway" name="submit" value="2 Angebot erstellen">
-                                            {{config('mail.direct_send') ? '2 Angebot erstellen & versenden' : '2 Angebot erstellen'}}
+                                            2 Angebot erstellen
                                         </x-forms.button>
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6"/>
                                     <x-forms.container class="col-xl-2 col-6"/>
                                     @break
-                                @case(config('status.contract_angebot_erstellt'))
+                                @case(\App\Enums\ContractState::AngebotErstellt)
                                     <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -141,7 +144,7 @@
                                     </x-forms.container>
                                     <x-forms.container class="col-xl-2 col-6"/>
                                     @break
-                                @case(config('status.contract_angebot_versendet'))
+                                @case(\App\Enums\ContractState::AngebotVersendet)
                                     <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -156,7 +159,7 @@
                                         </x-forms.button>
                                     </x-forms.container>
                                     @break
-                                @case(config('status.contract_rechnung_erstellt'))
+                                @case(\App\Enums\ContractState::RechnungErstellt)
                                     <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -169,7 +172,7 @@
                                         </x-forms.button>
                                     </x-forms.container>
                                     @break
-                                @case(config('status.contract_rechnung_versendet'))
+                                @case(\App\Enums\ContractState::RechnungVersendet)
                                 <x-forms.container class="col-xl-2 col-6">
                                         <a target="_blank" class = 'focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith' href="https://office.bexio.com/index.php/kb_offer/show/id/{{$event['bexio_offer_id']}}">Angebot anzeigen</a>
                                     </x-forms.container>
@@ -230,7 +233,7 @@
                         <a href="{{route('events.downloadParking', $event['uuid'])}}" class="focus:outline-none text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">Parkplatz-Karte herunterladen</a>
                     </div>
                     
-                    @if($event->external && ($event['contract_status_id'] < config('status.contract_angebot_erstellt')))
+                    @if($event->external && $event->contractState()->isBefore(\App\Enums\ContractState::AngebotErstellt))
                         <x-forms.container>
                             <x-forms.text-area label="Import Buchung:" name="import-text" rows=9 placeholder="Buchungsinformationen aus PDF 'Name' bis 'Anzahl Personen' hier einfügen..."/>
                         </x-forms.container>
@@ -407,7 +410,7 @@
         }
 
         $("#contract_status_id").change(function(e) {
-            if($(this).val() == {{config('status.contract_storniert')}}){
+            if($(this).val() == {{ \App\Enums\ContractState::Storniert->value }}){
                 var event = @json($event);
                 if(event['cleaning_mail']){
                     e.preventDefault(); //cancel default action
@@ -446,6 +449,14 @@
                 document.getElementById('telephone').value        = data.telefon ?? (data.mobil ?? '');
                 document.getElementById('start_date').value = data.mietdauer_von ?? '';
                 document.getElementById('end_date').value = data.mietdauer_bis ?? '';
+                // Kommentar der Gruppe (nur Anfrage-Mail) in die Bemerkungen; anhängen statt überschreiben,
+                // damit ein zweiter Import (Buchungs-PDF) nichts verliert.
+                if (data.kommentar) {
+                    const comment = document.getElementById('comment');
+                    if (!comment.value.includes(data.kommentar)) {
+                        comment.value = comment.value ? comment.value + "\n\n" + data.kommentar : data.kommentar;
+                    }
+                }
                 Total_Change()
             })
             .catch(err => console.error('Fehler:', err));

@@ -20,7 +20,7 @@ return [
     'client_id' => env('GOOGLE_DRIVE_CLIENT_ID', ''),
     'client_secret' => env('GOOGLE_DRIVE_CLIENT_SECRET', ''),
     'redirect_uri' => env('GOOGLE_REDIRECT', ''),
-    'scopes' => [\Google_Service_Sheets::DRIVE, \Google_Service_Sheets::SPREADSHEETS],
+    'scopes' => [Google_Service_Sheets::DRIVE, Google_Service_Sheets::SPREADSHEETS],
     'access_type' => 'offline',
     'approval_prompt' => 'force',
     'prompt' => 'consent',

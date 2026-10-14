@@ -14,7 +14,7 @@ class ContactCreated extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Contact
+     * @var Contact
      */
     protected $contact;
 

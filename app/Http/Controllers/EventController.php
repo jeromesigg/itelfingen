@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingState;
+use App\Enums\ContractState;
 use App\Events\EventCreated;
 use App\Models\City;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Notification;
 use Validator;
 
@@ -16,9 +19,23 @@ class EventController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'zipcode' => 'numeric|gte:1000|lte:9999',
-            'total_people' => 'gt:0|lte:19',
+            'name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'zipcode' => 'required|numeric|gte:1000|lte:99999',
+            'city' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            // Die Checkbox schickt einen leeren Wert; nicht angehakt wird sie gar nicht gesendet.
+            'terms' => 'present',
+            // Tagesbuchung (0 Tage) mit "date", sonst Anreise und Abreise
+            'total_days' => 'required|integer|min:0',
+            'date' => 'nullable|required_if:total_days,0|date',
+            'start_date' => 'nullable|required_unless:total_days,0|date',
+            'end_date' => 'nullable|required_unless:total_days,0|date|after_or_equal:start_date',
+            'total_people' => 'required|gt:0|lte:19',
+            'positions' => 'nullable|array',
+            'positions.*' => 'nullable|numeric|min:0',
         ], [
+            'terms.present' => 'Bitte akzeptiere die Hausordnung.',
             'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
             'zipcode.gte' => 'Die Postleitzahl muss grösser oder gleich 1000 sein.',
             'zipcode.lte' => 'Die Postleitzahl muss kleiner oder gleich 9999 sein.',
@@ -31,11 +48,16 @@ class EventController extends Controller
                 ->withInput();
         }
 
-        $input = $request->all();
+        // Nur Felder des Buchungsformulars, keine internen Felder (Türcode, Bexio, Notizen, Status).
+        $input = $request->only([
+            'name', 'firstname', 'group', 'street', 'house_number', 'zipcode', 'city', 'email', 'telephone',
+            'comment', 'marketing_comment', 'terms', 'date', 'start_date', 'end_date', 'total_days', 'total_people', 'total_amount',
+            'discount', 'positions',
+        ]);
         $input['plz'] = $input['zipcode'];
-        $input['group_name'] = $input['group'];
-        $input['event_status_id'] = config('status.event_neu');
-        $input['contract_status_id'] = config('status.contract_offen');
+        $input['group_name'] = $input['group'] ?? null;
+        $input['event_status_id'] = BookingState::Neu;
+        $input['contract_status_id'] = ContractState::Offen;
         $one_day = false;
         if ($input['total_days'] < 1) {
             $input['start_date'] = new Carbon($input['date']);
@@ -46,11 +68,10 @@ class EventController extends Controller
             $input['start_date'] = new Carbon($input['start_date']);
             $input['end_date'] = new Carbon($input['end_date']);
         }
-        $input['uuid'] = \Illuminate\Support\Str::uuid();
-        $input['phonenumber_query'] = str_replace(' ', '',$input['telephone']);
-        $input['phonenumber_query'] = str_replace('-', '',$input['phonenumber_query']);
+        $input['uuid'] = Str::uuid();
+        $input['phonenumber_query'] = str_replace([' ', '-'], '', $input['telephone'] ?? '');
         $event = Event::create($input);
-        EventCreated::dispatch($event, $one_day, $input['positions']);
+        EventCreated::dispatch($event, $one_day, $input['positions'] ?? []);
         Notification::send($event, new EventCreatedNotification($event));
 
         return redirect()->to(url()->previous().'#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden. Schau auch in deinem Spam-Ordner nach.');
@@ -60,6 +81,7 @@ class EventController extends Controller
     {
         // $query = $request->get('term','');
         $cities = City::search($request->get('term'))->get();
+        $data = [];
         foreach ($cities as $city) {
             $data[] = ['name' => $city->name, 'plz' => $city->plz, 'id' => $city->id];
         }

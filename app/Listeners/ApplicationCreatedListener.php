@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\ApplicationCreatedEvent;
 use App\Services\BexioApiService;
-use Ixudra\Curl\Facades\Curl;
 
 class ApplicationCreatedListener
 {
@@ -39,7 +38,7 @@ class ApplicationCreatedListener
                 ],
                 [
                     'field' => 'address',
-                    'value' => $application->street . ' ' . $application->house_number,
+                    'value' => $application->street.' '.$application->house_number,
                 ],
                 [
                     'field' => 'postcode',
@@ -49,20 +48,20 @@ class ApplicationCreatedListener
 
             if (count($person) === 0) {
                 $data = [
-                        'contact_type_id' => '2',
-                        'name_1' => $application->name,
-                        'name_2' => $application->firstname,
-                        'street_name' => $application->street,
-                        'house_number' => $application->house_number ?: '',
-                        'postcode' => $application->plz,
-                        'city' => $application->city,
-                        'country_id' => 1,
-                        'mail' => $application->email,
-                        'phone_mobile' => $application->telephone,
-                        'remarks' => $application->comment,
-                        'user_id' => 1,
-                        'owner_id' => 1,
-                    ];
+                    'contact_type_id' => '2',
+                    'name_1' => $application->name,
+                    'name_2' => $application->firstname,
+                    'street_name' => $application->street,
+                    'house_number' => $application->house_number ?: '',
+                    'postcode' => $application->plz,
+                    'city' => $application->city,
+                    'country_id' => 1,
+                    'mail' => $application->email,
+                    'phone_mobile' => $application->telephone,
+                    'remarks' => $application->comment,
+                    'user_id' => 1,
+                    'owner_id' => 1,
+                ];
                 $person = app(BexioApiService::class)->post('contact', $data);
             } else {
                 $person = $person[0];

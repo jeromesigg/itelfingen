@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Notification;
-use Carbon\Carbon;
-use App\Models\Event;
+use App\Enums\BookingState;
 use App\Helper\GlutzAPI;
-use Illuminate\Console\Command;
+use App\Models\Event;
 use App\Notifications\EventFeedbackNotification;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Notification;
 
 class DailyEveningTask extends Command
 {
@@ -34,7 +35,7 @@ class DailyEveningTask extends Command
     {
         parent::__construct();
     }
-    
+
     /**
      * Execute the console command.
      *
@@ -49,12 +50,12 @@ class DailyEveningTask extends Command
     public function SendFeedbackMails()
     {
         $date = Carbon::today()->addDays(1);
-        $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', config('status.event_bestaetigt'))->get();
+        $events = Event::where('feedback_mail', false)->where('end_date', '<=', $date)->where('event_status_id', '=', BookingState::Bestaetigt)->get();
 
         foreach ($events as $event) {
             Notification::send($event, new EventFeedbackNotification($event));
             $event->update(['feedback_mail' => true]);
-        }       
+        }
         if (count($events) > 0) {
             $this->info(count($events).' Feedback-Mails versendet.');
         }
@@ -62,7 +63,7 @@ class DailyEveningTask extends Command
 
     public function UpdateGlutzDevices()
     {
-         $result = GlutzAPI::updateDevice();       
-         $this->info('Glutz-Geräte aktualisiert. Ergebnis: '.json_encode($result)); 
+        $result = GlutzAPI::updateDevice();
+        $this->info('Glutz-Geräte aktualisiert. Ergebnis: '.json_encode($result));
     }
 }

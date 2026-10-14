@@ -9,11 +9,15 @@ class APIToken
 {
     /**
      * Handle an incoming request.
+     *
+     * Ohne API_TOKEN in der Konfiguration ist die API gesperrt.
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->api_token != config('app.api_token')) {
-            return response()->json('Token '.$request->api_token.' is not valid', 401);
+        $token = (string) config('app.api_token');
+
+        if ($token === '' || ! hash_equals($token, (string) $request->route('api_token'))) {
+            return response()->json('Token is not valid', 401);
         }
 
         return $next($request);

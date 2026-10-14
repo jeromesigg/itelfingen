@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ArchiveState;
 use Illuminate\Database\Eloquent\Model;
 
 class PricelistPosition extends Model
@@ -11,6 +12,7 @@ class PricelistPosition extends Model
     ];
 
     protected $casts = [
+        'archive_status_id' => ArchiveState::class,
         'show' => 'boolean',
     ];
 

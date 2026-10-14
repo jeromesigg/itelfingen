@@ -2,15 +2,34 @@
 
 namespace App\Listeners;
 
-use Carbon\Carbon;
-use App\Models\Position;
-use Ixudra\Curl\Facades\Curl;
+use App\Enums\ContractState;
 use App\Events\EventOfferCreate;
+use App\Models\Position;
 use App\Services\BexioApiService;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class EventOfferCreateListener
 {
+    private const PARKING_CODE = 210;
+
+    private const PARKING_INCLUDED = 3;
+
+    /**
+     * Menge einer Position in der Offerte: Hausmiete (20) und Zusatzkosten (> 200) fix,
+     * Personen/Nutzung (21-200) pro Nacht, Parkplätze pro Tag, wobei drei im Preis inbegriffen sind.
+     */
+    public static function offerAmount(int $bexioCode, int|float $amount, int $nights): int|float
+    {
+        if ($bexioCode === self::PARKING_CODE) {
+            return max($amount - self::PARKING_INCLUDED, 0) * $nights;
+        }
+        if ($bexioCode > 20 && $bexioCode <= 200) {
+            return $amount * $nights;
+        }
+
+        return $amount;
+    }
+
     /**
      * Create the event listener.
      *
@@ -38,12 +57,7 @@ class EventOfferCreateListener
             $positions = Position::with('pricelist_position')->where('event_id', $event['id'])->get()->sortBy('pricelist_position.bexio_code');
             $positions_array = [];
             foreach ($positions as $position) {
-                $amount = $position['amount'];
-                if ($position->pricelist_position['bexio_code'] > 200) {
-                    $amount = max($position['amount'] - 3, 0) * $event['total_days'];
-                }  elseif ($position->pricelist_position['bexio_code'] > 20)   {
-                    $amount = $event['total_days'] * $position['amount'];
-                }
+                $amount = self::offerAmount($position->pricelist_position['bexio_code'], $position['amount'], $event['total_days']);
                 if ($amount > 0) {
                     $positions_array[] = [
                         'amount' => $amount,
@@ -56,25 +70,20 @@ class EventOfferCreateListener
                 }
             }
             $data = [
-                        'title' => $title,
-                        'contact_id' => $event->bexio_user_id,
-                        'user_id' => 1,
-                        'is_valid_from' => now(),
-                        'is_valid_until' => now()->addMonth(),
-                        'api_reference' => $event['id'],
-                        'positions' => $positions_array,
-                    ];
+                'title' => $title,
+                'contact_id' => $event->bexio_user_id,
+                'user_id' => 1,
+                'is_valid_from' => now(),
+                'is_valid_until' => now()->addMonth(),
+                'api_reference' => $event['id'],
+                'positions' => $positions_array,
+            ];
+            // Fehler von Bexio wirft BexioApiService selbst (RequestException bzw. RuntimeException).
             $offer = app(BexioApiService::class)->post('kb_offer', $data);
-
-            if (!isset($offer['error_code'])) {
-                $event->update([
-                    'bexio_offer_id' => $offer['id'],
-                    'contract_status_id' => config('status.contract_angebot_erstellt'),
-                ]);
-            }
-            else{
-                Log::channel('emergency')->error($offer);
-            }
+            $event->update([
+                'bexio_offer_id' => $offer['id'],
+                'contract_status_id' => ContractState::AngebotErstellt,
+            ]);
         }
     }
 }
