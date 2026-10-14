@@ -15,8 +15,6 @@ use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventLastInfosNotification;
 use App\Notifications\EventOfferSendNotification;
 use Closure;
-use FPDF;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -27,27 +25,15 @@ use Tests\TestCase;
 
 /**
  * Alle Mails werden wirklich gebaut und über den array-Mailer "versendet": Views, Betreff, Empfänger, Anhänge.
- * Eigenes Storage-Verzeichnis, weil die Parkkarte nach storage/app/files/Parkkarten geschrieben wird
- * und die PDF-Vorlagen (nicht im Repo) hier als Platzhalter entstehen.
+ * Storage mit Platzhalter-PDFs stellt TestCase bereit (die Vorlagen liegen nicht im Repo).
  */
 class NotificationMailsTest extends TestCase
 {
-    private string $storage;
-
     private BookingScenario $s;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->storage = sys_get_temp_dir().'/itelfingen-storage-'.uniqid();
-        File::makeDirectory($this->storage.'/app/contracts', 0777, true);
-        File::makeDirectory($this->storage.'/app/files/Parkkarten', 0777, true);
-        $this->app->useStoragePath($this->storage);
-        config(['filesystems.disks.local.root' => $this->storage.'/app']);
-        Storage::forgetDisk('local');
-        $this->placeholderPdf($this->storage.'/app/contracts/Infos_vor_Buchung.pdf');
-        $this->placeholderPdf($this->storage.'/app/files/Parkkarte.pdf');
 
         BexioToken::create(['access_token' => 'token', 'refresh_token' => 'refresh', 'expires_at' => now()->addHour()]);
         Http::fake(['api.bexio.com/*' => Http::response([
@@ -60,20 +46,6 @@ class NotificationMailsTest extends TestCase
         $this->s = BookingScenario::create();
         $this->s->confirmedEvent->update(['bexio_offer_id' => 11, 'bexio_invoice_id' => 22, 'code' => 4711]);
         $this->s->application->update(['bexio_invoice_id' => 22]);
-    }
-
-    protected function tearDown(): void
-    {
-        File::deleteDirectory($this->storage);
-
-        parent::tearDown();
-    }
-
-    private function placeholderPdf(string $path): void
-    {
-        $pdf = new FPDF;
-        $pdf->AddPage();
-        $pdf->Output('F', $path);
     }
 
     /**

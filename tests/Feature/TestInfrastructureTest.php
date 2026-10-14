@@ -12,6 +12,7 @@ use App\Services\GoogleCalendarService;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Database\MySqlConnection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
 use RuntimeException;
 use Tests\Support\BookingScenario;
@@ -70,6 +71,15 @@ class TestInfrastructureTest extends TestCase
         $connection->shouldReceive('statement')->once()->with("SET lc_time_names = 'de_CH'");
 
         event(new ConnectionEstablished($connection));
+    }
+
+    public function test_storage_is_temporary_with_pdf_templates(): void
+    {
+        // Kein Test schreibt ins echte storage/ (z. B. Parkkarten); die PDF-Vorlagen sind Platzhalter.
+        $this->assertStringStartsWith(sys_get_temp_dir(), storage_path());
+        $this->assertStringStartsWith(sys_get_temp_dir(), Storage::disk('local')->path(''));
+        $this->assertFileExists(storage_path('app/contracts/Infos_vor_Buchung.pdf'));
+        $this->assertFileExists(storage_path('app/files/Parkkarte.pdf'));
     }
 
     public function test_google_calendar_is_faked(): void

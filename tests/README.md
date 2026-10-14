@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 13.10.2026: **423 Testfälle in 39 Dateien** (67 Unit, 356 Feature), Laufzeit rund 12 Sekunden.
+Stand 13.10.2026: **427 Testfälle in 39 Dateien** (67 Unit, 360 Feature), Laufzeit rund 12 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -42,9 +42,9 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 | Datei | Zweck |
 |---|---|
-| `phpunit.xml` | SQLite in-memory, Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN` |
+| `phpunit.xml` | SQLite in-memory, feste Werte statt `.env` (auch `SPREADSHEET_ID`, `GOOGLE_CALENDAR_ID`), Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN` |
 | `tests/UnitTestCase.php` | Basis für Unit-Tests, die Laravel brauchen (config, Validator), aber keine Datenbank; eine DB-Abfrage bricht den Test ab |
-| `tests/TestCase.php` | `RefreshDatabase` mit `TestingSeeder`, Schutz vor echter DB, `withoutVite()`, keine echten HTTP-Aufrufe |
+| `tests/TestCase.php` | `RefreshDatabase` mit `TestingSeeder`, Schutz vor echter DB, `withoutVite()`, keine echten HTTP-Aufrufe, Google-Kalender gefakt, temporäres `storage/` mit Platzhalter-PDFs (die Vorlagen liegen nicht im Repo; Parkkarten landen so nie im echten storage) |
 | `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210 |
 
 ### Testdaten: Szenario
@@ -91,7 +91,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Grundlagen | `EnumTablesTest` | 2 | Enum-Werte = Zeilen der Status-Tabellen, Rollen-Flags = Enum-Rechte |
 | Grundlagen | `FormPreselectionTest` | 10 | Auswahlfelder wählen den gespeicherten Wert vor (Status, Rolle, Archiv) |
 | Grundlagen | `StatusDisplayTest` | 17 | Statusspalte, Schritte im Kundenbereich, Monatsmail, leere Status |
-| Grundlagen | `TestInfrastructureTest` | 10 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
+| Grundlagen | `TestInfrastructureTest` | 11 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
 | Öffentlich | `CreateMultiDayEventTest` | 13 | Buchungsformular |
 | Öffentlich | `ContactTest` | 5 | Kontaktformular |
 | Öffentlich | `ApplicationTest` | 5 | Bewerbung Genossenschaft |
