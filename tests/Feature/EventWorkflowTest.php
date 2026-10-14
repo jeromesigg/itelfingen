@@ -101,6 +101,16 @@ class EventWorkflowTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    public function test_emptied_position_field_is_saved_as_zero(): void
+    {
+        $position = $this->s->event->positions()->first();
+
+        $this->submit($this->s->event, '1 Buchung updaten', ['positions' => [$position->id => '']])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(0, $position->fresh()->amount);
+    }
+
     public function test_update_only_changes_positions_of_this_booking(): void
     {
         $foreign = $this->s->confirmedEvent->positions()->first();

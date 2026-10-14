@@ -21,10 +21,11 @@ class EventController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'street' => 'required|string|max:255',
-            'zipcode' => 'required|numeric|gte:1000|lte:9999',
+            'zipcode' => 'required|numeric|gte:1000|lte:99999',
             'city' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'terms' => 'accepted',
+            // Die Checkbox schickt einen leeren Wert; nicht angehakt wird sie gar nicht gesendet.
+            'terms' => 'present',
             // Tagesbuchung (0 Tage) mit "date", sonst Anreise und Abreise
             'total_days' => 'required|integer|min:0',
             'date' => 'nullable|required_if:total_days,0|date',
@@ -32,7 +33,9 @@ class EventController extends Controller
             'end_date' => 'nullable|required_unless:total_days,0|date|after_or_equal:start_date',
             'total_people' => 'required|gt:0|lte:19',
             'positions' => 'nullable|array',
+            'positions.*' => 'nullable|numeric|min:0',
         ], [
+            'terms.present' => 'Bitte akzeptiere die Hausordnung.',
             'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
             'zipcode.gte' => 'Die Postleitzahl muss grösser oder gleich 1000 sein.',
             'zipcode.lte' => 'Die Postleitzahl muss kleiner oder gleich 9999 sein.',

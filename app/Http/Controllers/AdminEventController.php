@@ -229,7 +229,7 @@ class AdminEventController extends Controller
         if (isset($input['positions'])) {
             foreach ($input['positions'] as $index => $plposition) {
                 // Nur Positionen dieser Buchung, die IDs kommen aus dem Formular.
-                $event->positions()->whereKey($index)->update(['amount' => $plposition]);
+                $event->positions()->whereKey($index)->update(['amount' => $plposition ?? 0]);
             }
         }
         if (ContractState::tryFrom((int) ($input['contract_status_id'] ?? 0)) === ContractState::Storniert) {

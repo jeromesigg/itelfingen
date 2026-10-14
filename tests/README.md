@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 13.10.2026: **418 Testfälle in 39 Dateien** (67 Unit, 351 Feature), Laufzeit rund 12 Sekunden.
+Stand 13.10.2026: **423 Testfälle in 39 Dateien** (67 Unit, 356 Feature), Laufzeit rund 12 Sekunden.
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -92,7 +92,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Grundlagen | `FormPreselectionTest` | 10 | Auswahlfelder wählen den gespeicherten Wert vor (Status, Rolle, Archiv) |
 | Grundlagen | `StatusDisplayTest` | 17 | Statusspalte, Schritte im Kundenbereich, Monatsmail, leere Status |
 | Grundlagen | `TestInfrastructureTest` | 10 | Test-DB, Schutz vor echter DB, App-Start ohne DB, Seeder, Szenario, Startseite, Dashboard |
-| Öffentlich | `CreateMultiDayEventTest` | 8 | Buchungsformular |
+| Öffentlich | `CreateMultiDayEventTest` | 13 | Buchungsformular |
 | Öffentlich | `ContactTest` | 5 | Kontaktformular |
 | Öffentlich | `ApplicationTest` | 5 | Bewerbung Genossenschaft |
 | Öffentlich | `PublicApiTest` | 9 | Ortssuche, API-Antworten (Kalender, Verfügbarkeit, Telefonnummer) |

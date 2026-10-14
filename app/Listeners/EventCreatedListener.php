@@ -54,7 +54,7 @@ class EventCreatedListener
             Position::updateOrCreate([
                 'event_id' => $event->event['id'],
                 'pricelist_position_id' => $position['id'],
-            ], ['amount' => $position['amount']]);
+            ], ['amount' => $position['amount'] ?? 0]); // leeres Formularfeld kommt als null
         }
     }
 }

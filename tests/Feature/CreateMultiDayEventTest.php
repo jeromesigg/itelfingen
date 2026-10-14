@@ -37,7 +37,7 @@ class CreateMultiDayEventTest extends TestCase
             'city' => 'Zürich',
             'email' => 'max@example.com',
             'telephone' => '079 123-45 67',
-            'terms' => 'on',
+            'terms' => '', // so schickt die Checkbox des Formulars den Haken
             'start_date' => now()->addMonth()->toDateString(),
             'end_date' => now()->addMonth()->addDays(2)->toDateString(),
             'total_days' => 2,
@@ -86,6 +86,29 @@ class CreateMultiDayEventTest extends TestCase
             ->assertSee('Empfehlung von Freunden');
     }
 
+    public function test_empty_position_fields_count_as_zero(): void
+    {
+        // Leere Felder kommen als null an (ConvertEmptyStringsToNull); amount ist NOT NULL.
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'positions' => [30 => '6', 40 => ''],
+        ]))->assertSessionHasNoErrors();
+
+        $amounts = Event::sole()->positions()->with('pricelist_position')->get()
+            ->mapWithKeys(fn ($p) => [$p->pricelist_position->bexio_code => $p->amount])->all();
+        $this->assertSame(6, $amounts[30]);
+        $this->assertSame(0, $amounts[40]);
+    }
+
+    public function test_invalid_position_amounts_are_rejected(): void
+    {
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['positions' => [30 => -2]]))
+            ->assertSessionHasErrors('positions.30', null, 'event');
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['positions' => [30 => 'viele']]))
+            ->assertSessionHasErrors('positions.30', null, 'event');
+
+        $this->assertSame(0, Event::count());
+    }
+
     public function test_booking_form_cannot_set_internal_fields(): void
     {
         $this->from(route('home'))->post('/event/create', $this->bookingData([
@@ -127,6 +150,81 @@ class CreateMultiDayEventTest extends TestCase
             [20, 50, 210],
             $event->positions()->with('pricelist_position')->get()->pluck('pricelist_position.bexio_code')->all()
         );
+    }
+
+    /**
+     * Wert, den der Browser für die angehakte Hausordnung schickt: das value-Attribut der Checkbox auf der Startseite.
+     */
+    private function termsValueFromForm(): string
+    {
+        BookingScenario::create();
+        preg_match('/<input type="checkbox" name="terms"[^>]*value="([^"]*)"/', $this->get('/')->getContent(), $match);
+        $this->assertNotEmpty($match, 'Checkbox "terms" nicht gefunden');
+
+        return $match[1];
+    }
+
+    public function test_accepted_terms_as_sent_by_browser(): void
+    {
+        $terms = $this->termsValueFromForm();
+        $before = Event::count();
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['terms' => $terms]))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame($before + 1, Event::count());
+    }
+
+    public function test_unchecked_terms_are_rejected(): void
+    {
+        $data = $this->bookingData();
+        unset($data['terms']);
+
+        $this->from(route('home'))->post('/event/create', $data)->assertSessionHasErrors('terms', null, 'event');
+        $this->get('/')->assertSee('Bitte akzeptiere die Hausordnung.');
+    }
+
+    public function test_inputs_are_kept_after_validation_error(): void
+    {
+        BookingScenario::create();
+
+        // Keine Personen: Fehler, aber die Eingaben dürfen nicht verloren gehen.
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'total_people' => 0,
+            'positions' => [30 => 0, 40 => 0],
+            'comment' => 'Wir kommen mit Velo',
+        ]))->assertSessionHasErrors('total_people', null, 'event');
+
+        $this->get('/')
+            ->assertSee('Für die Buchung braucht es mindestens 1 Person.')
+            ->assertSee('value="Muster"', false)
+            ->assertSee('value="Dorfstrasse"', false)
+            ->assertSee('value="max@example.com"', false)
+            ->assertSee('value="079 123-45 67"', false)
+            ->assertSee('>Wir kommen mit Velo</textarea>', false);
+    }
+
+    public function test_page_restores_selected_dates_after_validation_error(): void
+    {
+        BookingScenario::create();
+        $start = now()->addMonth()->toDateString();
+        $end = now()->addMonth()->addDays(2)->toDateString();
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['total_people' => 0]));
+        $html = $this->get('/')->getContent();
+
+        // Die versteckten Felder tragen die Auswahl; das Kalender-Skript markiert sie und öffnet das Formular.
+        $this->assertMatchesRegularExpression('/<input type="hidden" name="start_date"[^>]*value="'.$start.'"/', $html);
+        $this->assertMatchesRegularExpression('/<input type="hidden" name="end_date"[^>]*value="'.$end.'"/', $html);
+        $this->assertStringContainsString("restoreBooking()\n", $html);
+        $this->assertMatchesRegularExpression('/if \(true\) \{\s*wizard_step\(2\);/', $html);
+    }
+
+    public function test_fresh_page_does_not_open_the_form(): void
+    {
+        BookingScenario::create();
+
+        $this->assertMatchesRegularExpression('/if \(false\) \{\s*wizard_step\(2\);/', $this->get('/')->getContent());
     }
 
     public function test_incomplete_booking_is_rejected_without_server_error(): void
