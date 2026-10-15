@@ -98,6 +98,8 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Öffentlich | `PublicApiTest` | 9 | Ortssuche, API-Antworten (Kalender, Verfügbarkeit, Telefonnummer) |
 | Login | `AuthTest` | 6 | Login; Registrierung, Passwort-Reset und -Bestätigung abgeschaltet |
 | Admin | `ChecklistAdminTest` | 3 | Räume und Checkpunkte bearbeiten |
+| Admin | `AdminApplicationTest` | 4 | Bewerbung anzeigen (Kontakt, Status, Verlauf), ablehnen, Escaping |
+| Admin | `AdminEventFormLayoutTest` | 3 | Buchung erstellen/bearbeiten: keine Bootstrap-Klassen, alle Felder/IDs für das JavaScript vorhanden |
 | Admin | `NewsletterTest` | 3 | Newsletter-Empfänger bearbeiten und löschen |
 | Admin | `MaintenanceTest` | 10 | Wartungsseite: Migrationen, Cache, nur Admin, nur POST |
 | Kundenbereich | `CustomerBookingPageTest` | 4 | Buchungsübersicht mit Bexio-Links, auch wenn Bexio fehlt |
