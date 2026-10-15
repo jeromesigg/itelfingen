@@ -108,6 +108,13 @@
     --norway: #A5BAA5;
     --grannysmith: #8DA3A8;
     --orientalpink: #C78B8E;
+    /* Ausgewählte bzw. aktuelle Buchung im Kalender (resources/css/libs/events.css) */
+    --calendar-selected: var(--ebonyclay);
+    --calendar-selected-text: #eee;
+    /* Freie Tage und freie Halbtage im Kalender */
+    --calendar-free: #FFF;
+    --calendar-free-border: #ccc;
+    --calendar-free-text: #333;
     --testcolor: #ff0000;
     --color-bg-primary: #F4F7FA;
     --color-text-primary: #666;
@@ -147,6 +154,11 @@
   }
 
 .dark {
+    --calendar-selected: #e5e7eb;
+    --calendar-selected-text: #1f2937;
+    --calendar-free: #374151;
+    --calendar-free-border: #4b5563;
+    --calendar-free-text: #e5e7eb;
     --color-bg-primary: #1c2128;
     --color-text-primary: rgb(200, 200, 200);
     --blue: #699fc9;

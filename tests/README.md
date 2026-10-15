@@ -100,6 +100,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Admin | `ChecklistAdminTest` | 3 | Räume und Checkpunkte bearbeiten |
 | Admin | `AdminApplicationTest` | 4 | Bewerbung anzeigen (Kontakt, Status, Verlauf), ablehnen, Escaping |
 | Admin | `AdminEventFormLayoutTest` | 3 | Buchung erstellen/bearbeiten: keine Bootstrap-Klassen, alle Felder/IDs für das JavaScript vorhanden |
+| Admin | `BookingCalendarTest` | 12 | Kalender auf "Buchung erstellen/bearbeiten": ±1 Woche, halbe Tage, Nachbarbuchungen verlinkt, Stornierte ausgeblendet, Vorschau mit Formulardaten (nicht gespeichert, validiert, nur Verwalter) |
 | Admin | `NewsletterTest` | 3 | Newsletter-Empfänger bearbeiten und löschen |
 | Admin | `MaintenanceTest` | 10 | Wartungsseite: Migrationen, Cache, nur Admin, nur POST |
 | Kundenbereich | `CustomerBookingPageTest` | 4 | Buchungsübersicht mit Bexio-Links, auch wenn Bexio fehlt |

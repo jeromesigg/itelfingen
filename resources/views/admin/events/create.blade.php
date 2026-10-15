@@ -29,6 +29,9 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
     <div class="{{ $card }} mb-6">
         <h4 class="{{ $heading }}">Kalender</h4>
+        <div id="booking-calendar">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Start und Ende wählen, um die Buchungen in diesem Zeitraum zu sehen.</p>
+        </div>
     </div>
 
     <div class="{{ $card }} mb-6 lg:col-span-3">
@@ -196,7 +199,8 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
             document.getElementById('end_date').value = data.mietdauer_bis ?? '';
             document.getElementById('position_2').value = data.anzahl_personen ?? '';
             $('#event_status_id').val(@json(\App\Enums\BookingState::Neu->value));
-            Total_Change()
+            Total_Change();
+            UpdateCalendar()
         })
         .catch(err => console.error('Fehler:', err));
     }
@@ -242,5 +246,33 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
     window.createExtern = createExtern;
     window.createIntern = createIntern;
     window.Total_Change = Total_Change;
+
+    // Kalender mit den Daten aus dem Formular laden (nur Anzeige)
+    let calendarRequest = null;
+    function UpdateCalendar() {
+        const start = document.getElementById('start_date').value;
+        const end = document.getElementById('end_date').value;
+        if (!start || !end || end < start) {
+            return;
+        }
+        calendarRequest?.abort();
+        calendarRequest = new AbortController();
+        fetch('{{ route('events.calendar') }}?' + new URLSearchParams({ start_date: start, end_date: end }), {
+            headers: { 'Accept': 'application/json' },
+            signal: calendarRequest.signal,
+        })
+            .then(response => response.ok ? response.text() : null)
+            .then(html => {
+                if (html) {
+                    document.getElementById('booking-calendar').innerHTML = html;
+                }
+            })
+            .catch(() => {});
+    }
+    ['start_date', 'end_date'].forEach(id => {
+        document.getElementById(id).addEventListener('change', UpdateCalendar);
+    });
+    // Nach einem Validierungsfehler sind die Daten schon ausgefüllt
+    UpdateCalendar();
 </script>
 @endpush

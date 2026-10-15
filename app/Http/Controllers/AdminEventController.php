@@ -26,7 +26,9 @@ use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
 use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventOfferSendNotification;
+use App\View\Components\BookingCalendar;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -34,6 +36,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 use Notification;
 use Spatie\IcalendarGenerator\Components\Calendar;
@@ -191,6 +194,37 @@ class AdminEventController extends Controller
     public function show($id)
     {
         //
+    }
+
+    /**
+     * Kalender auf "Buchung erstellen/bearbeiten" mit den (noch nicht gespeicherten) Daten aus dem Formular.
+     * Ohne Buchung (Seite "Buchung erstellen") wird eine neue, nicht gespeicherte Buchung angezeigt.
+     */
+    public function calendar(Request $request, ?Event $event = null): Response
+    {
+        $event ??= new Event;
+
+        $validated = $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date', function (string $attribute, mixed $value, Closure $fail) use ($request) {
+                // Begrenzt, damit kein riesiger Kalender entsteht
+                if (strtotime((string) $request->input('start_date')) && Carbon::parse($value)->gt(Carbon::parse($request->input('start_date'))->addYear())) {
+                    $fail('Der Zeitraum darf höchstens ein Jahr lang sein.');
+                }
+            }],
+            'early_checkin' => ['boolean'],
+            'late_checkout' => ['boolean'],
+        ]);
+
+        // Nur für die Anzeige, wird nicht gespeichert
+        $event->fill([
+            'start_date' => Carbon::parse($validated['start_date'])->toDateString(),
+            'end_date' => Carbon::parse($validated['end_date'])->toDateString(),
+            'early_checkin' => $request->boolean('early_checkin'),
+            'late_checkout' => $request->boolean('late_checkout'),
+        ]);
+
+        return response(Blade::renderComponent(new BookingCalendar($event)));
     }
 
     /**

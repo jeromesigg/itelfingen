@@ -70,6 +70,7 @@ Route::group(['middleware' => 'role:verwalter'], function () use ($crudOnIndex) 
     Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
     Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@MailTextUpdate')->name('admin.homepages.mail_text_update');
     Route::resource('admin/events', 'AdminEventController')->only(['create', 'store', 'edit', 'update', 'destroy'])->names('admin.events');
+    Route::get('admin/events/calendar/{event?}', [AdminEventController::class, 'calendar'])->name('events.calendar');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
     Route::post('admin/events/createAPICode', [AdminEventController::class, 'createAPICode'])->name('events.createAPICode');

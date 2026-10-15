@@ -65,6 +65,9 @@ $contract = $event->contractState();
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="{{ $card }}">
                     <h4 class="{{ $heading }}">Kalender</h4>
+                    <div id="booking-calendar">
+                        <x-booking-calendar :event="$event" />
+                    </div>
                 </div>
                 <div class="{{ $card }} col-auto md:col-span-4">
                     <h4 class="{{ $heading }}">Kontakt &amp; Zeitraum</h4>
@@ -499,7 +502,8 @@ $contract = $event->contractState();
                         comment.value = comment.value ? comment.value + "\n\n" + data.kommentar : data.kommentar;
                     }
                 }
-                Total_Change()
+                Total_Change();
+                UpdateCalendar()
             })
             .catch(err => console.error('Fehler:', err));
         }
@@ -509,5 +513,37 @@ $contract = $event->contractState();
         window.Total_Change = Total_Change;
         window.importExtern = importExtern;
         window.CreateAPICode = CreateAPICode;
+
+        // Kalender nach Änderung von Datum oder Check-In/-Out neu laden (nur Anzeige, gespeichert wird erst mit "Buchung updaten")
+        let calendarRequest = null;
+        function UpdateCalendar() {
+            const start = document.getElementById('start_date').value;
+            const end = document.getElementById('end_date').value;
+            if (!start || !end || end < start) {
+                return;
+            }
+            const params = new URLSearchParams({
+                start_date: start,
+                end_date: end,
+                early_checkin: document.getElementById('early_checkin').checked ? 1 : 0,
+                late_checkout: document.getElementById('late_checkout').checked ? 1 : 0,
+            });
+            calendarRequest?.abort();
+            calendarRequest = new AbortController();
+            fetch('{{ route('events.calendar', $event) }}?' + params, {
+                headers: { 'Accept': 'application/json' },
+                signal: calendarRequest.signal,
+            })
+                .then(response => response.ok ? response.text() : null)
+                .then(html => {
+                    if (html) {
+                        document.getElementById('booking-calendar').innerHTML = html;
+                    }
+                })
+                .catch(() => {});
+        }
+        ['start_date', 'end_date', 'early_checkin', 'late_checkout'].forEach(id => {
+            document.getElementById(id).addEventListener('change', UpdateCalendar);
+        });
 </script>
 @endpush
