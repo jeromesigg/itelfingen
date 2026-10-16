@@ -42,6 +42,10 @@
             </div>
           </div>
 
+          <p class="mt-6 text-gray-700 dark:text-gray-300">
+            In Zukunft möchten wir gemeinsam auch ein soziales Angebot schaffen, zum Beispiel «Ferien für Benachteiligte».
+          </p>
+
           <h2 class="mt-12 text-2xl font-semibold text-gray-900 dark:text-white">So läuft es ab</h2>
           <ol class="mt-4 space-y-3">
             @foreach ([

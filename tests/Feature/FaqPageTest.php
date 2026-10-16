@@ -37,8 +37,8 @@ class FaqPageTest extends TestCase
     {
         $s = BookingScenario::create();
         $s->faqWithoutPhoto->update(['archive_status_id' => ArchiveState::Archiviert]);
-        $empty = FaqChapter::create(['name' => 'Leeres Kapitel', 'sort-index' => 2, 'archive_status_id' => ArchiveState::Aktiv, 'symbol' => '']);
-        $archivedChapter = FaqChapter::create(['name' => 'Altes Kapitel', 'sort-index' => 3, 'archive_status_id' => ArchiveState::Archiviert, 'symbol' => '']);
+        $empty = FaqChapter::create(['name' => 'Leeres Kapitel', 'sort-index' => 2, 'archive_status_id' => ArchiveState::Aktiv]);
+        $archivedChapter = FaqChapter::create(['name' => 'Altes Kapitel', 'sort-index' => 3, 'archive_status_id' => ArchiveState::Archiviert]);
         Faq::create(['name' => 'Alte Frage', 'description' => 'Alt', 'faq_chapter_id' => $archivedChapter->id, 'sort-index' => 1, 'archive_status_id' => ArchiveState::Aktiv]);
 
         $this->get('/faq')

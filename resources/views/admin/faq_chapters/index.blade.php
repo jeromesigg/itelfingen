@@ -16,9 +16,6 @@
                 <x-forms.text label="Titel:" name="name" required=true/>
             </x-forms.container>
             <x-forms.container>
-                <x-forms.text label="Symbol:" name="symbol"/>
-            </x-forms.container>
-            <x-forms.container>
                 <x-forms.file label="Photo: " name="old_photo_id" class="old_photo_id"/>
                 <x-forms.hidden name="new_photo_id" />
             </x-forms.container>
@@ -35,7 +32,6 @@
                         <tr>
                             <th scope="col" class="px-6 py-3 font-medium">Titel</th>
                             <th scope="col" class="px-6 py-3 font-medium">Foto</th>
-                            <th scope="col" class="px-6 py-3 font-medium">Symbol</th>
                             <th scope="col" class="px-6 py-3 font-medium">Archiv-Status</th>
                             <th scope="col" class="px-6 py-3 font-medium">Sort-Index</th>
                         </tr>
@@ -46,7 +42,6 @@
                             <tr class="bg-neutral-primary border-b border-default">
                                 <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap"><a class="text-orientalpink" href="{{route('faq_chapters.edit', $faq_chapter->id)}}">{{$faq_chapter->name}}</a></th>
                                 <td class="px-6 py-4"><img height="50" src="{{$faq_chapter->photo ? $faq_chapter->photo->file : 'https://placehold.it/50x50'}}" alt=""></td>
-                                <td class="px-6 py-4">{{$faq_chapter['symbol']}}</td>
                                 <td class="px-6 py-4">{{$faq_chapter->archive_status['name']}}</td>
                                 <td class="px-6 py-4">{{$faq_chapter['sort-index']}}</td>
                                 </tr>

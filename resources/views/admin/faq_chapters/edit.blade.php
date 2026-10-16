@@ -18,9 +18,6 @@
                             <x-forms.text label="Titel:" name="name" required=true/>
                         </x-forms.container>
                         <x-forms.container>
-                            <x-forms.text label="Symbol:" name="symbol"/>
-                        </x-forms.container>
-                        <x-forms.container>
                             <x-forms.file label="Photo: " name="old_photo_id" class="old_photo_id"/>
                             <x-forms.hidden name="new_photo_id" />
                         </x-forms.container>

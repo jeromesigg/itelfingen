@@ -12,7 +12,6 @@ class FaqChapter extends Model
         'sort-index',
         'archive_status_id',
         'photo_id',
-        'symbol',
     ];
 
     protected $casts = [

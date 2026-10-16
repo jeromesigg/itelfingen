@@ -29,10 +29,6 @@
                     </div>
                     <dl class="h-fit space-y-3 rounded-lg border border-gray-200 bg-white p-5 text-sm dark:border-gray-700 dark:bg-gray-800">
                         <div>
-                            <dt class="text-gray-500 dark:text-gray-400">Rechtsform</dt>
-                            <dd class="font-medium text-gray-900 dark:text-white">Gemeinnützige Genossenschaft</dd>
-                        </div>
-                        <div>
                             <dt class="text-gray-500 dark:text-gray-400">Haus</dt>
                             <dd class="font-medium text-gray-900 dark:text-white">Gepachtet von der Reformierten Kirche Zürich</dd>
                         </div>
