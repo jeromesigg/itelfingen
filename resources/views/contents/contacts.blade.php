@@ -28,8 +28,8 @@
           <div id="toast-simple" class="fixed flex items-center w-full max-w-sm p-4 text-body text-fg-success-strong bg-success-soft rounded-base shadow-xs border border-success-subtle top-5 inset-e-5" role="alert">
             <svg class="w-5 h-5 text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 18-7 3 7-18 7 18-7-3Zm0 0v-5"/></svg>
             <div class="ms-2.5 text-sm border-s border-default ps-3.5">{!! session()->get('success_contact') !!}</div>
-            <button type="button" class="ms-auto flex items-center justify-center text-body hover:text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded text-sm h-8 w-8 focus:outline-none" data-dismiss-target="#toast-simple" aria-label="Close">
-                <span class="sr-only">Close</span>
+            <button type="button" class="ms-auto flex items-center justify-center text-body hover:text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded text-sm h-8 w-8 focus:outline-none" data-dismiss-target="#toast-simple" aria-label="Schliessen">
+                <span class="sr-only">Schliessen</span>
                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
             </button>
           </div>
@@ -44,18 +44,18 @@
         </x-alert>
       @endif
       <p class="mb-3 text-lg">
-        Fragen, Anregungen? Wir freuen uns über Deine Nachricht. <br>
-        Solltest du Fragen zu einer Buchung (Verfügbarkeit, Preis) haben, erstelle bitte direkt eine <a href="/#booking" class="text-red-300 hover:underline">Buchungsanfrage</a>.
+        Fragen, Anregungen? Wir freuen uns über deine Nachricht. <br>
+        Solltest du Fragen zu einer Buchung (Verfügbarkeit, Preis) haben, erstelle bitte direkt eine <a href="/#booking" class="font-medium text-gray-900 underline hover:no-underline">Buchungsanfrage</a>.
       </p>
       
       <x-forms.form :action="route('contacts.store')" id='contact_form' scope="contact">
         <x-honeypot />
-        <div class="form-row">
-          <x-forms.container class="col-md-6">
+        <div class="grid gap-4 md:grid-cols-2">
+          <x-forms.container>
               <x-forms.text label="Name:" name="name" required=true />
           </x-forms.container>
-          <x-forms.container class="col-md-6">
-              <x-forms.text label="Email:" name="email" type="email" required=true />
+          <x-forms.container>
+              <x-forms.text label="E-Mail:" name="email" type="email" required=true />
           </x-forms.container>
         </div>
         <x-forms.container>

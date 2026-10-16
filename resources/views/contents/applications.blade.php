@@ -6,12 +6,10 @@
     <main id="main">
       <section class="breadcrumbs">
         <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2>Bewerbung Genossenschaft</h2>
-          </div>
+          <h2>Bewerbung Genossenschaft</h2>
         </div>
       </section>
-        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6 max-width-md margin-top-lg margin-bottom-lg">
+        <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6 max-w-5xl my-10">
             @if(session()->has('success'))
                 <x-alert type="success">
                     <strong>{!! session()->get('success') !!}</strong>
@@ -27,29 +25,29 @@
                     </ul>
                 </div>
             @endif
-            <h3 class="text-3xl  dark:text-white">Ich möchte Genossenschafter/in werden... </h3>
+            <h3 class="mb-3 text-3xl dark:text-white">Ich möchte Genossenschafter:in werden</h3>
             <p class="mb-3 text-lg md:text-xl dark:text-gray-400">
                 Wir freuen uns über dein Interesse an der Genossenschaft Ferienhaus Itelfingen.
-                Hier hast du die Möglichkeit, dich als Genossenschafter/in zu bewerben.
+                Hier hast du die Möglichkeit, dich als Genossenschafter:in zu bewerben.
                 Neben den Vorteilen bei der Miete des Hauses freuen wir uns über jeden und jede, welche die Zukunft und Stimmung des Ferienhauses positiv mitprägen!
             </p>
-            <h4 class="text-2xl  dark:text-white">Warum mitmachen?</h4>
+            <h4 class="mb-2 text-2xl dark:text-white">Warum mitmachen?</h4>
             <ul class="space-y-1 list-disc list-inside dark:text-gray-400 mb-3">
-                <li>Auf unserer Webseite findest du die reduzierten Preise für Genossenschafter: <a href="https://www.itelfingen.ch" target="_blank" class="text-orientalpink">www.itelfingen.ch</a></li>
+                <li>Reduzierte Mietpreise für Genossenschafter:innen – siehe <a href="{{ route('home') }}#pricelist" class="text-orientalpink hover:underline">unsere Preise</a>.</li>
                 <li>Gemeinsam das schöne Haus mitprägen und mitunterhalten.</li>
-                <li>Genossenschafter/innen können Ideen einbringen und umsetzen und sich bei der GV mit einbringen.</li>
+                <li>Genossenschafter:innen können Ideen einbringen und umsetzen und sich bei der GV mit einbringen.</li>
                 <li>Ein Gemeinschaftsgefühl, gemeinsam etwas Begeisterndes schaffen und prägen.</li>
                 <li>In Zukunft möchten wir gemeinsam ein soziales Angebot schaffen wie z.B. "Ferien für Benachteiligte".</li>
-                <li>Einladung zu Genossenschafs-Events.</li>
+                <li>Einladung zu Genossenschafts-Events.</li>
                 <li>Möglichkeit zur Teilnahme an Genossenschafts-Wochenenden bei denen man kostenlos übernachten und beim Unterhalt oder
-                    der Erweiterung der Hauses und Angebotes mitarbeiten kann.</li>
+                    der Erweiterung des Hauses und Angebotes mitarbeiten kann.</li>
             </ul>
-            <h4 class="text-2xl  dark:text-white mt">Bist du einverstanden mit den folgenden Punkten?</h4>
-            <ul class="space-y-1  list-disc list-inside dark:text-gray-400 mb-3 ">
+            <h4 class="mt-6 mb-2 text-2xl dark:text-white">Bist du einverstanden mit den folgenden Punkten?</h4>
+            <ul class="space-y-1 list-disc list-inside dark:text-gray-400 mb-6">
                 <li>Sämtliche Infos zur Genossenschaft werden per Email kommuniziert.</li>
                 <li>Es gibt keine Familien-Mitgliedschaften sondern Einzelmitgliedschaften (CHF 100.-) für Erwachsene ab 18 Jahren - daher muss pro Person 1 Formular ausgefüllt werden.</li>
                 <li>Der Vorstand der Genossenschaft prüft die Bewerbungen innert zwei Wochen. Bei positivem Entscheid Rückmeldung inkl. Rechnung für deinen Genossenschafts-Anteil per Email. Der Vorstand vergibt den Genossenschafter-Status nach Bezahlung der Rechnung.</li>
-                <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="blank" class="text-orientalpink">Statuten</a> als akzeptiert.</li>
+                <li>Durch den Beitritt gelten die <a href='/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf' target="_blank" rel="noopener" class="text-orientalpink hover:underline">Statuten</a> als akzeptiert.</li>
             </ul>
             <x-forms.form :action="route('application.store')" id='application_form'>
                 <x-honeypot />
@@ -64,19 +62,23 @@
                       <x-forms.text label="Organisation:" name="organisation"/>
                   </x-forms.container>
                 </div>
-                <div class="grid grid-cols-12 gap-4">
-                    <x-forms.container class="md:col-span-5 col-span-10">
-                        <x-forms.text label="Strasse*:" name="street" required=true/>
-                    </x-forms.container>
-                    <x-forms.container class="md:col-span-1 col-span-2">
-                        <x-forms.text label="Nr.:" name="house_number"/>
-                    </x-forms.container>
-                    <x-forms.container class="md:col-span-1 col-span-3">
-                        <x-forms.text label="PLZ*:" name="zipcode" type="number" required=true class="autocomplete_txt"/>
-                    </x-forms.container>
-                    <x-forms.container class="md:col-span-5 col-span-9">
-                        <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
-                    </x-forms.container>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-4 gap-4">
+                        <x-forms.container class="col-span-3">
+                            <x-forms.text label="Strasse*:" name="street" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Nr.:" name="house_number"/>
+                        </x-forms.container>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4">
+                        <x-forms.container>
+                            <x-forms.text label="PLZ*:" name="zipcode" required=true inputmode="numeric" class="autocomplete_txt"/>
+                        </x-forms.container>
+                        <x-forms.container class="col-span-3">
+                            <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
+                        </x-forms.container>
+                    </div>
                     <x-forms.hidden name="city_id" class="autocomplete_txt"/>
                 </div>
                 <div class="grid md:grid-cols-2 gap-4">
@@ -89,7 +91,7 @@
                 </div>
                 <div class="grid md:grid-cols-2 gap-4">
                     <x-forms.container>
-                        <x-forms.text-area label="Warum willst Du Genossenschafter:in werden?*" name="why" required=true rows=3 placeholder="Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?"/>
+                        <x-forms.text-area label="Warum willst du Genossenschafter:in werden?*" name="why" required=true rows=3 placeholder="Wie gedenkst du vom Angebot des Ferienhauses Itelfingen Gebrauch zu machen? Wie möchtest du dich einbringen und welche Ideen hast du?"/>
                     </x-forms.container>
                     <x-forms.container>
                         <x-forms.text-area label="Hast du noch Fragen oder Bemerkungen?" name="comment" rows=3/>

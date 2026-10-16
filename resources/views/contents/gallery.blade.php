@@ -32,9 +32,9 @@
           </button>
       </div>
   </div>
-    <h3 class="text-3xl dark:text-white mt-12">
-      Mehr Bilder gibt es auf unserer <a href="https://www.instagram.com/itelfingen/" target="blank" class="text-(--orientalpink) hover:text-(--orientalpink) hover:underline">Instagram-Seite</a>
-    </h3>
+    <p class="mt-8 text-lg sm:text-xl dark:text-white">
+      Mehr Bilder gibt es auf unserer <a href="https://www.instagram.com/itelfingen/" target="_blank" rel="noopener" class="text-orientalpink hover:underline">Instagram-Seite</a>
+    </p>
   </div>   
 </section>
 

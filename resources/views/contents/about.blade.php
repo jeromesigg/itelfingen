@@ -12,13 +12,13 @@
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div class="lg:col-span-2 order-1 order-lg-2">
+            <div class="order-1 lg:order-2 lg:col-span-2">
                 <div class="about-img">
                     <img src="images/about-bg.webp" alt="" loading="lazy">
                 </div>
             </div>
 
-            <div class="pt-4 pt-lg-0 order-2 order-lg-1 content">
+            <div class="order-2 pt-4 lg:order-1 lg:pt-0 content">
 
                 <div class="section-title">
                     <p>Ferientraum direkt am Zugersee</p>

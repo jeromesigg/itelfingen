@@ -518,8 +518,14 @@ h1, h2, h3, h4, h5, h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 90px 0;
+  padding: 56px 0;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  section {
+    padding: 90px 0;
+  }
 }
 
 .section-bg {
@@ -536,7 +542,13 @@ section {
 }
 
 .section-title {
-  padding-bottom: 40px;
+  padding-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    padding-bottom: 40px;
+  }
 }
 
 .section-title h2 {
@@ -562,12 +574,16 @@ section {
 
 .section-title p {
   margin: 0;
-  margin: 0;
-  font-size:3rem;
+  font-size: 2.25rem;
   font-weight: 500;
   font-family: "PPMigra";
-  line-height: 3rem;
-  /* color: #cda45e; */
+  line-height: 1.15;
+}
+
+@media (min-width: 768px) {
+  .section-title p {
+    font-size: 3rem;
+  }
 }
 
 /*--------------------------------------------------------------

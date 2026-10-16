@@ -37,6 +37,14 @@
 	transition: background 0.1s, color 0.1s;
 }
 
+/* Handy: Monate untereinander in voller Breite, grössere Felder zum Antippen */
+@media (max-width: 479px) {
+	[class*="hk-agenda__day--"] {
+		height: 44px;
+		font-size: 15px;
+	}
+}
+
 .hk-agenda__day--past {
 	opacity: 0.3;
 	cursor: default;

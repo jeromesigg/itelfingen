@@ -237,6 +237,10 @@
 			}
 			this.apply();
 		},
+		// Anzahl Monate pro Blättern: auf dem Handy 2 sichtbar, ab Breakpoint sm (480px) 3 pro Zeile
+		visibleMonths: function() {
+			return window.matchMedia('(min-width: 480px)').matches ? 3 : 2;
+		},
 		prev: function(number) {
 			this.date = new Date(this.date.getFullYear(), this.date.getMonth() - number, 1);
 			this.apply();
