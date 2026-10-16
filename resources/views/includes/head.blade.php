@@ -10,25 +10,12 @@
   <meta name="author" content="Jérôme Sigg">
   <meta name="robots" content="index">
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F60JJ5ECJX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-F60JJ5ECJX');
-  </script>
-
   <!-- Favicons -->
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
 
   {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> --}}
 {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script> --}}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   @vite([
     'resources/css/app.css',
     'resources/js/app.js'])

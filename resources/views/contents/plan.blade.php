@@ -1,7 +1,7 @@
 <section id="plan">
     <div class="max-w-(--breakpoint-2xl) px-4 mx-auto lg:px-6">
         <div class="section-title">
-            <p>Das Ferienhaus</p>
+            <h2>Das Ferienhaus</h2>
         </div>       
         <div class="space-y-12 sm:space-y-16">
             <div class="flex flex-col lg:items-center lg:flex-row gap-y-4 sm:gap-y-8 lg:gap-x-16 xl:gap-x-24">

@@ -2,7 +2,7 @@
     <div class="container">
 
       <div class="section-title">
-        <p>Die Geschichte des Hauses</p>
+        <h2>Die Geschichte des Hauses</h2>
       </div>
 
       <div class="row">

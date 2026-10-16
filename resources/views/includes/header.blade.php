@@ -1,5 +1,5 @@
-<header class="m-1">
-    <nav class="bg-white border-gray-200 dark:bg-gray-800">
+<header class="sticky top-0 z-50 bg-white shadow-sm dark:bg-gray-800">
+    <nav class="border-gray-200 p-1">
         <div class="flex flex-wrap justify-between items-center gap-2 mx-auto max-w-(--breakpoint-2xl) px-2 py-1">
             <a href="/" class="flex items-center">
                 <img src="/img/logo.png" class="h-10 sm:h-12" alt="Ferienhaus Itelfingen" />

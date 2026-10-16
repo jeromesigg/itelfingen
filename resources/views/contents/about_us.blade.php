@@ -16,7 +16,7 @@
             <section id="about_us" class="about_us">
                 <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
                     <div class="section-title">
-                        <p>Was macht die Genossenschaft Ferienhaus Itelfingen?</p>
+                        <h2>Was macht die Genossenschaft Ferienhaus Itelfingen?</h2>
                     </div>
                     <p class="mb-3 text-gray-500 dark:text-gray-400">
                         Die Genossenschaft Ferienhaus Itelfingen bezweckt, in Itelfingen, Gemeinde Meierskappel, auf gemeinnütziger Grundlage ein Ferienhaus
@@ -33,7 +33,7 @@
                         <hr>
                         <br>
                         <div class="section-title">
-                            <p>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</p>
+                            <h2>Wer steckt hinter der Genossenschaft Ferienhaus Itelfingen</h2>
                         </div>
 
                         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">

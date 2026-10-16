@@ -1,40 +1,47 @@
 <section id="gallery_section" class="gallery section">
   <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
     <div class="section-title">
-      <p>Impressionen</p>
-    </div>      
-    
+      <h2>Impressionen</h2>
+    </div>
+
+    @php
+      $carouselButton = 'absolute top-0 z-30 flex h-full cursor-pointer items-center justify-center px-2 sm:px-4 group focus:outline-hidden';
+      $carouselIcon = 'inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/70 shadow-sm group-hover:bg-white group-focus:ring-4 group-focus:ring-white sm:h-12 sm:w-12';
+    @endphp
     <div id="custom-controls-gallery" class="relative w-full" data-carousel="slide">
       <!-- Carousel wrapper -->
-      <div class="relative h-56 overflow-hidden rounded-lg md:h-192">
+      <div class="relative h-64 overflow-hidden rounded-lg sm:h-96 lg:h-144">
         @foreach ($pictures as $key=>$picture)
           <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="{{$picture->photo->file}}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="{{$picture->name}}" loading="lazy">
+              <img src="{{$picture->photo->file}}" class="absolute inset-0 block h-full w-full object-cover" alt="{{$picture->name}}" loading="lazy">
           </div>
-        @endforeach    
+        @endforeach
       </div>
-      <div class="flex justify-center items-center pt-4">
-          <button type="button" class="flex justify-center items-center me-4 h-full cursor-pointer group focus:outline-hidden" data-carousel-prev>
-              <span class="text-gray-400 hover:text-gray-900 dark:hover:text-white group-focus:text-gray-900 dark:group-focus:text-white">
-                  <svg class="rtl:rotate-180 w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
-                  </svg>
-                  <span class="sr-only">Vorheriges Bild</span>
-              </span>
-          </button>
-          <button type="button" class="flex justify-center items-center h-full cursor-pointer group focus:outline-hidden" data-carousel-next>
-              <span class="text-gray-400 hover:text-gray-900 dark:hover:text-white group-focus:text-gray-900 dark:group-focus:text-white">
-                  <svg class="rtl:rotate-180 w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                  </svg>
-                  <span class="sr-only">Nächstes Bild</span>
-              </span>
-          </button>
+      <!-- Slider indicators -->
+      <div class="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 gap-2">
+        @foreach ($pictures as $key=>$picture)
+          <button type="button" class="h-2.5 w-2.5 rounded-full" aria-current="{{ $key === 0 ? 'true' : 'false' }}" aria-label="Bild {{ $key + 1 }}" data-carousel-slide-to="{{ $key }}"></button>
+        @endforeach
       </div>
-  </div>
+      <button type="button" class="{{ $carouselButton }} inset-s-0" data-carousel-prev>
+        <span class="{{ $carouselIcon }}">
+          <svg class="h-5 w-5 text-gray-900 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/>
+          </svg>
+          <span class="sr-only">Vorheriges Bild</span>
+        </span>
+      </button>
+      <button type="button" class="{{ $carouselButton }} inset-e-0" data-carousel-next>
+        <span class="{{ $carouselIcon }}">
+          <svg class="h-5 w-5 text-gray-900 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+          </svg>
+          <span class="sr-only">Nächstes Bild</span>
+        </span>
+      </button>
+    </div>
     <p class="mt-8 text-lg sm:text-xl dark:text-white">
       Mehr Bilder gibt es auf unserer <a href="https://www.instagram.com/itelfingen/" target="_blank" rel="noopener" class="text-orientalpink hover:underline">Instagram-Seite</a>
     </p>
-  </div>   
+  </div>
 </section>
-

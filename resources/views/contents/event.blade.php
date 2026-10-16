@@ -2,10 +2,10 @@
 
     <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
         <div class="section-title">
-            <p>Jetzt Buchungsanfrage senden</p>
+            <h2>Jetzt Buchungsanfrage senden</h2>
         </div>
         @if (session()->has('success_event'))
-            <div id="toast-simple" class="fixed flex items-center w-full max-w-sm p-4 text-body text-fg-success-strong bg-success-soft rounded-base shadow-xs border border-success-subtle top-5 inset-e-5" role="alert">
+            <div id="toast-simple" class="fixed z-60 flex items-center w-full max-w-sm p-4 text-body text-fg-success-strong bg-success-soft rounded-base shadow-xs border border-success-subtle top-5 inset-e-5" role="alert">
                 <svg class="w-5 h-5 text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 18-7 3 7-18 7 18-7-3Zm0 0v-5"/></svg>
                 <div class="ms-2.5 text-sm border-s border-default ps-3.5">{!! session()->get('success_event') !!}</div>
                 <button type="button" class="ms-auto flex items-center justify-center text-body hover:text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded text-sm h-8 w-8 focus:outline-none" data-dismiss-target="#toast-simple" aria-label="Schliessen">
@@ -29,7 +29,8 @@
                 <x-forms.form :action="route('event.create')" id='calendarform' lang="de-CH" scope="event">
                     <x-honeypot />
                     <div class="hk-calendar" id="wizard_calendar">
-                        <h3 class="text-3xl dark:text-white mb-2.5">Verfügbarkeit</h3>
+                        <p class="text-sm font-medium uppercase tracking-wide text-gladegreen">Schritt 1 von 2</p>
+                        <h3 class="text-3xl dark:text-white mb-2.5">Datum wählen</h3>
                         <x-alert id="reservation_error_date" style="display: none">
                             Es muss mindestens eine Übernachtung gewählt werden.
                         </x-alert>
@@ -87,13 +88,13 @@
                                         </div>
                                         <div class="text-base">
                                             <span class="hk-agenda__legend-block hk-agenda__day--FB"></span>
-                                            <span class="hk-agenda__legend-label align-top">Halbtage</span>
+                                            <span class="hk-agenda__legend-label align-top">An-/Abreisetag</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="flex flex-col items-start gap-2 md:col-span-2 md:items-end">
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Wähle im Kalender An- und Abreisetag.</p>
+                                <p id="selection_text" class="font-medium text-gray-900 md:text-right dark:text-white" aria-live="polite">Wähle im Kalender An- und Abreisetag.</p>
                                 <x-forms.button type="button" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen" onclick="wizard_step(2)">
                                     Weiter
                                 </x-forms.button>
@@ -103,7 +104,8 @@
                         <br>
                     </div>
                     <div class="hk-dateselect" id="wizard_formular" style="display: none">
-                        <h3 class="text-3xl dark:text-white mb-2.5">Buchungsinformationen</h3>
+                        <p class="text-sm font-medium uppercase tracking-wide text-gladegreen">Schritt 2 von 2</p>
+                        <h3 class="text-3xl dark:text-white mb-2.5">Deine Angaben</h3>
                         <div class="grid xl:grid-cols-3 gap-4" >
                             <div>
                                 <div class="grid md:grid-cols-2 gap-4">
@@ -162,26 +164,26 @@
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                         <thead class="text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                <th scope="col" class="px-6 py-3" style="width: 15%">Anzahl</th>
-                                                <th scope="col" class="px-6 py-3" style="width: 60%">Artikel</th>
-                                                <th scope="col" class="px-6 py-3" style="width: 10%">Kosten</th>
-                                                <th scope="col" class="px-6 py-3" style="width: 15%">Total</th>
+                                                <th scope="col" class="px-2 sm:px-6 py-3" style="width: 15%">Anzahl</th>
+                                                <th scope="col" class="px-2 sm:px-6 py-3" style="width: 60%">Artikel</th>
+                                                <th scope="col" class="px-2 sm:px-6 py-3" style="width: 10%">Kosten</th>
+                                                <th scope="col" class="px-2 sm:px-6 py-3" style="width: 15%">Total</th>
                                             </tr>
                                         </thead>
                                         <tfoot class="text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
-                                                <th class="px-6 pt-3" scope="row"></th>
-                                                <th class="px-6 pt-3">Total <span id="days"></span></th>
-                                                <th class="px-6 pt-3"></th>
-                                                <th class="px-6 pt-3"><span id="total_amount_show"></span>.-</th>
+                                                <th class="px-2 sm:px-6 pt-3" scope="row"></th>
+                                                <th class="px-2 sm:px-6 pt-3">Total <span id="days"></span></th>
+                                                <th class="px-2 sm:px-6 pt-3"></th>
+                                                <th class="px-2 sm:px-6 pt-3"><span id="total_amount_show"></span>.-</th>
                                                 <x-forms.hidden name="total_amount"/>
                                                 <x-forms.hidden name="total_people"/>
                                                 <x-forms.hidden name="discount"/>
                                                 <x-forms.hidden name="total_days"/>
                                             </tr>
                                             <tr>
-                                                <th class="px-6 pt-3" scope="row"></th>
-                                                <th class="px-6 pb-3" colspan="3">
+                                                <th class="px-2 sm:px-6 pt-3" scope="row"></th>
+                                                <th class="px-2 sm:px-6 pb-3" colspan="3">
                                                     <span class="font-normal normal-case">
                                                         Alle Preise in CHF. Die definitiven Preise werden im Mietvertrag festgelegt.
                                                     </span>
@@ -192,14 +194,14 @@
                                             @foreach ($positions as $position)
                                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200" id="row_{{$position['bexio_code']}}">
                                                     @if ($position['bexio_code']<100)
-                                                        <th class="px-6 py-4" scope="row" id={{'position_'.$position['bexio_code']}}><span id="position_{{$position['bexio_code']}}_amount"></span></th>
+                                                        <th class="px-2 sm:px-6 py-4" scope="row" id={{'position_'.$position['bexio_code']}}><span id="position_{{$position['bexio_code']}}_amount"></span></th>
                                                     @else
                                                     
-                                                        <th class="px-6 py-4" scope="row"><x-forms.text name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['bexio_code']}}" type="number" onChange="Total_Change()"/></th>
+                                                        <th class="px-2 sm:px-6 py-4" scope="row"><x-forms.text name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['bexio_code']}}" type="number" onChange="Total_Change()"/></th>
                                                     @endif
-                                                    <td class="px-6 py-4">{{$position['name']}}</td>
-                                                    <td class="px-6 py-4">{{$position['price']}}.-</td>
-                                                    <td class="px-6 py-4"><span id="position_{{$position['bexio_code']}}_total"></span>.-</td>
+                                                    <td class="px-2 sm:px-6 py-4">{{$position['name']}}</td>
+                                                    <td class="px-2 sm:px-6 py-4">{{$position['price']}}.-</td>
+                                                    <td class="px-2 sm:px-6 py-4"><span id="position_{{$position['bexio_code']}}_total"></span>.-</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -218,7 +220,7 @@
                             </div>
                             <div class="md:col-span-2 mb-1">
                                 <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen" id="submit-event-btn">
-                                    Reservieren
+                                    Buchungsanfrage senden
                                 </x-forms.button>
                             </div>
                         </div>

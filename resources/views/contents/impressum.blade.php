@@ -83,7 +83,6 @@
                   <ul>
                     <li><strong>Kontaktformular</strong> – Name, E-Mail-Adresse, Nachricht</li>
                     <li><strong>Buchungsanfrage</strong> – Name, E-Mail-Adresse, Adresse und gewünschte Reisedaten</li>
-                    <li><strong>Nutzungsdaten</strong> – anonymisierte Zugriffsdaten via Cookies (z. B. Google Analytics)</li>
                   </ul>
                 </div>
               </div>
@@ -96,15 +95,17 @@
                   <ul>
                     <li>Beantwortung von Anfragen und Abwicklung von Buchungen</li>
                     <li>Erfüllung gesetzlicher Pflichten (z. B. Buchführung)</li>
-                    <li>Verbesserung der Website durch anonymisierte Nutzungsanalyse</li>
                   </ul>
                 </div>
               </div>
               <div class="flex items-start pt-4">
                 <div>
-                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Cookies &amp; Google Analytics</p>
+                  <p class="mb-2 text-lg font-semibold leading-tight text-gray-900 dark:text-white">Cookies &amp; Google Maps</p>
                   <p class="mb-2">
-                      Diese Website verwendet Cookies sowie Google Analytics zur Auswertung des Nutzungsverhaltens. Dabei werden keine personenbezogenen Daten gespeichert – die Analyse erfolgt anonymisiert.
+                      Diese Website verwendet nur technisch notwendige Cookies, zum Beispiel für das Absenden von Formularen und den Login. Eine Auswertung des Nutzungsverhaltens findet nicht statt.
+                  </p>
+                  <p class="mb-2">
+                      Die Karte von Google Maps wird erst geladen, wenn Sie auf «Karte laden» klicken. Dabei werden Daten wie Ihre IP-Adresse an Google übertragen.
                   </p>
                   <p class="mb-2">Sie können Cookies jederzeit in Ihren Browsereinstellungen deaktivieren. Wir weisen darauf hin, dass dies die Funktionalität der Website einschränken kann.</p>
                 </div>
