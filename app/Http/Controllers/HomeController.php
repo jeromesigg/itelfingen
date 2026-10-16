@@ -12,11 +12,13 @@ use App\Models\Homepage;
 use App\Models\Person;
 use App\Models\Picture;
 use App\Models\PricelistPosition;
+use App\Services\BexioApiService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -117,12 +119,30 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $event = Event::where('uuid', $uuid)->firstOrFail();
-        if ($event === null) {
-            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
-        }
         $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $offerLink = $this->bexioDocumentLink('kb_offer', $event['bexio_offer_id']);
+        $invoiceLink = $this->bexioDocumentLink('kb_invoice', $event['bexio_invoice_id']);
 
-        return view('contents.bookings_show', compact('homepage', 'title', 'event'));
+        return view('contents.bookings_show', compact('homepage', 'title', 'event', 'offerLink', 'invoiceLink'));
+    }
+
+    /**
+     * Link auf Offerte oder Rechnung in Bexio für den Kundenbereich.
+     * Ohne ID wird Bexio nicht gefragt; ist Bexio nicht erreichbar, erscheint die Seite ohne Link.
+     */
+    private function bexioDocumentLink(string $endpoint, int|string|null $id): ?string
+    {
+        if (empty($id)) {
+            return null;
+        }
+
+        try {
+            return app(BexioApiService::class)->get($endpoint.'/'.$id)['network_link'] ?? null;
+        } catch (Throwable $e) {
+            Log::warning('Bexio im Kundenbereich nicht erreichbar', ['endpoint' => $endpoint, 'id' => $id, 'error' => $e->getMessage()]);
+
+            return null;
+        }
     }
 
     public function bookings_check(Request $request)

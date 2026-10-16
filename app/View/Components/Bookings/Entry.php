@@ -4,12 +4,9 @@ namespace App\View\Components\Bookings;
 
 use App\Enums\ContractState;
 use App\Models\Event;
-use App\Services\BexioApiService;
 use Closure;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\Component;
-use Throwable;
 
 class Entry extends Component
 {
@@ -33,8 +30,10 @@ class Entry extends Component
 
     /**
      * Create a new component instance.
+     *
+     * @param  string|null  $documentLink  Bexio-Link auf Offerte (OfferSend) bzw. Rechnung (Feedback)
      */
-    public function __construct(string $type, Event $event)
+    public function __construct(string $type, Event $event, ?string $documentLink = null)
     {
         $this->event = $event;
         $this->type = $type;
@@ -55,7 +54,6 @@ class Entry extends Component
                 ]];
                 break;
             case 'OfferSend':
-                $offer = $this->bexioDocument('kb_offer', $event['bexio_offer_id']);
                 $this->fulfilled = $event->contractState()->isAtLeast(ContractState::AngebotVersendet);
                 $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M11 16v-5.5A3.5 3.5 0 0 0 7.5 7m3.5 9H4v-5.5A3.5 3.5 0 0 1 7.5 7m3.5 9v4M7.5 7H14m0 0V4h2.5M14 7v3m-3.5 6H20v-6a3 3 0 0 0-3-3m-2 9v4m-8-6.5h1';
@@ -68,9 +66,9 @@ class Entry extends Component
                         break;
                     }
                 }
-                if (isset($offer['network_link'])) {
+                if ($documentLink) {
                     $this->contents = [[
-                        'link' => $offer['network_link'],
+                        'link' => $documentLink,
                         'text' => 'Angebot ansehen',
                         'path' => 'M10 3v4a1 1 0 0 1-1 1H5m8-2h3m-3 3h3m-4 3v6m4-3H8M19 4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1ZM8 12v6h8v-6H8Z',
                     ]];
@@ -110,11 +108,6 @@ class Entry extends Component
                         'text' => 'Letzte Infos ansehen',
                     ],
                     [
-                        'link' => '#',
-                        'text' => 'Türcode: '.$event['code'],
-                        'path' => 'M10 14v3m4-6V7a3 3 0 1 1 6 0v4M5 11h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z',
-                    ],
-                    [
                         'link' => route('events.downloadParking', $event['uuid']),
                         'text' => 'Parkplatz-Karte herunterladen',
                         'path' => 'M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z',
@@ -132,12 +125,7 @@ class Entry extends Component
                     'link' => route('bookings.checklist', $event['uuid']),
                     'text' => 'Checkliste "Hausabgabe" ansehen',
                     'path' => 'M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-6 7 2 2 4-4m-5-9v4h4V3h-4Z',
-                ],
-                    [
-                        'link' => '#',
-                        'text' => 'Abfallcontainer Code: 4315',
-                        'path' => 'M10 14v3m4-6V7a3 3 0 1 1 6 0v4M5 11h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z',
-                    ], ];
+                ]];
                 break;
             case 'Feedback':
                 $this->fulfilled = $event->contractState()->isAtLeast(ContractState::RechnungVersendet);
@@ -146,7 +134,6 @@ class Entry extends Component
                 $this->title = 'Aufenthalt beendet';
                 $this->notification_type = "App\Notifications\EventFeedbackNotification";
                 $this->time = $event['end_date'];
-                $invoice = $this->bexioDocument('kb_invoice', $event['bexio_invoice_id']);
                 $this->contents = [
                     [
                         'link' => 'https://forms.gle/RMWyPzs8wauakQam9',
@@ -154,10 +141,10 @@ class Entry extends Component
                         'path' => 'M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
                     ]];
 
-                if (isset($invoice['network_link'])) {
+                if ($documentLink) {
                     array_push($this->contents,
                         [
-                            'link' => $invoice['network_link'],
+                            'link' => $documentLink,
                             'text' => 'Rechnung ansehen',
                             'path' => 'M10 3v4a1 1 0 0 1-1 1H5m8-2h3m-3 3h3m-4 3v6m4-3H8M19 4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1ZM8 12v6h8v-6H8Z',
                         ]);
@@ -169,25 +156,6 @@ class Entry extends Component
                         'path' => 'M4.5 17H4a1 1 0 0 1-1-1 3 3 0 0 1 3-3h1m0-3.05A2.5 2.5 0 1 1 9 5.5M19.5 17h.5a1 1 0 0 0 1-1 3 3 0 0 0-3-3h-1m0-3.05a2.5 2.5 0 1 0-2-4.45m.5 13.5h-7a1 1 0 0 1-1-1 3 3 0 0 1 3-3h3a3 3 0 0 1 3 3 1 1 0 0 1-1 1Zm-1-9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z',
                     ]);
                 break;
-        }
-    }
-
-    /**
-     * Offerte oder Rechnung aus Bexio für den Link im Kundenbereich.
-     * Ohne ID wird Bexio nicht gefragt; ist Bexio nicht erreichbar, erscheint die Seite ohne Link.
-     */
-    private function bexioDocument(string $endpoint, $id): ?array
-    {
-        if (empty($id)) {
-            return null;
-        }
-
-        try {
-            return app(BexioApiService::class)->get($endpoint.'/'.$id);
-        } catch (Throwable $e) {
-            Log::warning('Bexio im Kundenbereich nicht erreichbar', ['endpoint' => $endpoint, 'id' => $id, 'error' => $e->getMessage()]);
-
-            return null;
         }
     }
 
