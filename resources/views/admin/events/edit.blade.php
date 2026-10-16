@@ -12,7 +12,9 @@ $ebonyclay = $btn.' bg-ebonyclay hover:opacity-90 focus:ring-ebonyclay/50 dark:b
 $outline = 'inline-flex items-center gap-2 font-medium rounded-lg text-sm px-4 py-2 text-gray-900 bg-white border
 border-gray-300 hover:bg-gray-100 focus:outline-hidden focus:ring-4 focus:ring-gray-100 dark:bg-gray-800 dark:text-white
 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700';
-$badge = 'text-xs font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+$badgeBase = 'text-xs font-medium px-2.5 py-0.5 rounded-full';
+$badge = $badgeBase.' bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+$badgeGreen = $badgeBase.' bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
 $offerUrl = 'https://office.bexio.com/index.php/kb_offer/show/id/'.$event['bexio_offer_id'];
 $invoiceUrl = 'https://office.bexio.com/index.php/kb_invoice/show/id/'.$event['bexio_invoice_id'];
 $contract = $event->contractState();
@@ -32,10 +34,23 @@ $contract = $event->contractState();
             bearbeiten</h3>
         <div class="flex flex-wrap items-center gap-3 mt-2">
             @if ($event->event_status)
-            <span class="{{ $badge }}">{{ $event->event_status->name }}</span>
+            <span class="{{ $event->bookingState() === \App\Enums\BookingState::Bestaetigt ? $badgeGreen : $badge }}">{{
+                $event->event_status->name }}</span>
             @endif
             @if ($event->contract_status)
-            <span class="{{ $badge }}">{{ $event->contract_status->name }}</span>
+            <span
+                class="{{ in_array($contract, [\App\Enums\ContractState::RechnungErstellt, \App\Enums\ContractState::RechnungVersendet], true) ? $badgeGreen : $badge }}">{{
+                $event->contract_status->name }}</span>
+            @endif
+            @if ($event->cleaning_mail)
+            <span class="{{ $badgeGreen }}">Reinigungsmail versendet</span>
+            @else
+            <span class="{{ $badge }}">Reinigungsmail noch nicht versendet</span>
+            @endif
+            @if ($event->glutz_user_id)
+            <span class="{{ $badgeGreen }}">Code übertragen</span>
+            @else
+            <span class="{{ $badge }}">Code nicht übertragen</span>
             @endif
             @if ($event->external)
             <span class="{{ $badge }}">Extern</span>
