@@ -11,7 +11,7 @@
   <div id="app">
     <main id="main" class="bg-gray-50 dark:bg-gray-900">
       <div class="mx-auto max-w-4xl px-4 pt-10 pb-14 sm:pt-16">
-        <h1 class="font-[PPMigra] text-4xl text-gray-900 sm:text-5xl dark:text-white">Genossenschafter:in werden</h1>
+        <h1 class="font-body text-4xl text-gray-900 sm:text-5xl dark:text-white">Genossenschafter:in werden</h1>
         <p class="mt-3 text-lg text-gray-600 dark:text-gray-400">
           Wir freuen uns über dein Interesse an der Genossenschaft Ferienhaus Itelfingen – und über alle, die die Zukunft und Stimmung des Hauses mitprägen möchten.
         </p>

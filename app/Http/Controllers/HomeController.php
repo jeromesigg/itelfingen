@@ -172,12 +172,11 @@ class HomeController extends Controller
 
     public function bookings_checklist(string $uuid)
     {
-        $event = Event::where('uuid', $uuid)->firstOrFail();
-        if ($event === null) {
-            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
-        }
+        $event = Event::where('uuid', $uuid)
+            ->with(['event_rooms.room', 'event_rooms.event_checkpoints.checkpoint'])
+            ->firstOrFail();
         $homepage = Homepage::FindOrFail(1);
-        $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $title = 'Checkliste Hausabgabe';
 
         return view('contents.bookings_checklist', compact('homepage', 'title', 'event'));
     }

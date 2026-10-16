@@ -10,8 +10,6 @@ use Illuminate\View\Component;
 
 class Entry extends Component
 {
-    public string $color;
-
     public string $path;
 
     public string $title;
@@ -20,7 +18,10 @@ class Entry extends Component
 
     public string $notification_type;
 
-    public string $fulfilled;
+    public bool $fulfilled;
+
+    /** Erster noch offener Schritt der Zeitleiste */
+    public bool $current;
 
     public $time;
 
@@ -39,10 +40,10 @@ class Entry extends Component
         $this->type = $type;
         $this->contents = [];
         $this->time = null;
+        $this->fulfilled = self::isFulfilled($type, $event);
+        $this->current = self::currentStep($event) === $type;
         switch ($type) {
             case 'Created':
-                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::Offen);
-                $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'm11.5 11.5 2.071 1.994M4 10h5m11 0h-1.5M12 7V4M7 7V4m10 3V4m-7 13H8v-2l5.227-5.292a1.46 1.46 0 0 1 2.065 2.065L10 17Zm-5 3h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z';
                 $this->title = 'Buchung erstellt';
                 $this->notification_type = "App\Notifications\EventCreatedNotification";
@@ -54,8 +55,6 @@ class Entry extends Component
                 ]];
                 break;
             case 'OfferSend':
-                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::AngebotVersendet);
-                $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M11 16v-5.5A3.5 3.5 0 0 0 7.5 7m3.5 9H4v-5.5A3.5 3.5 0 0 1 7.5 7m3.5 9v4M7.5 7H14m0 0V4h2.5M14 7v3m-3.5 6H20v-6a3 3 0 0 0-3-3m-2 9v4m-8-6.5h1';
                 $this->title = 'Angebot versendet';
                 $this->notification_type = "App\Notifications\EventOfferSendNotification";
@@ -75,8 +74,6 @@ class Entry extends Component
                 }
                 break;
             case 'InvoiceCreated':
-                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::RechnungErstellt);
-                $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'm8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z';
                 $this->title = 'Buchung definitiv';
                 $this->notification_type = "App\Notifications\EventInvoiceCreatedNotification";
@@ -90,8 +87,6 @@ class Entry extends Component
                 break;
 
             case 'EventLastInfos':
-                $this->fulfilled = $event['last_info'];
-                $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M12 5.464V3.099m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175C19 17.4 19 18 18.462 18H5.538C5 18 5 17.4 5 16.807c0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 12 5.464ZM6 5 5 4M4 9H3m15-4 1-1m1 5h1M8.54 18a3.48 3.48 0 0 0 6.92 0H8.54Z';
                 $this->title = 'Letzte Infos';
                 $this->notification_type = "App\Notifications\EventLastInfosNotification";
@@ -115,8 +110,6 @@ class Entry extends Component
                 ];
                 break;
             case 'EventStay':
-                $this->fulfilled = $event['last_info'] && ($event['start_date'] <= now());
-                $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'm4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5';
                 $this->title = 'Aufenthalt im Ferienhaus';
                 $this->notification_type = "App\Notifications\EventLastInfosNotification";
@@ -128,8 +121,6 @@ class Entry extends Component
                 ]];
                 break;
             case 'Feedback':
-                $this->fulfilled = $event->contractState()->isAtLeast(ContractState::RechnungVersendet);
-                $this->color = $this->fulfilled ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
                 $this->path = 'M10 3v4a1 1 0 0 1-1 1H5m8-2h3m-3 3h3m-4 3v6m4-3H8M19 4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1ZM8 12v6h8v-6H8Z';
                 $this->title = 'Aufenthalt beendet';
                 $this->notification_type = "App\Notifications\EventFeedbackNotification";
@@ -157,6 +148,35 @@ class Entry extends Component
                     ]);
                 break;
         }
+    }
+
+    /** Schritte der Zeitleiste im Kundenbereich, in dieser Reihenfolge */
+    public const STEPS = ['Created', 'OfferSend', 'InvoiceCreated', 'EventLastInfos', 'EventStay', 'Feedback'];
+
+    /** Ist der Schritt der Zeitleiste für diese Buchung erledigt? */
+    public static function isFulfilled(string $type, Event $event): bool
+    {
+        return match ($type) {
+            'Created' => $event->contractState()->isAtLeast(ContractState::Offen),
+            'OfferSend' => $event->contractState()->isAtLeast(ContractState::AngebotVersendet),
+            'InvoiceCreated' => $event->contractState()->isAtLeast(ContractState::RechnungErstellt),
+            'EventLastInfos' => (bool) $event['last_info'],
+            'EventStay' => $event['last_info'] && ($event['start_date'] <= now()),
+            'Feedback' => $event->contractState()->isAtLeast(ContractState::RechnungVersendet),
+            default => false,
+        };
+    }
+
+    /** Erster noch nicht erledigter Schritt, null wenn alles erledigt ist */
+    public static function currentStep(Event $event): ?string
+    {
+        foreach (self::STEPS as $step) {
+            if (! self::isFulfilled($step, $event)) {
+                return $step;
+            }
+        }
+
+        return null;
     }
 
     /**

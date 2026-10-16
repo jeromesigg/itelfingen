@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ContractState;
 use App\Models\BexioToken;
+use App\View\Components\Bookings\Entry;
 use Illuminate\Support\Facades\Http;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -133,5 +134,17 @@ class CustomerBookingPageTest extends TestCase
         $this->get("/bookings/{$s->confirmedEvent->uuid}")
             ->assertSee('Abfallcontainer')
             ->assertSee('4315');
+    }
+
+    public function test_timeline_marks_first_open_step_as_next(): void
+    {
+        Http::fake();
+        $s = BookingScenario::create();
+
+        $this->assertSame('OfferSend', Entry::currentStep($s->event));
+        $this->assertSame('EventLastInfos', Entry::currentStep($s->confirmedEvent));
+
+        $this->get("/bookings/{$s->confirmedEvent->uuid}")
+            ->assertSeeInOrder(['Buchung definitiv', 'Letzte Infos', 'Nächster Schritt', 'Aufenthalt im Ferienhaus']);
     }
 }
