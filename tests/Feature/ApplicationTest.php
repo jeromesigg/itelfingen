@@ -34,6 +34,7 @@ class ApplicationTest extends TestCase
             'telephone' => '079 765 43 21',
             'why' => 'Ich bin seit Jahren Gast im Haus.',
             'comment' => '',
+            'statutes' => '1',
         ], $overrides);
     }
 
@@ -74,7 +75,7 @@ class ApplicationTest extends TestCase
     {
         $this->from('/applications')->post('/applications/store', [])
             ->assertRedirect('/applications')
-            ->assertSessionHasErrors(['name', 'street', 'zipcode', 'city', 'email', 'why']);
+            ->assertSessionHasErrors(['name', 'street', 'zipcode', 'city', 'email', 'why', 'statutes']);
 
         $this->assertSame(0, Application::count());
         // Die Seite zeigt, was fehlt (bisher zeigte sie keine Fehler an).
@@ -86,5 +87,23 @@ class ApplicationTest extends TestCase
         $this->post('/applications/store', $this->applicationData(['why' => 'spam-link']))->assertStatus(422);
 
         $this->assertSame(0, Application::count());
+    }
+
+    public function test_application_without_accepted_statutes_is_rejected(): void
+    {
+        $this->from('/applications')->post('/applications/store', $this->applicationData(['statutes' => null]))
+            ->assertRedirect('/applications')
+            ->assertSessionHasErrors(['statutes' => 'Bitte akzeptiere die Statuten.']);
+
+        $this->assertSame(0, Application::count());
+    }
+
+    public function test_form_is_replaced_by_confirmation_after_submit(): void
+    {
+        $this->from('/applications')->post('/applications/store', $this->applicationData());
+
+        $this->get('/applications')
+            ->assertSee('Danke für deine Bewerbung!')
+            ->assertDontSee('Bewerbung absenden');
     }
 }

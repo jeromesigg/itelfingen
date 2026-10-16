@@ -8,7 +8,6 @@
 @import './admin/style.default.premium.css' layer(base);
 @import './libs/events.css' layer(base);
 @import './libs/custom.css' layer(base);
-@import './libs/faq.css' layer(base);
 
 @import 'tailwindcss';
 

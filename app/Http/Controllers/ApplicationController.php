@@ -49,6 +49,9 @@ class ApplicationController extends Controller
             'city' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'why' => 'required|string',
+            'statutes' => 'accepted',
+        ], [
+            'statutes.accepted' => 'Bitte akzeptiere die Statuten.',
         ]);
 
         // Nur Felder des Formulars, keine internen Felder (Bexio, Rechnung, Ablehnung).

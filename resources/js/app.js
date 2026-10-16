@@ -19,7 +19,6 @@ import 'flowbite';
 // import { DataTable } from "simple-datatables";
 import './libs/main.js';
 import './libs/custom.js';
-import './libs/faq.js';
 
 // Initialize Events Table when DOM is ready
 // import { initEventsTable } from './tables/EventsTable.js'
