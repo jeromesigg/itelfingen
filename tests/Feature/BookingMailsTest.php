@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Mail\ApplicationInvoiceMail;
+use App\Mail\CleaningSent;
 use App\Mail\FeedbackMail;
 use App\Mail\SendOffersMail;
 use App\Models\BexioToken;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\BookingScenario;
@@ -120,5 +122,15 @@ class BookingMailsTest extends TestCase
         $mail->assertSeeInHtml('01.12.2026');
         $mail->assertSeeInHtml('So buchst du zum Mitgliederpreis');
         $mail->assertSeeInHtml('https://bexio.test/rechnung');
+    }
+
+    public function test_cleaning_mail_renders_text_and_subject(): void
+    {
+        $s = BookingScenario::create();
+
+        $mail = new CleaningSent($s->confirmedEvent, 'reinigung@example.com', 'Bitte Reinigung am Sonntag.');
+
+        $mail->assertSeeInHtml('Bitte Reinigung am Sonntag.');
+        $mail->assertHasSubject('Reinigungsanfrage '.$s->confirmedEvent->number().' für das Ferienhaus Itelfingen vom '.Carbon::parse($s->confirmedEvent->end_date)->format('d.m.Y'));
     }
 }

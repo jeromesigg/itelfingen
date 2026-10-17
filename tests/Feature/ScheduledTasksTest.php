@@ -194,4 +194,31 @@ class ScheduledTasksTest extends TestCase
             return $events->pluck('id')->all() === [$soon->id, $cancelledInformed->id];
         });
     }
+
+    public function test_weekly_mail_renders_open_bookings_and_contacts(): void
+    {
+        $s = BookingScenario::create();
+
+        $this->artisan('task:weekly')->assertSuccessful();
+
+        Mail::assertSent(WeeklyMail::class, function (WeeklyMail $mail) use ($s) {
+            $html = $mail->render();
+
+            return str_contains($html, 'Folgende Anfragen sind noch offen')
+                && str_contains($html, e($s->contact->subject))
+                && str_contains($html, route('admin.events.edit', $s->event->id));
+        });
+    }
+
+    public function test_monthly_mail_renders_bookings(): void
+    {
+        $soon = Event::factory()->confirmed()->create(['name' => 'Testgruppe Monatsmail', 'start_date' => today()->addWeeks(2), 'end_date' => today()->addWeeks(2)->addDay()]);
+
+        $this->artisan('task:monthly')->assertSuccessful();
+
+        // Reinigung am Tag nach der Abreise, ohne Namen der Gäste
+        $cleaningDay = today()->addWeeks(2)->addDays(2)->format('d.m');
+        Mail::assertSent(MonthlyMail::class, fn (MonthlyMail $mail) => str_contains($mail->render(), $cleaningDay)
+            && ! str_contains($mail->render(), e($soon->name)));
+    }
 }

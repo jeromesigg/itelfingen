@@ -26,11 +26,10 @@ class EventController extends Controller
             'email' => 'required|email|max:255',
             // Die Checkbox schickt einen leeren Wert; nicht angehakt wird sie gar nicht gesendet.
             'terms' => 'present',
-            // Tagesbuchung (0 Tage) mit "date", sonst Anreise und Abreise
-            'total_days' => 'required|integer|min:0',
-            'date' => 'nullable|required_if:total_days,0|date',
-            'start_date' => 'nullable|required_unless:total_days,0|date',
-            'end_date' => 'nullable|required_unless:total_days,0|date|after_or_equal:start_date',
+            // Mindestens eine Übernachtung (Tagesaufenthalte gibt es nicht mehr)
+            'total_days' => 'required|integer|min:1',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'total_people' => 'required|gt:0|lte:19',
             'positions' => 'nullable|array',
             'positions.*' => 'nullable|numeric|min:0',
@@ -39,6 +38,8 @@ class EventController extends Controller
             'zipcode.numeric' => 'Die Postleitzahl muss numerisch sein.',
             'zipcode.gte' => 'Die Postleitzahl muss grösser oder gleich 1000 sein.',
             'zipcode.lte' => 'Die Postleitzahl muss kleiner oder gleich 9999 sein.',
+            'total_days.min' => 'Es muss mindestens eine Übernachtung gewählt werden.',
+            'end_date.after' => 'Es muss mindestens eine Übernachtung gewählt werden.',
             'total_people.gt' => 'Für die Buchung braucht es mindestens 1 Person.',
             'total_people.lte' => 'Für die Buchung sind maximal 19 Personen erlaubt.',  ]);
 
@@ -51,30 +52,35 @@ class EventController extends Controller
         // Nur Felder des Buchungsformulars, keine internen Felder (Türcode, Bexio, Notizen, Status).
         $input = $request->only([
             'name', 'firstname', 'group', 'street', 'house_number', 'zipcode', 'city', 'email', 'telephone',
-            'comment', 'marketing_comment', 'terms', 'date', 'start_date', 'end_date', 'total_days', 'total_people', 'total_amount',
-            'discount', 'positions',
+            'comment', 'marketing_comment', 'terms', 'start_date', 'end_date', 'total_days', 'total_people', 'total_amount',
+            'positions',
         ]);
         $input['plz'] = $input['zipcode'];
         $input['group_name'] = $input['group'] ?? null;
         $input['event_status_id'] = BookingState::Neu;
         $input['contract_status_id'] = ContractState::Offen;
-        $one_day = false;
-        if ($input['total_days'] < 1) {
-            $input['start_date'] = new Carbon($input['date']);
-            $input['end_date'] = new Carbon($input['date']);
-            $input['total_days'] = 1;
-            $one_day = true;
-        } else {
-            $input['start_date'] = new Carbon($input['start_date']);
-            $input['end_date'] = new Carbon($input['end_date']);
-        }
+        $input['start_date'] = new Carbon($input['start_date']);
+        $input['end_date'] = new Carbon($input['end_date']);
+        // Rabatt berechnet der Server selbst; der Wert aus dem Formular ist nur Anzeige und manipulierbar
+        $input['discount'] = $this->shortNoticeDiscount($input['start_date']);
         $input['uuid'] = Str::uuid();
         $input['phonenumber_query'] = str_replace([' ', '-'], '', $input['telephone'] ?? '');
         $event = Event::create($input);
-        EventCreated::dispatch($event, $one_day, $input['positions'] ?? []);
+        EventCreated::dispatch($event, false, $input['positions'] ?? []);
         Notification::send($event, new EventCreatedNotification($event));
 
         return redirect()->to(url()->previous().'#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden. Schau auch in deinem Spam-Ordner nach.');
+    }
+
+    /**
+     * 50 % Rabatt für kurzfristige Buchungen (Anreise in weniger als 8 Tagen), wenn in der Config eingeschaltet.
+     * Gleiche Regel wie in der Anzeige des Buchungsformulars (event_js.blade.php, getDays).
+     */
+    private function shortNoticeDiscount(Carbon $start): int
+    {
+        $enabled = filter_var(config('app.discount_enabled'), FILTER_VALIDATE_BOOLEAN);
+
+        return $enabled && $start->lt(Carbon::today()->addDays(8)) ? 50 : 0;
     }
 
     public function searchResponseCity(Request $request)

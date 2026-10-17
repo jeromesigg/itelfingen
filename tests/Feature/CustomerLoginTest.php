@@ -65,4 +65,15 @@ class CustomerLoginTest extends TestCase
 
         $this->get('/bookings/00000000-0000-0000-0000-000000000000')->assertNotFound();
     }
+
+    public function test_login_page_has_labelled_fields_and_navigation(): void
+    {
+        $this->get('/bookings/login')
+            ->assertOk()
+            ->assertSee('<label for="plz"', false)
+            ->assertSee('id="plz"', false)
+            ->assertDontSee('type="plz"', false)
+            ->assertSee('Steht in jeder E-Mail von uns')
+            ->assertSee('Jetzt buchen');
+    }
 }

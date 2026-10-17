@@ -6,7 +6,6 @@ use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -134,23 +133,20 @@ class CreateMultiDayEventTest extends TestCase
         $this->assertSame(BookingState::Neu, $event->event_status_id);
     }
 
-    public function test_one_day_booking_uses_day_rate(): void
+    public function test_booking_without_overnight_stay_is_rejected(): void
     {
+        // Tagesaufenthalte gibt es nicht mehr; das Formular verlangt mindestens eine Nacht, der Server auch.
         $date = now()->addMonth()->toDateString();
 
         $this->from(route('home'))->post('/event/create', $this->bookingData([
             'total_days' => 0,
             'date' => $date,
-        ]))->assertRedirect(route('home').'#booking');
+            'start_date' => $date,
+            'end_date' => $date,
+        ]))->assertRedirect(route('home').'#booking')
+            ->assertSessionHasErrors(['total_days' => 'Es muss mindestens eine Übernachtung gewählt werden.'], null, 'event');
 
-        $event = Event::sole();
-        $this->assertSame($date, Carbon::parse($event->start_date)->toDateString());
-        $this->assertSame($date, Carbon::parse($event->end_date)->toDateString());
-        $this->assertSame(1, $event->total_days);
-        $this->assertEqualsCanonicalizing(
-            [20, 50, 210],
-            $event->positions()->with('pricelist_position')->get()->pluck('pricelist_position.bexio_code')->all()
-        );
+        $this->assertSame(0, Event::count());
     }
 
     /**
@@ -312,5 +308,40 @@ class CreateMultiDayEventTest extends TestCase
             ->assertSessionHasErrors('total_people', null, 'event');
 
         $this->assertSame(0, Event::count());
+    }
+
+    public function test_discount_sent_by_browser_is_ignored_for_later_bookings(): void
+    {
+        config(['app.discount_enabled' => true]);
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['discount' => 50]));
+
+        $this->assertEquals(0, Event::sole()->discount);
+    }
+
+    public function test_short_notice_booking_gets_discount_when_enabled(): void
+    {
+        config(['app.discount_enabled' => true]);
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'start_date' => today()->addDays(7)->toDateString(),
+            'end_date' => today()->addDays(9)->toDateString(),
+            'discount' => 0,
+        ]));
+
+        $this->assertEquals(50, Event::sole()->discount);
+    }
+
+    public function test_no_discount_when_disabled(): void
+    {
+        config(['app.discount_enabled' => false]);
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'start_date' => today()->addDays(7)->toDateString(),
+            'end_date' => today()->addDays(9)->toDateString(),
+            'discount' => 50,
+        ]));
+
+        $this->assertEquals(0, Event::sole()->discount);
     }
 }

@@ -43,7 +43,7 @@ class HomeController extends Controller
         $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
         $events = Event::whereIn('event_status_id', BookingState::notCancelled())->where('end_date', '>=', Carbon::now())->get();
         $event_type = 'guest';
-        $discount = config('app.discount_enabled');
+        $discount = filter_var(config('app.discount_enabled'), FILTER_VALIDATE_BOOLEAN);
         $application_enabled = config('app.application_enabled');
 
         $events_json = [];
