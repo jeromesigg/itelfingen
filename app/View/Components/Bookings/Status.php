@@ -41,7 +41,7 @@ class Status extends Component
             $this->tone = 'success';
             $this->title = 'Danke für deinen Aufenthalt';
             $this->description = 'Wir hoffen, es hat dir gefallen. Wir freuen uns über deine Rückmeldung.';
-            $this->action = ['link' => 'https://forms.gle/RMWyPzs8wauakQam9', 'text' => 'Feedback abgeben'];
+            $this->action = ['link' => config('house.feedback_url'), 'text' => 'Feedback abgeben'];
         } elseif ($event['last_info'] && $start->lte($today)) {
             $this->tone = 'success';
             $this->title = 'Schön, bist du im Ferienhaus';

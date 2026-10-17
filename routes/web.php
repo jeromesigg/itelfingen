@@ -104,6 +104,10 @@ Route::group(['middleware' => 'role:admin'], function () use ($crudOnIndex) {
     Route::resource('admin/positions', 'AdminPricelistPositionController')->only(['index', 'create', 'edit', 'update', 'destroy']);
     Route::resource('admin/users', 'AdminUserController')->only(['store', 'destroy']);
 
+    // Vorschau der Mails an Buchende (nur rendern, kein Versand)
+    Route::get('admin/mail-preview', 'MailPreviewController@index')->name('admin.mail-preview');
+    Route::get('admin/mail-preview/{mail}', 'MailPreviewController@show')->name('admin.mail-preview.show');
+
     // Wartung: Aktionen nur per POST
     Route::get('admin/maintenance', 'MaintenanceController@index')->name('admin.maintenance');
     Route::post('admin/maintenance/migrate', 'MaintenanceController@migrate')->name('admin.maintenance.migrate');

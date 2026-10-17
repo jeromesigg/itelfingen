@@ -9,7 +9,7 @@
     $card = 'rounded-lg border border-gray-200 bg-white p-6 shadow-xs dark:border-gray-700 dark:bg-gray-800';
     $codes = array_filter([
         'Türcode' => $event['code'],
-        'Abfallcontainer' => $start->lte(today()) ? '4315' : null,
+        'Abfallcontainer' => $start->lte(today()) ? config('house.waste_code') : null,
     ]);
   @endphp
   <div id="app">
@@ -83,12 +83,12 @@
 
                   <dt class="text-sm text-gray-500 dark:text-gray-400">Anreise</dt>
                   <dd class="text-gray-900 dark:text-white">
-                    {{ $start->isoFormat('dd, DD.MM.YYYY') }}, ab {{ $event['early_checkin'] ? '10:00 Uhr (Early Check-In)' : '15:00 Uhr' }}
+                    {{ $start->isoFormat('dd, DD.MM.YYYY') }}, ab {{ $event['early_checkin'] ? config('house.checkin.early').' Uhr (Early Check-In)' : config('house.checkin.default').' Uhr' }}
                   </dd>
 
                   <dt class="text-sm text-gray-500 dark:text-gray-400">Abreise</dt>
                   <dd class="text-gray-900 dark:text-white">
-                    {{ $end->isoFormat('dd, DD.MM.YYYY') }}, bis {{ $event['late_checkout'] ? '17:00 Uhr (Late Check-Out)' : '10:00 Uhr' }}
+                    {{ $end->isoFormat('dd, DD.MM.YYYY') }}, bis {{ $event['late_checkout'] ? config('house.checkout.late').' Uhr (Late Check-Out)' : config('house.checkout.default').' Uhr' }}
                   </dd>
 
                   <dt class="text-sm text-gray-500 dark:text-gray-400">Belegung</dt>

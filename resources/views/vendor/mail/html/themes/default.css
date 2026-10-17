@@ -29,7 +29,7 @@ blockquote {
 }
 
 a {
-    color: #3869d4;
+    color: #657F61;
 }
 
 a img {
@@ -135,7 +135,7 @@ img {
 .inner-body {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
-    -premailer-width: 80%;
+    -premailer-width: 640px;
     border-color: #e8e5ef;
     border-radius: 2px;
     border-width: 1px;
@@ -143,7 +143,8 @@ img {
     background-color: #edede5;
     margin: 0 auto;
     padding: 0;
-    width: 80%;
+    /* Feste Breite: lange Zeilen sind auf grossen Bildschirmen schwer lesbar; mobil 100 % (siehe layout.blade.php) */
+    width: 640px;
 }
 
 /* Subcopy */
@@ -163,11 +164,11 @@ img {
 .footer {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
-    -premailer-width: 570px;
+    -premailer-width: 640px;
     margin: 0 auto;
     padding: 0;
     text-align: center;
-    width: 570px;
+    width: 640px;
 }
 
 .footer p {
@@ -225,7 +226,7 @@ img {
 .button {
     -webkit-text-size-adjust: none;
     border-radius: 4px;
-    color: black;
+    color: #ffffff;
     display: inline-block;
     overflow: hidden;
     text-decoration: none;
@@ -235,11 +236,11 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #2d3748;
-    border-bottom: 8px solid #2d3748;
-    border-left: 18px solid #2d3748;
-    border-right: 18px solid #2d3748;
-    border-top: 8px solid #2d3748;
+    background-color: #293242;
+    border-bottom: 8px solid #293242;
+    border-left: 18px solid #293242;
+    border-right: 18px solid #293242;
+    border-top: 8px solid #293242;
 }
 
 .button-green,

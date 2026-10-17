@@ -39,6 +39,6 @@ class ApplicationWanted extends Mailable
         return $this->markdown('emails.events.application', ['event' => $event, 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Dein Interesse '.str_pad($event['id'], 5, '0', STR_PAD_LEFT).' für die Genossenschaft Ferienhaus Itelfingen');
+            ->subject('Dein Interesse an der Genossenschaft Ferienhaus Itelfingen');
     }
 }

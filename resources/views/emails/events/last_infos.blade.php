@@ -1,34 +1,40 @@
 @component('mail::message')
-<h1>Die letzten Informationen zu deiner Buchung für das Ferienhaus Itelfingen</h1>
-Guten Tag {{$event->firstname}} {{$event->name}},
-<br><br>
-Im angehängten PDF findest du die wichtigsten Informationen zu deinem baldigen Aufenthalt im Ferienhaus Itelfingen und die Parkkarte für das Ferienhaus Itelfingen. 
-Hinterlege in jedem Auto eine Parkkarte, da sonst die Gefahr einer Busse in der Höhe von 240.- droht. Und beachte die Nachtruhe um 22:00 Uhr, Danke.
-<br>
-@component('mail::button', ['url' => route('faq'), 'color' => 'success'])
-    Besuche auch unsere FAQ-Seite
-@endcomponent
+# Die letzten Infos zu deinem Aufenthalt
+
+@include('emails.events.partials.greeting')
+
+Bald bist du im Ferienhaus Itelfingen. Hier das Wichtigste auf einen Blick:
+
+@include('emails.events.partials.facts', ['extra' => [
+    'Anreise' => 'ab '.($event->early_checkin ? config('house.checkin.early') : config('house.checkin.default')).' Uhr',
+    'Abreise' => 'bis '.($event->late_checkout ? config('house.checkout.late') : config('house.checkout.default')).' Uhr',
+]])
+
+@if ($event->code)
 @component('mail::panel')
-    Der Code für die Türe ist {{$event->code}}.
+**Türcode: {{ $event->code }}**
 @endcomponent
-<br>
-{{$additional_text}}
-<br><br>
-Bei Notfällen erreichst du uns direkt: <br>
-- Lukas Affolter (079 810 30 05), <br>
-- Jérôme Sigg (079 587 56 51) oder <br>
-- Matthias Bächler (079 386 73 20)
-<br><br>
-Wenn du ein schönes Foto von deinem Aufenthalt teilst, freuen wir uns sehr, wenn du uns auf <a href="https://www.instagram.com/itelfingen/">Instagram</a> markierst (@itelfingen) oder den Hashtag #ferienhausitelfingen verwendest.
-<br><br>
-Freundliche Grüsse,<br>
-Das Ferienhaus Itelfingen
-<br>
-<br>
-In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
-<div class="breadcrumbs">
-    <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">
-        <img src="https://itelfingen.ch/img/mail/4.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Letzte Infos"/>
-    </a>
-</div>
+@endif
+
+- **Parkkarte:** Lege in jedes Auto eine Parkkarte (im Anhang), sonst droht eine Busse von CHF 240.–.
+- **Nachtruhe:** ab {{ config('house.quiet_hours') }} Uhr.
+- **Alles Weitere** steht im angehängten PDF und auf unserer FAQ-Seite.
+
+@component('mail::button', ['url' => route('faq'), 'color' => 'success'])
+Häufige Fragen ansehen
+@endcomponent
+
+@if ($additional_text)
+{{ $additional_text }}
+
+@endif
+**Bei Notfällen** erreichst du uns direkt:
+
+@foreach (config('house.emergency_contacts') as $contact)
+- {{ $contact['name'] }}: {{ $contact['phone'] }}
+@endforeach
+
+Wenn du ein schönes Foto von deinem Aufenthalt teilst, freuen wir uns, wenn du uns auf [Instagram]({{ config('house.instagram_url') }}) markierst (@itelfingen) oder #ferienhausitelfingen verwendest.
+
+@include('emails.events.partials.closing', ['step' => 4])
 @endcomponent
