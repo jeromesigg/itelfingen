@@ -145,7 +145,6 @@
 
 import { ref, computed, onMounted, watch } from 'vue'
 import {
-  createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,

@@ -32,9 +32,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import DataTable from './DataTable.vue'
-import NewsletterTable from './NewsletterTable.vue'
 import { createColumnHelper } from '@tanstack/vue-table'
 
 const showApp = ref(false)
@@ -99,5 +98,4 @@ onMounted(() => {
   showApp.value = true
 })
 
-import { onMounted } from 'vue'
 </script>

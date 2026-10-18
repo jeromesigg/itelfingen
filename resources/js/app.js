@@ -13,7 +13,6 @@ import './bootstrap';
 import './admin/jquery-ui.min.js';
 import 'bootstrap';
 import 'laravel-datatables-vite';
-import './libs/validate.js';
 import './admin/jqBootstrapValidation.js';
 import 'flowbite';
 // import { DataTable } from "simple-datatables";
@@ -33,7 +32,6 @@ import './libs/custom.js';
 // ===== VUE SETUP =====
 import { createApp } from 'vue'
 import App from './components/App.vue'
-import DataTable from './components/DataTable.vue'
 import NewsletterTable from './components/NewsletterTable.vue'
 import ApplicationTable from './components/ApplicationTable.vue'
 import ContactTable from './components/ContactTable.vue'
