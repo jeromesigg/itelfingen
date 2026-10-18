@@ -33,12 +33,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
         Paginator::useBootstrap();
-        if (class_exists('Swift_Preferences')) {
-            \Swift_Preferences::getInstance()->setTempDir(storage_path().'/tmp');
-        } else {
-        }
         // Deutsche Monatsnamen in DATE_FORMAT (Auslastungs-Graphen). Erst beim Verbindungsaufbau setzen,
         // sonst bräuchte jeder App-Start eine Datenbank (composer install, Docker-Build, CI).
         Event::listen(function (ConnectionEstablished $event) {

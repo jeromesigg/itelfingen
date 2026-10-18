@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\BexioException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
@@ -55,7 +56,7 @@ class BexioApiService
 
         $data = $response->json();
         if (is_array($data) && isset($data['error_code'])) {
-            throw new \RuntimeException("Bexio API Fehler {$data['error_code']}: {$data['message']}");
+            throw new BexioException("Bexio API Fehler {$data['error_code']}: {$data['message']}");
         }
     }
 }

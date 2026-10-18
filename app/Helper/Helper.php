@@ -187,13 +187,10 @@ class Helper
 
             if ($event->bexio_invoice_id) {
                 $invoice = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.'<a target="_blank" href="https://office.bexio.com/index.php/kb_invoice/show/id/'.$event['bexio_invoice_id'].'">Rechnung</a> ';
-                switch ($event->contract_status_id) {
-                    case ContractState::RechnungErstellt:
-                        $invoice .= 'erstellt';
-                        break;
-                    case ContractState::RechnungVersendet:
-                        $invoice .= 'erstellt & versendet';
-                        break;
+                if ($event->contract_status_id === ContractState::RechnungErstellt) {
+                    $invoice .= 'erstellt';
+                } elseif ($event->contract_status_id === ContractState::RechnungVersendet) {
+                    $invoice .= 'erstellt & versendet';
                 }
             } else {
                 $invoice = '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Keine Rechnung erstellt';
@@ -353,7 +350,6 @@ class Helper
     {
         $nameBlock = self::extractMultilineRaw($text, 'Name', 'Gruppe');
 
-        // return array_merge(['nameBlock' => $nameBlock]);
         return array_merge(
             self::parseName($nameBlock),
             [
