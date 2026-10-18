@@ -1,9 +1,4 @@
 @extends('layouts.admin')
-@section('styles')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>
-@endsection
 @section('content')
     <section>
         <div class="container mx-auto px-4">
@@ -31,36 +26,6 @@
                 @include('includes.form_error')
             </div>
         </div>
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Vorschaubild zuschneiden</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="img-container">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="preview"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary" id="crop">Zuschneiden</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-crop-dialog title="Vorschaubild zuschneiden" input=".photo_id" target="cropped_photo_id" :aspect-ratio="1" :width="640" :height="640" />
     </section>
 @endsection
-@push('scripts')
-    @include('admin/pictures/photo_cropped_js')
-    @endpush

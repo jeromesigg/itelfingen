@@ -31,11 +31,11 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col" width="15%">Name</th>
-                            <th scope="col" width="15%">Funktion</th>
-                            <th scope="col" width="50%">Kommentar</th>
-                            <th scope="col" width="10%">Archiv-Status</th>
-                            <th scope="col" width="10%">Sort-Index</th>
+                            <th scope="col" class="w-[15%]">Name</th>
+                            <th scope="col" class="w-[15%]">Funktion</th>
+                            <th scope="col" class="w-[50%]">Kommentar</th>
+                            <th scope="col" class="w-[10%]">Archiv-Status</th>
+                            <th scope="col" class="w-[10%]">Sort-Index</th>
                         </tr>
                     </thead>
                     <tbody>

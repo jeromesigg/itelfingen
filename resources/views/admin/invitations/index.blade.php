@@ -12,12 +12,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" width="10%">Name</th>
-                        <th scope="col" width="10%">Vorname</th>
-                        <th scope="col" width="10%">E-Mail</th>
-                        <th scope="col" width="30%">Text</th>
-                        <th scope="col" width="30%">Antwort</th>
-                        <th scope="col" width="10%">Erstellt</th>
+                        <th scope="col" class="w-[10%]">Name</th>
+                        <th scope="col" class="w-[10%]">Vorname</th>
+                        <th scope="col" class="w-[10%]">E-Mail</th>
+                        <th scope="col" class="w-[30%]">Text</th>
+                        <th scope="col" class="w-[30%]">Antwort</th>
+                        <th scope="col" class="w-[10%]">Erstellt</th>
                     </tr>
                 </thead>
                 <tbody>

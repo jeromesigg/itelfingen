@@ -34,12 +34,12 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col" width="10%">photo</th>
-                            <th scope="col" width="10%">Titel</th>
-                            <th scope="col" width="15%">Untertitel</th>
-                            <th scope="col" width="55%">Beschreibung</th>
-                            <th scope="col" width="5%">Archiv-Status</th>
-                            <th scope="col" width="5%">Sort-Index</th>
+                            <th scope="col" class="w-[10%]">photo</th>
+                            <th scope="col" class="w-[10%]">Titel</th>
+                            <th scope="col" class="w-[15%]">Untertitel</th>
+                            <th scope="col" class="w-[55%]">Beschreibung</th>
+                            <th scope="col" class="w-[5%]">Archiv-Status</th>
+                            <th scope="col" class="w-[5%]">Sort-Index</th>
                         </tr>
                     </thead>
                     <tbody>

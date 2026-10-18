@@ -172,22 +172,22 @@
                                         </thead>
                                         <tfoot class="text-gray-900 dark:bg-gray-700 dark:text-white">
                                             <tr>
-                                                <th class="px-2 sm:px-6 pt-3" scope="row"></th>
-                                                <th class="px-2 sm:px-6 pt-4 text-base font-semibold sm:text-lg">Total <span id="days" class="font-normal"></span></th>
-                                                <th class="px-2 sm:px-6 pt-3"></th>
-                                                <th class="px-2 sm:px-6 pt-4 text-lg font-bold whitespace-nowrap sm:text-xl"><span id="total_amount_show"></span>.-</th>
+                                                <td class="px-2 sm:px-6 pt-3"></td>
+                                                <th class="px-2 sm:px-6 pt-4 text-base font-semibold sm:text-lg" scope="row">Total <span id="days" class="font-normal"></span></th>
+                                                <td class="px-2 sm:px-6 pt-3"></td>
+                                                <td class="px-2 sm:px-6 pt-4 text-lg font-bold whitespace-nowrap sm:text-xl"><span id="total_amount_show"></span>.-</td>
                                                 <x-forms.hidden name="total_amount"/>
                                                 <x-forms.hidden name="total_people"/>
                                                 <x-forms.hidden name="discount"/>
                                                 <x-forms.hidden name="total_days"/>
                                             </tr>
                                             <tr>
-                                                <th class="px-2 sm:px-6 pt-3" scope="row"></th>
-                                                <th class="px-2 sm:px-6 pb-3 pt-1 text-xs text-gray-600 dark:text-gray-400" colspan="3">
+                                                <td class="px-2 sm:px-6 pt-3"></td>
+                                                <td class="px-2 sm:px-6 pb-3 pt-1 text-xs text-gray-600 dark:text-gray-400" colspan="3">
                                                     <span class="font-normal normal-case">
                                                         Alle Preise in CHF. Die definitiven Preise werden im Mietvertrag festgelegt.
                                                     </span>
-                                                </th>
+                                                </td>
                                             </tr>
                                         </tfoot>
                                         <tbody>
