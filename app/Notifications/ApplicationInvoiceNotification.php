@@ -2,10 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Mail\ApplicationInvoiceMail;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Ixudra\Curl\Facades\Curl;
-use App\Mail\ApplicationInvoiceMail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class ApplicationInvoiceNotification extends Notification
@@ -13,6 +13,7 @@ class ApplicationInvoiceNotification extends Notification
     use Queueable;
 
     public Application $application;
+
     public $invoice;
 
     /**
@@ -42,7 +43,7 @@ class ApplicationInvoiceNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

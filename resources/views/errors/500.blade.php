@@ -1,5 +1,6 @@
-@extends('errors::minimal')
+@extends('errors.minimal')
 
-@section('title', __('Server Error'))
 @section('code', '500')
-@section('message', __('Server Error'))
+@section('title', 'Da ist etwas schiefgelaufen')
+@section('message', 'Bitte versuche es später nochmals. Wenn das Problem bleibt, schreib uns an verwalter@itelfingen.ch.')
+

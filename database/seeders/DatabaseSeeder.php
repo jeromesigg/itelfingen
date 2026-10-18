@@ -1,9 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
-use Database\Seeders\AddUUIDToEvent;
-use Database\Seeders\BasisdatenSeeder;
-use Database\Seeders\SeedPhoneQuery;
 
 class DatabaseSeeder extends Seeder
 {

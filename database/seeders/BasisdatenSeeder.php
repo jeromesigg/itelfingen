@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ArchiveState;
+use App\Enums\BookingState;
+use App\Enums\ContractState;
+use App\Enums\UserRole;
 use App\Models\ArchiveStatus;
 use App\Models\ContractStatus;
 use App\Models\EventStatus;
@@ -23,66 +27,66 @@ class BasisdatenSeeder extends Seeder
     {
         //
         Role::create([
-            'id' => config('status.role_Administrator'),
+            'id' => UserRole::Administrator->value,
             'name' => 'Administrator',
             'is_admin' => true,
             'is_team' => false, ]);
         Role::create([
-            'id' => config('status.role_Team'),
+            'id' => UserRole::Team->value,
             'name' => 'Team',
             'is_admin' => false,
             'is_team' => true, ]);
         Role::create([
-            'id' => config('status.role_Gast'),
+            'id' => UserRole::Gast->value,
             'name' => 'Gast',
             'is_admin' => false,
             'is_team' => false, ]);
         Role::create([
-            'id' => config('status.role_Verwalter'),
+            'id' => UserRole::Verwalter->value,
             'name' => 'Verwalter',
             'is_admin' => false,
             'is_team' => true, ]);
 
         EventStatus::create([
-            'id' => config('status.event_neu'),
+            'id' => BookingState::Neu->value,
             'name' => 'Neu',
             'color' => 'P', ]);
         EventStatus::create([
-            'id' => config('status.event_bestaetigt'),
+            'id' => BookingState::Bestaetigt->value,
             'name' => 'Bestätigt',
             'color' => 'B', ]);
         EventStatus::create([
-            'id' => config('status.event_storniert'),
+            'id' => BookingState::Storniert->value,
             'name' => 'Storniert', ]);
         EventStatus::create([
-            'id' => config('status.event_eigene'),
+            'id' => BookingState::Eigene->value,
             'name' => 'Eigene Termine',
             'color' => 'B', ]);
 
         ContractStatus::create([
-            'id' => config('status.contract_offen'),
+            'id' => ContractState::Offen->value,
             'name' => 'Offen', ]);
         ContractStatus::create([
-            'id' => config('status.contract_angebot_erstellt'),
+            'id' => ContractState::AngebotErstellt->value,
             'name' => 'Angebot erstellt', ]);
         ContractStatus::create([
-            'id' => config('status.contract_angebot_versendet'),
+            'id' => ContractState::AngebotVersendet->value,
             'name' => 'Angebot versendet', ]);
         ContractStatus::create([
-            'id' => config('status.contract_rechnung_erstellt'),
+            'id' => ContractState::RechnungErstellt->value,
             'name' => 'Rechnung erstellt', ]);
         ContractStatus::create([
-            'id' => config('status.contract_rechnung_versendet'),
+            'id' => ContractState::RechnungVersendet->value,
             'name' => 'Rechnung versendet', ]);
         ContractStatus::create([
-            'id' => config('status.contract_storniert'),
+            'id' => ContractState::Storniert->value,
             'name' => 'Storniert', ]);
 
         ArchiveStatus::create([
-            'id' => config('status.aktiv'),
+            'id' => ArchiveState::Aktiv->value,
             'name' => 'Aktiv', ]);
         ArchiveStatus::create([
-            'id' => config('status.archiviert'),
+            'id' => ArchiveState::Archiviert->value,
             'name' => 'Archiviert', ]);
 
         Homepage::create([
@@ -92,7 +96,7 @@ class BasisdatenSeeder extends Seeder
             'id' => 1,
             'username' => 'Administrator',
             'password' => Hash::make(env('ADMIN_PASSWORD')),
-            'role_id' => config('status.role_Administrator'),
+            'role_id' => UserRole::Administrator,
             'is_active' => true,
         ]);
 

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Event;
 use Illuminate\Database\Seeder;
 
 class SeedPhoneQuery extends Seeder
@@ -13,7 +13,7 @@ class SeedPhoneQuery extends Seeder
     public function run(): void
     {
         //
-        $events = \App\Models\Event::where('phonenumber_query', null)->get();
+        $events = Event::where('phonenumber_query', null)->get();
         foreach ($events as $event) {
             $event->phonenumber_query = str_replace(' ', '', $event->telephone);
             $event->phonenumber_query = str_replace('-', '', $event->phonenumber_query);

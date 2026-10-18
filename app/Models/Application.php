@@ -27,6 +27,7 @@ class Application extends Model
 
     public function routeNotificationForSlack($notification)
     {
-        return config('slack.endpoint');
+        // Ohne Webhook false: sonst wählt Laravel die Slack-Bot-API und die Benachrichtigung bricht ab.
+        return config('slack.endpoint') ?: false;
     }
 }

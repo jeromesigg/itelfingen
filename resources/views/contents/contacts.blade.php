@@ -1,12 +1,10 @@
 <section id="contact" class="contact section-bg">
-  <div class="container space-y-8 lg:grid lg:grid-cols-2 sm:gap-6 xl:gap-10 lg:space-y-0" >
+  <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6 space-y-8 lg:grid lg:grid-cols-2 sm:gap-6 xl:gap-10 lg:space-y-0" >
     <div class="p-6">
       <div class="section-title">
-        <p>So findest du uns:</p>
+        <h2>So findest du uns</h2>
       </div>
-      <div >
-        <iframe loading="lazy" style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d605.6247635940863!2d8.473077610557123!3d47.11300787321241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47855566fbd6fd7f%3A0xf9c4a22f086c0f22!2sItelfingen%203%2C%206344%20Meierskappel!5e1!3m2!1sde!2sch!4v1613503423612!5m2!1sde!2sch" frameborder="0" allowfullscreen></iframe>
-      </div>
+      <x-google-map />
       <div class="info">
         <div class="address">
           <i>
@@ -22,40 +20,40 @@
     </div>
     <div class="p-6">
       <div class="section-title">
-        <p>Schreib uns</p>
+        <h2>Schreib uns</h2>
       </div>
+      @if (session()->has('success_contact'))
+          <div id="toast-simple" class="fixed z-60 flex items-center w-full max-w-sm p-4 text-body text-fg-success-strong bg-success-soft rounded-base shadow-xs border border-success-subtle top-5 inset-e-5" role="alert">
+            <svg class="w-5 h-5 text-fg-brand" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 18-7 3 7-18 7 18-7-3Zm0 0v-5"/></svg>
+            <div class="ms-2.5 text-sm border-s border-default ps-3.5">{!! session()->get('success_contact') !!}</div>
+            <button type="button" class="ms-auto flex items-center justify-center text-body hover:text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded text-sm h-8 w-8 focus:outline-none" data-dismiss-target="#toast-simple" aria-label="Schliessen">
+                <span class="sr-only">Schliessen</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
+            </button>
+          </div>
+      @endif
       @if ($errors->contact->any())
-        <div class="alert alert-danger">
-            <ul>
+        <x-alert>
+            <ul class="list-disc list-inside">
                 @foreach ($errors->contact->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-        </div>
+        </x-alert>
       @endif
-      @if (session()->has('success_contact'))
-          <div class="alert alert-dismissable alert-success">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-              <strong>
-                  {!! session()->get('success_contact') !!}
-              </strong>
-          </div>
-      @endif
-      <p class="mb-3 text-lg md:text-xl">
-        Fragen, Anregungen? Wir freuen uns über Deine Nachricht. <br>
-        Solltest du Fragen zu einer Buchung (Verfügbarkeit, Preis) haben, erstelle bitte direkt eine <a href="/#booking" class="text-red-300 hover:underline">Buchungsanfrage</a>.
+      <p class="mb-3 text-lg">
+        Fragen, Anregungen? Wir freuen uns über deine Nachricht. <br>
+        Solltest du Fragen zu einer Buchung (Verfügbarkeit, Preis) haben, erstelle bitte direkt eine <a href="/#booking" class="font-medium text-gray-900 underline hover:no-underline">Buchungsanfrage</a>.
       </p>
       
-      <x-forms.form :action="route('contacts.store')" id='contact_form'>
+      <x-forms.form :action="route('contacts.store')" id='contact_form' scope="contact">
         <x-honeypot />
-        <div class="form-row">
-          <x-forms.container class="col-md-6">
+        <div class="grid gap-4 md:grid-cols-2">
+          <x-forms.container>
               <x-forms.text label="Name:" name="name" required=true />
           </x-forms.container>
-          <x-forms.container class="col-md-6">
-              <x-forms.text label="Email:" name="email" type="email" required=true />
+          <x-forms.container>
+              <x-forms.text label="E-Mail:" name="email" type="email" required=true />
           </x-forms.container>
         </div>
         <x-forms.container>
@@ -65,7 +63,7 @@
             <x-forms.text-area label="Nachricht:" name="content" required=true rows="8"/>
         </x-forms.container>
         <x-forms.container>
-          <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen" id="submit-btn">
+          <x-forms.button type="submit" class="btn btn-frontpage bg-gladegreen hover:bg-gladegreen" id="submit-btn">
             Sende Nachricht
           </x-forms.button>
         </x-forms.container>
@@ -76,6 +74,7 @@
 
 @push('scripts')
   <script type="module">
+
       document.getElementById('contact_form').addEventListener('submit', function(e) {
         const btn = document.getElementById('submit-btn');
         btn.disabled = true;

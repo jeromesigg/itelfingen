@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingState;
 use App\Exports\ExportBookings;
 use App\Helper\Helper;
 use App\Models\Contact;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
@@ -14,7 +16,7 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function __construct()
     {
@@ -23,17 +25,17 @@ class AdminController extends Controller
 
     public function index()
     {
-        $events_all = Event::where('event_status_id', '<', config('status.event_eigene'))->count();
-        $events_new = Event::where('event_status_id', config('status.event_neu'))->count();
-        $events = Event::where('start_date', '>=', today())->where('event_status_id', '<>', config('status.event_storniert'))->orderBy('id', 'DESC')->paginate(5);
+        $events_all = Event::where('event_status_id', '<', BookingState::Eigene->value)->count();
+        $events_new = Event::where('event_status_id', BookingState::Neu)->count();
+        $events = Event::where('start_date', '>=', today())->where('event_status_id', '<>', BookingState::Storniert)->orderBy('id', 'DESC')->paginate(5);
         $events_upcoming = Event::where('start_date', '>=', Carbon::today())
-            ->where('event_status_id', '<>', config('status.event_storniert'))
+            ->where('event_status_id', '<>', BookingState::Storniert)
             ->orderBy('start_date', 'ASC')
             ->limit(2)
             ->get();
 
         $events_past = Event::where('start_date', '<', Carbon::today())
-            ->where('event_status_id', '<>', config('status.event_storniert'))
+            ->where('event_status_id', '<>', BookingState::Storniert)
             ->orderBy('start_date', 'DESC')
             ->limit(3)
             ->get();
@@ -89,7 +91,6 @@ class AdminController extends Controller
         $bookingChartQuarter = Helper::getChart('quarter');
         $bookingChartMonthly = Helper::getChart('monthly');
         $bookingHeatMap = Helper::getChart('heatmap');
-
 
         $title = 'Auslastung';
 

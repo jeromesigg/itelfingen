@@ -1,16 +1,38 @@
 @component('mail::message')
-    <h1>Deine Bewerbung für die Genossenschaft Ferienhaus Itelfingen</h1>
-    @component('mail::table')
-        |        |          |
-        | :------------- | :------------- |
-        | Name  | {{$application->firstname}} {{$application->name}} |
-        | E-Mail | {{$application->email}} |
-        | Anlass / Gruppe | {{$application->organisation}} |
-        | Strasse |  {{$application->street}} {{$application->house_number}} |
-        | PlZ / Ort | {{$application->plz}} {{$application->city}} |
-        | Telefon | {{$application->telephone}} |
-        | Wieso willst du Genossenschafter:in werden? | {{$application->why}} |
-        | Bemerkung |  {{$application->comment}} |
-    @endcomponent
-    Sobald deine Bewerbung überprüft wurde, erhältst du von uns nach spätestens zwei Wochen die Rechnung für deinen Genossenschaftsanteil über CHF 100.- per E-Mail.
+# Deine Bewerbung ist eingegangen
+
+Hallo {{ $application->firstname ?: $application->name }}
+
+Vielen Dank für dein Interesse an der Genossenschaft Ferienhaus Itelfingen – wir freuen uns sehr! Hier nochmals deine Angaben:
+
+@component('mail::table')
+| Deine Bewerbung | |
+| :------------ | :------------ |
+| Name | {{ $application->firstname }} {{ $application->name }} |
+@if ($application->organisation)
+| Organisation | {{ $application->organisation }} |
+@endif
+| Adresse | {{ $application->street }} {{ $application->house_number }}, {{ $application->plz }} {{ $application->city }} |
+| E-Mail | {{ $application->email }} |
+@if ($application->telephone)
+| Telefon | {{ $application->telephone }} |
+@endif
+@endcomponent
+
+**Warum du Genossenschafter:in werden möchtest**<br>
+{!! nl2br(e($application->why)) !!}
+
+@if ($application->comment)
+**Deine Fragen oder Bemerkungen**<br>
+{!! nl2br(e($application->comment)) !!}
+
+@endif
+Mit deiner Bewerbung hast du die [Statuten]({{ url('/files/Statuten_Genossenschaft_Ferienhaus_Itelfingen.pdf') }}) der Genossenschaft akzeptiert.
+
+**Wie geht es weiter?**<br>
+Der Vorstand prüft deine Bewerbung. Spätestens nach zwei Wochen erhältst du per E-Mail die Rechnung für deinen Genossenschaftsanteil von CHF 100.–. Sobald sie bezahlt ist, bist du Genossenschafter:in.
+
+Freundliche Grüsse<br>
+Der Vorstand<br>
+Genossenschaft Ferienhaus Itelfingen
 @endcomponent

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
+use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\Person;
 use App\Models\Photo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Http\Response;
 
 class AdminPersonController extends Controller
 {
@@ -14,7 +16,7 @@ class AdminPersonController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -27,7 +29,7 @@ class AdminPersonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -38,22 +40,21 @@ class AdminPersonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = Str::uuid().'_'.$input['name'].'.jpg';
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
         }
         $index = Person::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         Person::create($input);
 
         return redirect('/admin/people');
@@ -63,7 +64,7 @@ class AdminPersonController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -74,7 +75,7 @@ class AdminPersonController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -89,15 +90,14 @@ class AdminPersonController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
         //
         $input = $request->all();
         if ($file = $request->file('photo_id')) {
-            $name = Str::uuid().'_'.$input['name'].'.jpg';
-            $file->move('images', $name);
+            $name = ImageUpload::store($file);
             $photo = Photo::create(['file' => $name]);
 
             $input['photo_id'] = $photo->id;
@@ -111,7 +111,7 @@ class AdminPersonController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

@@ -45,7 +45,7 @@
         <span>{{Auth::user()->username}}<span>
       </button>
       <!-- Dropdown menu -->
-      <div class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown">
+      <div class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded-sm divide-y divide-gray-100 shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown">
         <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown" >
           <li>
             <a href="{{ route('logout') }}" class="nav-link logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 

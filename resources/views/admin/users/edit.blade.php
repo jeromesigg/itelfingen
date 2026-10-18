@@ -2,7 +2,7 @@
 @section('content')
 
     <div>
-        <div class="container-fluid">
+        <div class="container mx-auto px-4">
             <header> 
                 <h3 class="text-3xl font-bold dark:text-white">Benutzer bearbeiten</h3>
             </header>
@@ -18,14 +18,16 @@
                         <x-forms.container>
                             <x-forms.text label="Handy-Nummer:" name="phone"/>
                         </x-forms.container>
+                        @if (Auth::user()->isAdmin())
                         <x-forms.container>
                             <x-forms.select label="Rolle:" name="role_id" required=true :collection="$roles"/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.select label="Archiv Status:" name="archive_status_id" required=true :collection="$archive_statuses"/>
                         </x-forms.container>
+                        @endif
                         <x-forms.container>
-                            <x-forms.text label="Password:" name="password" required=true type="password"/>
+                            <x-forms.text label="Passwort (leer lassen = unverändert, mindestens 10 Zeichen):" name="password" type="password"/>
                         </x-forms.container>
                         <x-forms.container>
                             <x-forms.button type="submit" class="btn btn-primary">

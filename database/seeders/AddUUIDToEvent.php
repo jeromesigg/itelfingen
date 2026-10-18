@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Event;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class AddUUIDToEvent extends Seeder
 {
@@ -13,9 +14,9 @@ class AddUUIDToEvent extends Seeder
     public function run(): void
     {
         //
-        $events = \App\Models\Event::where('uuid', null)->get();
+        $events = Event::where('uuid', null)->get();
         foreach ($events as $event) {
-            $event->uuid = \Illuminate\Support\Str::uuid();
+            $event->uuid = Str::uuid();
             $event->save();
         }
     }

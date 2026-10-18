@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
 use App\Models\PricelistPosition;
 use App\Services\BexioApiService;
 use Illuminate\Http\Request;
-use Ixudra\Curl\Facades\Curl;
+use Illuminate\Http\Response;
 
 class AdminPricelistPositionController extends Controller
 {
@@ -21,7 +22,7 @@ class AdminPricelistPositionController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -39,7 +40,7 @@ class AdminPricelistPositionController extends Controller
                     'bexio_id' => $position['id'],
                     'bexio_code' => $position['intern_code'],
                     'price' => $position['sale_price'],
-                    'archive_status_id' => config('status.aktiv'),
+                    'archive_status_id' => ArchiveState::Aktiv,
                     'show' => true, ]);
             }
         }
@@ -50,7 +51,7 @@ class AdminPricelistPositionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -61,7 +62,7 @@ class AdminPricelistPositionController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -72,7 +73,7 @@ class AdminPricelistPositionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -87,7 +88,7 @@ class AdminPricelistPositionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -103,7 +104,7 @@ class AdminPricelistPositionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

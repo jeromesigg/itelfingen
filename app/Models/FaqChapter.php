@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ArchiveState;
 use Illuminate\Database\Eloquent\Model;
 
 class FaqChapter extends Model
@@ -11,7 +12,10 @@ class FaqChapter extends Model
         'sort-index',
         'archive_status_id',
         'photo_id',
-        'symbol',
+    ];
+
+    protected $casts = [
+        'archive_status_id' => ArchiveState::class,
     ];
 
     public function archive_status()
@@ -21,7 +25,7 @@ class FaqChapter extends Model
 
     public function faqs()
     {
-        return $this->hasMany(Faq::class)->where('archive_status_id', '=', config('status.aktiv'));
+        return $this->hasMany(Faq::class)->where('archive_status_id', '=', ArchiveState::Aktiv);
     }
 
     public function photo()

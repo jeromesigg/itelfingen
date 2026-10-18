@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Ixudra\Curl\Facades\Curl;
 
 class SendEventInvoiceMail extends Mailable
 {

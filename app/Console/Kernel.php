@@ -24,9 +24,7 @@ class Kernel extends ConsoleKernel
      *
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-    }
+    protected function schedule(Schedule $schedule) {}
 
     /**
      * Register the commands for the application.

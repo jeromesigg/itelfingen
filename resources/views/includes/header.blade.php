@@ -1,24 +1,18 @@
-
-<header class="m-1">
-    <nav class="bg-white border-gray-200 dark:bg-gray-800">
-        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+<header class="sticky top-0 z-50 bg-white shadow-sm dark:bg-gray-800">
+    <nav class="border-gray-200 p-1">
+        <div class="flex flex-wrap justify-between items-center gap-2 mx-auto max-w-(--breakpoint-2xl) px-2 py-1">
             <a href="/" class="flex items-center">
-                <img src="/img/logo.png" class="mr-3 h-24 sm:h-12" alt="Itelfingen Logo" />
+                <img src="/img/logo.png" class="h-10 sm:h-12" alt="Ferienhaus Itelfingen" />
             </a>
-            <div class="flex items-center lg:order-2">
-                <a href="/#booking" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">Jetzt buchen</a>
-                <a href="/#contact" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">Schreib uns</a>
+            <div class="flex items-center gap-2 lg:order-2">
+                <a href="/#booking" class="text-white bg-gladegreen hover:opacity-90 focus:ring-4 focus:ring-gladegreen/50 font-medium rounded-lg text-sm px-3 py-2 lg:px-5 lg:py-2.5 focus:outline-hidden">Jetzt buchen</a>
+                <a href="/#contact" class="text-white bg-ebonyclay hover:opacity-90 focus:ring-4 focus:ring-ebonyclay/50 font-medium rounded-lg text-sm px-3 py-2 lg:px-5 lg:py-2.5 focus:outline-hidden">Schreib uns</a>
             </div>
-            <div class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
-                <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                    <li>
-                        @guest
-                        @else
-                        <a href="/admin" target="blank" class="text-orientalpink">Dashboard</a>
-                        @endguest
-                    </li>
-                </ul>
-            </div>
+            @auth
+                <div class="hidden lg:flex lg:order-1">
+                    <a href="/admin" target="_blank" class="font-medium text-orientalpink hover:underline">Dashboard</a>
+                </div>
+            @endauth
         </div>
     </nav>
 </header>

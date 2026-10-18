@@ -15,7 +15,7 @@ class LastInfosSent extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Event
+     * @var Event
      */
     protected $event;
 
@@ -42,8 +42,8 @@ class LastInfosSent extends Mailable
         $name = $this->event['firstname'].' '.$this->event['name'];
         $outputFile = Helper::PrintParking($this->event);
         $number = str_pad($this->event['id'], 5, '0', STR_PAD_LEFT);
-        if (isset($event['foreign_key'])) {
-            $number .= ' ('.$event['foreign_key'].')';
+        if (isset($this->event['foreign_key'])) {
+            $number .= ' ('.$this->event['foreign_key'].')';
         }
 
         return $this->markdown('emails.events.last_infos', ['event' => $this->event, 'additional_text' => $this->additional_text])

@@ -2,39 +2,36 @@
 @section('content')
 
     <div>
-        <div class="container-fluid">
+        <div class="container mx-auto px-4">
             <header>
                 <h3 class="text-3xl font-bold dark:text-white">Empfänger bearbeiten</h3>
             </header>
             <div class="row">
                  <div class="col-sm-9">
-                    {!! Form::model($newsletter, ['method' => 'PATCH', 'action'=>['NewsletterController@update', $newsletter]]) !!}
-                    <div class="form-row">
-                        <div class="col-md-6 form-group">
-                        {!! Form::label('name', 'Name:') !!}
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
+                    <x-forms.form :action="route('newsletter.update', $newsletter)" method="PATCH" :model="$newsletter">
+                        <div class="form-row">
+                            <x-forms.container class="col-md-6">
+                                <x-forms.text label="Name:" name="name" required=true/>
+                            </x-forms.container>
+                            <x-forms.container class="col-md-6">
+                                <x-forms.text label="Vorname:" name="firstname"/>
+                            </x-forms.container>
                         </div>
-                        <div class="col-md-6 form-group">
-                            {!! Form::label('firstname', 'Vorname:') !!}
-                            {!! Form::text('firstname', null, ['class' => 'form-control']) !!}
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('email', 'E-Mail:') !!}
-                        {!! Form::email('email', null, ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('booking', 'Buchungen:') !!}
-                        {!! Form::checkbox('bookings', '1', null) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('member', 'Genossenschaft:') !!}
-                        {!! Form::checkbox('members', '1', null) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::submit('Person updaten', ['class' => 'btn btn-primary'])!!}
-                    </div>
-                    {!! Form::close()!!}
+                        <x-forms.container>
+                            <x-forms.text label="E-Mail:" name="email" type="email" required=true/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Buchungen:" name="bookings" type="checkbox" value="{{$newsletter['bookings']}}"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.text label="Genossenschaft:" name="members" type="checkbox" value="{{$newsletter['members']}}"/>
+                        </x-forms.container>
+                        <x-forms.container>
+                            <x-forms.button type="submit" class="btn btn-primary">
+                                Person aktualisieren
+                            </x-forms.button>
+                        </x-forms.container>
+                    </x-forms.form>
                 </div>
             </div>
             <div class="row">

@@ -2,9 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Models\Room;
+use App\Enums\ArchiveState;
 use App\Events\EventInvoiceCreate;
-use App\Models\Checkpoint;
+use App\Models\Room;
 
 class EventChecklistCreateListener
 {
@@ -24,7 +24,7 @@ class EventChecklistCreateListener
         //
         $event = $eventInvoice->event;
         if ($event->event_rooms->count() === 0) {
-            $rooms = Room::where('archive_status_id', config('status.aktiv'))->orderBy('sort-index')->get();
+            $rooms = Room::where('archive_status_id', ArchiveState::Aktiv)->orderBy('sort-index')->get();
             foreach ($rooms as $room) {
                 $event_room = $event->event_rooms()->create([
                     'room_id' => $room->id,

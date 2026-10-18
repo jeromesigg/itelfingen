@@ -1,31 +1,30 @@
 @component('mail::message')
-<h1>Dein Feedback für das Ferienhaus Itelfingen</h1>
-Guten Tag {{$event->firstname}} {{$event->name}},
-<br><br>
-Morgen ist dein Abreisetag in unserem Ferienhaus Itelfingen. Bitte beachte die Hausrückgabe-Checkliste in der Hausordnung und bei der Haustüre. Der Code für den Abfalleimer ist 4315. Bitte entsorge den Abfall in den Containern gemäss Hausordnung. Und öffne alle Mückennetz, damit diese nicht bei einem Sturm kaputtgehen. Vielen Dank für deine Mithilfe.
-Wir hoffen, dass alles funktioniert hat und du wunderbare Tage verbringen konntest.
-<br>
-@component('mail::button', ['url' => config('app.url').'/bookings/'.$event->uuid.'/checklist', 'color' => 'success'])
-    Zur Checkliste für die Hausrückgabe
+# {{ $heading }}
+
+@include('emails.events.partials.greeting')
+
+Wir hoffen, du hattest schöne Tage im Ferienhaus Itelfingen! Damit die Hausrückgabe reibungslos klappt:
+
+- **Abreise** bis {{ $event->late_checkout ? config('house.checkout.late') : config('house.checkout.default') }} Uhr.
+- **Checkliste:** Hake die Punkte für die Hausrückgabe online ab (Link unten).
+- **Abfall** in die Container gemäss Hausordnung, der Code ist **{{ config('house.waste_code') }}**.
+- **Mückennetze** bitte öffnen, damit sie bei einem Sturm nicht kaputtgehen.
+
+@component('mail::button', ['url' => route('bookings.checklist', $event->uuid), 'color' => 'success'])
+Zur Checkliste für die Hausrückgabe
 @endcomponent
-<br>
-Sollte sich etwas an den Anzahl Übernachtung gegenüber der Offerte geändert haben, kannst du und dies gerne noch melden.
-<br>
-Bitte fülle noch die Rückmeldung aus, damit wir uns in Zukunft noch weiter verbessern können.
-@component('mail::button', ['url' => 'https://forms.gle/RMWyPzs8wauakQam9', 'color' => 'success'])
-    Zum Feedback-Formular
+
+Hat sich bei der Anzahl Übernachtungen gegenüber dem Angebot etwas geändert? Dann melde es uns bitte, damit die Rechnung stimmt.
+
+## Wie war's?
+
+Mit deiner Rückmeldung hilfst du uns, noch besser zu werden.
+
+@component('mail::button', ['url' => config('house.feedback_url'), 'color' => 'primary'])
+Feedback geben
 @endcomponent
-Wir würden uns freuen, dich wieder einmal im Ferienhaus Itelfingen begrüssen zu dürfen. <br>
-Hinterlasse uns doch auch eine Bewertung auf <a href="https://maps.app.goo.gl/nDkcMkAQLsQPfp557">Google Maps</a> oder folge uns auf <a href="https://www.instagram.com/itelfingen/">Instagram</a>.
-<br><br>
-Freundliche Grüsse,<br>
-Das Ferienhaus Itelfingen
-<br>
-<br>
-In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
-<div class="breadcrumbs">
-    <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">
-        <img src="https://itelfingen.ch/img/mail/5.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Feedback"/>
-    </a>
-</div>
+
+Wir freuen uns, dich wieder einmal im Ferienhaus Itelfingen begrüssen zu dürfen. Gerne kannst du uns auch auf [Google]({{ config('house.google_review_url') }}) bewerten oder uns auf [Instagram]({{ config('house.instagram_url') }}) folgen.
+
+@include('emails.events.partials.closing', ['step' => 5])
 @endcomponent

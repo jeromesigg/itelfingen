@@ -39,7 +39,7 @@ return [
     ],
 
     'glutz' => [
-        'url' =>  env('GLUTZ_URL', 'NULL'),
+        'url' => env('GLUTZ_URL', 'NULL'),
         'username' => env('GLUTZ_USERNAME', 'NULL'),
         'password' => env('GLUTZ_PASSWORD', 'NULL'),
     ],

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
+use App\Models\ArchiveStatus;
 use App\Models\Room;
 use Illuminate\Http\Request;
-use App\Models\ArchiveStatus;
 
 class AdminRoomsController extends Controller
 {
@@ -37,7 +38,7 @@ class AdminRoomsController extends Controller
         $input = $request->all();
         $index = Room::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         Room::create($input);
 
         return redirect('/admin/rooms');

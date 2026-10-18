@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
-use NumberFormatter;
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -15,7 +15,7 @@ class SendOffersMail extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Event
+     * @var Event
      */
     protected $event;
 
@@ -25,17 +25,21 @@ class SendOffersMail extends Mailable
 
     protected $additional_text;
 
+    /** Gültig bis (Bexio-Feld is_valid_until, Y-m-d) */
+    protected ?string $valid_until;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Event $event, string $link, string $total, string $additional_text)
+    public function __construct(Event $event, string $link, string $total, string $additional_text, ?string $valid_until = null)
     {
         $this->event = $event;
         $this->link = $link;
         $this->total = $total;
         $this->additional_text = $additional_text;
+        $this->valid_until = $valid_until;
     }
 
     /**
@@ -55,12 +59,14 @@ class SendOffersMail extends Mailable
             $number .= ' ('.$event['foreign_key'].')';
         }
 
-        $fmt = new NumberFormatter( 'de_DE', NumberFormatter::CURRENCY );
-        $total = $fmt->formatCurrency($this->total, "CHF");
-        return $this->markdown('emails.events.offers', ['event' => $event, 'link' => $this->link, 'total' => $total, 'additional_text' => $this->additional_text])
+        $total = 'CHF '.number_format((float) $this->total, 2, '.', '’');
+        // Frist aus dem Bexio-Angebot, damit sie auch bei einer Erinnerung stimmt
+        $valid_until = Carbon::parse($this->valid_until ?? now()->addMonth())->format('d.m.Y');
+
+        return $this->markdown('emails.events.offers', ['event' => $event, 'link' => $this->link, 'total' => $total, 'valid_until' => $valid_until, 'additional_text' => $this->additional_text])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Ihr Angebot zur Buchung '.$number.' für das Ferienhaus Itelfingen')
+            ->subject('Dein Angebot zur Buchung '.$number.' für das Ferienhaus Itelfingen')
             ->attach($PdfPath, [
                 'as' => 'Hausordnung.pdf',
                 'mime' => 'application/pdf',

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
 use App\Models\FaqChapter;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
 class AdminFaqChapterController extends Controller
@@ -21,7 +24,7 @@ class AdminFaqChapterController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -32,7 +35,7 @@ class AdminFaqChapterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -40,10 +43,11 @@ class AdminFaqChapterController extends Controller
         $input = $request->all();
         $index = FaqChapter::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
-        if (($file = $request->file('old_photo_id')) && $input['new_photo_id']) {
-            $name = time().$file->getClientOriginalName();
-            Image::make($input['new_photo_id'])->save('images/'.$name);
+        $input['archive_status_id'] = ArchiveState::Aktiv;
+        if (! empty($input['new_photo_id'])) {
+            $name = time().'_faq_chapter.png';
+            File::ensureDirectoryExists(public_path('images'));
+            Image::make($input['new_photo_id'])->save(public_path('images/'.$name));
 
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
@@ -57,7 +61,7 @@ class AdminFaqChapterController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -68,7 +72,7 @@ class AdminFaqChapterController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -83,16 +87,16 @@ class AdminFaqChapterController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
         //
         $input = $request->all();
-        $file = $request->file('old_photo_id');
-        if ($file && $input['new_photo_id']) {
-            $name = time().'_'.$file->getClientOriginalName();
-            Image::make($input['new_photo_id'])->save('images/'.$name);
+        if (! empty($input['new_photo_id'])) {
+            $name = time().'_faq_chapter.png';
+            File::ensureDirectoryExists(public_path('images'));
+            Image::make($input['new_photo_id'])->save(public_path('images/'.$name));
 
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
@@ -106,7 +110,7 @@ class AdminFaqChapterController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

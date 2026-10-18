@@ -4,10 +4,10 @@ namespace App\Mail;
 
 use App\Models\Application;
 use App\Services\BexioApiService;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Ixudra\Curl\Facades\Curl;
 
 class ApplicationInvoiceMail extends Mailable
 {
@@ -16,9 +16,10 @@ class ApplicationInvoiceMail extends Mailable
     /**
      * The event instance.
      *
-     * @var \App\Models\Application
+     * @var Application
      */
     protected $application;
+
     protected $invoice;
 
     /**
@@ -42,10 +43,13 @@ class ApplicationInvoiceMail extends Mailable
         $application = $this->application;
         $invoice_pdf = app(BexioApiService::class)->get('kb_invoice/'.$application['bexio_invoice_id'].'/pdf');
 
-        return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link']])
+        // Zahlungsfrist aus der Bexio-Rechnung (is_valid_to), sonst 30 Tage
+        $due_date = Carbon::parse($this->invoice['is_valid_to'] ?? now()->addDays(30))->format('d.m.Y');
+
+        return $this->markdown('emails.applications.invoices', ['application' => $application, 'link' => $this->invoice['network_link'], 'due_date' => $due_date])
             ->to($application['email'], $application['firstname'].' '.$application['name'])
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen')
+            ->subject('Willkommen in der Genossenschaft Ferienhaus Itelfingen – deine Rechnung für den Genossenschaftsanteil')
             ->attachData(base64_decode($invoice_pdf['content']), 'Rechnung.pdf', [
                 'mime' => 'application/pdf',
             ]);

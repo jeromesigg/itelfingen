@@ -66,7 +66,7 @@ class EventCreatedNotification extends Notification
             'name' => $event->firstname.' '.$event->name,
             'e-mail' => $event->email,
             'gruppe' => $event->group_name,
-            'strasse' => $event->street .' '.$event->house_number,
+            'strasse' => $event->street.' '.$event->house_number,
             'ort' => $event->plz.' '.$event->city,
             'telefon' => $event->telephone,
             'total' => $event->total_amount,

@@ -6,7 +6,6 @@ use App\Events\EventInvoiceCreate;
 use App\Helper\Helper;
 use App\Services\BexioApiService;
 use Carbon\Carbon;
-use Ixudra\Curl\Facades\Curl;
 
 class EventInvoiceCreateListener
 {
@@ -23,20 +22,16 @@ class EventInvoiceCreateListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\EventInvoiceCreate  $event
+     * @param  EventInvoiceCreate  $event
      * @return void
      */
     public function handle(EventInvoiceCreate $eventInvoice)
     {
         //
         $event = $eventInvoice->event;
+        // Fehler von Bexio wirft BexioApiService selbst (RequestException bzw. RuntimeException).
         $invoice = app(BexioApiService::class)->postAction('kb_offer/'.$event['bexio_offer_id'].'/invoice');
-        if (! isset($invoice['error_code'])) {
-            $event->update([
-                'bexio_invoice_id' => $invoice['id'], ]);
-        } else {
-            abort($invoice['error_code'], $invoice['message']);
-        }
+        $event->update(['bexio_invoice_id' => $invoice['id']]);
 
         if (isset($invoice['id'])) {
             $data = [

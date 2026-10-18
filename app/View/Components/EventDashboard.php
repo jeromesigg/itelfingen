@@ -11,8 +11,8 @@ class EventDashboard extends Component
     /**
      * Create a new component instance.
      */
-    
     public $events;
+
     public $title;
 
     public function __construct($events, $title = null)

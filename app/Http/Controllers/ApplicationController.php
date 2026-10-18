@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Notification;
+use App\Models\Application;
 use App\Models\Homepage;
 use App\Models\Salutation;
-use App\Models\Application;
-use Illuminate\Http\Request;
 use App\Notifications\ApplicationCreatedNotification;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Notification;
 
 class ApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -29,20 +30,36 @@ class ApplicationController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create() {}
 
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
-        $input = $request->all();
-        if (!preg_match('/\s/', $input['why'])) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'zipcode' => 'required|numeric|gte:1000|lte:9999',
+            'city' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'why' => 'required|string',
+            'statutes' => 'accepted',
+        ], [
+            'statutes.accepted' => 'Bitte akzeptiere die Statuten.',
+        ]);
+
+        // Nur Felder des Formulars, keine internen Felder (Bexio, Rechnung, Ablehnung).
+        $input = $request->only([
+            'name', 'firstname', 'organisation', 'street', 'house_number', 'zipcode', 'city', 'email', 'telephone',
+            'why', 'comment',
+        ]);
+        if (! preg_match('/\s/', $input['why'])) {
             abort(response()->view('errors.422', [], 422));
         }
 
@@ -57,7 +74,7 @@ class ApplicationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Application $application)
     {
@@ -67,7 +84,7 @@ class ApplicationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Application $application)
     {
@@ -77,7 +94,7 @@ class ApplicationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Application $application)
     {
@@ -87,7 +104,7 @@ class ApplicationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Application $application)
     {

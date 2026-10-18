@@ -1,5 +1,6 @@
-@extends('errors::minimal')
+@extends('errors.minimal')
 
-@section('title', __('Page Expired'))
 @section('code', '419')
-@section('message', __('Page Expired'))
+@section('title', 'Seite abgelaufen')
+@section('message', 'Die Seite war zu lange offen. Bitte gehe zurück, lade die Seite neu und sende das Formular nochmals ab.')
+@section('back', true)

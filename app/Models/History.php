@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ArchiveState;
 use Illuminate\Database\Eloquent\Model;
 
 class History extends Model
@@ -15,6 +16,10 @@ class History extends Model
         'archive_status_id',
         'sort-index',
         'photo_id',
+    ];
+
+    protected $casts = [
+        'archive_status_id' => ArchiveState::class,
     ];
 
     public function archive_status()

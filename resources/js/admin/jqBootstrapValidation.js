@@ -441,7 +441,7 @@
             [
               "keyup",
               "focus",
-              "blur",
+              "blur-sm",
               "click",
               "keydown",
               "keypress",
@@ -493,7 +493,7 @@
                 $helpBlock.html($helpBlock.data("original-contents"));
               }
 
-              if (e.type === "blur") {
+              if (e.type === "blur-sm") {
                 $controlGroup.removeClass("success");
               }
             }

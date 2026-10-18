@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Mail\FeedbackMail;
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class EventFeedbackNotification extends Notification
@@ -39,7 +40,7 @@ class EventFeedbackNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

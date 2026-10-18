@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
-use App\Models\Checkpoint;
-use Illuminate\Http\Request;
+use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
+use App\Models\Checkpoint;
+use App\Models\Room;
+use Illuminate\Http\Request;
 
 class AdminCheckpointController extends Controller
 {
@@ -39,7 +40,7 @@ class AdminCheckpointController extends Controller
         $input = $request->all();
         $index = Checkpoint::all()->count();
         $input['sort-index'] = $index + 1;
-        $input['archive_status_id'] = config('status.aktiv');
+        $input['archive_status_id'] = ArchiveState::Aktiv;
         Checkpoint::create($input);
 
         return redirect('/admin/checkpoints');
@@ -60,9 +61,9 @@ class AdminCheckpointController extends Controller
     {
         //
         $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
-        $rooms = Room::pluck('name', 'id')->all();
+        $rooms_select = Room::orderBy('sort-index')->pluck('name', 'id')->all();
 
-        return view('admin.checkpoints.edit', compact('archive_statuses', 'checkpoint', 'rooms'));
+        return view('admin.checkpoints.edit', compact('archive_statuses', 'checkpoint', 'rooms_select'));
     }
 
     /**

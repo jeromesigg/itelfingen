@@ -1,10 +1,4 @@
 <script type="module">
-	document.getElementById('calendarform').addEventListener('submit', function(e) {
-        const btn = document.getElementById('submit-event-btn');
-        btn.disabled = true;
-        btn.innerHTML = 'Wird gesendet...';
-    });
-
 	function wizard_step(i) {
 		if(i===1){
 			document.getElementById("wizard_calendar").style.display = "block";
@@ -27,7 +21,6 @@
 				if(days === 0 || Agenda.end === null){
 					document.getElementById("oneday_text").style.display = "block";
 					document.getElementById("multiday_text").style.display = "none";
-					document.getElementById("multiday_comment").style.display = "none";
 					positions.forEach(position => {
 						var id = 'row_' + position['bexio_code'];
 						var position_id = '#position_' + position['bexio_code'] + '_amount';
@@ -44,7 +37,6 @@
 				else {
 					document.getElementById("oneday_text").style.display = "none";
 					document.getElementById("multiday_text").style.display = "block";
-					document.getElementById("multiday_comment").style.display = "block";
 					positions.forEach(position => {
 						var id = 'row_' + position['bexio_code'];
 						var position_id = '#position_' + position['bexio_code'] + '_amount';
@@ -105,10 +97,39 @@
 
 	window.onload = function() {
 		Agenda.load(@json($events_json), @json($event_type))
+		restoreBooking()
 		if(document.getElementById('total_amount') != undefined){
 			Total_Change()
 		}
     };
+
+	// Nach einem Validierungsfehler sind die Felder wieder gefüllt (old()): gewählte Daten im Kalender
+	// markieren und direkt das Formular zeigen, damit Fehlermeldung und Eingaben sichtbar sind.
+	function restoreBooking() {
+		if (Agenda.mode !== 'guest' || !document.getElementById('start_date')) {
+			return;
+		}
+		var parse = function(value) {
+			var parts = value.split('-').map(Number);
+			return new Date(parts[0], parts[1] - 1, parts[2]);
+		};
+		var start = $('#start_date').val(), end = $('#end_date').val(), date = $('#date').val();
+		if (start && end) {
+			Agenda.start = parse(start);
+			Agenda.end = parse(end);
+		} else if (date) {
+			Agenda.start = parse(date);
+			Agenda.end = parse(date);
+		} else {
+			return;
+		}
+		Agenda.date = new Date(Agenda.start.getFullYear(), Agenda.start.getMonth(), 1);
+		Agenda.apply();
+		Agenda.getDays();
+		if (@json($errors->event->any())) {
+			wizard_step(2);
+		}
+	}
 
 	function addDays(date, days) {
 		var result = new Date(date);
@@ -216,6 +237,10 @@
 			}
 			this.apply();
 		},
+		// Anzahl Monate pro Blättern: auf dem Handy 2 sichtbar, ab Breakpoint sm (480px) 3 pro Zeile
+		visibleMonths: function() {
+			return window.matchMedia('(min-width: 480px)').matches ? 3 : 2;
+		},
 		prev: function(number) {
 			this.date = new Date(this.date.getFullYear(), this.date.getMonth() - number, 1);
 			this.apply();
@@ -286,6 +311,11 @@
 			this.getDays();
 		},
 		getDays: function(){
+			// Klick auf einen belegten Tag ohne laufende Auswahl: nichts gewählt
+			if (!this.start) {
+				this.showSelection();
+				return;
+			}
 			var days = (this.end - this.start)/(24*3600*1000);
 			var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 			var text = '';
@@ -312,6 +342,24 @@
 				$('#days').text('1 Tag');
 			}
 			Total_Change();
+			this.showSelection();
+		},
+		// gewählten Zeitraum unter dem Kalender anzeigen (nur Buchungsformular der Startseite)
+		showSelection: function() {
+			var element = document.getElementById('selection_text');
+			if (!element) {
+				return;
+			}
+			var options = { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' };
+			if (this.start && this.end && this.end > this.start) {
+				var nights = Math.round((this.end - this.start) / (24 * 3600 * 1000));
+				element.textContent = this.start.toLocaleDateString('de-CH', options) + ' – '
+					+ this.end.toLocaleDateString('de-CH', options) + ' · ' + nights + (nights === 1 ? ' Nacht' : ' Nächte');
+			} else if (this.start && this.end === null) {
+				element.textContent = 'Anreise ' + this.start.toLocaleDateString('de-CH', options) + ' – wähle jetzt den Abreisetag.';
+			} else {
+				element.textContent = 'Wähle im Kalender An- und Abreisetag.';
+			}
 		},
 		// reset selection
 		clear: function() {

@@ -24,8 +24,8 @@
         </a>
       </li>
     </ul>
-    @if (Auth::user()->isManager())
-      <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
+    <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
+      @if (Auth::user()->canManageBookings())
         <li>
           <a href="{{route('admin.contacts.index')}}" class="flex items-center p-2 text-base font-medium rounded-lg text-gray-900 dark:text-white">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -34,6 +34,7 @@
             <span class="ml-3">Anfragen</span>
           </a>
         </li>
+      @endif
         <li>
           <a href="{{route('admin.events.index')}}" class="flex items-center p-2 text-base font-medium rounded-lg text-gray-900 dark:text-white">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -43,7 +44,6 @@
           </a>
         </li>
       </ul>
-    @endif
     <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
       @if (Auth::user()->isAdmin())
         <li>
@@ -139,7 +139,8 @@
           </svg>
           <span class="ml-3">Auslastung</span>
         </a>
-      <li>
+      </li>
+      @if (Auth::user()->canManageBookings())
       <li>
         <a href="{{route('newsletter.index')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white  group">
           <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -148,6 +149,8 @@
           <span class="ml-3">Newsletter</span>
         </a>
       </li>
+      @endif
+      @if (Auth::user()->isAdmin())
       <li>
         <button type="button" class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group  dark:text-white" aria-controls="dropdown-faqs" data-collapse-toggle="dropdown-faqs">
           <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -173,6 +176,8 @@
           </li>
         </ul>
       </li>
+      @endif
+      @if (Auth::user()->canManageBookings())
       <li>
         <button type="button" class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group  dark:text-white" aria-controls="dropdown-checkpoints" data-collapse-toggle="dropdown-checkpoints">
           <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -206,6 +211,7 @@
           <span class="ml-3">Bewerbungen</span>
         </a>
       </li>
+      @endif
       <li>
         <a href="{{route('users.index')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white  group">
           <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -222,6 +228,25 @@
           <span class="ml-3">Änderungen</span>
         </a>
       </li>
+      @if (Auth::user()->isAdmin())
+      <li>
+        <a href="{{route('admin.maintenance')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white  group">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13v-2a1 1 0 0 0-1-1h-.757l-.707-1.707.535-.536a1 1 0 0 0 0-1.414l-1.414-1.414a1 1 0 0 0-1.414 0l-.536.535L14 4.757V4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v.757l-1.707.707-.536-.535a1 1 0 0 0-1.414 0L4.929 6.343a1 1 0 0 0 0 1.414l.536.536L4.757 10H4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h.757l.707 1.707-.535.536a1 1 0 0 0 0 1.414l1.414 1.414a1 1 0 0 0 1.414 0l.536-.535 1.707.707V20a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-.757l1.707-.708.536.536a1 1 0 0 0 1.414 0l1.414-1.414a1 1 0 0 0 0-1.414l-.535-.536.707-1.707H20a1 1 0 0 0 1-1Z"/>
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+          </svg>
+          <span class="ml-3">Wartung</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{route('admin.mail-preview')}}" class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white  group">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3.5 5.5 7.893 6.036a1 1 0 0 0 1.214 0L20.5 5.5M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+          </svg>
+          <span class="ml-3">Mail-Vorschau</span>
+        </a>
+      </li>
+      @endif
     </ul>
   </div>
 </aside>
