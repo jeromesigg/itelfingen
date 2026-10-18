@@ -5,7 +5,7 @@
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen">
         <a href="/home" class="flex items-center mb-6 text-2xl font-semibold text-white">
             <img class="w-8 h-8 mr-2" src="/img/logo_small.png" alt="logo">
-            Ferienhaus Itelfingen    
+            Ferienhaus Itelfingen
         </a>
         <div class="w-full bg-white rounded-lg shadow-sm md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
             <div class="p-6 space-y-4 md:space-y-6 lg:space-y-8 sm:p-8">
@@ -27,7 +27,7 @@
                         <p class="mt-2 text-sm text-red-600 dark:text-red-500" role="alert">
                             <strong>{{ $message }}</strong>
                         </p>
-                    @enderror 
+                    @enderror
                     <div>
                         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Password') }}</label>
                         <input type="password" name="password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required="">

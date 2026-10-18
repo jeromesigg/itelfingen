@@ -196,7 +196,7 @@
                                                     @if ($position['bexio_code']<100)
                                                         <th class="px-2 sm:px-6 py-4" scope="row" id={{'position_'.$position['bexio_code']}}><span id="position_{{$position['bexio_code']}}_amount"></span></th>
                                                     @else
-                                                    
+
                                                         <th class="px-2 sm:px-6 py-4" scope="row"><x-forms.text name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['bexio_code']}}" type="number" onChange="Total_Change()"/></th>
                                                     @endif
                                                     <td class="px-2 sm:px-6 py-4">{{$position['name']}}</td>
@@ -235,7 +235,7 @@
 
 @push('scripts')
   <script type="module">
-  	document.getElementById('calendarform').addEventListener('submit', function(e) {
+    document.getElementById('calendarform').addEventListener('submit', function(e) {
         const btn = document.getElementById('submit-event-btn');
         btn.disabled = true;
         btn.innerHTML = 'Wird gesendet...';

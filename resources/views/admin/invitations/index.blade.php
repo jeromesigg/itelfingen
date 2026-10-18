@@ -4,10 +4,10 @@
 <section>
     <div class="container mx-auto px-4">
 
-        <header> 
+        <header>
             <h3>Anmeldungen</h3>
         </header>
-    
+
         <div class="row">
             <table class="table">
                 <thead>
@@ -30,7 +30,7 @@
                             <td>{{$invitation->content}}</td>
                             <td>{{$invitation->response['name']}}</td>
                             <td>{{$invitation->created_at ? $invitation->created_at->diffForHumans() : 'Kein Datum'}}</td>
-                        </tr>   
+                        </tr>
                     @endforeach
                     @endif
                 </tbody>
@@ -41,6 +41,6 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 @endsection

@@ -21,13 +21,13 @@
                             <x-forms.file label="Photo: " name="old_photo_id" class="old_photo_id"/>
                             <x-forms.hidden name="new_photo_id" />
                         </x-forms.container>
-                        <div class="form-row">                        
+                        <div class="form-row">
                             <x-forms.container class="col-md-6">
                                 <x-forms.text label="Sort Index:" name="sort-index" type="number" required=true/>
-                            </x-forms.container>     
+                            </x-forms.container>
                             <x-forms.container class="col-md-6">
                                 <x-forms.select label="Archiv Status:" name="archive_status_id" required=true :collection="$archive_statuses"/>
-                            </x-forms.container>     
+                            </x-forms.container>
                         </div>
                         <x-forms.container>
                             <x-forms.button type="submit" class="btn btn-primary">

@@ -160,17 +160,17 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
 @push('scripts')
 <script type="module">
     function createIntern() {
-	    $('#name').val("Interne Buchung");
-	    $('#street').val("Itelfingen");
-	    $('#house_number').val("3");
-	    $('#plz').val("6344");
-	    $('#city').val("Meierskappel");
-	    $('#email').val("verwalter@itelfingen.ch");
-	    $('#total_people').val("0");
-	    $('#total_days').val("0");
-	    $('#total_amount').val("0");
+        $('#name').val("Interne Buchung");
+        $('#street').val("Itelfingen");
+        $('#house_number').val("3");
+        $('#plz').val("6344");
+        $('#city').val("Meierskappel");
+        $('#email').val("verwalter@itelfingen.ch");
+        $('#total_people').val("0");
+        $('#total_days').val("0");
+        $('#total_amount').val("0");
         $('#code').val("290393");
-	    $('#event_status_id').val(@json(\App\Enums\BookingState::Eigene->value));
+        $('#event_status_id').val(@json(\App\Enums\BookingState::Eigene->value));
     }
     function createExtern() {
         const text = document.getElementById('import-text').value;

@@ -48,7 +48,7 @@
         var booking = @json($bookingChartYear);
         var chart_type = 'yearly';
         function showBooking(time_frame) {
-          
+
           if (chart_type === "heatmap") {
             chart.destroy();
             chart = new ApexCharts(document.getElementById("data-series-chart"), options);
@@ -141,7 +141,7 @@
               },
               // Weitere Heatmap-spezifische Optionen...
             };
-            
+
             chart = new ApexCharts(document.getElementById("data-series-chart"), newOptions);
             chart.render();
           } else {
@@ -162,8 +162,8 @@
                 categories: booking[0],
               },
             });
-          }   
-        }     
+          }
+        }
         window.showBooking = showBooking;
         const options = {
 // add data series via arrays, learn more here: https://apexcharts.com/docs/series/
@@ -210,7 +210,7 @@
           },
           markers: {
               size: 5,
-          },  
+          },
           stroke: {
             curve: 'smooth',
             width: 4,

@@ -4,10 +4,10 @@
 <section>
     <div class="container mx-auto px-4">
 
-        <header> 
+        <header>
             <h3>Bewertungen</h3>
         </header>
-    
+
         <div class="row">
             <div class="col-sm-3">
                 <x-forms.form :action="route('testimonials.store')">
@@ -26,7 +26,7 @@
                         </x-forms.button>
                     </x-forms.container>
                 </x-forms.form>
-            </div>    
+            </div>
             <div class="col-sm-9">
                 <table class="table">
                     <thead>
@@ -47,13 +47,13 @@
                                 <td>{{$testimonial->comment}}</td>
                                 <td>{{$testimonial->archive_status['name']}}</td>
                                 <td>{{$testimonial['sort-index']}}</td>
-                                </tr>   
+                                </tr>
                         @endforeach
                         @endif
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 @endsection

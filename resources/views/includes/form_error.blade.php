@@ -6,5 +6,5 @@
             @endforeach
         </ul>
     </x-alert>
-        
+
     @endif

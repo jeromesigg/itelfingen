@@ -16,7 +16,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/4.12.37/es2021/jodit.min.js"></script>
 
         <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
-        
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <script>
@@ -42,7 +42,7 @@
         <main class="p-4 md:ml-64 h-auto min-h-screen pt-20">
           @yield('content')
         </main>
-      </div> 
+      </div>
        <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
       @stack('scripts')
     </body>

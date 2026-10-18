@@ -7,7 +7,7 @@
 @section('content')
     <section>
         <div class="container mx-auto px-4">
-            <header> 
+            <header>
                 <h3 class="display">Albumbild erstellen</h3>
             </header>
             <x-forms.form :action="route('pictures.store')" enctype="multipart/form-data" accept-charset="UTF-8">
@@ -27,9 +27,9 @@
                     </x-forms.button>
                 </x-forms.container>
             </x-forms.form>
-            <div class="row"> 
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">

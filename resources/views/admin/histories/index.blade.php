@@ -4,10 +4,10 @@
 <section>
     <div class="container mx-auto px-4">
 
-        <header> 
+        <header>
             <h3>Geschichte</h3>
         </header>
-    
+
         <div class="row">
             <div class="col-sm-3">
                 <x-forms.form :action="route('histories.store')" enctype="multipart/form-data" accept-charset="UTF-8">
@@ -29,7 +29,7 @@
                         </x-forms.button>
                     </x-forms.container>
                 </x-forms.form>
-            </div>    
+            </div>
             <div class="col-sm-9">
                 <table class="table">
                     <thead>
@@ -52,13 +52,13 @@
                                 <td>{{$history->description}}</td>
                                 <td>{{$history->archive_status['name']}}</td>
                                 <td>{{$history['sort-index']}}</td>
-                                </tr>   
+                                </tr>
                         @endforeach
                         @endif
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 @endsection
