@@ -16,6 +16,43 @@ import 'laravel-datatables-vite';
 import './libs/validate.js';
 import './admin/jqBootstrapValidation.js';
 import 'flowbite';
+// import { DataTable } from "simple-datatables";
 import './libs/main.js';
 import './libs/custom.js';
-import './libs/faq.js';
+
+// Initialize Events Table when DOM is ready
+// import { initEventsTable } from './tables/EventsTable.js'
+
+// document.addEventListener('DOMContentLoaded', () => {
+//   const tbody = document.getElementById('eventTableBody')
+//   if (tbody) {
+//     initEventsTable()
+//   }
+// })
+
+// ===== VUE SETUP =====
+import { createApp } from 'vue'
+import App from './components/App.vue'
+import DataTable from './components/DataTable.vue'
+import NewsletterTable from './components/NewsletterTable.vue'
+import ApplicationTable from './components/ApplicationTable.vue'
+import ContactTable from './components/ContactTable.vue'
+import FAQTable from './components/FAQTable.vue'
+
+// Component Registry
+const components = {
+  'events-table': App,
+  'newsletter-table': NewsletterTable,
+  'applications-table': ApplicationTable,
+  'contacts-table': ContactTable,
+  'faqs-table': FAQTable,
+  // Später: 'users-table': UsersTable, etc.
+}
+
+// Auto-mount alle Vue Components
+document.querySelectorAll('[data-vue-component]').forEach(el => {
+  const componentName = el.dataset.vueComponent
+  if (components[componentName]) {
+    createApp(components[componentName]).mount(el)
+  }
+})

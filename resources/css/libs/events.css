@@ -37,23 +37,31 @@
 	transition: background 0.1s, color 0.1s;
 }
 
+/* Handy: Monate untereinander in voller Breite, grössere Felder zum Antippen */
+@media (max-width: 479px) {
+	[class*="hk-agenda__day--"] {
+		height: 44px;
+		font-size: 15px;
+	}
+}
+
 .hk-agenda__day--past {
 	opacity: 0.3;
 	cursor: default;
 }
 
 .hk-agenda__day--FF {
-	border: 1px solid #ccc;
-	background: #FFF;
-	color: #333;
+	border: 1px solid var(--calendar-free-border);
+	background: var(--calendar-free);
+	color: var(--calendar-free-text);
 }
 
 .hk-agenda__day--SS,
 .hk-agenda__day--FS,
 .hk-agenda__day--SF {
-	border: 1px solid var(--ebonyclay);
-	background: var(--ebonyclay);
-	color: #eee;
+	border: 1px solid var(--calendar-selected);
+	background: var(--calendar-selected);
+	color: var(--calendar-selected-text);
 }
 
 .hk-agenda__day--PP {
@@ -65,26 +73,28 @@
 
 .hk-agenda__day--PDP {
     border: 1px solid #7e967e;
-    background: var(--norway) url(@/img/calendar/provisorisch-doppelt.svg) 10%;
-    background-size: 110%;
+    /* Trennlinie zwischen Abreise und Anreise in der Farbe freier Tage */
+    background: linear-gradient(to bottom right, var(--norway) 45%, var(--calendar-free) 45% 55%, var(--norway) 55%);
     color: #333;
 }
 
 .hk-agenda__day--FP {
-	border: 1px solid #ccc;
+	border: 1px solid var(--calendar-free-border);
 	border-bottom: 1px solid #7e967e;
 	border-right: 1px solid #7e967e;
-	background: var(--norway) url(@/img/calendar/provisorisch_start.svg) 50% 50%;
-	color: #333;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit freie Halbtage dem Dark Mode folgen */
+	background: linear-gradient(to bottom right, var(--calendar-free) 50%, var(--norway) 50%);
+	color: var(--calendar-free-text);
 
 }
 
 .hk-agenda__day--PDF {
-	border: 1px solid #ccc;
+	border: 1px solid var(--calendar-free-border);
 	border-top: 1px solid #7e967e;
 	border-left: 1px solid #7e967e;
-	background: var(--norway) url(@/img/calendar/provisorisch_end.svg) 50% 50%;
-	color: #333;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit freie Halbtage dem Dark Mode folgen */
+	background: linear-gradient(to bottom right, var(--norway) 50%, var(--calendar-free) 50%);
+	color: var(--calendar-free-text);
 
 }
 
@@ -96,25 +106,27 @@
 
 .hk-agenda__day--BDB {
     border: 1px solid #aa7679;
-    background: var(--orientalpink) url(@/img/calendar/provisorisch-doppelt.svg) 10%;
-    background-size: 110%;
+    /* Trennlinie zwischen Abreise und Anreise in der Farbe freier Tage */
+    background: linear-gradient(to bottom right, var(--orientalpink) 45%, var(--calendar-free) 45% 55%, var(--orientalpink) 55%);
     color: #333;
 }
 
 .hk-agenda__day--FB {
-	border: 1px solid #ccc;
+	border: 1px solid var(--calendar-free-border);
 	border-bottom: 1px solid #aa7679;
 	border-right: 1px solid #aa7679;
-	background: var(--orientalpink) url(@/img/calendar/besetzt_start.svg) 50% 50%;
-	color: #333;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit freie Halbtage dem Dark Mode folgen */
+	background: linear-gradient(to bottom right, var(--calendar-free) 50%, var(--orientalpink) 50%);
+	color: var(--calendar-free-text);
 }
 
 .hk-agenda__day--BDF {
-	border: 1px solid #ccc;
+	border: 1px solid var(--calendar-free-border);
 	border-top: 1px solid #aa7679;
 	border-left: 1px solid #aa7679;
-	background: var(--orientalpink) url(@/img/calendar/besetzt_end.svg) 50% 50%;
-	color: #333;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit freie Halbtage dem Dark Mode folgen */
+	background: linear-gradient(to bottom right, var(--orientalpink) 50%, var(--calendar-free) 50%);
+	color: var(--calendar-free-text);
 }
 
 .hk-agenda__day--PDB {
@@ -145,39 +157,43 @@
 }
 
 .hk-agenda__day--SP {
-	border-top: 1px solid var(--ebonyclay);
-	border-right: 1px solid var(--ebonyclay);
+	border-top: 1px solid var(--calendar-selected);
+	border-right: 1px solid var(--calendar-selected);
 	border-bottom: 1px solid #7e967e;
 	border-right: 1px solid #7e967e;
-	background: var(--orientalpink) url(@/img/calendar/selected_end-provisorisch_start.svg) 50% 50%;
-	color: #eee;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
+	background: linear-gradient(to bottom right, var(--calendar-selected) 50%, var(--norway) 50%);
+	color: var(--calendar-selected-text);
 }
 
 .hk-agenda__day--PS {
-	border-bottom: 1px solid var(--ebonyclay);
-	border-left: 1px solid var(--ebonyclay);
+	border-bottom: 1px solid var(--calendar-selected);
+	border-left: 1px solid var(--calendar-selected);
 	border-top: 1px solid #7e967e;
 	border-left: 1px solid #7e967e;
-	background: var(--orientalpink) url(@/img/calendar/provisorisch_end-selected_start.svg) 50% 50%;
-	color: #eee;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
+	background: linear-gradient(to bottom right, var(--norway) 50%, var(--calendar-selected) 50%);
+	color: var(--calendar-selected-text);
 }
 
 .hk-agenda__day--SB {
-	border-top: 1px solid var(--ebonyclay);
-	border-right: 1px solid var(--ebonyclay);
+	border-top: 1px solid var(--calendar-selected);
+	border-right: 1px solid var(--calendar-selected);
 	border-bottom: 1px solid #aa7679;
 	border-right: 1px solid #aa7679;
-	background: var(--orientalpink) url(@/img/calendar/selected_end-besetzt_start.svg) 50% 50%;
-	color: #eee;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
+	background: linear-gradient(to bottom right, var(--calendar-selected) 50%, var(--orientalpink) 50%);
+	color: var(--calendar-selected-text);
 }
 
 .hk-agenda__day--BS {
-	border-bottom: 1px solid var(--ebonyclay);
-	border-left: 1px solid var(--ebonyclay);
+	border-bottom: 1px solid var(--calendar-selected);
+	border-left: 1px solid var(--calendar-selected);
 	border-top: 1px solid #aa7679;
 	border-left: 1px solid #aa7679;
-	background: var(--orientalpink) url(@/img/calendar/besetzt_end-selected_start.svg) 50% 50%;
-	color: #eee;
+	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
+	background: linear-gradient(to bottom right, var(--orientalpink) 50%, var(--calendar-selected) 50%);
+	color: var(--calendar-selected-text);
 }
 
 .hk-agenda__day--NN,
@@ -190,6 +206,11 @@
 	border: 1px solid #aa7679;
 	background: var(--orientalpink);
 	color: #444;
+}
+
+.dark .hk-agenda__day--inactive {
+	border-color: #374151;
+	background: transparent;
 }
 
 .hk-agenda__title {

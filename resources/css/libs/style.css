@@ -8,6 +8,11 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+/* Sprungziele (#booking, #contact) nicht unter dem fixierten Header verstecken */
+html {
+  scroll-padding-top: 5rem;
+}
+
 body {
   font-family: "Titillium Web";
   background: #ffffff;
@@ -379,7 +384,7 @@ h1, h2, h3, h4, h5, h6 {
 --------------------------------------------------------------*/
 #hero {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   background-size: cover;
   position: relative;
   padding: 0;
@@ -387,7 +392,8 @@ h1, h2, h3, h4, h5, h6 {
 
 #hero:before {
   content: "";
-  background: rgba(0, 0, 0, 0.1);
+  /* Verlauf nach unten, damit Titel und Button auf dem Bild lesbar sind */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.55));
   position: absolute;
   bottom: 0;
   top: 0;
@@ -401,7 +407,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 992px) {
     #hero {
-        height: 50vh;
+        height: 60vh;
     }
   #hero .container {
     padding-top: 98px;
@@ -410,7 +416,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 500px) {
   #hero {
-      height: 40vh;
+      height: 55vh;
   }
 #hero .container {
   padding-top: 98px;
@@ -425,6 +431,13 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 56px;
   color: #fff;
   font-family: "PPMigra";
+}
+
+@media (max-width: 500px) {
+  #hero h1 {
+    font-size: 36px;
+    line-height: 42px;
+  }
 }
 
 #hero h1 span {
@@ -518,8 +531,14 @@ h1, h2, h3, h4, h5, h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 90px 0;
+  padding: 56px 0;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  section {
+    padding: 90px 0;
+  }
 }
 
 .section-bg {
@@ -536,38 +555,29 @@ section {
 }
 
 .section-title {
-  padding-bottom: 40px;
+  padding-bottom: 24px;
 }
 
+@media (min-width: 768px) {
+  .section-title {
+    padding-bottom: 40px;
+  }
+}
+
+/* Abschnittstitel der öffentlichen Seiten (h2) */
 .section-title h2 {
-  font-size: 14px;
-  font-weight: 500;
-  padding: 0;
-  line-height: 1px;
-  margin: 0 0 5px 0;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  /* color: #aaaaaa; */
-  font-family: "Titillium Web";
-}
-
-.section-title h2::after {
-  content: "";
-  width: 120px;
-  height: 1px;
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 4px 10px;
-}
-
-.section-title p {
   margin: 0;
-  margin: 0;
-  font-size:3rem;
+  font-size: 2.25rem;
   font-weight: 500;
   font-family: "PPMigra";
-  line-height: 3rem;
-  /* color: #cda45e; */
+  line-height: 1.15;
+  color: inherit;
+}
+
+@media (min-width: 768px) {
+  .section-title h2 {
+    font-size: 3rem;
+  }
 }
 
 /*--------------------------------------------------------------
@@ -863,12 +873,19 @@ section {
   background: url(@/img/events-bg.webp) center center no-repeat;
   background-size: cover;
   position: relative;
-  height: 750px;
+  height: 360px;
+}
+
+@media (min-width: 768px) {
+  .locations {
+    height: 440px;
+  }
 }
 
 .locations::before {
   content: '';
-  /* background-color: rgba(0, 0, 0, 0.8); */
+  /* Abdunkeln, damit der Text auf dem Bild lesbar ist */
+  background-color: rgba(0, 0, 0, 0.4);
   position: absolute;
   top: 0;
   right: 0;
@@ -1019,52 +1036,6 @@ section {
 }
 
 /*--------------------------------------------------------------
-# About_us
---------------------------------------------------------------*/
-.about_us .member {
-  text-align: center;
-  margin-bottom: 20px;
-  background: #343a40;
-  position: relative;
-  overflow: hidden;
-  border-radius: 1.25rem;
-}
-
-.about_us .member .member-info {
-  /* opacity: 0; */
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  transition: 0.2s;
-}
-
-.about_us .member .member-info-content {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom:0;
-  transition: bottom 0.4s;
-  background: black;
-  opacity: 0.75;
-}
-
-.about_us .member .member-info-content h4 {
-  font-weight: 700;
-  margin-bottom: 2px;
-  font-size: 18px;
-  color: #fff;
-}
-
-.about_us .member .member-info-content span {
-  font-style: italic;
-  display: block;
-  font-size: 13px;
-  color: #fff;
-}
-
-/*--------------------------------------------------------------
 # Contact
 --------------------------------------------------------------*/
 .contact .info {
@@ -1123,9 +1094,4 @@ section {
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/
-#footer {
-  padding-top: 10px;
-  padding-bottom: 30px;
-  text-align: center;
-  font-size: 13px;
-}
+

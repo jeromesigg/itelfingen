@@ -1,18 +1,26 @@
 @component('mail::message')
-    <h1>Deine Rechnung zum Genossenschaftsschein der Genossenschaft Ferienhaus Itelfingen</h1>
-    Guten Tag {{$application['firstname'] . ' ' . $application['name']}},
-    <br><br>
-    Vielen Dank für deine Bewerbung für die Genossenschaft Ferienhaus Itelfingen. Der Vorstand hat deine Bewerbung geprüft und wir freuen uns,
-    dich in der Genossenschaft willkommen zu heissen. Mit Bezahlung der Rechnung für deinen Genossenschafts-Anteil wird der Genossenschafter:innen-Status vergeben.
-    Unter folgendem Link kannst du die Rechnung für deinen Genossenschaftsschein über CHF 100 ansehen und bezahlen:
-    @component('mail::button', ['url' => $link, 'color' => 'success'])
-        Zur Rechnung
-    @endcomponent
-    Wir bitten um Bezahlung über eine der zur Verfügung stehenden Zahlungsmöglichkeiten innerhalb von 30 Tagen.
-    <br>
-    Für Rückfragen zu dieser Rechnung stehen wir jederzeit gerne zur Verfügung.
-    <br><br>
-    Freundliche Grüsse, <br>
-    Der Vorstand <br>
-    Genossenschaft Ferienhaus Itelfingen
+# Willkommen in der Genossenschaft
+
+Hallo {{ $application->firstname ?: $application->name }}
+
+Der Vorstand hat deine Bewerbung geprüft – wir freuen uns, dich in der Genossenschaft Ferienhaus Itelfingen willkommen zu heissen!
+
+Mit der Bezahlung deines Genossenschaftsanteils von **CHF 100.–** wirst du Genossenschafter:in. Die Rechnung findest du im Anhang und online:
+
+@component('mail::button', ['url' => $link, 'color' => 'success'])
+Zur Rechnung
+@endcomponent
+
+Bitte bezahle sie bis **{{ $due_date }}** über eine der angegebenen Zahlungsmöglichkeiten.
+
+@component('mail::panel')
+**So buchst du zum Mitgliederpreis**<br>
+Gib bei deiner Buchungsanfrage im Feld «Bemerkungen» deinen Namen an. Übernachten weitere Genossenschafter:innen mit, nenne auch ihre Namen.
+@endcomponent
+
+Bei Fragen sind wir gerne für dich da.
+
+Freundliche Grüsse<br>
+Der Vorstand<br>
+Genossenschaft Ferienhaus Itelfingen
 @endcomponent

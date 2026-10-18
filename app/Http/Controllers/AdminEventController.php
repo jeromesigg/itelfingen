@@ -26,19 +26,22 @@ use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
 use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventOfferSendNotification;
+use App\View\Components\BookingCalendar;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 use Notification;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as Event_ICAL;
 use Spatie\IcalendarGenerator\Enums\EventStatus as EventStatus_ICAL;
-use Yajra\DataTables\Facades\DataTables;
 
 class AdminEventController extends Controller
 {
@@ -83,7 +86,7 @@ class AdminEventController extends Controller
         return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title', 'homepage'));
     }
 
-    public function createDataTables(Request $request)
+    public function createDataTablesTanStack(Request $request)
     {
         // Filter aus der Tabelle; ohne Angabe: alle offenen Status, nur künftige Buchungen.
         $contract_status = ContractStatus::where('name', '=', $request->input('status'))->first();
@@ -96,47 +99,40 @@ class AdminEventController extends Controller
             ->when($date, function ($query, $date) {
                 $query->where('start_date', '>=', $date);
             })
-            ->orderby('start_date')->get();
+            ->orderby('start_date')
+            ->get();
 
-        return DataTables::of($events)
-            // Werte aus dem öffentlichen Formular immer escapen, die Spalten werden als HTML ausgegeben.
-            ->addColumn('name', function (Event $event) use ($request) {
-                $name = e($event['name']);
-                if ($request->user()->canManageBookings()) {
-                    $name = '<a class="text-orientalpink" href="'.\URL::route('admin.events.edit', $event).'">'.$name.'</a>';
-                }
+        // Werte aus dem öffentlichen Formular escapen: name, number und status werden als HTML gerendert
+        // (siehe meta.html in App.vue), alle anderen Spalten als Text. Nur die Spalten der Tabelle,
+        // keine internen Felder wie Türcode oder Bexio-IDs.
+        $canEdit = $request->user()->canManageBookings();
+        $data = $events->map(function (Event $event) use ($canEdit) {
+            $name = e($event['name']);
+            if ($canEdit) {
+                $name = '<a class="text-orientalpink" href="'.route('admin.events.edit', $event).'">'.$name.'</a>';
+            }
 
-                return e($event['firstname']).' '.$name.'<br>'.e($event['group_name']);
-            })
-            ->addColumn('number', function (Event $event) {
-                return $event->number().'<br>'.e($event['foreign_key']);
-            })
-            ->editColumn('start_date', function (Event $event) {
-                return [
+            return [
+                'start_date' => [
                     'display' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.
                         Carbon::parse($event['end_date'])->format('d.m.Y'),
                     'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021'),
-                ];
-            })
-            ->editColumn('end_date', function (Event $event) {
-                return [
-                    'display' => Carbon::parse($event['end_date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($event['end_date'])->diffInDays('01.01.2021'),
-                ];
-            })
-            ->editColumn('user', function (Event $event) {
-                return $event->user ? $event->user['username'] : '';
-            })
-            ->addColumn('status', function (Event $event) {
-                return $event->status();
-            })
-            ->editColumn('contract_status', function (Event $event) {
-                return $event->contract_status ? $event->contract_status['name'] : '';
-            })
-            ->rawColumns(['name', 'status', 'number'])
-            // Nur die Spalten der Tabelle, keine internen Felder wie Türcode oder Bexio-IDs.
-            ->only(['id', 'start_date', 'end_date', 'number', 'name', 'email', 'total_amount', 'comment', 'comment_intern', 'status', 'user', 'contract_status'])
-            ->make(true);
+                ],
+                'number' => $event->number().'<br>'.e($event['foreign_key']),
+                'name' => e($event['firstname']).' '.$name.'<br>'.e($event['group_name']),
+                'email' => $event['email'] ?? '',
+                'total_amount' => $event['total_amount'] ?? '',
+                'comment' => $event['comment'] ?? '',
+                'comment_intern' => $event['comment_intern'] ?? '',
+                'status' => $event->status(),
+            ];
+        });
+
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
     }
 
     /**
@@ -187,6 +183,48 @@ class AdminEventController extends Controller
         }
 
         return redirect()->route('admin.events.edit', [$event]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Kalender auf "Buchung erstellen/bearbeiten" mit den (noch nicht gespeicherten) Daten aus dem Formular.
+     * Ohne Buchung (Seite "Buchung erstellen") wird eine neue, nicht gespeicherte Buchung angezeigt.
+     */
+    public function calendar(Request $request, ?Event $event = null): Response
+    {
+        $event ??= new Event;
+
+        $validated = $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date', function (string $attribute, mixed $value, Closure $fail) use ($request) {
+                // Begrenzt, damit kein riesiger Kalender entsteht
+                if (strtotime((string) $request->input('start_date')) && Carbon::parse($value)->gt(Carbon::parse($request->input('start_date'))->addYear())) {
+                    $fail('Der Zeitraum darf höchstens ein Jahr lang sein.');
+                }
+            }],
+            'early_checkin' => ['boolean'],
+            'late_checkout' => ['boolean'],
+        ]);
+
+        // Nur für die Anzeige, wird nicht gespeichert
+        $event->fill([
+            'start_date' => Carbon::parse($validated['start_date'])->toDateString(),
+            'end_date' => Carbon::parse($validated['end_date'])->toDateString(),
+            'early_checkin' => $request->boolean('early_checkin'),
+            'late_checkout' => $request->boolean('late_checkout'),
+        ]);
+
+        return response(Blade::renderComponent(new BookingCalendar($event)));
     }
 
     /**

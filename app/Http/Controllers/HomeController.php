@@ -6,17 +6,18 @@ use App\Enums\ArchiveState;
 use App\Enums\BookingState;
 use App\Models\Event;
 use App\Models\EventCheckpoint;
-use App\Models\Faq;
 use App\Models\FaqChapter;
 use App\Models\Homepage;
 use App\Models\Person;
 use App\Models\Picture;
 use App\Models\PricelistPosition;
+use App\Services\BexioApiService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -42,7 +43,7 @@ class HomeController extends Controller
         $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
         $events = Event::whereIn('event_status_id', BookingState::notCancelled())->where('end_date', '>=', Carbon::now())->get();
         $event_type = 'guest';
-        $discount = config('app.discount_enabled');
+        $discount = filter_var(config('app.discount_enabled'), FILTER_VALIDATE_BOOLEAN);
         $application_enabled = config('app.application_enabled');
 
         $events_json = [];
@@ -90,7 +91,7 @@ class HomeController extends Controller
     public function about_us()
     {
         $homepage = Homepage::FindOrFail(1);
-        $people = Person::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
+        $people = Person::where('archive_status_id', ArchiveState::Aktiv)->with('photo')->orderby('sort-index')->get();
 
         return view('contents.about_us', compact('homepage', 'people'));
     }
@@ -99,10 +100,13 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $title = 'FAQ';
-        $faqs = Faq::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
-        $faq_chapters = FaqChapter::where('archive_status_id', ArchiveState::Aktiv)->orderby('sort-index')->get();
+        $faq_chapters = FaqChapter::where('archive_status_id', ArchiveState::Aktiv)
+            ->whereHas('faqs')
+            ->with(['photo', 'faqs' => fn ($query) => $query->orderBy('sort-index')->with('photo')])
+            ->orderBy('sort-index')
+            ->get();
 
-        return view('contents.faq', compact('homepage', 'faq_chapters', 'faqs', 'title'));
+        return view('contents.faq', compact('homepage', 'faq_chapters', 'title'));
     }
 
     public function bookings_login()
@@ -117,12 +121,30 @@ class HomeController extends Controller
     {
         $homepage = Homepage::FindOrFail(1);
         $event = Event::where('uuid', $uuid)->firstOrFail();
-        if ($event === null) {
-            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
-        }
         $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $offerLink = $this->bexioDocumentLink('kb_offer', $event['bexio_offer_id']);
+        $invoiceLink = $this->bexioDocumentLink('kb_invoice', $event['bexio_invoice_id']);
 
-        return view('contents.bookings_show', compact('homepage', 'title', 'event'));
+        return view('contents.bookings_show', compact('homepage', 'title', 'event', 'offerLink', 'invoiceLink'));
+    }
+
+    /**
+     * Link auf Offerte oder Rechnung in Bexio für den Kundenbereich.
+     * Ohne ID wird Bexio nicht gefragt; ist Bexio nicht erreichbar, erscheint die Seite ohne Link.
+     */
+    private function bexioDocumentLink(string $endpoint, int|string|null $id): ?string
+    {
+        if (empty($id)) {
+            return null;
+        }
+
+        try {
+            return app(BexioApiService::class)->get($endpoint.'/'.$id)['network_link'] ?? null;
+        } catch (Throwable $e) {
+            Log::warning('Bexio im Kundenbereich nicht erreichbar', ['endpoint' => $endpoint, 'id' => $id, 'error' => $e->getMessage()]);
+
+            return null;
+        }
     }
 
     public function bookings_check(Request $request)
@@ -150,12 +172,11 @@ class HomeController extends Controller
 
     public function bookings_checklist(string $uuid)
     {
-        $event = Event::where('uuid', $uuid)->firstOrFail();
-        if ($event === null) {
-            return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
-        }
+        $event = Event::where('uuid', $uuid)
+            ->with(['event_rooms.room', 'event_rooms.event_checkpoints.checkpoint'])
+            ->firstOrFail();
         $homepage = Homepage::FindOrFail(1);
-        $title = 'Deine Buchung Nr. '.str_pad($event['id'], 5, '0', STR_PAD_LEFT);
+        $title = 'Checkliste Hausabgabe';
 
         return view('contents.bookings_checklist', compact('homepage', 'title', 'event'));
     }

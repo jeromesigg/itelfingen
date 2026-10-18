@@ -57,7 +57,7 @@ Route::group(['middleware' => 'role:team'], function () {
     Route::get('/admin/changes', ['as' => 'admin.changes', 'uses' => 'AdminController@changes']);
     Route::get('/admin/bookings', ['as' => 'admin.bookings', 'uses' => 'AdminController@bookings']);
     Route::get('admin/events', 'AdminEventController@index')->name('admin.events.index');
-    Route::get('events/createDataTables', ['as' => 'events.CreateDataTables', 'uses' => 'AdminEventController@createDataTables']);
+    Route::get('events/datatable', ['as' => 'events.CreateDataTablesTanStack', 'uses' => 'AdminEventController@createDataTablesTanStack']);
     // Nicht-Admins sehen und bearbeiten nur sich selbst (Prüfung im Controller)
     Route::resource('admin/users', 'AdminUserController')->only(['index', 'edit', 'update']);
     Route::get('admin/users/download/{user}', ['as' => 'download_signature', 'uses' => 'AdminUserController@get_signature']);
@@ -70,17 +70,18 @@ Route::group(['middleware' => 'role:verwalter'], function () use ($crudOnIndex) 
     Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
     Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@MailTextUpdate')->name('admin.homepages.mail_text_update');
     Route::resource('admin/events', 'AdminEventController')->only(['create', 'store', 'edit', 'update', 'destroy'])->names('admin.events');
+    Route::get('admin/events/calendar/{event?}', [AdminEventController::class, 'calendar'])->name('events.calendar');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');
     Route::post('admin/events/parse', [AdminEventController::class, 'parse'])->name('events.parse');
     Route::post('admin/events/createAPICode', [AdminEventController::class, 'createAPICode'])->name('events.createAPICode');
 
     Route::resource('admin/contacts', 'AdminContactController')->only(['index'])->names('admin.contacts');
     Route::post('contacts/{contact}/done', ['as' => 'contacts.done', 'uses' => 'AdminContactController@done']);
-    Route::get('contacts/createDataTables', ['as' => 'contacts.CreateDataTables', 'uses' => 'AdminContactController@createDataTables']);
+    Route::get('contacts/datatable', ['as' => 'contacts.CreateDataTablesTanStack', 'uses' => 'AdminContactController@createDataTablesTanStack']);
     Route::resource('admin/applications', 'AdminApplicationController')->only(['index', 'show']);
-    Route::get('applications/createDataTables', ['as' => 'applications.CreateDataTables', 'uses' => 'AdminApplicationController@createDataTables']);
+    Route::get('applications/datatable', ['as' => 'applications.CreateDataTablesTanStack', 'uses' => 'AdminApplicationController@createDataTablesTanStack']);
     Route::post('applications/{application}/refuse', ['as' => 'applications.refuse', 'uses' => 'AdminApplicationController@refuse']);
-    Route::get('newsletter/createDataTables', ['as' => 'newsletter.CreateDataTables', 'uses' => 'NewsletterController@createDataTables']);
+    Route::get('newsletter/datatable', ['as' => 'newsletter.CreateDataTablesTanStack', 'uses' => 'NewsletterController@createDataTablesTanStack']);
     Route::get('/admin/newsletter/export-bookings', ['as' => 'newsletter.exportBookings', 'uses' => 'NewsletterController@exportBookings']);
     Route::get('/admin/newsletter/export-members', ['as' => 'newsletter.exportMembers', 'uses' => 'NewsletterController@exportMembers']);
     Route::get('/admin/newsletter/import', ['as' => 'newsletter.import', 'uses' => 'NewsletterController@import']);
@@ -97,11 +98,15 @@ Route::group(['middleware' => 'role:admin'], function () use ($crudOnIndex) {
     Route::resource('admin/people', 'AdminPersonController')->only($crudOnIndex);
     Route::resource('admin/histories', 'AdminHistoryController')->only($crudOnIndex);
     Route::resource('admin/faqs', 'AdminFaqController')->only($crudOnIndex);
-    Route::get('faqs/createDataTables', ['as' => 'faqs.CreateDataTables', 'uses' => 'AdminFaqController@createDataTables']);
+    Route::get('faqs/datatable', ['as' => 'faqs.CreateDataTablesTanStack', 'uses' => 'AdminFaqController@createDataTablesTanStack']);
     Route::resource('admin/faq_chapters', 'AdminFaqChapterController')->only($crudOnIndex);
     // create: Artikel aus Bexio abgleichen
     Route::resource('admin/positions', 'AdminPricelistPositionController')->only(['index', 'create', 'edit', 'update', 'destroy']);
     Route::resource('admin/users', 'AdminUserController')->only(['store', 'destroy']);
+
+    // Vorschau der Mails an Buchende (nur rendern, kein Versand)
+    Route::get('admin/mail-preview', 'MailPreviewController@index')->name('admin.mail-preview');
+    Route::get('admin/mail-preview/{mail}', 'MailPreviewController@show')->name('admin.mail-preview.show');
 
     // Wartung: Aktionen nur per POST
     Route::get('admin/maintenance', 'MaintenanceController@index')->name('admin.maintenance');

@@ -4,6 +4,7 @@ use App\Providers\AppServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\GoogleDriveServiceProvider;
 use App\Providers\RouteServiceProvider;
+use App\Providers\TelescopeServiceProvider;
 use Illuminate\Auth\AuthServiceProvider;
 use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
 use Illuminate\Broadcasting\BroadcastServiceProvider;
@@ -92,7 +93,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
     'version' => env('VERSION', '1.0'),
-    'discount_enabled' => env('DISCOUNT_ENABLED', 'false'),
+    'discount_enabled' => env('DISCOUNT_ENABLED', false),
     'sharing_enabled' => env('SHARING_ENABLED', 'false'),
     'application_enabled' => env('APPLICATION_ENABLED', 'false'),
     'api_token' => env('API_TOKEN'),
@@ -246,6 +247,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         EventServiceProvider::class,
         RouteServiceProvider::class,
+        TelescopeServiceProvider::class,
         GoogleDriveServiceProvider::class,
 
     ],

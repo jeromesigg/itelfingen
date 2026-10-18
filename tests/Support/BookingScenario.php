@@ -152,7 +152,7 @@ class BookingScenario
             $aktiv = ArchiveState::Aktiv;
             $photo = fn (string $file) => Photo::create(['file' => $file])->id;
 
-            $this->faqChapter = FaqChapter::create(['name' => 'Anreise', 'sort-index' => 1, 'symbol' => 'fa-car', 'archive_status_id' => $aktiv, 'photo_id' => $photo('kapitel.png')]);
+            $this->faqChapter = FaqChapter::create(['name' => 'Anreise', 'sort-index' => 1, 'archive_status_id' => $aktiv, 'photo_id' => $photo('kapitel.png')]);
             $this->faq = Faq::create(['name' => 'Wo parkieren?', 'description' => 'Beim Haus', 'faq_chapter_id' => $this->faqChapter->id, 'photo_id' => $photo('faq.jpg'), 'sort-index' => 1, 'archive_status_id' => $aktiv]);
             $this->faqWithoutPhoto = Faq::create(['name' => 'Gibt es WLAN?', 'description' => 'Ja', 'faq_chapter_id' => $this->faqChapter->id, 'sort-index' => 2, 'archive_status_id' => $aktiv]);
             $this->history = History::create(['title' => 'Gründung', 'shorttitle' => '1950', 'subtitle' => 'Die Anfänge', 'description' => 'Text', 'sort-index' => 1, 'archive_status_id' => $aktiv, 'photo_id' => $photo('geschichte.jpg')]);

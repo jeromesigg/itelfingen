@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
 
@@ -24,7 +25,7 @@ class XssTest extends TestCase
         ]);
 
         $json = $this->actingAs($s->user('verwalter'))
-            ->getJson('/events/createDataTables?status=Alle&date=Alle&draw=1')
+            ->getJson('/events/datatable?status=Alle&date=Alle&draw=1')
             ->assertOk()
             ->getContent();
 
@@ -37,7 +38,7 @@ class XssTest extends TestCase
         $s->event->update(['code' => 4711, 'bexio_invoice_id' => 99]);
 
         $row = $this->actingAs($s->user('team'))
-            ->getJson('/events/createDataTables?status=Alle&date=Alle&draw=1')
+            ->getJson('/events/datatable?status=Alle&date=Alle&draw=1')
             ->assertOk()
             ->json('data.0');
 
@@ -51,7 +52,7 @@ class XssTest extends TestCase
         $s = BookingScenario::create();
 
         $rows = $this->actingAs($s->user('team'))
-            ->getJson('/events/createDataTables?status=Alle&date=Alle&draw=1')
+            ->getJson('/events/datatable?status=Alle&date=Alle&draw=1')
             ->assertOk()
             ->json('data');
 
@@ -61,30 +62,76 @@ class XssTest extends TestCase
         }
     }
 
-    public function test_contact_name_is_escaped_in_contacts_table(): void
+    public function test_contact_fields_are_plain_text_and_actions_safe(): void
     {
+        // Kontaktfelder kommen als Text (DataTable.vue rendert sie ohne v-html); nur "actions" ist HTML.
         $s = BookingScenario::create();
-        $s->contact->update(['name' => self::PAYLOAD]);
+        $s->contact->update(['name' => self::PAYLOAD, 'subject' => self::PAYLOAD, 'content' => self::PAYLOAD]);
 
-        $json = $this->actingAs($s->user('verwalter'))
-            ->getJson('/contacts/createDataTables?done=Nein&draw=1')
+        $row = $this->actingAs($s->user('verwalter'))
+            ->getJson('/contacts/datatable?status=Offen')
             ->assertOk()
-            ->getContent();
+            ->json('data.0');
 
-        $this->assertStringNotContainsString('<img', $this->flatten($json));
+        $this->assertSame(self::PAYLOAD, $row['name']);
+        $this->assertStringNotContainsString('<img', $row['actions']);
     }
 
     public function test_application_name_is_escaped_in_applications_table(): void
     {
         $s = BookingScenario::create();
-        $s->application->update(['name' => self::PAYLOAD]);
+        $s->application->update(['name' => self::PAYLOAD, 'why' => self::PAYLOAD]);
 
-        $json = $this->actingAs($s->user('verwalter'))
-            ->getJson('/applications/createDataTables?draw=1')
+        $row = $this->actingAs($s->user('verwalter'))
+            ->getJson('/applications/datatable')
             ->assertOk()
-            ->getContent();
+            ->json('data.0');
 
-        $this->assertStringNotContainsString('<img', $this->flatten($json));
+        $this->assertStringNotContainsString('<img', $row['name']);
+        $this->assertStringNotContainsString('<img', $row['actions']);
+    }
+
+    public function test_newsletter_name_is_escaped(): void
+    {
+        // Newsletter-Namen stammen aus Buchungen und Bewerbungen
+        $s = BookingScenario::create();
+        $s->newsletter->update(['name' => self::PAYLOAD]);
+
+        $row = $this->actingAs($s->user('verwalter'))->getJson('/newsletter/datatable')->assertOk()->json('data.0');
+
+        $this->assertStringNotContainsString('<img', $row['name']);
+    }
+
+    /**
+     * HTML-Spalten pro Tabelle. Jede andere Spalte rendert DataTable.vue als Text.
+     * Wer hier eine Spalte ergänzt, muss sicherstellen, dass der Server ihre Werte escaped.
+     */
+    public static function htmlColumns(): array
+    {
+        return [
+            'Buchungen' => ['App.vue', ['number', 'name', 'status']],
+            'Kontakte' => ['ContactTable.vue', ['actions']],
+            'Bewerbungen' => ['ApplicationTable.vue', ['name', 'actions']],
+            'FAQ' => ['FAQTable.vue', ['image', 'name']],
+            'Newsletter' => ['NewsletterTable.vue', ['name']],
+        ];
+    }
+
+    #[DataProvider('htmlColumns')]
+    public function test_only_known_columns_are_rendered_as_html(string $component, array $expected): void
+    {
+        $source = file_get_contents(resource_path('js/components/'.$component));
+        preg_match_all("/columnHelper\.accessor\('(\w+)', \{\s*meta: \{ html: true \}/", $source, $matches);
+
+        $this->assertEqualsCanonicalizing($expected, $matches[1]);
+    }
+
+    public function test_data_table_uses_v_html_only_for_marked_columns(): void
+    {
+        $source = file_get_contents(resource_path('js/components/DataTable.vue'));
+
+        $this->assertSame(1, substr_count($source, 'v-html'));
+        $this->assertMatchesRegularExpression('/v-if="cell\.column\.columnDef\.meta\?\.html" v-html=/', $source);
     }
 
     /**

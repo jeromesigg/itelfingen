@@ -6,7 +6,6 @@ use App\Models\Application;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Yajra\DataTables\Facades\DataTables;
 
 class AdminApplicationController extends Controller
 {
@@ -23,46 +22,39 @@ class AdminApplicationController extends Controller
         return view('admin.applications.index', compact('title'));
     }
 
-    public function createDataTables()
+    public function createDataTablesTanStack(Request $request)
     {
+
         $applications = Application::get();
 
-        return DataTables::of($applications)
-            ->addColumn('name', function (Application $applications) {
-                return '<a class="text-orientalpink" href="'.\URL::route('applications.show', $applications).'">'.e($applications['name']).'</a>';
-            })
-            ->addColumn('refuse', function (Application $application) {
-                return $application['refuse'] ? 'Ja' : 'Nein';
-            })
-            ->addColumn('invoice_send', function (Application $application) {
-                return $application['invoice_send'] ? 'Ja' : 'Nein';
-            })
-            ->addColumn('invoice_send', function (Application $application) {
-                return $application['invoice_send'] ? 'Ja' : 'Nein';
-            })
-            ->addColumn('city', function (Application $application) {
-                return $application['plz'].' '.$application['city'];
-            })
-            ->addColumn('Actions', function (Application $application) {
-                $buttons = '<form action="'.\URL::route('applications.refuse', $application).'" method="post">'.csrf_field();
-                if (! $application['invoice_send'] && ! $application['refuse']) {
-                    $buttons .= '  <button type="submit" class="btn btn-secondary btn-sm">Ablehnen</button>';
-                }
-                $buttons .= '</form>';
-
-                return $buttons;
-            })
-            ->editColumn('street', function (Application $application) {
-                return $application['street'].' '.$application['house_number'];
-            })
-            ->editColumn('created_at', function (Application $application) {
-                return [
+        // Transformation der Daten (gleich wie Yajra, aber manuel)
+        $data = $applications->map(function (Application $application) {
+            return [
+                'created_at' => [
                     'display' => Carbon::parse($application['created_at'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($application['created_at'])->diffInDays('01.01.2022'),
-                ];
-            })
-            ->rawColumns(['Actions', 'name'])
-            ->make(true);
+                    'sort' => Carbon::parse($application['created_at'])->toISOString(),
+                ],
+                // HTML-Spalten (meta.html): Werte aus dem öffentlichen Formular escapen
+                'name' => '<a class="text-orientalpink" href="'.route('applications.show', $application).'">'.e($application['name']).'</a>',
+                'firstname' => $application['firstname'],
+                'email' => $application['email'],
+                'group' => $application['group'],
+                'street' => $application['street'].' '.$application['house_number'],
+                'city' => $application['plz'].' '.$application['city'],
+                'why' => $application['why'],
+                'comment' => $application['comment'],
+                'refuse' => $application['refuse'] ? 'Ja' : 'Nein',
+                'invoice_send' => $application['invoice_send'] ? 'Ja' : 'Nein',
+                'members' => $application['members'] ? 'Ja' : 'Nein',
+                'actions' => '<form action="'.\URL::route('applications.refuse', $application).'" method="post">'.csrf_field().(! $application['invoice_send'] && ! $application['refuse'] ? '  <button type="submit" class="text-white bg-danger box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:ring-danger-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">Ablehnen</button>' : '').'</form>',
+            ];
+        });
+
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
     }
 
     /**

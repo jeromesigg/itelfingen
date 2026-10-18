@@ -1,32 +1,28 @@
 <section id="about" class="about section">
 
-    <div class="container">
+    <div class="px-4 mx-auto max-w-(--breakpoint-2xl) lg:px-6">
 
         @if($homepage['green_text'])
-            <div class="alert alert-dismissable alert-success section-title">
+            <x-alert type="success" class="mb-8">
                 <p>
                     {{$homepage['green_text']}}
                 </p>
-            </div>
-            <br>
+            </x-alert>
         @endif
 
-        <div class="row">
-            <div class="col-lg-8 order-1 order-lg-2">
-                <div class="about-img">
-                    <img src="images/about-bg.webp" alt="" loading="lazy">
+        <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16">
+            <div class="content">
+                <div class="section-title">
+                    <h2>Ferientraum direkt am Zugersee</h2>
                 </div>
+                <p class="text-lg leading-relaxed sm:text-xl">
+                    Eingebettet in die Landwirtschaftszone über dem Zugersee lädt dieses Haus zum Verweilen ein.
+                    Wer die Natur liebt, ist hier am richtigen Ort. Lass deine Seele baumeln – einatmen, ausatmen, geniessen!
+                </p>
             </div>
 
-            <div class="col-lg-4 pt-4 pt-lg-0 order-2 order-lg-1 content">
-
-                <div class="section-title">
-                    <p>Ferientraum direkt am Zugersee</p>
-                </div>
-                <p>
-                    Eingebettet in die Landwirtschaftszone über dem Zugersee lädt dieses Haus zum Verweilen ein.
-                    Wer die Natur liebt ist hier am richtigen Ort. Lass deine Seele baumeln – einatmen, ausatmen, geniessen!
-                </p>
+            <div class="about-img mx-auto lg:mx-0">
+                <img src="images/about-bg.webp" alt="Zimmer mit Holzdecke und Blick ins Grüne" loading="lazy">
             </div>
         </div>
     </div>

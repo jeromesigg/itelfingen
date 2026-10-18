@@ -11,7 +11,6 @@ use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
-use Yajra\DataTables\Facades\DataTables;
 
 class NewsletterController extends Controller
 {
@@ -28,22 +27,28 @@ class NewsletterController extends Controller
         return view('admin.newsletter.index', compact('title'));
     }
 
-    public function createDataTables()
+    public function createDataTablesTanStack(Request $request)
     {
-        $applications = Newsletter::get();
 
-        return DataTables::of($applications)
-            ->addColumn('name', function (Newsletter $newsletter) {
-                return '<a href='.\URL::route('newsletter.edit', $newsletter).'>'.$newsletter['name'].'</a>';
-            })
-            ->addColumn('bookings', function (Newsletter $newsletter) {
-                return $newsletter['bookings'] ? 'Ja' : 'Nein';
-            })
-            ->addColumn('members', function (Newsletter $newsletter) {
-                return $newsletter['members'] ? 'Ja' : 'Nein';
-            })
-            ->rawColumns(['name'])
-            ->make(true);
+        $newsletter = Newsletter::get();
+
+        // Transformation der Daten (gleich wie Yajra, aber manuel)
+        $data = $newsletter->map(function (Newsletter $newsletter) {
+            return [
+                // HTML-Spalte (meta.html): Namen stammen aus Buchungen und Bewerbungen, also escapen
+                'name' => '<a class="text-orientalpink" href="'.route('newsletter.edit', $newsletter).'">'.e($newsletter['name']).'</a>',
+                'firstname' => $newsletter['firstname'],
+                'email' => $newsletter['email'],
+                'bookings' => $newsletter['bookings'] ? 'Ja' : 'Nein',
+                'members' => $newsletter['members'] ? 'Ja' : 'Nein',
+            ];
+        });
+
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
     }
 
     /**

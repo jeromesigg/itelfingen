@@ -73,7 +73,6 @@ i[class*='icon-'] {
 
 table {
   font-size: 0.9em;
-  color: #666;
 }
 
 .btn-xs {
@@ -2897,4 +2896,7 @@ img {
 }
 .modal-lg{
   max-width: 1000px !important;
+}
+.border-default {
+    border-color: var(--color-default);
 }

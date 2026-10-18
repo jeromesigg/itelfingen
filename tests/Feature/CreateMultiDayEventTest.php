@@ -6,7 +6,6 @@ use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -38,6 +37,7 @@ class CreateMultiDayEventTest extends TestCase
             'email' => 'max@example.com',
             'telephone' => '079 123-45 67',
             'terms' => '', // so schickt die Checkbox des Formulars den Haken
+            '_form_scope' => 'event', // verstecktes Feld des Formulars, siehe OldInput
             'start_date' => now()->addMonth()->toDateString(),
             'end_date' => now()->addMonth()->addDays(2)->toDateString(),
             'total_days' => 2,
@@ -133,23 +133,20 @@ class CreateMultiDayEventTest extends TestCase
         $this->assertSame(BookingState::Neu, $event->event_status_id);
     }
 
-    public function test_one_day_booking_uses_day_rate(): void
+    public function test_booking_without_overnight_stay_is_rejected(): void
     {
+        // Tagesaufenthalte gibt es nicht mehr; das Formular verlangt mindestens eine Nacht, der Server auch.
         $date = now()->addMonth()->toDateString();
 
         $this->from(route('home'))->post('/event/create', $this->bookingData([
             'total_days' => 0,
             'date' => $date,
-        ]))->assertRedirect(route('home').'#booking');
+            'start_date' => $date,
+            'end_date' => $date,
+        ]))->assertRedirect(route('home').'#booking')
+            ->assertSessionHasErrors(['total_days' => 'Es muss mindestens eine Übernachtung gewählt werden.'], null, 'event');
 
-        $event = Event::sole();
-        $this->assertSame($date, Carbon::parse($event->start_date)->toDateString());
-        $this->assertSame($date, Carbon::parse($event->end_date)->toDateString());
-        $this->assertSame(1, $event->total_days);
-        $this->assertEqualsCanonicalizing(
-            [20, 50, 210],
-            $event->positions()->with('pricelist_position')->get()->pluck('pricelist_position.bexio_code')->all()
-        );
+        $this->assertSame(0, Event::count());
     }
 
     /**
@@ -202,6 +199,53 @@ class CreateMultiDayEventTest extends TestCase
             ->assertSee('value="max@example.com"', false)
             ->assertSee('value="079 123-45 67"', false)
             ->assertSee('>Wir kommen mit Velo</textarea>', false);
+    }
+
+    /**
+     * HTML eines Formulars der Startseite anhand seiner Ziel-URL.
+     */
+    private function formHtml(string $html, string $action): string
+    {
+        preg_match('#<form[^>]*action="'.preg_quote($action, '#').'"[^>]*>.*?</form>#s', $html, $form);
+        $this->assertNotEmpty($form, "Formular $action nicht gefunden");
+
+        return $form[0];
+    }
+
+    public function test_forms_send_their_scope(): void
+    {
+        BookingScenario::create();
+        $html = $this->get('/')->getContent();
+
+        $this->assertStringContainsString('<input type="hidden" name="_form_scope" value="event">', $this->formHtml($html, route('event.create')));
+        $this->assertStringContainsString('<input type="hidden" name="_form_scope" value="contact">', $this->formHtml($html, route('contacts.store')));
+    }
+
+    public function test_booking_error_does_not_fill_contact_form(): void
+    {
+        BookingScenario::create();
+
+        // Beide Formulare haben Felder "name" und "email"; die alte Eingabe gehört nur zum abgeschickten Formular.
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['total_people' => 0]));
+        $html = $this->get('/')->getContent();
+
+        $this->assertStringContainsString('value="Muster"', $this->formHtml($html, route('event.create')));
+        $contact = $this->formHtml($html, route('contacts.store'));
+        $this->assertStringNotContainsString('value="Muster"', $contact);
+        $this->assertStringNotContainsString('value="max@example.com"', $contact);
+    }
+
+    public function test_contact_error_does_not_fill_booking_form(): void
+    {
+        BookingScenario::create();
+
+        $this->from(route('home'))->post('/contacts', ['name' => 'Kontakt Person', 'email' => 'kontakt@example.com', '_form_scope' => 'contact']);
+        $html = $this->get('/')->getContent();
+
+        $this->assertStringContainsString('value="Kontakt Person"', $this->formHtml($html, route('contacts.store')));
+        $booking = $this->formHtml($html, route('event.create'));
+        $this->assertStringNotContainsString('value="Kontakt Person"', $booking);
+        $this->assertStringNotContainsString('value="kontakt@example.com"', $booking);
     }
 
     public function test_page_restores_selected_dates_after_validation_error(): void
@@ -264,5 +308,40 @@ class CreateMultiDayEventTest extends TestCase
             ->assertSessionHasErrors('total_people', null, 'event');
 
         $this->assertSame(0, Event::count());
+    }
+
+    public function test_discount_sent_by_browser_is_ignored_for_later_bookings(): void
+    {
+        config(['app.discount_enabled' => true]);
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData(['discount' => 50]));
+
+        $this->assertEquals(0, Event::sole()->discount);
+    }
+
+    public function test_short_notice_booking_gets_discount_when_enabled(): void
+    {
+        config(['app.discount_enabled' => true]);
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'start_date' => today()->addDays(7)->toDateString(),
+            'end_date' => today()->addDays(9)->toDateString(),
+            'discount' => 0,
+        ]));
+
+        $this->assertEquals(50, Event::sole()->discount);
+    }
+
+    public function test_no_discount_when_disabled(): void
+    {
+        config(['app.discount_enabled' => false]);
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData([
+            'start_date' => today()->addDays(7)->toDateString(),
+            'end_date' => today()->addDays(9)->toDateString(),
+            'discount' => 50,
+        ]));
+
+        $this->assertEquals(0, Event::sole()->discount);
     }
 }

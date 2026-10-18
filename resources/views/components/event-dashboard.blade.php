@@ -1,7 +1,7 @@
 <div class="col-span-full my-4 space-y-4 md:mb-8">
     <h2 class="mb-4 text-xl text-gray-500 dark:text-gray-400">{{$title}}</h2>
     @foreach ($events as $event)
-        <div class="relative flex items-center justify-between rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+        <div class="relative flex items-center justify-between rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800">
             <div class="me-8 flex items-start sm:items-center">
                 <div class="text-gray-500 dark:text-gray-400">
                     <p class="mb-1 text-sm  sm:text-base">                                
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div>
-                <div class="text-left absolute end-1 top-1 rounded-md textalign-left p-1 text-sm font-medium text-gray-500 dark:text-gray-400 sm:relative sm:end-0 sm:top-0">
+                <div class="text-left absolute inset-e-1 top-1 rounded-md textalign-left p-1 text-sm font-medium text-gray-500 dark:text-gray-400 sm:relative sm:inset-e-0 sm:top-0">
                     {!! $event->status() !!}
                 </div>
             </div>

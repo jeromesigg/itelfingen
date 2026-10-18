@@ -54,7 +54,7 @@ class EventOfferSendNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new SendOffersMail($this->event, $this->offer['network_link'], $this->offer['total'], $this->additional_text);
+        return new SendOffersMail($this->event, $this->offer['network_link'], $this->offer['total'], $this->additional_text, $this->offer['is_valid_until'] ?? null);
     }
 
     /**

@@ -1,27 +1,23 @@
 @component('mail::message')
-<h1>Deine Buchung für das Ferienhaus Itelfingen</h1>
-Guten Tag {{$event->firstname}} {{$event->name}},
-<br><br>
-Deine Buchung für das Ferienhaus Itelfingen vom {{Carbon\Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y')}} bis {{Carbon\Carbon::create($event['end_date'])->locale('de_CH')->format('d.m.Y')}} ist definitiv.
-<br>
-Du wirst zwei Wochen vor deinem Aufenthalt noch die letzten Informationen per E-Mail erhalten.
-<br>
+# Deine Buchung ist definitiv
+
+@include('emails.events.partials.greeting')
+
+Deine Buchung für das Ferienhaus Itelfingen ist definitiv – wir freuen uns auf dich!
+
+@include('emails.events.partials.facts')
+
+Etwa zwei Wochen vor deinem Aufenthalt erhältst du die letzten Infos mit Türcode und Parkkarte per E-Mail. Im Anhang findest du einen Kalendereintrag für deinen Aufenthalt.
+
 @component('mail::button', ['url' => route('faq'), 'color' => 'success'])
-    Besuche auch unsere FAQ-Seite
+Häufige Fragen ansehen
 @endcomponent
-<br>
-{{$additional_text}}
-<br>
-Für Rückfragen und weitere Informationen stehen wir gerne jederzeit zur Verfügung.
-<br><br>
-Freundliche Grüsse,<br>
-Das Ferienhaus Itelfingen
-<br>
-<br>
-In Deinem <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">Kundenkonto</a> findest Du alle wichtigen Informationen und eine Übersicht Deiner Buchung.
-<div class="breadcrumbs">
-    <a href="{{ config('app.url') }}/bookings/{{$event->uuid}}">
-        <img src="https://itelfingen.ch/img/mail/3.png" class="logo img-header" style="display: block; margin: auto" width="60%" alt="Bestätigung"/>
-    </a>
-</div>
+
+@if ($additional_text)
+{{ $additional_text }}
+
+@endif
+Bei Fragen sind wir gerne für dich da.
+
+@include('emails.events.partials.closing', ['step' => 3])
 @endcomponent

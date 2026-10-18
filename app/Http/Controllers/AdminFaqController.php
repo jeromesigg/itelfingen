@@ -10,7 +10,6 @@ use App\Models\FaqChapter;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Yajra\DataTables\Facades\DataTables;
 
 class AdminFaqController extends Controller
 {
@@ -27,32 +26,28 @@ class AdminFaqController extends Controller
         return view('admin.faqs.index', compact('faq_chapters'));
     }
 
-    public function createDataTables()
+    public function createDataTablesTanStack(Request $request)
     {
+
         $faqs = Faq::get();
 
-        return DataTables::of($faqs)
-            ->addColumn('image', function (Faq $faq) {
-                $url = $faq->photo ? $faq->photo['file'] : 'https://via.placeholder.com/50';
+        // Transformation der Daten (gleich wie Yajra, aber manuel)
+        $data = $faqs->map(function (Faq $faq) {
+            return [
+                // HTML-Spalten (meta.html): Werte escapen
+                'image' => $faq->photo ? '<img height="50" src="'.e($faq->photo['file']).'" alt="'.e($faq->name).'" class="img-fluid">' : '',
+                'name' => '<a class="text-orientalpink" href="'.route('faqs.edit', $faq->id).'">'.e($faq->name).'</a>',
+                'description' => substr($faq->description, 0, 500),
+                'chapter' => $faq->faq_chapter?->name ?? '',
+                'archive_status' => $faq->archive_status?->name ?? '',
+            ];
+        });
 
-                //               return $url;
-                return '<img height="50" src="'.$url.'" alt="" class="img-fluid">';
-            })
-            ->addColumn('name', function (Faq $faq) {
-                return '<a class="text-orientalpink" href="'.route('faqs.edit', $faq->id).'">'.$faq->name.'</a>';
-            })
-            ->addColumn('description', function (Faq $faq) {
-                return substr($faq->description, 0, 500);
-            })
-
-            ->addColumn('chapter', function (Faq $faq) {
-                return $faq->faq_chapter->name;
-            })
-            ->addColumn('archive_status', function (Faq $faq) {
-                return $faq->archive_status->name;
-            })
-            ->rawColumns(['image', 'name'])
-            ->make(true);
+        // TanStack-freundliches Response-Format
+        return response()->json([
+            'data' => $data,
+            'rowCount' => count($data),
+        ]);
     }
 
     /**

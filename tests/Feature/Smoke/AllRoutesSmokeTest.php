@@ -186,6 +186,7 @@ class AllRoutesSmokeTest extends TestCase
             'picture' => $s->picture->id,
             'position' => $s->pricelistPosition->id,
             'newsletter' => $s->newsletter->id,
+            'mail' => 'events.offers',
         ];
     }
 }

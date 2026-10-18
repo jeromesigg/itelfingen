@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ContractState;
 use App\Models\BexioToken;
+use App\View\Components\Bookings\Entry;
 use Illuminate\Support\Facades\Http;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -72,5 +73,78 @@ class CustomerBookingPageTest extends TestCase
         $s->confirmedEvent->update(['bexio_offer_id' => 11]);
 
         $this->get("/bookings/{$s->confirmedEvent->uuid}")->assertOk();
+    }
+
+    public function test_status_banner_shows_current_stage(): void
+    {
+        Http::fake();
+        $s = BookingScenario::create();
+
+        $this->get("/bookings/{$s->event->uuid}")->assertSee('Buchung eingegangen');
+        $this->get("/bookings/{$s->confirmedEvent->uuid}")->assertSee('Deine Buchung ist definitiv');
+        $this->get("/bookings/{$s->cancelledEvent->uuid}")->assertSee('Buchung storniert');
+        $this->get("/bookings/{$s->pastEvent->uuid}")->assertSee('Danke für deinen Aufenthalt');
+    }
+
+    public function test_offer_stage_links_offer_in_status_banner(): void
+    {
+        Http::fake([
+            'api.bexio.com/2.0/kb_offer/11' => Http::response(['id' => 11, 'network_link' => 'https://bexio.test/offerte']),
+        ]);
+        $s = BookingScenario::create();
+        $s->event->update(['bexio_offer_id' => 11, 'contract_status_id' => ContractState::AngebotVersendet]);
+
+        $this->get("/bookings/{$s->event->uuid}")
+            ->assertOk()
+            ->assertSee('Angebot versendet – bitte prüfen')
+            ->assertSee('https://bexio.test/offerte');
+
+        Http::assertSentCount(1);
+    }
+
+    public function test_codes_are_shown_only_after_last_infos(): void
+    {
+        Http::fake();
+        $s = BookingScenario::create();
+        $s->confirmedEvent->update(['code' => '987654']);
+
+        $this->get("/bookings/{$s->confirmedEvent->uuid}")
+            ->assertDontSee('Deine Codes')
+            ->assertDontSee('987654');
+
+        $s->confirmedEvent->update(['last_info' => true]);
+
+        $this->get("/bookings/{$s->confirmedEvent->uuid}")
+            ->assertSee('Alles bereit für deine Anreise')
+            ->assertSee('Deine Codes')
+            ->assertSee('987654')
+            ->assertDontSee('Abfallcontainer');
+    }
+
+    public function test_waste_code_is_shown_from_start_date(): void
+    {
+        Http::fake();
+        $s = BookingScenario::create();
+        $s->confirmedEvent->update([
+            'last_info' => true,
+            'start_date' => today()->format('Y-m-d'),
+            'end_date' => today()->addDays(2)->format('Y-m-d'),
+        ]);
+
+        $this->get("/bookings/{$s->confirmedEvent->uuid}")
+            ->assertSee('Abfallcontainer')
+            ->assertSee('4315');
+    }
+
+    public function test_timeline_marks_first_open_step_as_next(): void
+    {
+        Http::fake();
+        $s = BookingScenario::create();
+
+        $this->assertSame('OfferSend', Entry::currentStep($s->event));
+        $this->assertSame('EventLastInfos', Entry::currentStep($s->confirmedEvent));
+
+        $this->get("/bookings/{$s->confirmedEvent->uuid}")
+            ->assertSeeInOrder(['Buchung definitiv', 'Letzte Infos', 'Nächster Schritt', 'Aufenthalt im Ferienhaus']);
     }
 }

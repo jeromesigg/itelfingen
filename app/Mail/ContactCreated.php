@@ -38,6 +38,6 @@ class ContactCreated extends Mailable
         return $this->markdown('emails.contacts.created', ['contact' => $this->contact])
             ->to($this->contact['email'], $this->contact['name'])
             ->cc(config('mail.from.address'), config('mail.from.name'))
-            ->subject('Kopie deiner Nachricht ans Ferien- und Lagerhaus Itelfingen');
+            ->subject('Deine Nachricht an das Ferienhaus Itelfingen');
     }
 }

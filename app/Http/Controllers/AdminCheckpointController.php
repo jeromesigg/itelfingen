@@ -61,9 +61,9 @@ class AdminCheckpointController extends Controller
     {
         //
         $archive_statuses = ArchiveStatus::pluck('name', 'id')->all();
-        $rooms = Room::pluck('name', 'id')->all();
+        $rooms_select = Room::orderBy('sort-index')->pluck('name', 'id')->all();
 
-        return view('admin.checkpoints.edit', compact('archive_statuses', 'checkpoint', 'rooms'));
+        return view('admin.checkpoints.edit', compact('archive_statuses', 'checkpoint', 'rooms_select'));
     }
 
     /**

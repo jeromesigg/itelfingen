@@ -295,7 +295,7 @@ class EventWorkflowTest extends TestCase
         foreach ([5, 7, 10, 20, 30] as $status) {
             $event->update(['contract_status_id' => $status, 'bexio_offer_id' => 11, 'bexio_invoice_id' => 22]);
             $html = $this->actingAs($this->s->user('verwalter'))->get("/admin/events/{$event->id}/edit")->assertOk()->getContent();
-            preg_match_all('/name="submit" value="([^"]*)"/', $html, $buttons);
+            preg_match_all('/name="submit"\s+value="([^"]*)"/', $html, $buttons);
             foreach ($buttons[1] as $value) {
                 $seen[] = $value;
                 $this->assertContains(substr(trim($value), 0, 1), $handled, "Button \"$value\" (Status $status) wird im Controller nicht behandelt");
