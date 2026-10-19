@@ -26,6 +26,7 @@ use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
 use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventOfferSendNotification;
+use App\Services\BookingDays;
 use App\View\Components\BookingCalendar;
 use Carbon\Carbon;
 use Closure;
@@ -53,38 +54,12 @@ class AdminEventController extends Controller
     {
         //
         $homepage = Homepage::FindOrFail(1);
-        $event_type = 'admin';
-        $events_all = Event::all();
-        $positions = [];
-        $discount = false;
         $contract_statuses = ContractStatus::pluck('name');
-
-        $events_json = [];
-        foreach ($events_all as $event) {
-            $start_date = new Carbon($event['start_date']);
-            $end_date = new Carbon($event['end_date']);
-            $start = [
-                'y' => $start_date->year,
-                'm' => $start_date->month - 1,
-                'd' => $start_date->day,
-                'h' => ! $event['early_checkin'],
-            ];
-            $end = [
-                'y' => $end_date->year,
-                'm' => $end_date->month - 1,
-                'd' => $end_date->day,
-                'h' => ! $event['late_checkout'],
-            ];
-            $events_json[] = [
-                'start' => $start,
-                'end' => $end,
-                'state' => $event->event_status['color'],
-                'id' => $event->id,
-            ];
-        }
+        $events = Event::with('event_status')->orderBy('start_date')->get();
+        $booked_days = (new BookingDays)->markAll($events)->toArray(withIds: true);
         $title = 'Buchungen';
 
-        return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title', 'homepage'));
+        return view('admin.events.index', compact('booked_days', 'contract_statuses', 'title', 'homepage'));
     }
 
     public function createDataTablesTanStack(Request $request)

@@ -21,6 +21,8 @@ import NewsletterTable from './components/NewsletterTable.vue'
 import ApplicationTable from './components/ApplicationTable.vue'
 import ContactTable from './components/ContactTable.vue'
 import FAQTable from './components/FAQTable.vue'
+import BookingWizard from './components/BookingWizard.vue'
+import BookingCalendar from './components/BookingCalendar.vue'
 
 // Component Registry
 const components = {
@@ -29,13 +31,14 @@ const components = {
   'applications-table': ApplicationTable,
   'contacts-table': ContactTable,
   'faqs-table': FAQTable,
-  // Später: 'users-table': UsersTable, etc.
+  'booking-wizard': BookingWizard,
+  'booking-calendar': BookingCalendar,
 }
 
-// Auto-mount alle Vue Components
+// Auto-mount alle Vue Components, Props als JSON im Attribut data-props
 document.querySelectorAll('[data-vue-component]').forEach(el => {
   const componentName = el.dataset.vueComponent
   if (components[componentName]) {
-    createApp(components[componentName]).mount(el)
+    createApp(components[componentName], JSON.parse(el.dataset.props || '{}')).mount(el)
   }
 })

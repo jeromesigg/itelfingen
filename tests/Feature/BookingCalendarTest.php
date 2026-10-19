@@ -172,6 +172,23 @@ class BookingCalendarTest extends TestCase
         $this->assertSame($count, Event::count());
     }
 
+    public function test_overview_calendar_links_bookings(): void
+    {
+        $s = BookingScenario::create();
+        $event = Event::factory()->confirmed()->create([
+            'start_date' => '2030-11-11', 'end_date' => '2030-11-13', 'early_checkin' => false, 'late_checkout' => false,
+        ]);
+
+        $html = $this->actingAs($s->user('verwalter'))->get('/admin/events')->assertOk()->getContent();
+        preg_match('/data-vue-component="booking-calendar" data-props="([^"]*)"/', $html, $match);
+        $props = json_decode(html_entity_decode($match[1] ?? ''), true);
+
+        $this->assertSame('admin', $props['mode']);
+        $this->assertSame(['am' => null, 'pm' => 'B', 'id' => $event->id], $props['days']['2030-11-11']);
+        $this->assertSame(['am' => 'BD', 'pm' => null, 'id' => $event->id], $props['days']['2030-11-13']);
+        $this->assertSame(route('admin.events.edit', $event), str_replace('__ID__', $event->id, $props['editUrl']));
+    }
+
     public function test_create_page_shows_calendar_placeholder(): void
     {
         $s = BookingScenario::create();
