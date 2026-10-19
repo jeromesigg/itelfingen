@@ -15,7 +15,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-CGKCDhBu.css",
+    "file": "assets/app-BFnlTNDt.css",
     "name": "app",
     "names": [
       "app.css"
@@ -65,7 +65,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DPPbLv6g.js",
+    "file": "assets/app-C_k0ghv6.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -87,7 +87,7 @@
     ]
   },
   "resources/js/editor.js": {
-    "file": "assets/editor-CjiXp9tm.js",
+    "file": "assets/editor-BntjX2Bs.js",
     "name": "editor",
     "src": "resources/js/editor.js",
     "isEntry": true,

@@ -41,16 +41,7 @@ class HomeController extends Controller
         $discount = filter_var(config('app.discount_enabled'), FILTER_VALIDATE_BOOLEAN);
         $application_enabled = config('app.application_enabled');
 
-        $contact_attributes = [
-            'data-theme' => 'light',
-            'data-callback' => 'enable_ContactBtn',
-        ];
-        $event_attributes = [
-            'data-theme' => 'light',
-            'data-callback' => 'enable_EventBtn',
-        ];
-
-        return view('home', compact('homepage', 'pictures', 'booked_days', 'event_attributes', 'contact_attributes', 'positions', 'discount', 'application_enabled'));
+        return view('home', compact('homepage', 'pictures', 'booked_days', 'positions', 'discount', 'application_enabled'));
     }
 
     public function impressum()

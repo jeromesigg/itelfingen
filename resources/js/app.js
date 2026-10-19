@@ -10,10 +10,14 @@ import.meta.glob([
   ]);
 
 import 'flowbite';
-import './libs/custom.js';
 import { initCitySearch } from './libs/city-search.js';
+import { initThemeToggle } from './libs/theme-toggle.js';
 
 document.querySelectorAll('[data-city-search]').forEach(initCitySearch);
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+  initThemeToggle(themeToggle);
+}
 
 // ===== VUE SETUP =====
 import { createApp } from 'vue'
