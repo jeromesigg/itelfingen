@@ -15,19 +15,19 @@
                 <x-forms.container>
                     <x-forms.file label="Photo: " name="photo_id"/>
                 </x-forms.container>
-                <div class="form-row">                        
+                <div class="form-row">
                     <x-forms.container class="col-md-6">
                         <x-forms.select label="Kapitel:" name="faq_chapter_id" required=true :collection="$faq_chapters"/>
-                    </x-forms.container>     
+                    </x-forms.container>
                     <x-forms.container class="col-md-6">
                         <x-forms.select label="Archiv Status:" name="archive_status_id" required=true :collection="$archive_statuses"/>
-                    </x-forms.container>     
+                    </x-forms.container>
                 </div>
                 <x-forms.container>
                     <x-forms.button type="submit" class="btn btn-primary">
                         FAQ updaten
                     </x-forms.button>
-                </x-forms.container>  
+                </x-forms.container>
             </x-forms.form>
         </div>
     </div>

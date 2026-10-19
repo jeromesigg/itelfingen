@@ -180,8 +180,9 @@ class ScheduledTasksTest extends TestCase
     public function test_monthly_mail_lists_bookings_of_next_six_weeks(): void
     {
         $soon = Event::factory()->confirmed()->create(['start_date' => today()->addWeeks(2), 'end_date' => today()->addWeeks(2)->addDay()]);
-        $later = Event::factory()->confirmed()->create(['start_date' => today()->addWeeks(8), 'end_date' => today()->addWeeks(8)->addDay()]);
-        $cancelled = Event::factory()->cancelled()->create(['start_date' => today()->addWeeks(2), 'end_date' => today()->addWeeks(2)->addDay()]);
+        // Zu spät bzw. storniert: dürfen nicht in der Liste erscheinen
+        Event::factory()->confirmed()->create(['start_date' => today()->addWeeks(8), 'end_date' => today()->addWeeks(8)->addDay()]);
+        Event::factory()->cancelled()->create(['start_date' => today()->addWeeks(2), 'end_date' => today()->addWeeks(2)->addDay()]);
         // Storniert, aber die Reinigungsfirma ist schon informiert: muss in der Liste bleiben
         $cancelledInformed = Event::factory()->cancelled()->create(['cleaning_mail' => true, 'start_date' => today()->addWeeks(3), 'end_date' => today()->addWeeks(3)->addDay()]);
 

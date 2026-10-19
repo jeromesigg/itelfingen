@@ -4,15 +4,4 @@ namespace App\Charts;
 
 use ConsoleTVs\Charts\Classes\Chartjs\Chart;
 
-class BookingChart extends Chart
-{
-    /**
-     * Initializes the chart.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-}
+class BookingChart extends Chart {}

@@ -37,8 +37,6 @@ Route::post('bookings/{uuid}/checkpoint/done', 'HomeController@bookings_checkpoi
 // Nur Login/Logout: Konten legt ein Admin an, Benutzer haben keine E-Mail-Adresse für einen Reset.
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false]);
 
-// Route::get('/home', 'HomeController@index')->name('home');
-
 // fullcalender
 Route::post('event/create', ['as' => 'event.create', 'uses' => 'EventController@create'])->middleware(['throttle:public-forms', ProtectAgainstSpam::class]);
 Route::get('event/searchajaxcity', ['as' => 'searchajaxcity', 'uses' => 'EventController@searchResponseCity']);

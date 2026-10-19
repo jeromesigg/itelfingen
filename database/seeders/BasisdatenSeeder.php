@@ -92,7 +92,7 @@ class BasisdatenSeeder extends Seeder
         Homepage::create([
             'title' => env('APP_NAME'), ]);
 
-        $user = User::create([
+        User::create([
             'id' => 1,
             'username' => 'Administrator',
             'password' => Hash::make(env('ADMIN_PASSWORD')),

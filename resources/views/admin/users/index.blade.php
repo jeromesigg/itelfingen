@@ -50,7 +50,7 @@
                             <tbody>
                                 @if($users)
                                     @foreach ($users as $user)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"> 
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                             <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><a class="text-orientalpink hover:underline" href="{{route('users.edit', $user->id)}}">{{$user->username}}</a></td>
                                             <td class="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">{{$user->role?->name ?? 'Keine Rolle'}}</td>
                                             <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><span class="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded text-xs font-semibold">{{$user->is_active ? 'Aktiv' : 'Archiviert'}}</span></td>

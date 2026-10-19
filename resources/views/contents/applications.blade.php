@@ -152,7 +152,7 @@
         if(type =='city'){
              var autoType='name';
         }
-        else if(type =='zipcode'){ 
+        else if(type =='zipcode'){
             var autoType='plz';
         }
         else if(type =='city_id'){

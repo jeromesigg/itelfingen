@@ -28,15 +28,22 @@
                     <h6 class="text-lg font-bold dark:text-white">{{$room->name}}</h6>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-fixed w-full">
-
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="px-6 w-1/4">Name</th>
+                                    <th scope="col" class="px-6 w-1/2">Beschreibung</th>
+                                    <th scope="col" class="px-6 w-1/8">Archiv-Status</th>
+                                    <th scope="col" class="px-6 w-1/8">Sort-Index</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @if($room->checkpoints)
                                     @foreach ($room->checkpoints as $checkpoint)
                                         <tr>
-                                            <td scope="col" class="px-6 w-1/4"><a class="text-orientalpink" href="{{route('checkpoints.edit', $checkpoint)}}">{{$checkpoint->name}}</a></td>
-                                            <td scope="col" class="px-6 w-1/2">{{$checkpoint->description}}</td>
-                                            <td scope="col" class="px-6 w-1/8">{{$checkpoint->archive_status['name']}}</td>
-                                            <td scope="col" class="px-6 w-1/8">{{$checkpoint['sort-index']}}</td>
+                                            <td class="px-6 w-1/4"><a class="text-orientalpink" href="{{route('checkpoints.edit', $checkpoint)}}">{{$checkpoint->name}}</a></td>
+                                            <td class="px-6 w-1/2">{{$checkpoint->description}}</td>
+                                            <td class="px-6 w-1/8">{{$checkpoint->archive_status['name']}}</td>
+                                            <td class="px-6 w-1/8">{{$checkpoint['sort-index']}}</td>
                                         </tr>
                                     @endforeach
                                 @endif

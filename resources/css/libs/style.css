@@ -14,14 +14,14 @@ html {
 }
 
 body {
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
   background: #ffffff;
   color: #000;
   line-height: 2rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
 }
 
 /*--------------------------------------------------------------
@@ -51,15 +51,6 @@ h1, h2, h3, h4, h5, h6 {
   height: 60px;
   -webkit-animation: animate-preloader 1s linear infinite;
   animation: animate-preloader 1s linear infinite;
-}
-
-@-webkit-keyframes animate-preloader {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 @keyframes animate-preloader {
@@ -130,7 +121,6 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid whitesmoke;
   transition: all 0.5s;
   z-index: 997;
-  /* top: 40px; */
 }
 
 #header.header-scrolled {
@@ -147,7 +137,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: lowercase;
-  font-family: "PPMigra";
+  font-family: "PPMigra", serif;
 }
 
 #header .logo a {
@@ -184,7 +174,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   transition: 0.3s;
   font-size: 14px;
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
 }
 
 .book a {
@@ -430,7 +420,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 56px;
   color: #fff;
-  font-family: "PPMigra";
+  font-family: "PPMigra", serif;
 }
 
 @media (max-width: 500px) {
@@ -505,17 +495,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@-webkit-keyframes pulsate-btn {
-  0% {
-    transform: scale(0.6, 0.6);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1, 1);
-    opacity: 0;
-  }
-}
-
 @keyframes pulsate-btn {
   0% {
     transform: scale(0.6, 0.6);
@@ -569,7 +548,7 @@ section {
   margin: 0;
   font-size: 2.25rem;
   font-weight: 500;
-  font-family: "PPMigra";
+  font-family: "PPMigra", serif;
   line-height: 1.15;
   color: inherit;
 }
@@ -597,7 +576,7 @@ section {
 .breadcrumbs h2 {
   font-size: 2rem;
   font-weight: 600;
-  font-family: "PPMigra";
+  font-family: "PPMigra", serif;
 }
 
 .breadcrumbs ol {
@@ -642,7 +621,6 @@ section {
 
 .about:before {
   content: "";
-  /* background: rgb(165 165 165 / 80%); */
   position: absolute;
   bottom: 0;
   top: 0;
@@ -787,7 +765,7 @@ section {
   top: -4px;
   z-index: 1;
   color: #bab3a6;
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
 }
 
 
@@ -803,7 +781,7 @@ section {
   margin-left: 20px;
   font-style: italic;
   font-size: 14px;
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
   color: rgb(36, 33, 33);
 }
 
@@ -845,7 +823,7 @@ section {
 }
 
 .history .details h3 {
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
   font-size: 26px;
   font-weight: 600;
   margin-bottom: 20px;
@@ -1007,7 +985,6 @@ section {
   background: #26231d;
   position: relative;
   border-radius: 6px;
-  position: relative;
   z-index: 1;
   color: white;
 }
@@ -1061,7 +1038,7 @@ section {
   font-weight: 500;
   margin-bottom: 10px;
   margin-top: 10px;
-  font-family: "Titillium Web";
+  font-family: "Titillium Web", sans-serif;
 }
 
 .contact .info p {
@@ -1069,18 +1046,8 @@ section {
   margin-bottom: 0;
   font-size: 14px;
   line-height: normal;
-  /* color: #bab3a6; */
 }
 
-
-@-webkit-keyframes animate-loading {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 @keyframes animate-loading {
   0% {

@@ -18,6 +18,5 @@ class DatabaseSeeder extends Seeder
             AddUUIDToEvent::class,
             SeedPhoneQuery::class,
         ]);
-        // $this->call(UserSeeder::class);
     }
 }

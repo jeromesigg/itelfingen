@@ -12,17 +12,17 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" width="10%">Name</th>
-                        <th scope="col" width="20%">Beschreibung</th>
-                        <th scope="col" width="15%">Adresse</th>
-                        <th scope="col" width="15%">Telefon</th>
-                        <th scope="col" width="15%">E-Mail</th>
-                        <th scope="col" width="15%">Banner Text</th>
-                        <th scope="col" width="5%">Bild Titel</th>
-                        <th scope="col" width="5%">Bild Oben</th>
-                        <th scope="col" width="5%">Bild Unten</th>
-                        <th scope="col" width="5%">Bild Login Gross</th>
-                        <th scope="col" width="5%">Bild Login Klein</th>
+                        <th scope="col" class="w-[10%]">Name</th>
+                        <th scope="col" class="w-[20%]">Beschreibung</th>
+                        <th scope="col" class="w-[15%]">Adresse</th>
+                        <th scope="col" class="w-[15%]">Telefon</th>
+                        <th scope="col" class="w-[15%]">E-Mail</th>
+                        <th scope="col" class="w-[15%]">Banner Text</th>
+                        <th scope="col" class="w-[5%]">Bild Titel</th>
+                        <th scope="col" class="w-[5%]">Bild Oben</th>
+                        <th scope="col" class="w-[5%]">Bild Unten</th>
+                        <th scope="col" class="w-[5%]">Bild Login Gross</th>
+                        <th scope="col" class="w-[5%]">Bild Login Klein</th>
                     </tr>
                 </thead>
                 <tbody>
