@@ -41,7 +41,7 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js" integrity="sha384-d+JVPSxB4qHCRf+fci5rkY2+tgpL+o0BL5vjy1sQzyOS1scbfhKYCSXfKmwRc5cz" crossorigin="anonymous"></script>
+    @vite('resources/js/charts.js')
 
     <script  type="module">
         var booking = @json($bookingChartYear);

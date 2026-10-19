@@ -11,23 +11,8 @@ import.meta.glob([
 
 import './bootstrap';
 import './admin/jquery-ui.min.js';
-import 'bootstrap';
-import 'laravel-datatables-vite';
-import './admin/jqBootstrapValidation.js';
 import 'flowbite';
-// import { DataTable } from "simple-datatables";
-import './libs/main.js';
 import './libs/custom.js';
-
-// Initialize Events Table when DOM is ready
-// import { initEventsTable } from './tables/EventsTable.js'
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   const tbody = document.getElementById('eventTableBody')
-//   if (tbody) {
-//     initEventsTable()
-//   }
-// })
 
 // ===== VUE SETUP =====
 import { createApp } from 'vue'
