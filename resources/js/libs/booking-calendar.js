@@ -47,7 +47,7 @@ export function monthWeeks(year, month) {
     const first = new Date(Date.UTC(year, month, 1));
     const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
     const offset = (first.getUTCDay() + 6) % 7;
-    const cells = Array(offset).fill(null);
+    const cells = new Array(offset).fill(null);
     for (let day = 1; day <= daysInMonth; day++) {
         cells.push(toISO(new Date(Date.UTC(year, month, day))));
     }
@@ -120,28 +120,4 @@ export function selectionStates(days, start, end) {
 
 export function shortNoticeDiscount(start, today, enabled) {
     return enabled && start < addDays(today, SHORT_NOTICE_DAYS) ? SHORT_NOTICE_DISCOUNT : 0;
-}
-
-/**
- * Preis je Position (Logik wie bisher im Buchungsformular, die definitiven Preise rechnet Bexio):
- * bexio_code < 50 einmalig (z. B. Hausmiete, Reinigung), > 100 Anzahl × Preis × Nächte abzüglich Rabatt.
- * Tagesaufenthalte (50–100) gibt es nicht mehr, sie fehlen im Formular.
- */
-export function positionTotal(position, amount, nights, discount) {
-    if (position.bexio_code < 50) {
-        return position.price;
-    }
-    if (position.bexio_code > 100) {
-        return (Number(amount) || 0) * position.price * nights * ((100 - discount) / 100);
-    }
-    return 0;
-}
-
-/** Positionen mit Eingabefeld (Personen, Parkplätze …); ihre Anzahlen zählen als Personen. */
-export function hasAmountInput(position) {
-    return position.bexio_code >= 100;
-}
-
-export function isBookable(position) {
-    return position.bexio_code < 50 || position.bexio_code >= 100;
 }

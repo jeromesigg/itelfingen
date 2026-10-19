@@ -9,10 +9,11 @@ import.meta.glob([
     '../fonts/**',
   ]);
 
-import './bootstrap';
-import './admin/jquery-ui.min.js';
 import 'flowbite';
 import './libs/custom.js';
+import { initCitySearch } from './libs/city-search.js';
+
+document.querySelectorAll('[data-city-search]').forEach(initCitySearch);
 
 // ===== VUE SETUP =====
 import { createApp } from 'vue'

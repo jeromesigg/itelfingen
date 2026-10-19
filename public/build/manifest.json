@@ -1,10 +1,14 @@
 {
+  "_pricing-BIsXh3Gn.js": {
+    "file": "assets/pricing-BIsXh3Gn.js",
+    "name": "pricing"
+  },
   "_rolldown-runtime-XKyaHtl9.js": {
     "file": "assets/rolldown-runtime-XKyaHtl9.js",
     "name": "rolldown-runtime"
   },
   "resources/css/app.css": {
-    "file": "assets/app-H8IHP45H.css",
+    "file": "assets/app-SIYmvXPh.css",
     "name": "app",
     "names": [
       "app.css"
@@ -42,13 +46,23 @@
     "file": "assets/login-Decb8tK8.webp",
     "src": "resources/images/login.webp"
   },
+  "resources/js/admin/event-form.js": {
+    "file": "assets/event-form-IkeiKcHA.js",
+    "name": "event-form",
+    "src": "resources/js/admin/event-form.js",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js",
+      "_pricing-BIsXh3Gn.js"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-BuFgJqTq.js",
+    "file": "assets/app-C0jvi7u7.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "_rolldown-runtime-XKyaHtl9.js"
+      "_pricing-BIsXh3Gn.js"
     ]
   },
   "resources/js/charts.js": {

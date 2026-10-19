@@ -115,7 +115,7 @@
               <tbody>
                 <tr v-for="row in rows" :key="row.bexio_code" class="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
                   <th scope="row" class="px-2 py-4 sm:px-6">
-                    <template v-if="hasAmountInput(row)">
+                    <template v-if="!isFixedPosition(row)">
                       <label :for="'position_' + row.bexio_code" class="sr-only">Anzahl {{ row.name }}</label>
                       <input
                         :id="'position_' + row.bexio_code"
@@ -175,15 +175,8 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import BookingCalendar from './BookingCalendar.vue'
-import {
-  fromISO,
-  hasAmountInput,
-  isBookable,
-  nightsBetween,
-  positionTotal,
-  shortNoticeDiscount,
-  todayISO,
-} from '../libs/booking-calendar.js'
+import { fromISO, nightsBetween, shortNoticeDiscount, todayISO } from '../libs/booking-calendar.js'
+import { isFixedPosition, isPersonPosition, lineTotal } from '../libs/pricing.js'
 
 const LEGEND = [
   { state: 'FF', label: 'Frei' },
@@ -222,12 +215,15 @@ const form = reactive(Object.fromEntries(FIELDS.map((field) => [field, props.old
 const nights = computed(() => (start.value && end.value ? nightsBetween(start.value, end.value) : 0))
 const discount = computed(() => (start.value && nights.value > 0 ? shortNoticeDiscount(start.value, todayISO(), props.discountEnabled) : 0))
 
-const rows = computed(() => props.positions.filter(isBookable).map((position) => ({
-  ...position,
-  total: positionTotal(position, amounts[position.bexio_code], nights.value, discount.value),
-})))
+// Tagesaufenthalte (bexio_code 50–99) gibt es nicht mehr
+const rows = computed(() => props.positions
+  .filter((position) => isFixedPosition(position) || position.bexio_code >= 100)
+  .map((position) => ({
+    ...position,
+    total: lineTotal(position, isFixedPosition(position) ? 1 : amounts[position.bexio_code], nights.value, discount.value),
+  })))
 const totalAmount = computed(() => rows.value.reduce((sum, row) => sum + row.total, 0))
-const totalPeople = computed(() => rows.value.filter(hasAmountInput).reduce((sum, row) => sum + (Number(amounts[row.bexio_code]) || 0), 0))
+const totalPeople = computed(() => rows.value.filter(isPersonPosition).reduce((sum, row) => sum + (Number(amounts[row.bexio_code]) || 0), 0))
 
 const nightsText = computed(() => {
   const text = `${nights.value} ${nights.value === 1 ? 'Nacht' : 'Nächte'}`

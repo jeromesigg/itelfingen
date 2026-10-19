@@ -17,6 +17,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/editor.js',
                 'resources/js/charts.js',
+                'resources/js/admin/event-form.js',
             ],
             refresh: true
         }),

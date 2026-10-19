@@ -42,8 +42,8 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
                     placeholder="Anfrage-Mail von 'Anfragenummer' bis 'Kommentar der Gruppe' hier einfügen..." />
             </div>
             <div class="flex flex-wrap gap-2 shrink-0">
-                <button type="button" class="{{ $grannysmith }}" onclick="createExtern()">Import übernehmen</button>
-                <button type="button" class="{{ $grannysmith }}" onclick="createIntern()">Als interne Buchung
+                <button type="button" class="{{ $grannysmith }}" data-action="import">Import übernehmen</button>
+                <button type="button" class="{{ $grannysmith }}" data-action="intern">Als interne Buchung
                     ausfüllen</button>
             </div>
         </div>
@@ -56,11 +56,10 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
             <h4 class="{{ $heading }}">Kontakt &amp; Zeitraum</h4>
             <div class="grid grid-cols-1 sm:grid-cols-6 gap-4">
                 <div class="sm:col-span-3">
-                    <x-forms.text label="Start:" name="start_date" type="date" required=true
-                        onchange="Total_Change()" />
+                    <x-forms.text label="Start:" name="start_date" type="date" required=true />
                 </div>
                 <div class="sm:col-span-3">
-                    <x-forms.text label="Ende:" name="end_date" type="date" required=true onchange="Total_Change()" />
+                    <x-forms.text label="Ende:" name="end_date" type="date" required=true />
                 </div>
                 <div class="sm:col-span-3">
                     <x-forms.text label="Name:" name="name" required=true />
@@ -99,12 +98,12 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
                     @foreach ($positions as $index => $position)
                     @if ($position['bexio_code']
                     <50) <x-forms.hidden name="{{'positions['.$position['bexio_code'].']'}}"
-                        id="{{'position_'.$position['id']}}" onChange="Total_Change()" value="1" />
+                        id="{{'position_'.$position['id']}}" value="1" />
                     @else
                     <div>
                         <x-forms.text label="{{ $position['name'] . ' ('. $position['price'] . ' CHF)'}}"
                             name="{{'positions['.$position['bexio_code'].']'}}" type="number"
-                            id="{{'position_'.$position['id']}}" onChange="Total_Change()" />
+                            id="{{'position_'.$position['id']}}" />
                     </div>
                     @endif
                     @endforeach
@@ -113,11 +112,10 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
                 <div
                     class="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                     <div>
-                        <x-forms.text label="Tage:" name="total_days" type="number" required=true
-                            onChange="Total_Change()" />
+                        <x-forms.text label="Tage:" name="total_days" type="number" required=true />
                     </div>
                     <div>
-                        <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()" />
+                        <x-forms.text label="Rabatt [%]:" name="discount" type="number" />
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total</span>
@@ -158,121 +156,23 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
 </x-forms.form>
 @endsection
 @push('scripts')
-<script type="module">
-    function createIntern() {
-        $('#name').val("Interne Buchung");
-        $('#street').val("Itelfingen");
-        $('#house_number').val("3");
-        $('#plz').val("6344");
-        $('#city').val("Meierskappel");
-        $('#email').val("verwalter@itelfingen.ch");
-        $('#total_people').val("0");
-        $('#total_days').val("0");
-        $('#total_amount').val("0");
-        $('#code').val("290393");
-        $('#event_status_id').val(@json(\App\Enums\BookingState::Eigene->value));
-    }
-    function createExtern() {
-        const text = document.getElementById('import-text').value;
-
-        fetch('{{ route("events.parse") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-            body: JSON.stringify({ text }),
-        })
-        .then(res => res.json())
-        .then(data => {
-            // Felder befüllen
-            document.getElementById('foreign_key').value        = data.buchungsnummer ?? '';
-            document.getElementById('name').value        = data.name ?? '';
-            document.getElementById('firstname').value        = data.vorname ?? '';
-            document.getElementById('group_name').value        = data.gruppe ?? '';
-            document.getElementById('street').value        = data.strasse ?? 'Itelfingen';
-            document.getElementById('house_number').value        = data.hausnummer ?? '3';
-            document.getElementById('plz').value        = data.plz ?? '6344';
-            document.getElementById('city').value        = data.stadt ?? 'Meierskappel';
-            document.getElementById('email').value        = data.email ?? 'verwalter@itelfingen.ch';
-            document.getElementById('start_date').value = data.mietdauer_von ?? '';
-            document.getElementById('end_date').value = data.mietdauer_bis ?? '';
-            document.getElementById('position_2').value = data.anzahl_personen ?? '';
-            $('#event_status_id').val(@json(\App\Enums\BookingState::Neu->value));
-            Total_Change();
-            UpdateCalendar()
-        })
-        .catch(err => console.error('Fehler:', err));
-    }
-    function Total_Change() {
-        var start_date = new Date(document.getElementById('start_date').value);
-        var end_date = new Date(document.getElementById('end_date').value);
-        var days = (end_date - start_date)/(24*3600*1000);
-        var positions = @json($positions);
-        var total_amount = 0, id = 0, total_person = 0;
-        var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
-        positions.forEach(position => {
-            id = 'position_' + position['id'];
-            var person = position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
-            person = person || 0;
-            var subtotal = 0
-            if(days === 0){
-                if(position['bexio_code'] < 50){
-                    subtotal = position['price'] / 2;
-                }
-                else if(position['bexio_code'] < 100) {
-                    subtotal =position['price']
-                }
-            }
-            else {
-                if(position['bexio_code'] < 50){
-                    subtotal = position['price'];
-                }
-                else if(position['bexio_code'] > 100) {
-                    subtotal = parseInt(document.getElementById(id).value) * position['price'] * days * discount || 0;
-                }
-            }
-            if( position['bexio_code']>200){
-                subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position['price'] * Math.max(days,1) || 0;
-            }
-            total_amount += subtotal;
-            total_person += person;
-        });
-        $("#total").text(total_amount);
-        $("#total_days").val(days);
-        $("#total_amount").val(total_amount);
-        $("#total_people").val(total_person);
-    }
-    window.createExtern = createExtern;
-    window.createIntern = createIntern;
-    window.Total_Change = Total_Change;
-
-    // Kalender mit den Daten aus dem Formular laden (nur Anzeige)
-    let calendarRequest = null;
-    function UpdateCalendar() {
-        const start = document.getElementById('start_date').value;
-        const end = document.getElementById('end_date').value;
-        if (!start || !end || end < start) {
-            return;
-        }
-        calendarRequest?.abort();
-        calendarRequest = new AbortController();
-        fetch('{{ route('events.calendar') }}?' + new URLSearchParams({ start_date: start, end_date: end }), {
-            headers: { 'Accept': 'application/json' },
-            signal: calendarRequest.signal,
-        })
-            .then(response => response.ok ? response.text() : null)
-            .then(html => {
-                if (html) {
-                    document.getElementById('booking-calendar').innerHTML = html;
-                }
-            })
-            .catch(() => {});
-    }
-    ['start_date', 'end_date'].forEach(id => {
-        document.getElementById(id).addEventListener('change', UpdateCalendar);
-    });
-    // Nach einem Validierungsfehler sind die Daten schon ausgefüllt
-    UpdateCalendar();
-</script>
+@php
+    $adults = $positions->firstWhere('bexio_code', 120);
+    $eventFormConfig = [
+        'positions' => $positions->map(fn ($position) => [
+            'input' => 'position_'.$position->id,
+            'bexio_code' => (int) $position->bexio_code,
+            'price' => (float) $position->price,
+        ])->values(),
+        'minNights' => 0,
+        'calendarUrl' => route('events.calendar'),
+        'parseUrl' => route('events.parse'),
+        // Anzahl Personen aus dem Import zählt als Erwachsene, Normaltarif
+        'importPersonsInput' => $adults ? 'position_'.$adults->id : null,
+        'importStatus' => \App\Enums\BookingState::Neu->value,
+        'internStatus' => \App\Enums\BookingState::Eigene->value,
+    ];
+@endphp
+<script type="application/json" id="event-form-config">@json($eventFormConfig)</script>
+@vite('resources/js/admin/event-form.js')
 @endpush

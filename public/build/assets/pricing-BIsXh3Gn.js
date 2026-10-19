@@ -1,0 +1,1 @@
+function e(e,t,n){let r=Number(t)||0;return e===210?Math.max(r-3,0)*n:e>20&&e<=200?r*n:r}function t(e){return e>=100&&e!==220}function n(n,r,i,a){let o=t(n.bexio_code)?(100-(Number(a)||0))/100:1;return e(n.bexio_code,r,i)*n.price*o}function r(e){return e.bexio_code<50}function i(e){return e.bexio_code>=100&&e.bexio_code<=200}export{i as n,n as r,r as t};

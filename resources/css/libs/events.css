@@ -56,12 +56,27 @@
 	color: var(--calendar-free-text);
 }
 
-.hk-agenda__day--SS,
-.hk-agenda__day--FS,
-.hk-agenda__day--SF {
+.hk-agenda__day--SS {
 	border: 1px solid var(--calendar-selected);
 	background: var(--calendar-selected);
 	color: var(--calendar-selected-text);
+}
+
+/* Anreise am Nachmittag bzw. Abreise am Vormittag der gewählten Buchung, wie FP/PDF */
+.hk-agenda__day--FS {
+	border: 1px solid var(--calendar-free-border);
+	border-bottom: 1px solid var(--calendar-selected);
+	border-right: 1px solid var(--calendar-selected);
+	background: linear-gradient(to bottom right, var(--calendar-free) 50%, var(--calendar-selected) 50%);
+	color: var(--calendar-free-text);
+}
+
+.hk-agenda__day--SF {
+	border: 1px solid var(--calendar-free-border);
+	border-top: 1px solid var(--calendar-selected);
+	border-left: 1px solid var(--calendar-selected);
+	background: linear-gradient(to bottom right, var(--calendar-selected) 50%, var(--calendar-free) 50%);
+	color: var(--calendar-free-text);
 }
 
 .hk-agenda__day--PP {

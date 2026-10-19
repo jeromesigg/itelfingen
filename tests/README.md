@@ -45,7 +45,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | `phpunit.xml` | SQLite in-memory, feste Werte statt `.env` (auch `SPREADSHEET_ID`, `GOOGLE_CALENDAR_ID`), Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN` |
 | `tests/UnitTestCase.php` | Basis für Unit-Tests, die Laravel brauchen (config, Validator), aber keine Datenbank; eine DB-Abfrage bricht den Test ab |
 | `tests/TestCase.php` | `RefreshDatabase` mit `TestingSeeder`, Schutz vor echter DB, `withoutVite()`, keine echten HTTP-Aufrufe, Google-Kalender gefakt, temporäres `storage/` mit Platzhalter-PDFs (die Vorlagen liegen nicht im Repo; Parkkarten landen so nie im echten storage) |
-| `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210 |
+| `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210, 220, 250, 300 |
 
 ### Testdaten: Szenario
 
@@ -316,9 +316,12 @@ Bestätigt am 10.10.2026.
 | Hausmiete (20) | wie in der Buchung erfasst |
 | Personen/Nutzung (21-200) | erfasste Menge × Anzahl Nächte |
 | Parkplätze (210) | (erfasste Menge − 3 inbegriffene, mindestens 0) × Anzahl Nächte |
+| Frühbezug, Spätabgabe (220) | fix, je 1 für Early Check-In und Late Check-Out (setzt "Buchung updaten" aus den Checkboxen) |
 | übrige Zusatzkosten (> 200) | fix, wie erfasst |
 | Menge 0 | Position entfällt |
-| Rabatt | nur auf Positionen ab Code 100 |
+| Rabatt | nur auf Positionen ab Code 100, nicht auf Frühbezug/Spätabgabe (220, bestätigt am 19.10.2026) |
+
+Die Anzeige in den Formularen rechnet gleich (`resources/js/libs/pricing.js`).
 
 ---
 

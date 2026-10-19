@@ -216,7 +216,11 @@ class AdminEventController extends Controller
             ->where('event_id', $id)
             ->orderBy(PricelistPosition::select('bexio_code')
                 ->whereColumn('pricelist_positions.id', 'positions.pricelist_position_id')
-            )->get();
+            )->get()
+            // Frühbezug/Spätabgabe folgt den Checkboxen Early Check-In / Late Check-Out
+            ->reject(fn (Position $position) => $position->pricelist_position?->bexio_code === PricelistPosition::CHECKIN_CHECKOUT_CODE)
+            ->values();
+        $checkin_checkout_price = (float) PricelistPosition::where('bexio_code', PricelistPosition::CHECKIN_CHECKOUT_CODE)->value('price');
 
         $event_statuses = EventStatus::pluck('name', 'id')->all();
         $contract_statuses = ContractStatus::pluck('name', 'id')->all();
@@ -224,7 +228,7 @@ class AdminEventController extends Controller
         $users = User::where('role_id', UserRole::Verwalter)->pluck('username', 'id')->all();
         $title = str_pad($event['id'], 5, '0', STR_PAD_LEFT).' - Buchung bearbeiten';
 
-        return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'title'));
+        return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'checkin_checkout_price', 'title'));
     }
 
     /**
@@ -253,6 +257,7 @@ class AdminEventController extends Controller
         $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
 
         $event->update($input);
+        $event->syncCheckinCheckoutPosition();
         $additional_text = $input['additional_text'] ?? '';
 
         switch (substr($input['submit'], 0, 1)) {

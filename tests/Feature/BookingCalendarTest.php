@@ -193,10 +193,12 @@ class BookingCalendarTest extends TestCase
     {
         $s = BookingScenario::create();
 
-        $this->actingAs($s->user('verwalter'))->get('/admin/events/create')
+        $html = $this->actingAs($s->user('verwalter'))->get('/admin/events/create')
             ->assertOk()
             ->assertSee('id="booking-calendar"', false)
             ->assertSee('Start und Ende wählen')
-            ->assertSee(route('events.calendar'), false);
+            ->getContent();
+
+        $this->assertSame(route('events.calendar'), AdminEventFormLayoutTest::eventFormConfig($html)['calendarUrl']);
     }
 }
