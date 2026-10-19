@@ -7,8 +7,15 @@
     "file": "assets/rolldown-runtime-XKyaHtl9.js",
     "name": "rolldown-runtime"
   },
+  "_sweetalert2.all-ChJboSGG.js": {
+    "file": "assets/sweetalert2.all-ChJboSGG.js",
+    "name": "sweetalert2.all",
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js"
+    ]
+  },
   "resources/css/app.css": {
-    "file": "assets/app-SIYmvXPh.css",
+    "file": "assets/app-CGKCDhBu.css",
     "name": "app",
     "names": [
       "app.css"
@@ -47,22 +54,27 @@
     "src": "resources/images/login.webp"
   },
   "resources/js/admin/event-form.js": {
-    "file": "assets/event-form-IkeiKcHA.js",
+    "file": "assets/event-form-DIdnv7Dg.js",
     "name": "event-form",
     "src": "resources/js/admin/event-form.js",
     "isEntry": true,
     "imports": [
       "_rolldown-runtime-XKyaHtl9.js",
-      "_pricing-BIsXh3Gn.js"
+      "_pricing-BIsXh3Gn.js",
+      "_sweetalert2.all-ChJboSGG.js"
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-C0jvi7u7.js",
+    "file": "assets/app-DPPbLv6g.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
+      "_rolldown-runtime-XKyaHtl9.js",
       "_pricing-BIsXh3Gn.js"
+    ],
+    "dynamicImports": [
+      "_sweetalert2.all-ChJboSGG.js"
     ]
   },
   "resources/js/charts.js": {

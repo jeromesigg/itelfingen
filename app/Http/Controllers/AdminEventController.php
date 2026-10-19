@@ -92,7 +92,7 @@ class AdminEventController extends Controller
                 'start_date' => [
                     'display' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.
                         Carbon::parse($event['end_date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021'),
+                    'sort' => Carbon::parse($event['start_date'])->toDateString(),
                 ],
                 'number' => $event->number().'<br>'.e($event['foreign_key']),
                 'name' => e($event['firstname']).' '.$name.'<br>'.e($event['group_name']),

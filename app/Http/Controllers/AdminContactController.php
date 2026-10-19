@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,22 +39,7 @@ class AdminContactController extends Controller
             $contacts = Contact::where('done', $done)->orderby('created_at', 'DESC')->get();
         }
 
-        // Transformation der Daten (gleich wie Yajra, aber manuel)
-        $data = $contacts->map(function (Contact $contact) {
-            return [
-                'created_at' => [
-                    'display' => Carbon::parse($contact['created_at'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($contact['created_at'])->toISOString(),
-                ],
-                'name' => $contact['name'],
-                'email' => $contact['email'],
-                'subject' => $contact['subject'],
-                'content' => $contact['content'],
-                'done' => $contact['done'] ? 'Ja' : 'Nein',
-                'user' => $contact->user['username'] ?? '',
-                'actions' => '<form action="'.\URL::route('contacts.done', $contact).'" method="post">'.csrf_field().(! $contact['done'] ? '<button type="submit" class="btn btn-secondary btn-sm">Bearbeitet</button>' : '').'</form>',
-            ];
-        });
+        $data = $contacts->map(fn (Contact $contact) => $this->row($contact));
 
         // TanStack-freundliches Response-Format
         return response()->json([
@@ -61,11 +48,39 @@ class AdminContactController extends Controller
         ]);
     }
 
-    public function done(Contact $contact)
+    public function done(Request $request, Contact $contact): JsonResponse|RedirectResponse
     {
-        //
         $contact->update(['user_id' => Auth::user()->id, 'done' => true]);
 
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Anfrage als bearbeitet markiert.', 'row' => $this->row($contact->fresh('user'))]);
+        }
+
         return redirect('/admin/contacts');
+    }
+
+    /**
+     * Zeile der Tabelle (DataTable.vue). Textspalten ohne HTML, Aktionen als Daten.
+     *
+     * @return array<string, mixed>
+     */
+    private function row(Contact $contact): array
+    {
+        return [
+            'id' => $contact->id,
+            'created_at' => [
+                'display' => Carbon::parse($contact['created_at'])->format('d.m.Y'),
+                'sort' => Carbon::parse($contact['created_at'])->toISOString(),
+            ],
+            'name' => $contact['name'],
+            'email' => $contact['email'],
+            'subject' => $contact['subject'],
+            'content' => $contact['content'],
+            'done' => $contact['done'] ? 'Ja' : 'Nein',
+            'user' => $contact->user['username'] ?? '',
+            'actions' => $contact['done'] ? [] : [
+                ['label' => 'Bearbeitet', 'url' => route('contacts.done', $contact)],
+            ],
+        ];
     }
 }

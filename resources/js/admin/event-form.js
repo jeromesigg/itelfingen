@@ -277,7 +277,7 @@ function initEventForm(config) {
             allowOutsideClick: () => !Swal.isLoading(),
         }).then((result) => {
             if (result.isConfirmed) {
-                void Swal.fire({ title: `${result.value.success}` });
+                void Swal.fire({ titleText: String(result.value.success) });
             }
         });
     }

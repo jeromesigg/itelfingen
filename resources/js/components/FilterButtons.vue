@@ -1,0 +1,30 @@
+<template>
+  <div role="group" :aria-label="label" class="flex flex-wrap gap-2">
+    <button
+      v-for="option in options"
+      :key="option"
+      type="button"
+      :aria-pressed="option === model"
+      :class="[
+        'rounded-lg border px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus:ring-4',
+        option === model
+          ? `${activeClass} border-transparent text-white`
+          : 'border-gray-300 bg-white text-gray-900 hover:bg-gray-100 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700',
+      ]"
+      @click="model = option"
+    >
+      {{ option }}
+    </button>
+  </div>
+</template>
+
+<script setup>
+const model = defineModel({ type: String, required: true })
+
+defineProps({
+  options: { type: Array, required: true },
+  // Beschriftung der Gruppe für Screenreader
+  label: { type: String, required: true },
+  activeClass: { type: String, default: 'bg-grannysmith focus:ring-grannysmith/50' },
+})
+</script>

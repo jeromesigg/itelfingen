@@ -50,29 +50,74 @@
             </th>
           </tr>
         </thead>
-        <tbody id="tableBody">
-          <tr 
-            v-for="(row, index) in table.getRowModel().rows"
+        <tbody id="tableBody" :aria-busy="isLoading">
+          <!-- Erstes Laden: Platzhalterzeilen statt leerer Tabelle -->
+          <template v-if="isLoading && !tableData.length">
+            <tr v-for="n in 5" :key="'skeleton-' + n" class="border-b border-default">
+              <td v-for="column in columns" :key="column.accessorKey" class="px-4 py-3 border border-gray-300 dark:border-gray-600">
+                <div class="h-3 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+              </td>
+            </tr>
+          </template>
+          <tr v-else-if="loadError">
+            <td :colspan="columns.length" class="px-4 py-6 text-center">
+              Die Daten konnten nicht geladen werden.
+              <button type="button" class="ms-2 font-medium text-orientalpink hover:underline" @click="loadData">Erneut laden</button>
+            </td>
+          </tr>
+          <tr v-else-if="!rows.length">
+            <td :colspan="columns.length" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">Keine Einträge gefunden.</td>
+          </tr>
+          <template v-else>
+          <tr
+            v-for="row in rows"
             :key="row.id"
-            :class="{
-              'bg-neutral-primary': index % 2 === 0,
-              'bg-neutral-primary': index % 2 !== 0,
-              'border-b border-default hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors': true
-            }"
+            class="bg-neutral-primary border-b border-default hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
-            <td 
+            <td
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
               :style="{ 'max-width': cell.column.getSize() + 'px' }"
               class="px-4 py-2 border border-gray-300 dark:border-gray-600"
             >
+              <!-- Aktionen kommen als Daten ({ label, url, variant, confirm }) und laufen per fetch, ohne Neuladen -->
+              <div v-if="cell.column.columnDef.meta?.actions" class="flex flex-wrap gap-2">
+                <button
+                  v-for="action in cell.getValue() ?? []"
+                  :key="action.url"
+                  type="button"
+                  :disabled="busyAction === action.url"
+                  :class="[
+                    'rounded-lg px-3 py-1.5 text-sm font-medium text-white focus:outline-hidden focus:ring-4 disabled:cursor-wait disabled:opacity-60',
+                    action.variant === 'danger' ? 'bg-red-700 hover:bg-red-800 focus:ring-red-300' : 'bg-grannysmith hover:opacity-90 focus:ring-grannysmith/50',
+                  ]"
+                  @click="runAction(row.original, action)"
+                >
+                  {{ action.label }}
+                </button>
+              </div>
               <!-- HTML nur für Spalten mit meta.html (vom Server escaped), sonst als Text: Werte aus öffentlichen Formularen -->
-              <span v-if="cell.column.columnDef.meta?.html" v-html="formatCellValue(cell.getValue())"></span>
+              <span v-else-if="cell.column.columnDef.meta?.html" v-html="formatCellValue(cell.getValue())"></span>
               <template v-else>{{ formatCellValue(cell.getValue()) }}</template>
             </td>
           </tr>
+          </template>
         </tbody>
       </table>
+    </div>
+
+    <div aria-live="polite" class="pointer-events-none fixed bottom-5 end-5 z-60">
+      <Transition enter-active-class="transition-opacity duration-200" enter-from-class="opacity-0" leave-active-class="transition-opacity duration-300" leave-to-class="opacity-0">
+        <div
+          v-if="toast"
+          :class="[
+            'pointer-events-auto rounded-lg border px-4 py-3 text-sm shadow-lg',
+            toast.error ? 'border-red-300 bg-red-50 text-red-800 dark:border-red-800 dark:bg-gray-800 dark:text-red-400' : 'border-green-300 bg-green-50 text-green-800 dark:border-green-800 dark:bg-gray-800 dark:text-green-400',
+          ]"
+        >
+          {{ toast.message }}
+        </div>
+      </Transition>
     </div>
 
     <!-- Page Size Selector -->
@@ -173,6 +218,9 @@ const props = defineProps({
 // ===== STATE =====
 const tableData = ref([])
 const isLoading = ref(false)
+const loadError = ref(false)
+const busyAction = ref(null)
+const toast = ref(null)
 const pagination = ref({ pageIndex: 0, pageSize: props.pageSize })
 const globalFilter = ref('')
 const debouncedFilter = ref('')
@@ -232,6 +280,22 @@ const table = useVueTable({
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
   getSortedRowModel: getSortedRowModel(),
+  // Datumsspalten kommen als { display, sort }; sonst alphanumerisch
+  defaultColumn: { sortingFn: 'sortValue' },
+  sortingFns: {
+    sortValue: (rowA, rowB, columnId) => {
+      const value = (row) => {
+        const raw = row.getValue(columnId)
+        return raw !== null && typeof raw === 'object' && 'sort' in raw ? raw.sort : (raw ?? '')
+      }
+      const a = value(rowA)
+      const b = value(rowB)
+      if (typeof a === 'number' && typeof b === 'number') {
+        return a - b
+      }
+      return String(a).localeCompare(String(b), 'de-CH', { numeric: true })
+    },
+  },
   // globalFilterFn: (row, columnId, filterValue) => {
   //   if (!props.searchableColumns.length) return true
   //   const cellValue = String(row.getValue(columnId) || '').toLowerCase()
@@ -241,6 +305,13 @@ const table = useVueTable({
 
 // ===== COMPUTED =====
 const filteredRowCount = computed(() => filteredData.value.length)
+
+// Sichtbare Zeilen. Der Zustand von TanStack ist für das Template nicht reaktiv, darum
+// Sortierung, Seite und Daten hier ausdrücklich lesen, sonst zeichnet ein Klick auf eine Spalte nicht neu.
+const rows = computed(() => {
+  void [sorting.value, pagination.value.pageIndex, pagination.value.pageSize, filteredData.value]
+  return table.getRowModel().rows
+})
 
 const visiblePages = computed(() => {
   const pageCount = table.getPageCount()
@@ -286,11 +357,64 @@ async function loadData() {
     }
     const { data } = await response.json()
     tableData.value = data
-    // Reset to first page
+    loadError.value = false
   } catch (error) {
     console.error('Error loading table data:', error)
+    loadError.value = true
   } finally {
     isLoading.value = false
+  }
+}
+
+let toastTimer = null
+function showToast(message, error = false) {
+  toast.value = { message, error }
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { toast.value = null }, 4000)
+}
+
+/**
+ * Aktion einer Zeile ausführen (POST, Antwort { message, row }) und nur diese Zeile ersetzen.
+ */
+async function runAction(rowData, action) {
+  if (action.confirm) {
+    const { default: Swal } = await import('sweetalert2')
+    const result = await Swal.fire({
+      titleText: action.confirm,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: action.label,
+      cancelButtonText: 'Abbrechen',
+      confirmButtonColor: action.variant === 'danger' ? '#b91c1c' : undefined,
+      theme: 'auto',
+    })
+    if (!result.isConfirmed) {
+      return
+    }
+  }
+  busyAction.value = action.url
+  try {
+    const response = await fetch(action.url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+      },
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+    const { message, row } = await response.json()
+    if (row) {
+      // Neues Array statt splice: TanStack erkennt geänderte Daten an der Referenz
+      tableData.value = tableData.value.map((entry) => (entry.id === rowData.id ? row : entry))
+    }
+    showToast(message)
+  } catch (error) {
+    console.error('Error running action:', error)
+    showToast('Die Aktion ist fehlgeschlagen. Bitte Seite neu laden und nochmals versuchen.', true)
+  } finally {
+    busyAction.value = null
   }
 }
 
@@ -352,7 +476,6 @@ watch(() => props.filters, () => {
 
 watch(sorting, () => {
   pagination.value.pageIndex = 0
-  loadData()
 }, { deep: true })
 
 // ===== LIFECYCLE =====

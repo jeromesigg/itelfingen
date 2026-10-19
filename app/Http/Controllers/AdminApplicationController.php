@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -27,28 +29,7 @@ class AdminApplicationController extends Controller
 
         $applications = Application::get();
 
-        // Transformation der Daten (gleich wie Yajra, aber manuel)
-        $data = $applications->map(function (Application $application) {
-            return [
-                'created_at' => [
-                    'display' => Carbon::parse($application['created_at'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($application['created_at'])->toISOString(),
-                ],
-                // HTML-Spalten (meta.html): Werte aus dem öffentlichen Formular escapen
-                'name' => '<a class="text-orientalpink" href="'.route('applications.show', $application).'">'.e($application['name']).'</a>',
-                'firstname' => $application['firstname'],
-                'email' => $application['email'],
-                'group' => $application['group'],
-                'street' => $application['street'].' '.$application['house_number'],
-                'city' => $application['plz'].' '.$application['city'],
-                'why' => $application['why'],
-                'comment' => $application['comment'],
-                'refuse' => $application['refuse'] ? 'Ja' : 'Nein',
-                'invoice_send' => $application['invoice_send'] ? 'Ja' : 'Nein',
-                'members' => $application['members'] ? 'Ja' : 'Nein',
-                'actions' => '<form action="'.\URL::route('applications.refuse', $application).'" method="post">'.csrf_field().(! $application['invoice_send'] && ! $application['refuse'] ? '  <button type="submit" class="text-white bg-danger box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:ring-danger-medium shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none">Ablehnen</button>' : '').'</form>',
-            ];
-        });
+        $data = $applications->map(fn (Application $application) => $this->row($application));
 
         // TanStack-freundliches Response-Format
         return response()->json([
@@ -100,20 +81,51 @@ class AdminApplicationController extends Controller
     public function edit() {}
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return Response
+     * Bewerbung ablehnen; die Tabelle ruft das per fetch auf und erhält die neue Zeile.
      */
-    public function refuse(Application $application)
+    public function refuse(Request $request, Application $application): JsonResponse|RedirectResponse
     {
-        //
-        $input['refuse'] = true;
+        $application->update(['refuse' => true]);
 
-        $application->update($input);
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Bewerbung abgelehnt.', 'row' => $this->row($application->fresh())]);
+        }
 
         return redirect('/admin/applications');
+    }
+
+    /**
+     * Zeile der Tabelle (DataTable.vue). Aktionen als Daten, die Tabelle führt sie per fetch aus.
+     *
+     * @return array<string, mixed>
+     */
+    private function row(Application $application): array
+    {
+        return [
+            'id' => $application->id,
+            'created_at' => [
+                'display' => Carbon::parse($application['created_at'])->format('d.m.Y'),
+                'sort' => Carbon::parse($application['created_at'])->toISOString(),
+            ],
+            // HTML-Spalten (meta.html): Werte aus dem öffentlichen Formular escapen
+            'name' => '<a class="text-orientalpink" href="'.route('applications.show', $application).'">'.e($application['name']).'</a>',
+            'firstname' => $application['firstname'],
+            'email' => $application['email'],
+            'group' => $application['group'],
+            'street' => $application['street'].' '.$application['house_number'],
+            'city' => $application['plz'].' '.$application['city'],
+            'why' => $application['why'],
+            'comment' => $application['comment'],
+            'refuse' => $application['refuse'] ? 'Ja' : 'Nein',
+            'invoice_send' => $application['invoice_send'] ? 'Ja' : 'Nein',
+            'members' => $application['members'] ? 'Ja' : 'Nein',
+            'actions' => $application['invoice_send'] || $application['refuse'] ? [] : [[
+                'label' => 'Ablehnen',
+                'url' => route('applications.refuse', $application),
+                'variant' => 'danger',
+                'confirm' => 'Bewerbung von '.trim($application['firstname'].' '.$application['name']).' ablehnen?',
+            ]],
+        ];
     }
 
     /**

@@ -31,8 +31,6 @@
 
 
     <div class="container mx-auto px-4">
-        <input type="hidden" value="Ab Heute" id="date_btn_value">
-        <input type="hidden" value="Alle" id="status_btn_value">
         <div class="hk-reservation hk-reservation__step1 text-gray-600 dark:text-gray-300">
             <div class="hk-reservation__container container mx-auto px-4">
                 <div class="hk-calendar" data-vue-component="booking-calendar" data-props="{{ json_encode([
@@ -46,12 +44,5 @@
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
     </div>
-    <div id="tanStackTable" data-vue-component="events-table"></div>
+    <div id="tanStackTable" data-vue-component="events-table" data-props="{{ json_encode(['contractStatuses' => $contract_statuses->values()]) }}"></div>
 @endsection
-
-@push('scripts')
-    <script>
-        // Pass contract statuses to Vue
-        window.contractStatuses = @json($contract_statuses->toArray())
-    </script>
-@endpush

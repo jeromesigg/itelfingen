@@ -8,6 +8,7 @@
         <meta name="author" content="Jérôme Sigg">
         <meta name="robots" content="noindex,nofollow">
         <meta name="theme-color" content="#ffffff">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{isset($title) ? $title . ' - ' : ''}}{{config('app.name')}}</title>
 
