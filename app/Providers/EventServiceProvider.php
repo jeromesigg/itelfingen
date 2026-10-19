@@ -52,16 +52,4 @@ class EventServiceProvider extends ServiceProvider
             ApplicationCreatedListener::class,
         ],
     ];
-
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        parent::boot();
-
-        //
-    }
 }

@@ -75,6 +75,33 @@ class ExternalBookingParserTest extends TestCase
         $this->assertSame('Nachname', $data['name']);
     }
 
+    public static function lineEndings(): array
+    {
+        return [
+            'Unix' => ["\n"],
+            'Windows' => ["\r\n"],
+        ];
+    }
+
+    #[DataProvider('lineEndings')]
+    public function test_mail_with_empty_comment_keeps_language_clean(string $lineEnding): void
+    {
+        $text = str_replace("    \tIst das Haus frei?", '', self::MAIL)."\n";
+
+        $data = Helper::parseFromMailText(str_replace("\n", $lineEnding, $text));
+
+        $this->assertSame('französisch', $data['sprache']);
+        $this->assertNull($data['kommentar']);
+    }
+
+    public function test_mail_comment_on_next_line(): void
+    {
+        $data = Helper::parseFromMailText(str_replace("    \tIst", "\nIst", self::MAIL));
+
+        $this->assertSame('französisch', $data['sprache']);
+        $this->assertSame('Ist das Haus frei?', $data['kommentar']);
+    }
+
     public function test_mail_people_count_takes_first_number(): void
     {
         $data = Helper::parseFromMailText(str_replace('ca. 12 Personen', '12-15 Personen', self::MAIL));

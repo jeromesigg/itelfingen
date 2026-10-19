@@ -4,18 +4,18 @@
     <section>
         <div class="container mx-auto px-4">
 
-            <header> 
+            <header>
                 <h3>Positionen</h3>
                 <a href="{{route('positions.create')}}" class="btn btn-primary btn-success btn-sm">
                     <span>Importieren</span>
                 </a>
             </header>
-        
+
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table">
                         <thead>
-                            <tr>                                
+                            <tr>
                                 <th>Bexio Code</th>
                                 <th>Name</th>
                                 <th>Preis</th>
@@ -32,13 +32,13 @@
                                         <td>{{$position->price}}</td>
                                         <td>{{$position->show ? 'Ja' : 'Nein'}}</td>
                                         <td>{{$position->archive_status['name']}}</td>
-                                    </tr>   
+                                    </tr>
                                 @endforeach
                             @endif
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>  
+        </div>
     </section>
 @endsection

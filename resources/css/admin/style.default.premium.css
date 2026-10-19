@@ -275,8 +275,6 @@ nav.navbar .dropdown-menu {
   float: left;
   margin-top: 16px;
   margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
   font-size: 1rem;
   padding: 1rem;
 }
@@ -378,7 +376,6 @@ nav.navbar a.menu-btn:hover {
   position: fixed;
   top: 0;
   left: 0;
-  width: 200px;
   height: 100%;
   width: 200px;
   text-align: left;

@@ -12,11 +12,11 @@
         <title>{{isset($title) ? $title . ' - ' : ''}}{{config('app.name')}}</title>
 
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jodit/4.12.37/es2021/jodit.min.css"/>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/4.12.37/es2021/jodit.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jodit/4.12.37/es2021/jodit.min.css" integrity="sha512-Yr0Qtm5RuMtPg7m1Hf9FWXtIEx/lvYiu5CWgr4CmHcvLWHTVHd0P2eSRHRfU7LvYJUQNzwgA9sFUbMAzu1iv/w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jodit/4.12.37/es2021/jodit.min.js" integrity="sha512-+jmK7ImR8Bl9ycGUyNa2zqnsX6L/4/nIWQmGC4V5Pt8PZ3dZ2MWiNwX+6x0bGCAdvs6Y1ObE4tJ6F33+b83zqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
         <script src="https://kit.fontawesome.com/da9e6dcf22.js" crossorigin="anonymous"></script>
-        
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <script>
@@ -42,8 +42,8 @@
         <main class="p-4 md:ml-64 h-auto min-h-screen pt-20">
           @yield('content')
         </main>
-      </div> 
-       <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+      </div>
+       <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js" integrity="sha384-dXMudAuWq5MLjG7Tex8rC+3U/BPQ/OUAF6UyUa7DWzfAMW1JRIf2NuW2hAyGtsvO" crossorigin="anonymous"></script>
       @stack('scripts')
     </body>
 

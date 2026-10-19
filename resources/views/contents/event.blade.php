@@ -172,22 +172,22 @@
                                         </thead>
                                         <tfoot class="text-gray-900 dark:bg-gray-700 dark:text-white">
                                             <tr>
-                                                <th class="px-2 sm:px-6 pt-3" scope="row"></th>
-                                                <th class="px-2 sm:px-6 pt-4 text-base font-semibold sm:text-lg">Total <span id="days" class="font-normal"></span></th>
-                                                <th class="px-2 sm:px-6 pt-3"></th>
-                                                <th class="px-2 sm:px-6 pt-4 text-lg font-bold whitespace-nowrap sm:text-xl"><span id="total_amount_show"></span>.-</th>
+                                                <td class="px-2 sm:px-6 pt-3"></td>
+                                                <th class="px-2 sm:px-6 pt-4 text-base font-semibold sm:text-lg" scope="row">Total <span id="days" class="font-normal"></span></th>
+                                                <td class="px-2 sm:px-6 pt-3"></td>
+                                                <td class="px-2 sm:px-6 pt-4 text-lg font-bold whitespace-nowrap sm:text-xl"><span id="total_amount_show"></span>.-</td>
                                                 <x-forms.hidden name="total_amount"/>
                                                 <x-forms.hidden name="total_people"/>
                                                 <x-forms.hidden name="discount"/>
                                                 <x-forms.hidden name="total_days"/>
                                             </tr>
                                             <tr>
-                                                <th class="px-2 sm:px-6 pt-3" scope="row"></th>
-                                                <th class="px-2 sm:px-6 pb-3 pt-1 text-xs text-gray-600 dark:text-gray-400" colspan="3">
+                                                <td class="px-2 sm:px-6 pt-3"></td>
+                                                <td class="px-2 sm:px-6 pb-3 pt-1 text-xs text-gray-600 dark:text-gray-400" colspan="3">
                                                     <span class="font-normal normal-case">
                                                         Alle Preise in CHF. Die definitiven Preise werden im Mietvertrag festgelegt.
                                                     </span>
-                                                </th>
+                                                </td>
                                             </tr>
                                         </tfoot>
                                         <tbody>
@@ -196,7 +196,7 @@
                                                     @if ($position['bexio_code']<100)
                                                         <th class="px-2 sm:px-6 py-4" scope="row" id={{'position_'.$position['bexio_code']}}><span id="position_{{$position['bexio_code']}}_amount"></span></th>
                                                     @else
-                                                    
+
                                                         <th class="px-2 sm:px-6 py-4" scope="row"><x-forms.text name="{{'positions['.$position['bexio_code'].']'}}" id="{{'position_'.$position['bexio_code']}}" type="number" onChange="Total_Change()"/></th>
                                                     @endif
                                                     <td class="px-2 sm:px-6 py-4">{{$position['name']}}</td>
@@ -235,7 +235,7 @@
 
 @push('scripts')
   <script type="module">
-  	document.getElementById('calendarform').addEventListener('submit', function(e) {
+    document.getElementById('calendarform').addEventListener('submit', function(e) {
         const btn = document.getElementById('submit-event-btn');
         btn.disabled = true;
         btn.innerHTML = 'Wird gesendet...';

@@ -48,9 +48,9 @@
       <div class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded-sm divide-y divide-gray-100 shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown">
         <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown" >
           <li>
-            <a href="{{ route('logout') }}" class="nav-link logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
+            <a href="{{ route('logout') }}" class="nav-link logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
               <span class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Logout</span>
-          </a> 
+          </a>
           <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
               @csrf
           </form>

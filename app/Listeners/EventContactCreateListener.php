@@ -47,7 +47,7 @@ class EventContactCreateListener
                 ], ];
             $person = app(BexioApiService::class)->post('contact/search', $query);
 
-            if (count($person) === 0) {
+            if (empty($person)) {
                 $data = [
                     'contact_type_id' => '2',
                     'name_1' => $event->name,

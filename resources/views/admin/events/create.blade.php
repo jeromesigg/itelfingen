@@ -38,8 +38,8 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
         <h4 class="{{ $heading }}">Vorausfüllen</h4>
         <div class="flex flex-col lg:flex-row lg:items-end gap-4">
             <div class="grow">
-                <x-forms.text label="Import Mail:" name="import-text"
-                    placeholder="Anfrage A-123456: Sa 01.01.2026 bis Mo 03.01.2026, Gruppe Sigg (Sonstige), ca. 12 Personen (Selbstkocher)." />
+                <x-forms.text-area label="Import Mail:" name="import-text" rows=4
+                    placeholder="Anfrage-Mail von 'Anfragenummer' bis 'Kommentar der Gruppe' hier einfügen..." />
             </div>
             <div class="flex flex-wrap gap-2 shrink-0">
                 <button type="button" class="{{ $grannysmith }}" onclick="createExtern()">Import übernehmen</button>
@@ -160,17 +160,17 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
 @push('scripts')
 <script type="module">
     function createIntern() {
-	    $('#name').val("Interne Buchung");
-	    $('#street').val("Itelfingen");
-	    $('#house_number').val("3");
-	    $('#plz').val("6344");
-	    $('#city').val("Meierskappel");
-	    $('#email').val("verwalter@itelfingen.ch");
-	    $('#total_people').val("0");
-	    $('#total_days').val("0");
-	    $('#total_amount').val("0");
+        $('#name').val("Interne Buchung");
+        $('#street').val("Itelfingen");
+        $('#house_number').val("3");
+        $('#plz').val("6344");
+        $('#city').val("Meierskappel");
+        $('#email').val("verwalter@itelfingen.ch");
+        $('#total_people').val("0");
+        $('#total_days').val("0");
+        $('#total_amount').val("0");
         $('#code').val("290393");
-	    $('#event_status_id').val(@json(\App\Enums\BookingState::Eigene->value));
+        $('#event_status_id').val(@json(\App\Enums\BookingState::Eigene->value));
     }
     function createExtern() {
         const text = document.getElementById('import-text').value;

@@ -4,5 +4,9 @@
         "editor.defaultFormatter": "open-southeners.laravel-pint",
         "editor.formatOnSave": true
     },
-    "laravel-pint.enable": true
+    "laravel-pint.enable": true,
+    "sonarlint.connectedMode.project": {
+        "connectionId": "jeromesigg",
+        "projectKey": "jeromesigg_itelfingen"
+    }
 }

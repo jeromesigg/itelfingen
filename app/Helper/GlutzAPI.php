@@ -63,13 +63,11 @@ class GlutzAPI
     public static function setCode(int $userId, string $code): mixed
     {
         $result_code = self::ApiRequest('getModel', ['Codes', ['code' => $code]]);
-        if (($result_code === null || ! is_array($result_code) || empty($result_code))) {
+        if ($result_code === null || ! is_array($result_code) || empty($result_code)) {
             self::ApiRequest('setModel', ['Codes', ['code' => $code, 'userId' => $userId]]);
-        } else {
-            if (! ($result_code[0]['userId'] == $userId)) {
-                // Türcode bereits vergeben, Fehler zurückgeben
-                return false;
-            }
+        } elseif ($result_code[0]['userId'] != $userId) {
+            // Türcode bereits vergeben, Fehler zurückgeben
+            return false;
         }
 
         return true;
@@ -84,7 +82,7 @@ class GlutzAPI
     {
         // getAccessPointsOfUser
         $accessPointResult = self::ApiRequest('getAccessPointsOfUser', [(string) $userId], 2);
-        if (($accessPointResult === null || empty($accessPointResult))) {
+        if ($accessPointResult === null || empty($accessPointResult)) {
             // addAccessPointsToUser
             return self::ApiRequest('addAccessPointsToUser', [[$accessPointId], (string) $userId], 4);
         }
@@ -106,7 +104,7 @@ class GlutzAPI
         $result = [];
         // getDeviceEvaluationAndUpdateState
         $response_Result = self::ApiRequest('getDeviceEvaluationAndUpdateState', []);
-        if (! ($response_Result === null)) {
+        if ($response_Result !== null) {
             $updateNeededId = $response_Result['updateNeeded'] ?? null;
             if (is_array($updateNeededId) && ! empty($updateNeededId)) {
                 $resultUpdate = self::ApiRequest('deviceAction', ['DeviceUpdate', ['deviceid' => $updateNeededId[0]]]);

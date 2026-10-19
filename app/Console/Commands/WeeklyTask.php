@@ -28,16 +28,6 @@ class WeeklyTask extends Command
     protected $description = 'Run a task weekly';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int

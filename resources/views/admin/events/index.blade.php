@@ -38,9 +38,9 @@
                 <div class="hk-calendar">
                     <div class="hk-agenda">
                         <div class="d-none d-sm-block">
-                            <a class="hk-agenda__prev text-orientalpink hover:underline" onclick="Agenda.prev(3); return false" href="#">
+                            <button type="button" class="hk-agenda__prev text-orientalpink hover:underline cursor-pointer" onclick="Agenda.prev(3)">
                                 früheres Datum
-                            </a>
+                            </button>
                         </div>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                             @for ($i = 0; $i <= 9; $i++)
@@ -53,9 +53,9 @@
                             @endfor
                         </div>
                         <div class="d-none d-sm-block">
-                            <a class="hk-agenda__next text-orientalpink hover:underline" onclick="Agenda.next(3); return false" href="#">
+                            <button type="button" class="hk-agenda__next text-orientalpink hover:underline cursor-pointer" onclick="Agenda.next(3)">
                                 späteres Datum
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
