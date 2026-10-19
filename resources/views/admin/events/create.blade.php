@@ -38,8 +38,8 @@ $gladegreen = $btn.' bg-gladegreen hover:opacity-90 focus:ring-gladegreen/50';
         <h4 class="{{ $heading }}">Vorausfüllen</h4>
         <div class="flex flex-col lg:flex-row lg:items-end gap-4">
             <div class="grow">
-                <x-forms.text label="Import Mail:" name="import-text"
-                    placeholder="Anfrage A-123456: Sa 01.01.2026 bis Mo 03.01.2026, Gruppe Sigg (Sonstige), ca. 12 Personen (Selbstkocher)." />
+                <x-forms.text-area label="Import Mail:" name="import-text" rows=4
+                    placeholder="Anfrage-Mail von 'Anfragenummer' bis 'Kommentar der Gruppe' hier einfügen..." />
             </div>
             <div class="flex flex-wrap gap-2 shrink-0">
                 <button type="button" class="{{ $grannysmith }}" onclick="createExtern()">Import übernehmen</button>

@@ -319,12 +319,15 @@ class Helper
         // damit er selbst Wörter wie "Anzahl" oder "Name" enthalten darf.
         $extract = function (string $field) use ($text, $labels): ?string {
             $others = array_filter($labels, fn ($l) => $l !== $field);
-            $lookahead = $field === 'Kommentar der Gruppe'
+            // Ein leeres Feld steht allein auf der Zeile, darum endet der Feldname auch am Zeilenende.
+            // Beim Kommentar darf der Text auch erst auf der nächsten Zeile beginnen.
+            $isComment = $field === 'Kommentar der Gruppe';
+            $lookahead = $isComment
                 ? '(?=\z)'
-                : '(?=\n\h*(?:'.implode('|', array_map(fn ($l) => preg_quote($l, '/'), $others)).')\h|\z)';
-            $pattern = '/^\h*'.preg_quote($field, '/').'\h+(.+?)'.$lookahead.'/msu';
+                : '(?=\n\h*(?:'.implode('|', array_map(fn ($l) => preg_quote($l, '/'), $others)).')(?:\h|\R|\z)|\z)';
+            $pattern = '/^\h*'.preg_quote($field, '/').($isComment ? '\s+' : '\h+').'(.+?)'.$lookahead.'/msu';
 
-            return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+            return preg_match($pattern, $text, $m) && trim($m[1]) !== '' ? trim($m[1]) : null;
         };
 
         preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
