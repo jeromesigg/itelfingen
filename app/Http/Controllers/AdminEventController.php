@@ -155,7 +155,7 @@ class AdminEventController extends Controller
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event->event_status_id === BookingState::Eigene) {
-            Helper::EventToGoogleCalendar($event);
+            Helper::eventToGoogleCalendar($event);
         }
 
         return redirect()->route('admin.events.edit', [$event]);
@@ -325,7 +325,7 @@ class AdminEventController extends Controller
         if ($event === null) {
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
         }
-        $outputFile = Helper::PrintParking($event);
+        $outputFile = Helper::printParking($event);
 
         return response()->download($outputFile);
     }
@@ -439,19 +439,12 @@ class AdminEventController extends Controller
 
     public function createAPICode(Request $request)
     {
-        $request->validate(['code' => 'required|string|size:4']);
-
-        $code = $request->input('code');
-
-        // Code überprüfen ob vom Event oder neuerstellt
-        $event_id = $request->input('event_id');
-        if (! is_numeric($event_id)) {
-            return response()->json(['error' => 'Invalid event ID'], 400);
-        }
-        $event = Event::find($event_id);
-        if (! $event) {
-            return response()->json(['error' => 'Event not found'], 404);
-        }
+        $validated = $request->validate([
+            'code' => 'required|string|size:4',
+            'event_id' => 'required|integer|exists:events,id',
+        ]);
+        $code = $validated['code'];
+        $event = Event::findOrFail($validated['event_id']);
         $userName = 'Besucher '.$event->number();
         $userId = GlutzAPI::getUser($event, $userName, $code);
         $accessPointId = null;

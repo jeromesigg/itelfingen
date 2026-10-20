@@ -173,19 +173,15 @@
 }
 
 .text-dark__white {
-    color: var(--color-bg-primary) !important;
+    color: var(--color-bg-primary);
 }
 
 .text-dark__black {
-    color: var(--color-text-primary) !important;
-}
-
-.card-header {
-    background-color: var(--background-card) !important;
+    color: var(--color-text-primary);
 }
 
 .table {
-    color: var(--color-text-primary) !important;
+    color: var(--color-text-primary);
 }
 
 .text-uppercase {
@@ -193,15 +189,15 @@
 }
 
 .text-fg-success-strong {
-    color: var(--color-fg-success-strong) !important;
+    color: var(--color-fg-success-strong);
 }
 
 .bg-success-soft {
-    background-color: var(--color-success-soft) !important;
+    background-color: var(--color-success-soft);
 }
 
 .border-success-subtle {
-    border-color: var(--color-success-subtle) !important;
+    border-color: var(--color-success-subtle);
 }
 
 

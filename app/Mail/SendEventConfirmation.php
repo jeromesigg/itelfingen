@@ -22,7 +22,7 @@ class SendEventConfirmation extends Mailable
      */
     protected $event;
 
-    protected $additional_text;
+    protected $additionalText;
 
     /**
      * Create a new message instance.
@@ -32,7 +32,7 @@ class SendEventConfirmation extends Mailable
     public function __construct(Event $event, string $additional_text)
     {
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -63,7 +63,7 @@ class SendEventConfirmation extends Mailable
             });
         $calendar->appendProperty(TextProperty::create('METHOD', 'REQUEST'));
 
-        return $this->markdown('emails.events.confirmation', ['event' => $event, 'additional_text' => $this->additional_text])
+        return $this->markdown('emails.events.confirmation', ['event' => $event, 'additional_text' => $this->additionalText])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Buchung '.$number.' für das Ferienhaus Itelfingen ist definitiv')

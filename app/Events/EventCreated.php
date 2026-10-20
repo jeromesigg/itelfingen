@@ -18,9 +18,9 @@ class EventCreated
      */
     public Event $event;
 
-    public bool $one_day;
+    public bool $oneDay;
 
-    public array $position_array;
+    public array $positionArray;
 
     /**
      * Create a new event instance.
@@ -31,8 +31,8 @@ class EventCreated
     {
         //
         $this->event = $event;
-        $this->one_day = $one_day;
-        $this->position_array = $position_array;
+        $this->oneDay = $one_day;
+        $this->positionArray = $position_array;
     }
 
     /**

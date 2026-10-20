@@ -102,10 +102,10 @@ class Event extends Model
 
     public function status()
     {
-        $offer = Helper::GetEventOfferStatus($this);
-        $invoice = Helper::GetEventInvoiceStatus($this);
-        $cleaning_mail = Helper::GetEventCleaningMailCheck($this);
-        $code = Helper::GetEventCodeCheck($this);
+        $offer = Helper::getEventOfferStatus($this);
+        $invoice = Helper::getEventInvoiceStatus($this);
+        $cleaning_mail = Helper::getEventCleaningMailCheck($this);
+        $code = Helper::getEventCodeCheck($this);
 
         return $offer.$invoice.$cleaning_mail.$code;
     }

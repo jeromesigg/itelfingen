@@ -15,9 +15,9 @@ class GlutzAPI
         );
     }
 
-    public static function ApiRequest(string $method, array $params = [], int $id = 1, bool $returnResult = true): mixed
+    public static function apiRequest(string $method, array $params = [], int $id = 1, bool $returnResult = true): mixed
     {
-        $response = self::ApiRequestCall($method, $params, $id);
+        $response = self::apiRequestCall($method, $params, $id);
         $responseJson = $response->json();
         if ($returnResult) {
             return $responseJson['result'] ?? null;
@@ -26,7 +26,7 @@ class GlutzAPI
         }
     }
 
-    public static function ApiRequestCall(string $method, array $params = [], int $id = 1): mixed
+    public static function apiRequestCall(string $method, array $params = [], int $id = 1): mixed
     {
         $method = 'eAccess.'.$method;
         $credentials = self::getCredentials();
@@ -45,26 +45,26 @@ class GlutzAPI
     public static function getUser(Event $event, string $userName, string $code): mixed
     {
         if (! isset($event['glutz_user_id'])) {
-            $userId = self::ApiRequest('createUser', [['label' => $userName]]);
+            $userId = self::apiRequest('createUser', [['label' => $userName]]);
             if (isset($userId)) {
                 $event->update(['glutz_user_id' => $userId]);
             }
         } else {
             $userId = $event['glutz_user_id'];
         }
-        self::ApiRequest('setUserProperty', ['Code', $code, $userId]);
-        self::ApiRequest('setUserProperty', ['Name', $event['name'], $userId]);
-        self::ApiRequest('setUserProperty', ['Vorname', $event['firstname'], $userId]);
-        self::ApiRequest('setUserProperty', ['Event ID', $event['id'], $userId]);
+        self::apiRequest('setUserProperty', ['Code', $code, $userId]);
+        self::apiRequest('setUserProperty', ['Name', $event['name'], $userId]);
+        self::apiRequest('setUserProperty', ['Vorname', $event['firstname'], $userId]);
+        self::apiRequest('setUserProperty', ['Event ID', $event['id'], $userId]);
 
         return $userId;
     }
 
     public static function setCode(int $userId, string $code): mixed
     {
-        $result_code = self::ApiRequest('getModel', ['Codes', ['code' => $code]]);
+        $result_code = self::apiRequest('getModel', ['Codes', ['code' => $code]]);
         if ($result_code === null || ! is_array($result_code) || empty($result_code)) {
-            self::ApiRequest('setModel', ['Codes', ['code' => $code, 'userId' => $userId]]);
+            self::apiRequest('setModel', ['Codes', ['code' => $code, 'userId' => $userId]]);
         } elseif ($result_code[0]['userId'] != $userId) {
             // Türcode bereits vergeben, Fehler zurückgeben
             return false;
@@ -75,16 +75,16 @@ class GlutzAPI
 
     public static function getAccessPointId(): ?int
     {
-        return self::ApiRequest('getAccessPoint', [['Access Point' => 'Hauseingang']]);
+        return self::apiRequest('getAccessPoint', [['Access Point' => 'Hauseingang']]);
     }
 
     public static function getAccessPointOfUser(int $userId, int $accessPointId): mixed
     {
         // getAccessPointsOfUser
-        $accessPointResult = self::ApiRequest('getAccessPointsOfUser', [(string) $userId], 2);
+        $accessPointResult = self::apiRequest('getAccessPointsOfUser', [(string) $userId], 2);
         if ($accessPointResult === null || empty($accessPointResult)) {
             // addAccessPointsToUser
-            return self::ApiRequest('addAccessPointsToUser', [[$accessPointId], (string) $userId], 4);
+            return self::apiRequest('addAccessPointsToUser', [[$accessPointId], (string) $userId], 4);
         }
 
         return true;
@@ -94,7 +94,7 @@ class GlutzAPI
     {
         $checkIn = Carbon::parse($event['start_date'])->startOfDay();   // 00:00:00.000
         $checkOut = Carbon::parse($event['end_date'])->endOfDay();     // 23:59:59.999
-        self::ApiRequest('setAccessRightProperties', [[$accessPointId], (string) $userId, ['validFrom' => $checkIn->format('Y-m-d\TH:i:s.v'), 'validTo' => $checkOut->format('Y-m-d\TH:i:s.v')]], 4);
+        self::apiRequest('setAccessRightProperties', [[$accessPointId], (string) $userId, ['validFrom' => $checkIn->format('Y-m-d\TH:i:s.v'), 'validTo' => $checkOut->format('Y-m-d\TH:i:s.v')]], 4);
 
         return true;
     }
@@ -103,11 +103,11 @@ class GlutzAPI
     {
         $result = [];
         // getDeviceEvaluationAndUpdateState
-        $response_Result = self::ApiRequest('getDeviceEvaluationAndUpdateState', []);
+        $response_Result = self::apiRequest('getDeviceEvaluationAndUpdateState', []);
         if ($response_Result !== null) {
             $updateNeededId = $response_Result['updateNeeded'] ?? null;
             if (is_array($updateNeededId) && ! empty($updateNeededId)) {
-                $resultUpdate = self::ApiRequest('deviceAction', ['DeviceUpdate', ['deviceid' => $updateNeededId[0]]]);
+                $resultUpdate = self::apiRequest('deviceAction', ['DeviceUpdate', ['deviceid' => $updateNeededId[0]]]);
                 $result = $resultUpdate;
             }
         }
@@ -118,6 +118,6 @@ class GlutzAPI
 
     public static function deleteUser(int $userId): mixed
     {
-        return self::ApiRequest('deleteUser', [(string) $userId]);
+        return self::apiRequest('deleteUser', [(string) $userId]);
     }
 }

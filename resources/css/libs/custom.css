@@ -47,8 +47,3 @@ body {
   min-height: 80vh;
 }
 
-@media (min-width: 768px) {
-  .md\:h-192 {
-      height: 48rem !important;
-  }
-}

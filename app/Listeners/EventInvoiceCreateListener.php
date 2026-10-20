@@ -40,7 +40,7 @@ class EventInvoiceCreateListener
                 'api_reference' => $event['id'],
             ];
             app(BexioApiService::class)->post('kb_invoice/'.$invoice['id'], $data);
-            Helper::EventToGoogleCalendar($event);
+            Helper::eventToGoogleCalendar($event);
         }
     }
 }

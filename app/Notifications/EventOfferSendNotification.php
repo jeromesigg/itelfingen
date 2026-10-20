@@ -16,7 +16,7 @@ class EventOfferSendNotification extends Notification
 
     public Event $event;
 
-    public $additional_text;
+    public $additionalText;
 
     public array $offer;
 
@@ -29,7 +29,7 @@ class EventOfferSendNotification extends Notification
     {
         //
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
 
         $offer = app(BexioApiService::class)->get('kb_offer/'.$event['bexio_offer_id']);
         $this->offer = $offer;
@@ -54,7 +54,7 @@ class EventOfferSendNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new SendOffersMail($this->event, $this->offer['network_link'], $this->offer['total'], $this->additional_text, $this->offer['is_valid_until'] ?? null);
+        return new SendOffersMail($this->event, $this->offer['network_link'], $this->offer['total'], $this->additionalText, $this->offer['is_valid_until'] ?? null);
     }
 
     /**

@@ -69,7 +69,7 @@ class StatusDisplayTest extends TestCase
     {
         $event = Event::factory()->create(['event_status_id' => $booking])->fresh();
 
-        $this->assertStringContainsString($text, Helper::GetEventUserCheck($event));
+        $this->assertStringContainsString($text, Helper::getEventUserCheck($event));
     }
 
     public static function customerSteps(): array
