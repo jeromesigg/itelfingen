@@ -28,9 +28,49 @@ vendor/bin/phpunit --filter test_contact_form             # einzelne Tests
 
 Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpunit`.
 
+### JavaScript (Vitest)
+
+```bash
+npm test                                                  # alle JS-Tests (vitest run)
+npm run test:watch                                        # bei jeder Änderung neu
+npx vitest run tests/js/DataTable.test.js                 # eine Datei
+```
+
+In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DOM über happy-dom, Vue-Komponenten mit `@vue/test-utils`).
+
+| Datei | Prüft |
+|---|---|
+| `pricing.test.js` | Preisregel der Formulare (`resources/js/libs/pricing.js`) mit denselben Fällen wie `Unit/OfferAmountTest`, Rabatt ohne Frühbezug/Spätabgabe |
+| `booking-calendar.test.js` | Kalenderlogik: Nächte über die Zeitumstellung, Wochen ab Montag, Kürzen vor der nächsten Buchung, Halbtage der Auswahl, Kurzfrist-Rabatt |
+| `BookingWizard.test.js` | Buchungsassistent: Eingaben bleiben beim Neuzeichnen und Absenden erhalten, Total/Personen/Nächte, Wiederherstellen nach Validierungsfehler |
+| `DataTable.test.js` | Admin-Tabellen: Sortieren ohne neue Anfrage, Aktion ersetzt nur ihre Zeile, Fehler- und Leerzustand, Suche |
+| `DataTableStress.test.js` | 140 Sortierwechsel und 20 Seitenwechsel über 700 Zeilen: jeder Klick unter 500 ms, keine Vue-Warnungen. Hält den Hänger fest, den `useVueTable` mit `get data()`/`get state()` auslöste |
+| `FilterButtons.test.js` | aktiver Filter mit `aria-pressed` |
+
+### Browser (Laravel Dusk)
+
+```bash
+./vendor/bin/sail up -d                                   # startet auch den Selenium-Container
+./vendor/bin/sail npm run build                           # Dusk testet die gebauten Assets
+./vendor/bin/sail dusk                                    # alle Browser-Tests
+./vendor/bin/sail dusk tests/Browser/EventEditTest.php    # eine Datei
+```
+
+- **Ablauf:** Chrome läuft im Container `selenium` (`docker-compose.yml`) und ruft die App unter `http://laravel.test` auf. Dusk ersetzt während des Laufs die `.env` durch `.env.dusk.local` und stellt sie danach wieder her.
+- **Datenbank:** SQLite-Datei `database/dusk.sqlite` (nicht im Repo), weil Testprozess und Webserver dieselbe Datenbank sehen müssen. `phpunit.dusk.xml` statt `phpunit.xml`, das SQLite im Arbeitsspeicher erzwingt. `DuskTestCase::beforeRefreshingDatabase()` bricht ab, bevor eine andere Datenbank geleert würde.
+- **Testdaten:** wie in den Feature-Tests (`TestingSeeder`, `BookingScenario`), pro Test frisch migriert (`DatabaseMigrations`).
+- **Fehler:** Screenshots, Browser-Konsole und HTML des letzten Stands in `tests/Browser/screenshots`, `console` und `source`.
+- **Nicht in der CI:** Die Tests brauchen Chrome bzw. Selenium und laufen lokal mit Sail.
+
+| Datei | Prüft |
+|---|---|
+| `BookingWizardTest` | Buchung über Kalender und Formular absenden; Eingaben bleiben beim Ändern der Personen; nach Validierungsfehler offenes Formular mit Eingaben |
+| `AdminTablesTest` | „Bearbeitet“ und „Ablehnen“ (mit Bestätigung) ändern die Zeile ohne Neuladen; Sortieren nach Datum in beide Richtungen |
+| `EventEditTest` | Early Check-In macht den Anreisetag im Kalender ganz und erhöht das Total um die Pauschale |
+
 - **Datenbank:** immer SQLite im Arbeitsspeicher, nie die Datenbank aus der `.env`. `tests/TestCase.php` bricht ab, falls die Config gecacht ist und auf MySQL zeigt.
 - **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`. Der Google-Kalender läuft nicht über `Http`: `TestCase` ersetzt `GoogleCalendarService` durch `Tests\Support\FakeGoogleCalendar`. Google Sheets und Slack (DailyTask) per Facade-Mock (`Sheets::shouldReceive`, `Slack::shouldReceive`), Slack-Benachrichtigungen entfallen mangels Webhook.
-- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint` und `phpunit` (PHP 8.3), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
+- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint`, `phpunit` (PHP 8.3) und `vitest` (Node 24), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
 - **Code-Stil:** Laravel Pint (`pint.json`, Preset `laravel`): `vendor/bin/pint --test` prüft, `vendor/bin/pint` korrigiert. Der Git-Hook `.githooks/pre-commit` formatiert gestagte PHP-Dateien beim Commit; `composer install` aktiviert ihn (`git config core.hooksPath .githooks`). Teilweise gestagte PHP-Dateien blockieren den Commit. VS Code formatiert beim Speichern (`.vscode/settings.json`, Erweiterung "Laravel Pint").
 - **git blame:** Der Formatierungs-Commit steht in `.git-blame-ignore-revs`. GitHub berücksichtigt das automatisch, lokal einmal `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
 

@@ -65,12 +65,12 @@
               <button type="button" class="ms-2 font-medium text-orientalpink hover:underline" @click="loadData">Erneut laden</button>
             </td>
           </tr>
-          <tr v-else-if="!rows.length">
+          <tr v-else-if="!table.getRowModel().rows.length">
             <td :colspan="columns.length" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">Keine Einträge gefunden.</td>
           </tr>
           <template v-else>
           <tr
-            v-for="row in rows"
+            v-for="row in table.getRowModel().rows"
             :key="row.id"
             class="bg-neutral-primary border-b border-default hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
@@ -253,15 +253,15 @@ watch(debouncedFilter, () => {
 })
 
 // ===== TABLE SETUP =====
+// Daten als Ref und Zustand als Getter pro Eigenschaft (Muster aus der TanStack-Doku für Vue).
+// Mit "get data()" und "get state()" verschachtelt useVueTable die Optionen bei jedem Sortieren
+// tiefer; jeder Klick dauerte ein Vielfaches des vorherigen, bis die Seite hing (tests/js/DataTableStress.test.js).
 const table = useVueTable({
-  get data() { return filteredData.value },
+  data: filteredData,
   columns: props.columns,
-  get state() {
-    return {
-      pagination: pagination.value,
-      // globalFilter: debouncedFilter.value,
-      sorting: sorting.value,
-    }
+  state: {
+    get pagination() { return pagination.value },
+    get sorting() { return sorting.value },
   },
   onPaginationChange: (updater) => {
     pagination.value = typeof updater === 'function'
@@ -305,13 +305,6 @@ const table = useVueTable({
 
 // ===== COMPUTED =====
 const filteredRowCount = computed(() => filteredData.value.length)
-
-// Sichtbare Zeilen. Der Zustand von TanStack ist für das Template nicht reaktiv, darum
-// Sortierung, Seite und Daten hier ausdrücklich lesen, sonst zeichnet ein Klick auf eine Spalte nicht neu.
-const rows = computed(() => {
-  void [sorting.value, pagination.value.pageIndex, pagination.value.pageSize, filteredData.value]
-  return table.getRowModel().rows
-})
 
 const visiblePages = computed(() => {
   const pageCount = table.getPageCount()
