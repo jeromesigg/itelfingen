@@ -67,6 +67,18 @@ In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DO
 | `BookingWizardTest` | Buchung über Kalender und Formular absenden; Eingaben bleiben beim Ändern der Personen; nach Validierungsfehler offenes Formular mit Eingaben |
 | `AdminTablesTest` | „Bearbeitet“ und „Ablehnen“ (mit Bestätigung) ändern die Zeile ohne Neuladen; Sortieren nach Datum in beide Richtungen |
 | `EventEditTest` | Early Check-In macht den Anreisetag im Kalender ganz und erhöht das Total um die Pauschale |
+| `VisualSnapshotTest` | nur auf Wunsch: ganzseitige Screenshots von 31 Seiten (öffentliche auch in Handybreite) für einen Vorher/Nachher-Vergleich |
+
+**Optische Änderungen prüfen** (z. B. CSS aufräumen): Testdaten mit festem Faker-Seed und eingefrorener Zeit, zwei Läufe ohne Änderung sind pixelgleich.
+
+```bash
+SNAPSHOT_SET=before php artisan dusk --filter=VisualSnapshotTest   # vor der Änderung
+# … ändern, npm run build …
+SNAPSHOT_SET=after php artisan dusk --filter=VisualSnapshotTest    # danach
+php tests/Browser/compare-snapshots.php tests/Browser/screenshots/before tests/Browser/screenshots/after tests/Browser/screenshots/diff
+```
+
+Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättung, kein CSS-Effekt.
 
 - **Datenbank:** immer SQLite im Arbeitsspeicher, nie die Datenbank aus der `.env`. `tests/TestCase.php` bricht ab, falls die Config gecacht ist und auf MySQL zeigt.
 - **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`. Der Google-Kalender läuft nicht über `Http`: `TestCase` ersetzt `GoogleCalendarService` durch `Tests\Support\FakeGoogleCalendar`. Google Sheets und Slack (DailyTask) per Facade-Mock (`Sheets::shouldReceive`, `Slack::shouldReceive`), Slack-Benachrichtigungen entfallen mangels Webhook.
