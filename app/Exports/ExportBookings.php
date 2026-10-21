@@ -10,10 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ExportBookings implements FromCollection, WithHeadings
 {
-    /**
-     * @return Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
         return Event::where('event_status_id', '<=', BookingState::Bestaetigt->value)->get(['start_date', 'end_date', 'name', 'firstname', 'group_name', 'event_status_id', 'total_days', 'total_amount', 'total_people', 'external', 'early_checkin', 'late_checkout']);
     }

@@ -6,7 +6,7 @@
   "service": "laravel.test",
   "workspaceFolder": "/var/www/html",
 
-  "postCreateCommand": "cp /workspaces/itelfingen/.devcontainer/bashrc ~/.bashrc",
+  "postCreateCommand": "cp /var/www/html/.devcontainer/.bashrc ~/.bashrc",
 
   "settings": {
     "terminal.integrated.defaultProfile.linux": "bash"

@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 13.10.2026: **427 Testfälle in 39 Dateien** (67 Unit, 360 Feature), Laufzeit rund 12 Sekunden.
+Stand 21.10.2026: **544 PHPUnit-Testfälle** (70 Unit, 474 Feature, rund 15 Sekunden), **65 Vitest-Tests** (unter 1 Sekunde) und **13 Dusk-Tests** (rund 1 Minute, nur lokal mit Sail).
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -87,7 +87,7 @@ Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättun
 
 - **Datenbank:** immer SQLite im Arbeitsspeicher, nie die Datenbank aus der `.env`. `tests/TestCase.php` bricht ab, falls die Config gecacht ist und auf MySQL zeigt.
 - **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`. Der Google-Kalender läuft nicht über `Http`: `TestCase` ersetzt `GoogleCalendarService` durch `Tests\Support\FakeGoogleCalendar`. Google Sheets und Slack (DailyTask) per Facade-Mock (`Sheets::shouldReceive`, `Slack::shouldReceive`), Slack-Benachrichtigungen entfallen mangels Webhook.
-- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint`, `phpunit` (PHP 8.3) und `vitest` (Node 24), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
+- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint`, `phpunit` (PHP 8.5) und `vitest` (Node 24), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
 - **Code-Stil:** Laravel Pint (`pint.json`, Preset `laravel`): `vendor/bin/pint --test` prüft, `vendor/bin/pint` korrigiert. Der Git-Hook `.githooks/pre-commit` formatiert gestagte PHP-Dateien beim Commit; `composer install` aktiviert ihn (`git config core.hooksPath .githooks`). Teilweise gestagte PHP-Dateien blockieren den Commit. VS Code formatiert beim Speichern (`.vscode/settings.json`, Erweiterung "Laravel Pint").
 - **git blame:** Der Formatierungs-Commit steht in `.git-blame-ignore-revs`. GitHub berücksichtigt das automatisch, lokal einmal `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
 

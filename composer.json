@@ -17,7 +17,7 @@
         "laravel/slack-notification-channel": "^3.4",
         "laravel/tinker": "^3.0",
         "laravel/ui": "^4.0",
-        "maatwebsite/excel": "^3.1",
+        "maatwebsite/excel": "^4.0",
         "nicolaslopezj/searchable": "^1.13",
         "nunomaduro/collision": "^8.1",
         "revolution/laravel-google-sheets": "^7.0",
@@ -26,8 +26,7 @@
         "simonschaufi/laravel-dkim": "*",
         "spatie/icalendar-generator": "^2.4",
         "spatie/laravel-google-calendar": "^3.3",
-        "spatie/laravel-honeypot": "^4.5",
-        "yajra/laravel-datatables": "^13.0"
+        "spatie/laravel-honeypot": "^4.5"
     },
     "require-dev": {
         "laravel/boost": "^2.4",
