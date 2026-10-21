@@ -55,7 +55,6 @@
     </div>
     <!-- Pricing Card -->
 
-    {{-- <x-event-dashboard :events="$events_current" title="Neue Buchungen"/> --}}
     <div class="flex flex-col p-4 md:p-6 xl:p-8 space-x-0 text-gray-900 bg-white rounded-lg border border-gray-100 shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white xl:p-8 sm:space-x-4 ">
       <h3 class="mb-4 text-2xl font-semibold">Nächste Buchungen</h3>
       <div class="flex justify-center items-baseline my-8">

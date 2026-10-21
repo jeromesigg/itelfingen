@@ -15,7 +15,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-D-Ej-U1i.css",
+    "file": "assets/app-BERlkdyT.css",
     "name": "app",
     "names": [
       "app.css"
@@ -54,7 +54,7 @@
     "src": "resources/images/login.webp"
   },
   "resources/js/admin/event-form.js": {
-    "file": "assets/event-form-DIdnv7Dg.js",
+    "file": "assets/event-form-CyQb2AMk.js",
     "name": "event-form",
     "src": "resources/js/admin/event-form.js",
     "isEntry": true,

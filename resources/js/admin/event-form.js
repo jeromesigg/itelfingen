@@ -20,7 +20,8 @@ function field(id) {
 function setValue(id, value) {
     const element = field(id);
     if (element) {
-        element.value = value;
+        // Formularwerte sind Text; ein <select> nimmt Zahlen sonst nicht überall an
+        element.value = String(value ?? '');
     }
 }
 

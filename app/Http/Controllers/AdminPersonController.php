@@ -9,6 +9,7 @@ use App\Models\Person;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 
 class AdminPersonController extends Controller
 {
@@ -117,8 +118,9 @@ class AdminPersonController extends Controller
     {
         //
         $person = Person::findOrFail($id);
+        // Fehlt die Datei schon, trotzdem löschen (unlink brach sonst mit einem Fehler ab)
         if ($person->photo) {
-            unlink(public_path().$person->photo->file);
+            File::delete(public_path().$person->photo->file);
         }
         $person->delete();
 

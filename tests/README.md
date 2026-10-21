@@ -43,6 +43,7 @@ In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DO
 | `pricing.test.js` | Preisregel der Formulare (`resources/js/libs/pricing.js`) mit denselben Fällen wie `Unit/OfferAmountTest`, Rabatt ohne Frühbezug/Spätabgabe |
 | `booking-calendar.test.js` | Kalenderlogik: Nächte über die Zeitumstellung, Wochen ab Montag, Kürzen vor der nächsten Buchung, Halbtage der Auswahl, Kurzfrist-Rabatt |
 | `BookingWizard.test.js` | Buchungsassistent: Eingaben bleiben beim Neuzeichnen und Absenden erhalten, Total/Personen/Nächte, Wiederherstellen nach Validierungsfehler |
+| `event-form.test.js` | Admin-Formulare „Buchung erstellen/bearbeiten“ (`resources/js/admin/event-form.js`): Total wie die Offerte, Rabatt ohne Frühbezug/Spätabgabe, Nächte aus dem Datum, Kalender-Vorschau (auch nach Validierungsfehler), Import inkl. Kommentar, interne Buchung, Putzmail, Storno-Warnung, Türcode |
 | `DataTable.test.js` | Admin-Tabellen: Sortieren ohne neue Anfrage, Aktion ersetzt nur ihre Zeile, Fehler- und Leerzustand, Suche |
 | `DataTableStress.test.js` | 140 Sortierwechsel und 20 Seitenwechsel über 700 Zeilen: jeder Klick unter 500 ms, keine Vue-Warnungen. Hält den Hänger fest, den `useVueTable` mit `get data()`/`get state()` auslöste |
 | `FilterButtons.test.js` | aktiver Filter mit `aria-pressed` |
@@ -59,6 +60,7 @@ In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DO
 - **Ablauf:** Chrome läuft im Container `selenium` (`docker-compose.yml`) und ruft die App unter `http://laravel.test` auf. Dusk ersetzt während des Laufs die `.env` durch `.env.dusk.local` und stellt sie danach wieder her.
 - **Datenbank:** SQLite-Datei `database/dusk.sqlite` (nicht im Repo), weil Testprozess und Webserver dieselbe Datenbank sehen müssen. `phpunit.dusk.xml` statt `phpunit.xml`, das SQLite im Arbeitsspeicher erzwingt. `DuskTestCase::beforeRefreshingDatabase()` bricht ab, bevor eine andere Datenbank geleert würde.
 - **Testdaten:** wie in den Feature-Tests (`TestingSeeder`, `BookingScenario`), pro Test frisch migriert (`DatabaseMigrations`).
+- **Cache:** `CACHE_DRIVER=array`, damit die Anfrage-Begrenzung (`throttle`) nicht über Tests und Läufe hinweg zählt; geprüft wird sie in `Security/PublicFormRateLimitTest`.
 - **Fehler:** Screenshots, Browser-Konsole und HTML des letzten Stands in `tests/Browser/screenshots`, `console` und `source`.
 - **Nicht in der CI:** Die Tests brauchen Chrome bzw. Selenium und laufen lokal mit Sail.
 
@@ -67,7 +69,10 @@ In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DO
 | `BookingWizardTest` | Buchung über Kalender und Formular absenden; Eingaben bleiben beim Ändern der Personen; nach Validierungsfehler offenes Formular mit Eingaben |
 | `AdminTablesTest` | „Bearbeitet“ und „Ablehnen“ (mit Bestätigung) ändern die Zeile ohne Neuladen; Sortieren nach Datum in beide Richtungen |
 | `EventEditTest` | Early Check-In macht den Anreisetag im Kalender ganz und erhöht das Total um die Pauschale |
-| `VisualSnapshotTest` | nur auf Wunsch: ganzseitige Screenshots von 31 Seiten (öffentliche auch in Handybreite) für einen Vorher/Nachher-Vergleich |
+| `PublicFormsTest` | Kontaktformular absenden; Bewerbung, bei der die PLZ die Ortschaft füllt; Kundenbereich mit Buchungsnummer und PLZ, falsche PLZ |
+| `CustomerChecklistTest` | Checkliste im Kundenbereich: Abhaken speichert sofort, Zähler und Raum-Status folgen, bleibt nach dem Neuladen |
+| `UniqueIdsTest` | jede `id` nur einmal pro Seite (auch im von Vue gerenderten DOM), auf 22 Seiten; sonst zeigen Labels auf das falsche Formular |
+| `VisualSnapshotTest` | nur auf Wunsch: ganzseitige Screenshots von 44 Seiten (öffentliche auch in Handybreite) für einen Vorher/Nachher-Vergleich |
 
 **Optische Änderungen prüfen** (z. B. CSS aufräumen): Testdaten mit festem Faker-Seed und eingefrorener Zeit, zwei Läufe ohne Änderung sind pixelgleich.
 
@@ -258,6 +263,10 @@ Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättun
 ### Fachlogik
 
 **[`EventWorkflowTest`](Feature/EventWorkflowTest.php)**: Formular "Buchung bearbeiten" mit den echten Button-Werten. 1 speichert (nur Positionen dieser Buchung), 2 legt Kontakt und Offerte in Bexio an (Mengenregeln siehe unten), 3 versendet die Offerte, 4 erstellt die Rechnung (Buchung bestätigt, Google-Kalender, Checkliste, Newsletter), 5 versendet die Rechnung, 6 Info Genossenschaft. Ein Test liest alle Buttons aus der View in jedem Vertragsstatus und prüft, dass der Controller sie kennt.
+
+**[`AdminEventStoreTest`](Feature/AdminEventStoreTest.php)**: Formular "Buchung erstellen" im Admin: Buchung mit Positionen (Hausmiete, Personen, Parkplätze mit 0), Telefon für die Suche, externe Buchungs-Nr., interne Buchung ohne Nächte als Tagesbuchung mit Eintrag im Google-Kalender. Unvollständiges Formular und Ende vor Start werden abgewiesen, ohne halb angelegte Buchung (vorher Serverfehler nach dem Anlegen).
+
+**[`AdminContentTest`](Feature/AdminContentTest.php)**: Inhaltspflege (nur Admin) je Bereich anlegen, ändern, löschen: Räume, Bewertungen, FAQ-Kapitel, FAQ, Geschichte, Personen, Checkpoints; dazu Preisliste (in Buchungen verwendete Positionen werden nicht gelöscht), Albumbild, Startseiten-Texte. Löschen klappt auch, wenn die Bilddatei fehlt. Bilder landen in einem temporären `public/`.
 
 **[`DoorCodeTest`](Feature/DoorCodeTest.php)**: Besucher in Glutz anlegen bzw. wiederverwenden, Code setzen, Hauseingang vom Anreisetag 00:00 bis Abreisetag 23:59 freigeben; vergebener Code, ungültiger Code, Glutz nicht erreichbar (JSON-Fehler 502).
 

@@ -50,10 +50,10 @@
         <x-honeypot />
         <div class="grid gap-4 md:grid-cols-2">
           <x-forms.container>
-              <x-forms.text label="Name:" name="name" required=true />
+              <x-forms.text label="Name:" name="name" id="contact_name" required=true />
           </x-forms.container>
           <x-forms.container>
-              <x-forms.text label="E-Mail:" name="email" type="email" required=true />
+              <x-forms.text label="E-Mail:" name="email" id="contact_email" type="email" required=true />
           </x-forms.container>
         </div>
         <x-forms.container>

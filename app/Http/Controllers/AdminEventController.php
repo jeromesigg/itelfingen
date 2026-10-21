@@ -40,6 +40,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Notification;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as Event_ICAL;
@@ -135,8 +136,24 @@ class AdminEventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Pflichtfelder wie im Formular; ohne Prüfung brach ein unvollständiges Formular erst nach dem Anlegen der Buchung ab
+        $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'total_days' => ['required', 'integer', 'min:0'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'street' => ['required', 'string', 'max:255'],
+            'plz' => ['required', 'string', 'max:10'],
+            'city' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'exists:users,id'],
+            'event_status_id' => ['required', Rule::enum(BookingState::class)],
+            'positions' => ['nullable', 'array'],
+            'positions.*' => ['nullable', 'numeric', 'min:0'],
+        ]);
         $input = $request->all();
+        $input['positions'] ??= [];
+        $input['telephone'] ??= '';
         $input['external'] = isset($input['foreign_key']);
         $input['contract_status_id'] = ContractState::Offen;
         $one_day = false;

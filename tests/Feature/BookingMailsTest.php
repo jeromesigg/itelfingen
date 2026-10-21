@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\ApplicationInvoiceMail;
 use App\Mail\CleaningSent;
+use App\Mail\EventCreated;
 use App\Mail\FeedbackMail;
 use App\Mail\SendOffersMail;
 use App\Models\BexioToken;
@@ -82,6 +83,31 @@ class BookingMailsTest extends TestCase
 
         $s->confirmedEvent->update(['end_date' => today()->format('Y-m-d')]);
         (new FeedbackMail($s->confirmedEvent->fresh()))->assertSeeInHtml('Heute ist dein Abreisetag');
+    }
+
+    public function test_booking_request_mail_separates_contact_data_and_comment(): void
+    {
+        $s = BookingScenario::create();
+        $s->event->update(['telephone' => '079 123 45 67', 'comment' => "Evtl. kommen noch Personen dazu.\nWir melden uns."]);
+
+        $html = (new EventCreated($s->event->fresh()))->render();
+
+        // Telefon und Überschrift "Deine Bemerkung" nicht im selben Absatz (Blade verschluckt den Umbruch nach @endif)
+        $this->assertMatchesRegularExpression('/<br>\s*'.preg_quote(e($s->event->email), '/').' · 079 123 45 67\s*<\/p>/', $html);
+        $this->assertMatchesRegularExpression('/<p[^>]*><strong[^>]*>Deine Bemerkung<\/strong>/', $html);
+        $this->assertStringContainsString('Evtl. kommen noch Personen dazu.<br', $html);
+    }
+
+    public function test_booking_request_mail_without_phone_and_comment(): void
+    {
+        $s = BookingScenario::create();
+        $s->event->update(['telephone' => null, 'comment' => null]);
+
+        $html = (new EventCreated($s->event->fresh()))->render();
+
+        $this->assertMatchesRegularExpression('/<br>\s*'.preg_quote(e($s->event->email), '/').'\s*<\/p>/', $html);
+        $this->assertStringNotContainsString('Deine Bemerkung', $html);
+        $this->assertStringNotContainsString(' · ', $html);
     }
 
     public function test_contact_mail_thanks_first_and_keeps_line_breaks(): void

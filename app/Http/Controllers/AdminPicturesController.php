@@ -7,6 +7,7 @@ use App\Models\Photo;
 use App\Models\Picture;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
 class AdminPicturesController extends Controller
@@ -129,8 +130,12 @@ class AdminPicturesController extends Controller
     {
         //
         $picture = Picture::findOrFail($id);
-        unlink(public_path().$picture->photo->file);
-        unlink(public_path().$picture->cropped_photo->file);
+        // Fehlende Dateien oder ein fehlendes Vorschaubild dürfen das Löschen nicht verhindern
+        foreach ([$picture->photo, $picture->cropped_photo] as $photo) {
+            if ($photo) {
+                File::delete(public_path().$photo->file);
+            }
+        }
 
         $picture->delete();
 
