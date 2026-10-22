@@ -5,6 +5,7 @@
         "editor.formatOnSave": true
     },
     "laravel-pint.enable": true,
+    "sonarlint.testFilePattern": "tests/**",
     "sonarlint.connectedMode.project": {
         "connectionId": "jeromesigg",
         "projectKey": "jeromesigg_itelfingen"
