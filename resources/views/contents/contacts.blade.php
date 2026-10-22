@@ -45,7 +45,7 @@
         Fragen, Anregungen? Wir freuen uns über deine Nachricht. <br>
         Solltest du Fragen zu einer Buchung (Verfügbarkeit, Preis) haben, erstelle bitte direkt eine <a href="/#booking" class="font-medium text-gray-900 underline hover:no-underline">Buchungsanfrage</a>.
       </p>
-      
+
       <x-forms.form :action="route('contacts.store')" id='contact_form' scope="contact">
         <x-honeypot />
         <div class="grid gap-4 md:grid-cols-2">

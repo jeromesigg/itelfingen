@@ -158,7 +158,6 @@
 
 .hk-agenda__day--SP {
 	border-top: 1px solid var(--calendar-selected);
-	border-right: 1px solid var(--calendar-selected);
 	border-bottom: 1px solid #7e967e;
 	border-right: 1px solid #7e967e;
 	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
@@ -168,7 +167,6 @@
 
 .hk-agenda__day--PS {
 	border-bottom: 1px solid var(--calendar-selected);
-	border-left: 1px solid var(--calendar-selected);
 	border-top: 1px solid #7e967e;
 	border-left: 1px solid #7e967e;
 	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
@@ -178,7 +176,6 @@
 
 .hk-agenda__day--SB {
 	border-top: 1px solid var(--calendar-selected);
-	border-right: 1px solid var(--calendar-selected);
 	border-bottom: 1px solid #aa7679;
 	border-right: 1px solid #aa7679;
 	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */
@@ -188,7 +185,6 @@
 
 .hk-agenda__day--BS {
 	border-bottom: 1px solid var(--calendar-selected);
-	border-left: 1px solid var(--calendar-selected);
 	border-top: 1px solid #aa7679;
 	border-left: 1px solid #aa7679;
 	/* Vormittag oben links, Nachmittag unten rechts; als Verlauf, damit die Farbe dem Dark Mode folgt */

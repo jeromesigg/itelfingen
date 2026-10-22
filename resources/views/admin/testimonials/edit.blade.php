@@ -3,7 +3,7 @@
 
     <section>
         <div class="container mx-auto px-4">
-            <header> 
+            <header>
                 <h3 class="display">Bewertung bearbeiten</h3>
             </header>
             <div class="row">
@@ -30,11 +30,11 @@
                             </x-forms.button>
                         </x-forms.container>
                     </x-forms.form>
-                </div>   
-            </div>   
-            <div class="row"> 
+                </div>
+            </div>
+            <div class="row">
                 @include('includes.form_error')
-            </div>   
+            </div>
         </div>
     </section>
 </div>

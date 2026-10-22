@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\BexioException;
 use App\Models\BexioToken;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -16,7 +17,7 @@ class BexioAuthService
         $token = BexioToken::first();
 
         if (! $token) {
-            throw new \RuntimeException('Kein Bexio-Token vorhanden. Bitte zuerst den Authorization Code Flow durchführen.');
+            throw new BexioException('Kein Bexio-Token vorhanden. Bitte zuerst den Authorization Code Flow durchführen.');
         }
 
         if ($token->isExpired()) {
@@ -47,7 +48,7 @@ class BexioAuthService
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
-            throw new \RuntimeException('Bexio Token konnte nicht erneuert werden. Eventuell muss der Benutzer neu autorisieren.');
+            throw new BexioException('Bexio Token konnte nicht erneuert werden. Eventuell muss der Benutzer neu autorisieren.');
         }
 
         $data = $response->json();

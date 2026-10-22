@@ -32,6 +32,7 @@ use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -321,6 +322,9 @@ class AdminEventController extends Controller
             case '6':
                 Notification::send($event, new EventApplicationWantedNotification($event, $additional_text));
                 break;
+            default:
+                // Nur speichern, keine weitere Aktion.
+                break;
         }
 
         return redirect()->back();
@@ -470,47 +474,53 @@ class AdminEventController extends Controller
         }
         $userName = 'Besucher '.$event->number();
         $userId = GlutzAPI::getUser($event, $userName, $code);
+        $accessPointId = null;
         if (isset($userId)) {
-
-            $success = GlutzAPI::setCode($userId, $code);
-            if (! $success) {
-
+            if (! GlutzAPI::setCode($userId, $code)) {
                 return response()->json([
                     'error' => 'Code bereits in Verwendung für anderen User.',
                 ], 500);
-            } else {
-                $accessPointId = GlutzAPI::getAccessPointId();
-                if (isset($accessPointId)) {
-                    if (GlutzAPI::getAccessPointOfUser($userId, $accessPointId)) {
-                        GlutzAPI::setAccessPointsOfUser($event, $userId, $accessPointId);
-
-                        $result = GlutzAPI::updateDevice();
-                        if (empty($result['errorString'])) {
-                            $event->update(['code' => $code]);
-
-                            return response()->json([
-                                'success' => 'Code erfolgreich erstellt.',
-                                'User' => $userName,
-                            ], 200);
-                        } else {
-                            return response()->json([
-                                'error' => 'Fehler beim Update des Gerätes.',
-                                'Meldung' => $result['errorString'] ?? 'Unbekannter Fehler',
-                            ], 500);
-                        }
-                    } else {
-                        return response()->json([
-                            'error' => 'AccessPoint nicht gefunden.',
-                            'User' => $userName,
-                        ], 500);
-                    }
-                }
             }
+            $accessPointId = GlutzAPI::getAccessPointId();
+        }
+
+        if (isset($accessPointId)) {
+            return $this->grantAccessAndUpdateDevice($event, $userId, $accessPointId, $code, $userName);
         }
 
         // Glutz lieferte keinen Besucher oder keinen Zugangspunkt: JSON-Fehler statt leerer Antwort.
         return response()->json([
             'error' => 'Glutz nicht erreichbar oder unvollständige Antwort. Bitte später erneut versuchen.',
         ], 502);
+    }
+
+    /**
+     * Gibt dem Glutz-Besucher Zugang zum Hauseingang und spielt den Code auf das Gerät.
+     */
+    private function grantAccessAndUpdateDevice(Event $event, int $userId, int $accessPointId, string $code, string $userName): JsonResponse
+    {
+        if (! GlutzAPI::getAccessPointOfUser($userId, $accessPointId)) {
+            return response()->json([
+                'error' => 'AccessPoint nicht gefunden.',
+                'User' => $userName,
+            ], 500);
+        }
+
+        GlutzAPI::setAccessPointsOfUser($event, $userId, $accessPointId);
+
+        $result = GlutzAPI::updateDevice();
+        if (! empty($result['errorString'])) {
+            return response()->json([
+                'error' => 'Fehler beim Update des Gerätes.',
+                'Meldung' => $result['errorString'],
+            ], 500);
+        }
+
+        $event->update(['code' => $code]);
+
+        return response()->json([
+            'success' => 'Code erfolgreich erstellt.',
+            'User' => $userName,
+        ], 200);
     }
 }

@@ -187,13 +187,10 @@ class Helper
 
             if ($event->bexio_invoice_id) {
                 $invoice = '<i class="fa-regular fa-circle-check" style="color:darkseagreen"></i> '.'<a target="_blank" href="https://office.bexio.com/index.php/kb_invoice/show/id/'.$event['bexio_invoice_id'].'">Rechnung</a> ';
-                switch ($event->contract_status_id) {
-                    case ContractState::RechnungErstellt:
-                        $invoice .= 'erstellt';
-                        break;
-                    case ContractState::RechnungVersendet:
-                        $invoice .= 'erstellt & versendet';
-                        break;
+                if ($event->contract_status_id === ContractState::RechnungErstellt) {
+                    $invoice .= 'erstellt';
+                } elseif ($event->contract_status_id === ContractState::RechnungVersendet) {
+                    $invoice .= 'erstellt & versendet';
                 }
             } else {
                 $invoice = '<i class="fa-solid fa-xmark" style="color: indianred"></i> '.'Keine Rechnung erstellt';
@@ -322,12 +319,15 @@ class Helper
         // damit er selbst Wörter wie "Anzahl" oder "Name" enthalten darf.
         $extract = function (string $field) use ($text, $labels): ?string {
             $others = array_filter($labels, fn ($l) => $l !== $field);
-            $lookahead = $field === 'Kommentar der Gruppe'
+            // Ein leeres Feld steht allein auf der Zeile, darum endet der Feldname auch am Zeilenende.
+            // Beim Kommentar darf der Text auch erst auf der nächsten Zeile beginnen.
+            $isComment = $field === 'Kommentar der Gruppe';
+            $lookahead = $isComment
                 ? '(?=\z)'
-                : '(?=\n\h*(?:'.implode('|', array_map(fn ($l) => preg_quote($l, '/'), $others)).')\h|\z)';
-            $pattern = '/^\h*'.preg_quote($field, '/').'\h+(.+?)'.$lookahead.'/msu';
+                : '(?=\n\h*(?:'.implode('|', array_map(fn ($l) => preg_quote($l, '/'), $others)).')(?:\h|\R|\z)|\z)';
+            $pattern = '/^\h*'.preg_quote($field, '/').($isComment ? '\s+' : '\h+').'(.+?)'.$lookahead.'/msu';
 
-            return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+            return preg_match($pattern, $text, $m) && trim($m[1]) !== '' ? trim($m[1]) : null;
         };
 
         preg_match('/(\d{2}\.\d{2}\.\d{4})\s*[\-‐]\s*\w+\s+(\d{2}\.\d{2}\.\d{4})/u', $text, $dates);
@@ -353,7 +353,6 @@ class Helper
     {
         $nameBlock = self::extractMultilineRaw($text, 'Name', 'Gruppe');
 
-        // return array_merge(['nameBlock' => $nameBlock]);
         return array_merge(
             self::parseName($nameBlock),
             [

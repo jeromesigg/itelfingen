@@ -4,20 +4,20 @@
 <section>
     <div class="container mx-auto px-4">
 
-        <header> 
+        <header>
             <h3>Anmeldungen</h3>
         </header>
-    
+
         <div class="row">
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" width="10%">Name</th>
-                        <th scope="col" width="10%">Vorname</th>
-                        <th scope="col" width="10%">E-Mail</th>
-                        <th scope="col" width="30%">Text</th>
-                        <th scope="col" width="30%">Antwort</th>
-                        <th scope="col" width="10%">Erstellt</th>
+                        <th scope="col" class="w-[10%]">Name</th>
+                        <th scope="col" class="w-[10%]">Vorname</th>
+                        <th scope="col" class="w-[10%]">E-Mail</th>
+                        <th scope="col" class="w-[30%]">Text</th>
+                        <th scope="col" class="w-[30%]">Antwort</th>
+                        <th scope="col" class="w-[10%]">Erstellt</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
                             <td>{{$invitation->content}}</td>
                             <td>{{$invitation->response['name']}}</td>
                             <td>{{$invitation->created_at ? $invitation->created_at->diffForHumans() : 'Kein Datum'}}</td>
-                        </tr>   
+                        </tr>
                     @endforeach
                     @endif
                 </tbody>
@@ -41,6 +41,6 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 @endsection

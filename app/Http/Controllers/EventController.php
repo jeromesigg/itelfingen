@@ -85,7 +85,6 @@ class EventController extends Controller
 
     public function searchResponseCity(Request $request)
     {
-        // $query = $request->get('term','');
         $cities = City::search($request->get('term'))->get();
         $data = [];
         foreach ($cities as $city) {

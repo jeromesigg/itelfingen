@@ -15,16 +15,16 @@
           <div id="lastDaysdropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-xs w-60 dark:bg-gray-700">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                   <li>
-                    <a href="#" onclick="showBooking('yearly')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Jährliche Auslastung</a>
+                    <button type="button" onclick="showBooking('yearly')" class="block w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Jährliche Auslastung</button>
                   </li>
                   <li>
-                    <a href="#" onclick="showBooking('quarter')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Quartalsweise Auslastung</a>
+                    <button type="button" onclick="showBooking('quarter')" class="block w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Quartalsweise Auslastung</button>
                   </li>
                   <li>
-                    <a href="#" onclick="showBooking('monthly')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Monatliche Auslastung</a>
+                    <button type="button" onclick="showBooking('monthly')" class="block w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Monatliche Auslastung</button>
                   </li>
                   <li>
-                    <a href="#" onclick="showBooking('heatmap')" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Heatmap der Auslastung</a>
+                    <button type="button" onclick="showBooking('heatmap')" class="block w-full px-4 py-2 text-left cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Heatmap der Auslastung</button>
                   </li>
                   <li>
                     <a href="{{ route('admin.exportcsv') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Export File</a>
@@ -41,14 +41,13 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js" integrity="sha384-d+JVPSxB4qHCRf+fci5rkY2+tgpL+o0BL5vjy1sQzyOS1scbfhKYCSXfKmwRc5cz" crossorigin="anonymous"></script>
 
     <script  type="module">
         var booking = @json($bookingChartYear);
         var chart_type = 'yearly';
         function showBooking(time_frame) {
-          
+
           if (chart_type === "heatmap") {
             chart.destroy();
             chart = new ApexCharts(document.getElementById("data-series-chart"), options);
@@ -141,7 +140,7 @@
               },
               // Weitere Heatmap-spezifische Optionen...
             };
-            
+
             chart = new ApexCharts(document.getElementById("data-series-chart"), newOptions);
             chart.render();
           } else {
@@ -162,8 +161,8 @@
                 categories: booking[0],
               },
             });
-          }   
-        }     
+          }
+        }
         window.showBooking = showBooking;
         const options = {
 // add data series via arrays, learn more here: https://apexcharts.com/docs/series/
@@ -210,7 +209,7 @@
           },
           markers: {
               size: 5,
-          },  
+          },
           stroke: {
             curve: 'smooth',
             width: 4,

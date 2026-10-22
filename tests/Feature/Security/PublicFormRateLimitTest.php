@@ -41,7 +41,7 @@ class PublicFormRateLimitTest extends TestCase
 
     public function test_limit_is_per_ip(): void
     {
-        foreach (range(1, 5) as $attempt) {
+        for ($i = 0; $i < 5; $i++) {
             $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.1'])->post('/contacts', []);
         }
 
