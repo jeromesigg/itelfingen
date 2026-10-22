@@ -5,6 +5,10 @@ namespace App\Helper;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Exceptions\ArgumentException;
+use Intervention\Image\Exceptions\DecoderException;
+use Intervention\Image\ImageManager;
 
 /**
  * Bilder für public/images: nur echte Bilder, Dateiname und Endung vergibt der Server.
@@ -26,7 +30,7 @@ class ImageUpload
     }
 
     /**
-     * Sicherer Dateiname mit der Endung, die zum Inhalt passt (z. B. für Image::make()->save()).
+     * Sicherer Dateiname mit der Endung, die zum Inhalt passt (z. B. für saveDataUri()).
      */
     public static function name(UploadedFile $file, string $field = 'photo_id', string $suffix = ''): string
     {
@@ -38,5 +42,20 @@ class ImageUpload
         }
 
         return time().'_'.Str::random(8).$suffix.'.'.$extension;
+    }
+
+    /**
+     * Speichert ein Bild aus einer Data-URL (z. B. vom Zuschneiden im Browser). Das Format folgt der Endung von $path.
+     * Andere Quellen wie Dateipfade oder URLs werden nicht gelesen.
+     */
+    public static function saveDataUri(string $dataUri, string $path, string $field = 'photo_id'): void
+    {
+        try {
+            $image = ImageManager::usingDriver(Driver::class)->decodeDataUri($dataUri);
+        } catch (ArgumentException|DecoderException) {
+            throw ValidationException::withMessages([$field => 'Das zugeschnittene Bild konnte nicht gelesen werden.']);
+        }
+
+        $image->save($path);
     }
 }

@@ -26,6 +26,7 @@ class ImageUploadTest extends TestCase
         mkdir($this->publicDir.'/images', 0777, true);
         $this->originalCwd = getcwd();
         chdir($this->publicDir);
+        $this->app->usePublicPath($this->publicDir);
     }
 
     protected function tearDown(): void
@@ -85,6 +86,61 @@ class ImageUploadTest extends TestCase
         $files = $this->storedFiles();
         $this->assertCount(1, $files);
         $this->assertStringEndsWith('.jpg', $files[0]);
+    }
+
+    public function test_cropped_picture_from_data_uri_is_stored_as_image(): void
+    {
+        $s = BookingScenario::create();
+
+        $this->actingAs($s->user('admin'))->post('/admin/pictures', [
+            'name' => 'Bild',
+            'photo_id' => UploadedFile::fake()->image('foto.jpg', 10, 10),
+            'cropped_photo_id' => self::pngDataUri(),
+        ])->assertSessionHasNoErrors();
+
+        $cropped = preg_grep('/_cropped\.jpg$/', $this->storedFiles());
+        $this->assertCount(1, $cropped);
+        $this->assertSame('image/jpeg', mime_content_type($this->publicDir.'/images/'.reset($cropped)));
+    }
+
+    public function test_cropped_picture_does_not_read_paths(): void
+    {
+        $s = BookingScenario::create();
+
+        // Image::make() aus Intervention 2 hat auch Dateipfade und URLs gelesen.
+        $this->actingAs($s->user('admin'))->post('/admin/pictures', [
+            'name' => 'Bild',
+            'photo_id' => UploadedFile::fake()->image('foto.jpg', 10, 10),
+            'cropped_photo_id' => base_path('public/favicon.ico'),
+        ])->assertSessionHasErrors('cropped_photo_id');
+
+        $this->assertSame([], preg_grep('/_cropped/', $this->storedFiles()));
+    }
+
+    public function test_faq_chapter_photo_from_data_uri_is_stored_as_png(): void
+    {
+        $s = BookingScenario::create();
+
+        $this->actingAs($s->user('admin'))->post('/admin/faq_chapters', [
+            'name' => 'Kapitel',
+            'new_photo_id' => self::pngDataUri(),
+        ])->assertSessionHasNoErrors();
+
+        $files = $this->storedFiles();
+        $this->assertCount(1, $files);
+        $this->assertStringEndsWith('_faq_chapter.png', $files[0]);
+        $this->assertSame('image/png', mime_content_type($this->publicDir.'/images/'.$files[0]));
+    }
+
+    /**
+     * So schickt das Zuschneide-Werkzeug im Browser das Bild (canvas.toDataURL()).
+     */
+    private static function pngDataUri(): string
+    {
+        ob_start();
+        imagepng(imagecreatetruecolor(10, 10));
+
+        return 'data:image/png;base64,'.base64_encode(ob_get_clean());
     }
 
     /**

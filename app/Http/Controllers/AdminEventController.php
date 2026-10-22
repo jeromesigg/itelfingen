@@ -391,7 +391,7 @@ class AdminEventController extends Controller
             $calendar->event(Event_ICAL::create()
                 ->startsAt($start)
                 ->endsAt($end)
-                ->status(EventStatus_ICAL::confirmed()));
+                ->status(EventStatus_ICAL::Confirmed));
         }
 
         return response($calendar->get(), 200, [
