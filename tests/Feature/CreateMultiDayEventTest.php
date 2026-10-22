@@ -6,6 +6,7 @@ use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -325,8 +326,10 @@ class CreateMultiDayEventTest extends TestCase
     public function test_calendar_hides_cancelled_and_past_bookings(): void
     {
         BookingScenario::create();
+        // Nach allen Szenario-Buchungen (Zufallsdatum), sonst ist der Tag womöglich von einer anderen Buchung belegt.
+        $free = Carbon::parse(Event::max('end_date'))->addWeek();
         $cancelled = Event::factory()->create([
-            'start_date' => now()->addMonths(3)->toDateString(), 'end_date' => now()->addMonths(3)->addDays(2)->toDateString(),
+            'start_date' => $free->toDateString(), 'end_date' => $free->copy()->addDays(2)->toDateString(),
             'event_status_id' => BookingState::Storniert,
         ]);
         $past = Event::factory()->confirmed()->create([

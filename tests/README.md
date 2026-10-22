@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 21.10.2026: **544 PHPUnit-Testfälle** (70 Unit, 474 Feature, rund 15 Sekunden), **65 Vitest-Tests** (unter 1 Sekunde) und **13 Dusk-Tests** (rund 1 Minute, nur lokal mit Sail).
+Stand 22.10.2026: **550 PHPUnit-Testfälle** (70 Unit, 480 Feature, rund 15 Sekunden), **65 Vitest-Tests** (unter 1 Sekunde) und **17 Dusk-Tests** (rund 1 Minute, nur lokal mit Sail).
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -58,6 +58,7 @@ In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DO
 ```
 
 - **Ablauf:** Chrome läuft im Container `selenium` (`docker-compose.yml`) und ruft die App unter `http://laravel.test` auf. Dusk ersetzt während des Laufs die `.env` durch `.env.dusk.local` und stellt sie danach wieder her.
+- **Kein `npm run dev`:** Der Vite-Dev-Server muss gestoppt sein. Er bemerkt den Austausch der `.env`, startet neu und legt `public/hot` an; die Seiten laden dann CSS und JS von `localhost:5173`, das der Selenium-Container nicht erreicht. Die Tests sehen die Seite ohne CSS, Layout-Prüfungen werden wertlos.
 - **Datenbank:** SQLite-Datei `database/dusk.sqlite` (nicht im Repo), weil Testprozess und Webserver dieselbe Datenbank sehen müssen. `phpunit.dusk.xml` statt `phpunit.xml`, das SQLite im Arbeitsspeicher erzwingt. `DuskTestCase::beforeRefreshingDatabase()` bricht ab, bevor eine andere Datenbank geleert würde.
 - **Testdaten:** wie in den Feature-Tests (`TestingSeeder`, `BookingScenario`), pro Test frisch migriert (`DatabaseMigrations`).
 - **Cache:** `CACHE_DRIVER=array`, damit die Anfrage-Begrenzung (`throttle`) nicht über Tests und Läufe hinweg zählt; geprüft wird sie in `Security/PublicFormRateLimitTest`.
@@ -71,6 +72,7 @@ In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DO
 | `EventEditTest` | Early Check-In macht den Anreisetag im Kalender ganz und erhöht das Total um die Pauschale |
 | `PublicFormsTest` | Kontaktformular absenden; Bewerbung, bei der die PLZ die Ortschaft füllt; Kundenbereich mit Buchungsnummer und PLZ, falsche PLZ |
 | `CustomerChecklistTest` | Checkliste im Kundenbereich: Abhaken speichert sofort, Zähler und Raum-Status folgen, bleibt nach dem Neuladen |
+| `AdminLayoutTest` | die fixe Navbar im Admin überdeckt weder Inhalt noch Seitenleiste, in Handy-, Tablet- und Desktop-Breite (auf dem Handy brach sie früher in zwei Zeilen um) |
 | `UniqueIdsTest` | jede `id` nur einmal pro Seite (auch im von Vue gerenderten DOM), auf 22 Seiten; sonst zeigen Labels auf das falsche Formular |
 | `VisualSnapshotTest` | nur auf Wunsch: ganzseitige Screenshots von 44 Seiten (öffentliche auch in Handybreite) für einen Vorher/Nachher-Vergleich |
 
@@ -153,6 +155,7 @@ Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättun
 | Öffentlich | `ContactTest` | 5 | Kontaktformular |
 | Öffentlich | `ApplicationTest` | 5 | Bewerbung Genossenschaft |
 | Öffentlich | `PublicApiTest` | 9 | Ortssuche, API-Antworten (Kalender, Verfügbarkeit, Telefonnummer) |
+| Öffentlich | `CalendarExportTest` | 2 | Kalendereinträge (.ics): Abo-Kalender der API, Einladung in der Bestätigungsmail |
 | Login | `AuthTest` | 6 | Login; Registrierung, Passwort-Reset und -Bestätigung abgeschaltet |
 | Admin | `ChecklistAdminTest` | 3 | Räume und Checkpunkte bearbeiten |
 | Admin | `AdminApplicationTest` | 4 | Bewerbung anzeigen (Kontakt, Status, Verlauf), ablehnen, Escaping |
@@ -178,7 +181,7 @@ Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättun
 | Sicherheit | `Security/ApiTokenTest` | 14 | API-Token |
 | Sicherheit | `Security/CustomerChecklistTest` | 5 | Checkliste im Kundenbereich nur für die eigene Buchung |
 | Sicherheit | `Security/BexioOAuthTest` | 6 | Bexio verbinden (nur Admin, Wartungsseite) mit `state` |
-| Sicherheit | `Security/ImageUploadTest` | 9 | Bild-Uploads nach `public/images` |
+| Sicherheit | `Security/ImageUploadTest` | 12 | Bild-Uploads nach `public/images`, zugeschnittene Bilder als Data-URL |
 
 ### Grundlagen
 
@@ -249,6 +252,8 @@ Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättun
 | `test_phone_number_lookup_finds_booking_by_local_and_international_number` | 079…, +4179…, 79… |
 | `test_phone_number_lookup_does_not_treat_input_as_pattern` | `%` und `_` sind keine Platzhalter |
 | `test_phone_number_lookup_requires_enough_digits` | mindestens 6 Ziffern |
+
+**[`CalendarExportTest`](Feature/CalendarExportTest.php)**: Das Enddatum im Kalendereintrag ist laut iCalendar exklusiv, also der Tag nach der Abreise. Ab `spatie/icalendar-generator` 3.2 rechnet das Paket diesen Tag nicht mehr selbst dazu; vorher war der Eintrag in der Mail einen Tag zu lang.
 
 **[`AuthTest`](Feature/AuthTest.php)**: Login mit Benutzername, falsches Passwort, Eingeloggte werden von Login/Registrierung weggeleitet, Selbst-Registrierung wartet auf Freischaltung (ohne Rolle, inaktiv).
 
@@ -327,7 +332,7 @@ Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättun
 
 **[`BexioOAuthTest`](Feature/Security/BexioOAuthTest.php)**: Bexio verbinden nur als Admin über `admin/bexio/connect` (Knopf und Verbindungsstatus auf der Wartungsseite); der Callback nimmt nur einen Code mit dem `state` der eigenen Weiterleitung an, einmalig, und leitet zurück zur Wartungsseite. Bexio ist mit `Http::fake()` ersetzt.
 
-**[`ImageUploadTest`](Feature/Security/ImageUploadTest.php)**: FAQ, Geschichte und Bilder speichern nur echte Bilder unter einem Namen des Servers (`App\Helper\ImageUpload`). Läuft in einem Temp-Verzeichnis statt `public/`.
+**[`ImageUploadTest`](Feature/Security/ImageUploadTest.php)**: FAQ, Geschichte und Bilder speichern nur echte Bilder unter einem Namen des Servers (`App\Helper\ImageUpload`). Zugeschnittene Bilder (FAQ-Kapitel, Vorschaubild) kommen als Data-URL aus dem Browser; `ImageUpload::saveDataUri()` liest nur Data-URLs, keine Dateipfade oder URLs. Läuft in einem Temp-Verzeichnis statt `public/`.
 
 ---
 

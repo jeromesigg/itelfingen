@@ -1,6 +1,6 @@
 <nav class="bg-norway border-b border-norway px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
-  <div class="flex flex-wrap justify-between items-center">
-    <div class="flex justify-start items-center">
+  <div class="flex justify-between items-center gap-2">
+    <div class="flex justify-start items-center min-w-0">
       <button
         data-drawer-target="drawer-navigation"
         data-drawer-toggle="drawer-navigation"
@@ -35,14 +35,14 @@
         </svg>
         <span class="sr-only">Toggle sidebar</span>
       </button>
-      <a href="/" class="flex items-center justify-between mr-4">
-        <img src="/img/logo.png" class="mr-3 h-8" alt="Itelfingen Logo" />
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Ferienhaus Itelfingen</span>
+      <a href="/" class="flex items-center justify-between min-w-0">
+        <img src="/img/logo.png" class="mr-3 h-8 shrink-0" alt="Itelfingen Logo" />
+        <span class="hidden sm:block self-center text-2xl font-semibold truncate dark:text-white">Ferienhaus Itelfingen</span>
       </a>
     </div>
-    <div class="flex items-center lg:order-2 text-gray-700 dark:text-gray-300">
-      <button type="button" class="flex mx-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
-        <span>{{Auth::user()->username}}<span>
+    <div class="flex items-center shrink-0 text-gray-700 dark:text-gray-300">
+      <button type="button" class="flex mx-3 text-sm rounded-full md:mr-0 max-w-24 sm:max-w-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
+        <span class="truncate">{{Auth::user()->username}}</span>
       </button>
       <!-- Dropdown menu -->
       <div class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded-sm divide-y divide-gray-100 shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown">
