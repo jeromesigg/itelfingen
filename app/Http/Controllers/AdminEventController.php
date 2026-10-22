@@ -26,6 +26,7 @@ use App\Notifications\EventCleaningSentNotification;
 use App\Notifications\EventInvoiceCreatedNotification;
 use App\Notifications\EventInvoiceSendNotification;
 use App\Notifications\EventOfferSendNotification;
+use App\Services\BookingDays;
 use App\View\Components\BookingCalendar;
 use Carbon\Carbon;
 use Closure;
@@ -39,6 +40,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Notification;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as Event_ICAL;
@@ -53,38 +55,12 @@ class AdminEventController extends Controller
     {
         //
         $homepage = Homepage::FindOrFail(1);
-        $event_type = 'admin';
-        $events_all = Event::all();
-        $positions = [];
-        $discount = false;
         $contract_statuses = ContractStatus::pluck('name');
-
-        $events_json = [];
-        foreach ($events_all as $event) {
-            $start_date = new Carbon($event['start_date']);
-            $end_date = new Carbon($event['end_date']);
-            $start = [
-                'y' => $start_date->year,
-                'm' => $start_date->month - 1,
-                'd' => $start_date->day,
-                'h' => ! $event['early_checkin'],
-            ];
-            $end = [
-                'y' => $end_date->year,
-                'm' => $end_date->month - 1,
-                'd' => $end_date->day,
-                'h' => ! $event['late_checkout'],
-            ];
-            $events_json[] = [
-                'start' => $start,
-                'end' => $end,
-                'state' => $event->event_status['color'],
-                'id' => $event->id,
-            ];
-        }
+        $events = Event::with('event_status')->orderBy('start_date')->get();
+        $booked_days = (new BookingDays)->markAll($events)->toArray(withIds: true);
         $title = 'Buchungen';
 
-        return view('admin.events.index', compact('event_type', 'events_json', 'positions', 'discount', 'contract_statuses', 'title', 'homepage'));
+        return view('admin.events.index', compact('booked_days', 'contract_statuses', 'title', 'homepage'));
     }
 
     public function createDataTablesTanStack(Request $request)
@@ -117,7 +93,7 @@ class AdminEventController extends Controller
                 'start_date' => [
                     'display' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.
                         Carbon::parse($event['end_date'])->format('d.m.Y'),
-                    'sort' => Carbon::parse($event['start_date'])->diffInDays('01.01.2021'),
+                    'sort' => Carbon::parse($event['start_date'])->toDateString(),
                 ],
                 'number' => $event->number().'<br>'.e($event['foreign_key']),
                 'name' => e($event['firstname']).' '.$name.'<br>'.e($event['group_name']),
@@ -160,8 +136,24 @@ class AdminEventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Pflichtfelder wie im Formular; ohne Prüfung brach ein unvollständiges Formular erst nach dem Anlegen der Buchung ab
+        $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'total_days' => ['required', 'integer', 'min:0'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'street' => ['required', 'string', 'max:255'],
+            'plz' => ['required', 'string', 'max:10'],
+            'city' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'exists:users,id'],
+            'event_status_id' => ['required', Rule::enum(BookingState::class)],
+            'positions' => ['nullable', 'array'],
+            'positions.*' => ['nullable', 'numeric', 'min:0'],
+        ]);
         $input = $request->all();
+        $input['positions'] ??= [];
+        $input['telephone'] ??= '';
         $input['external'] = isset($input['foreign_key']);
         $input['contract_status_id'] = ContractState::Offen;
         $one_day = false;
@@ -180,7 +172,7 @@ class AdminEventController extends Controller
         $event = Event::create($input);
         EventCreated::dispatch($event, $one_day, $input['positions']);
         if ($event->event_status_id === BookingState::Eigene) {
-            Helper::EventToGoogleCalendar($event);
+            Helper::eventToGoogleCalendar($event);
         }
 
         return redirect()->route('admin.events.edit', [$event]);
@@ -241,7 +233,11 @@ class AdminEventController extends Controller
             ->where('event_id', $id)
             ->orderBy(PricelistPosition::select('bexio_code')
                 ->whereColumn('pricelist_positions.id', 'positions.pricelist_position_id')
-            )->get();
+            )->get()
+            // Frühbezug/Spätabgabe folgt den Checkboxen Early Check-In / Late Check-Out
+            ->reject(fn (Position $position) => $position->pricelist_position?->bexio_code === PricelistPosition::CHECKIN_CHECKOUT_CODE)
+            ->values();
+        $checkin_checkout_price = (float) PricelistPosition::where('bexio_code', PricelistPosition::CHECKIN_CHECKOUT_CODE)->value('price');
 
         $event_statuses = EventStatus::pluck('name', 'id')->all();
         $contract_statuses = ContractStatus::pluck('name', 'id')->all();
@@ -249,7 +245,7 @@ class AdminEventController extends Controller
         $users = User::where('role_id', UserRole::Verwalter)->pluck('username', 'id')->all();
         $title = str_pad($event['id'], 5, '0', STR_PAD_LEFT).' - Buchung bearbeiten';
 
-        return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'title'));
+        return view('admin.events.edit', compact('event_statuses', 'event', 'contract_statuses', 'users', 'positions', 'checkin_checkout_price', 'title'));
     }
 
     /**
@@ -278,6 +274,7 @@ class AdminEventController extends Controller
         $input['phonenumber_query'] = str_replace('-', '', $input['phonenumber_query']);
 
         $event->update($input);
+        $event->syncCheckinCheckoutPosition();
         $additional_text = $input['additional_text'] ?? '';
 
         switch (substr($input['submit'], 0, 1)) {
@@ -345,7 +342,7 @@ class AdminEventController extends Controller
         if ($event === null) {
             return redirect()->route('bookings.login')->withErrors('message', 'Die eingegebenen Daten sind nicht korrekt.');
         }
-        $outputFile = Helper::PrintParking($event);
+        $outputFile = Helper::printParking($event);
 
         return response()->download($outputFile);
     }
@@ -394,7 +391,7 @@ class AdminEventController extends Controller
             $calendar->event(Event_ICAL::create()
                 ->startsAt($start)
                 ->endsAt($end)
-                ->status(EventStatus_ICAL::confirmed()));
+                ->status(EventStatus_ICAL::Confirmed));
         }
 
         return response($calendar->get(), 200, [
@@ -459,19 +456,12 @@ class AdminEventController extends Controller
 
     public function createAPICode(Request $request)
     {
-        $request->validate(['code' => 'required|string|size:4']);
-
-        $code = $request->input('code');
-
-        // Code überprüfen ob vom Event oder neuerstellt
-        $event_id = $request->input('event_id');
-        if (! is_numeric($event_id)) {
-            return response()->json(['error' => 'Invalid event ID'], 400);
-        }
-        $event = Event::find($event_id);
-        if (! $event) {
-            return response()->json(['error' => 'Event not found'], 404);
-        }
+        $validated = $request->validate([
+            'code' => 'required|string|size:4',
+            'event_id' => 'required|integer|exists:events,id',
+        ]);
+        $code = $validated['code'];
+        $event = Event::findOrFail($validated['event_id']);
         $userName = 'Besucher '.$event->number();
         $userId = GlutzAPI::getUser($event, $userName, $code);
         $accessPointId = null;

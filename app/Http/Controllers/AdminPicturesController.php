@@ -7,7 +7,7 @@ use App\Models\Photo;
 use App\Models\Picture;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class AdminPicturesController extends Controller
 {
@@ -52,7 +52,7 @@ class AdminPicturesController extends Controller
 
             if ($input['cropped_photo_id']) {
                 $name = ImageUpload::name($file, 'photo_id', '_cropped');
-                Image::make($input['cropped_photo_id'])->save('images/'.$name);
+                ImageUpload::saveDataUri($input['cropped_photo_id'], 'images/'.$name, 'cropped_photo_id');
 
                 $photo_cropped = Photo::create(['file' => $name]);
                 $input['cropped_photo_id'] = $photo_cropped->id;
@@ -108,7 +108,7 @@ class AdminPicturesController extends Controller
 
             if ($input['cropped_photo_id']) {
                 $name = ImageUpload::name($file, 'photo_id', '_cropped');
-                Image::make($input['cropped_photo_id'])->save('images/'.$name);
+                ImageUpload::saveDataUri($input['cropped_photo_id'], 'images/'.$name, 'cropped_photo_id');
 
                 $photo_cropped = Photo::create(['file' => $name]);
                 $input['cropped_photo_id'] = $photo_cropped->id;
@@ -129,8 +129,12 @@ class AdminPicturesController extends Controller
     {
         //
         $picture = Picture::findOrFail($id);
-        unlink(public_path().$picture->photo->file);
-        unlink(public_path().$picture->cropped_photo->file);
+        // Fehlende Dateien oder ein fehlendes Vorschaubild dürfen das Löschen nicht verhindern
+        foreach ([$picture->photo, $picture->cropped_photo] as $photo) {
+            if ($photo) {
+                File::delete(public_path().$photo->file);
+            }
+        }
 
         $picture->delete();
 

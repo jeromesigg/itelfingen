@@ -16,7 +16,7 @@ class EventInvoiceSendNotification extends Notification
 
     public Event $event;
 
-    public string $additional_text;
+    public string $additionalText;
 
     public array $invoice;
 
@@ -29,7 +29,7 @@ class EventInvoiceSendNotification extends Notification
     {
         //
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
         $invoice = app(BexioApiService::class)->get('kb_invoice/'.$event['bexio_invoice_id']);
         $this->invoice = $invoice;
     }
@@ -53,7 +53,7 @@ class EventInvoiceSendNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new SendEventInvoiceMail($this->event, $this->invoice, $this->additional_text);
+        return new SendEventInvoiceMail($this->event, $this->invoice, $this->additionalText);
     }
 
     /**

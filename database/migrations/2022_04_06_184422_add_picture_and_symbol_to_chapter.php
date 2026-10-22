@@ -28,8 +28,6 @@ class AddPictureAndSymbolToChapter extends Migration
      */
     public function down()
     {
-        Schema::table('faq_chapters', function (Blueprint $table) {
-            //
-        });
+        // Hat die Spalten nie entfernt; ein Rollback lässt symbol und photo_id bestehen (Verhalten unverändert)
     }
 }

@@ -60,8 +60,6 @@ use Illuminate\Support\Str;
 use Illuminate\Translation\TranslationServiceProvider;
 use Illuminate\Validation\ValidationServiceProvider;
 use Illuminate\View\ViewServiceProvider;
-use Intervention\Image\Facades\Image;
-use Intervention\Image\ImageServiceProvider;
 use SimonSchaufi\LaravelDKIM\DKIMMailServiceProvider;
 
 return [
@@ -232,7 +230,6 @@ return [
         TranslationServiceProvider::class,
         ValidationServiceProvider::class,
         ViewServiceProvider::class,
-        ImageServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -299,7 +296,6 @@ return [
         'URL' => URL::class,
         'Validator' => Validator::class,
         'View' => View::class,
-        'Image' => Image::class,
     ],
 
 ];

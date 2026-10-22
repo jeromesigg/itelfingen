@@ -15,7 +15,7 @@ class EventLastInfosNotification extends Notification
 
     public Event $event;
 
-    public string $additional_text;
+    public string $additionalText;
 
     /**
      * Create a new notification instance.
@@ -26,7 +26,7 @@ class EventLastInfosNotification extends Notification
     {
         //
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -48,7 +48,7 @@ class EventLastInfosNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new LastInfosSent($this->event, $this->additional_text);
+        return new LastInfosSent($this->event, $this->additionalText);
     }
 
     /**

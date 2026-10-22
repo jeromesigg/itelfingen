@@ -6,6 +6,7 @@ use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
@@ -150,15 +151,30 @@ class CreateMultiDayEventTest extends TestCase
     }
 
     /**
-     * Wert, den der Browser für die angehakte Hausordnung schickt: das value-Attribut der Checkbox auf der Startseite.
+     * Wert, den der Browser für die angehakte Hausordnung schickt: das value-Attribut der Checkbox im Buchungsassistenten.
      */
     private function termsValueFromForm(): string
     {
         BookingScenario::create();
-        preg_match('/<input type="checkbox" name="terms"[^>]*value="([^"]*)"/', $this->get('/')->getContent(), $match);
+        $wizard = file_get_contents(resource_path('js/components/BookingWizard.vue'));
+        preg_match('/<input id="terms" name="terms" type="checkbox" value="([^"]*)"/', $wizard, $match);
         $this->assertNotEmpty($match, 'Checkbox "terms" nicht gefunden');
 
         return $match[1];
+    }
+
+    /**
+     * Props des Buchungsassistenten (Vue) aus dem HTML der Startseite.
+     *
+     * @return array{days: array, positions: array, discountEnabled: bool, showForm: bool, old: array<string, mixed>}
+     */
+    private function bookingProps(?string $html = null): array
+    {
+        $html ??= $this->get('/')->getContent();
+        preg_match('/data-vue-component="booking-wizard" data-props="([^"]*)"/', $html, $match);
+        $this->assertNotEmpty($match, 'Buchungsassistent nicht gefunden');
+
+        return json_decode(html_entity_decode($match[1]), true);
     }
 
     public function test_accepted_terms_as_sent_by_browser(): void
@@ -192,13 +208,15 @@ class CreateMultiDayEventTest extends TestCase
             'comment' => 'Wir kommen mit Velo',
         ]))->assertSessionHasErrors('total_people', null, 'event');
 
-        $this->get('/')
-            ->assertSee('Für die Buchung braucht es mindestens 1 Person.')
-            ->assertSee('value="Muster"', false)
-            ->assertSee('value="Dorfstrasse"', false)
-            ->assertSee('value="max@example.com"', false)
-            ->assertSee('value="079 123-45 67"', false)
-            ->assertSee('>Wir kommen mit Velo</textarea>', false);
+        $html = $this->get('/')->assertSee('Für die Buchung braucht es mindestens 1 Person.')->getContent();
+        $old = $this->bookingProps($html)['old'];
+
+        $this->assertSame('Muster', $old['name']);
+        $this->assertSame('Dorfstrasse', $old['street']);
+        $this->assertSame('max@example.com', $old['email']);
+        $this->assertSame('079 123-45 67', $old['telephone']);
+        $this->assertSame('Wir kommen mit Velo', $old['comment']);
+        $this->assertEquals(['30' => 0, '40' => 0], $old['positions']);
     }
 
     /**
@@ -229,7 +247,7 @@ class CreateMultiDayEventTest extends TestCase
         $this->from(route('home'))->post('/event/create', $this->bookingData(['total_people' => 0]));
         $html = $this->get('/')->getContent();
 
-        $this->assertStringContainsString('value="Muster"', $this->formHtml($html, route('event.create')));
+        $this->assertSame('Muster', $this->bookingProps($this->formHtml($html, route('event.create')))['old']['name']);
         $contact = $this->formHtml($html, route('contacts.store'));
         $this->assertStringNotContainsString('value="Muster"', $contact);
         $this->assertStringNotContainsString('value="max@example.com"', $contact);
@@ -255,20 +273,73 @@ class CreateMultiDayEventTest extends TestCase
         $end = now()->addMonth()->addDays(2)->toDateString();
 
         $this->from(route('home'))->post('/event/create', $this->bookingData(['total_people' => 0]));
-        $html = $this->get('/')->getContent();
+        $props = $this->bookingProps();
 
-        // Die versteckten Felder tragen die Auswahl; das Kalender-Skript markiert sie und öffnet das Formular.
-        $this->assertMatchesRegularExpression('/<input type="hidden" name="start_date"[^>]*value="'.$start.'"/', $html);
-        $this->assertMatchesRegularExpression('/<input type="hidden" name="end_date"[^>]*value="'.$end.'"/', $html);
-        $this->assertStringContainsString("restoreBooking()\n", $html);
-        $this->assertMatchesRegularExpression('/if \(true\) \{\s*wizard_step\(2\);/', $html);
+        // Der Assistent markiert die Auswahl im Kalender und öffnet direkt das Formular.
+        $this->assertSame($start, $props['old']['start_date']);
+        $this->assertSame($end, $props['old']['end_date']);
+        $this->assertTrue($props['showForm']);
     }
 
     public function test_fresh_page_does_not_open_the_form(): void
     {
         BookingScenario::create();
 
-        $this->assertMatchesRegularExpression('/if \(false\) \{\s*wizard_step\(2\);/', $this->get('/')->getContent());
+        $props = $this->bookingProps();
+
+        $this->assertFalse($props['showForm']);
+        $this->assertSame('', $props['old']['start_date']);
+    }
+
+    public function test_calendar_shows_booked_half_days_without_booking_ids(): void
+    {
+        BookingScenario::create();
+        // Mo bis Mi, ohne Early Check-In / Late Check-Out: Anreise am Nachmittag, Abreise am Vormittag
+        $monday = now()->addMonths(2)->next('Monday');
+        Event::factory()->confirmed()->create([
+            'start_date' => $monday->toDateString(), 'end_date' => $monday->copy()->addDays(2)->toDateString(),
+            'early_checkin' => false, 'late_checkout' => false,
+        ]);
+
+        $days = $this->bookingProps()['days'];
+
+        $this->assertSame(['am' => null, 'pm' => 'B'], $days[$monday->toDateString()]);
+        $this->assertSame(['am' => 'B', 'pm' => 'B'], $days[$monday->copy()->addDay()->toDateString()]);
+        $this->assertSame(['am' => 'BD', 'pm' => null], $days[$monday->copy()->addDays(2)->toDateString()]);
+    }
+
+    public function test_calendar_treats_sunday_arrival_and_departure_as_whole_days(): void
+    {
+        BookingScenario::create();
+        $sunday = now()->addMonths(2)->next('Sunday');
+        Event::factory()->confirmed()->create([
+            'start_date' => $sunday->toDateString(), 'end_date' => $sunday->copy()->addWeek()->toDateString(),
+            'early_checkin' => false, 'late_checkout' => false,
+        ]);
+
+        $days = $this->bookingProps()['days'];
+
+        $this->assertSame(['am' => 'B', 'pm' => 'B'], $days[$sunday->toDateString()]);
+        $this->assertSame(['am' => 'B', 'pm' => 'B'], $days[$sunday->copy()->addWeek()->toDateString()]);
+    }
+
+    public function test_calendar_hides_cancelled_and_past_bookings(): void
+    {
+        BookingScenario::create();
+        // Nach allen Szenario-Buchungen (Zufallsdatum), sonst ist der Tag womöglich von einer anderen Buchung belegt.
+        $free = Carbon::parse(Event::max('end_date'))->addWeek();
+        $cancelled = Event::factory()->create([
+            'start_date' => $free->toDateString(), 'end_date' => $free->copy()->addDays(2)->toDateString(),
+            'event_status_id' => BookingState::Storniert,
+        ]);
+        $past = Event::factory()->confirmed()->create([
+            'start_date' => now()->subMonth()->toDateString(), 'end_date' => now()->subMonth()->addDays(2)->toDateString(),
+        ]);
+
+        $days = $this->bookingProps()['days'];
+
+        $this->assertArrayNotHasKey($cancelled->start_date, $days);
+        $this->assertArrayNotHasKey($past->start_date, $days);
     }
 
     public function test_incomplete_booking_is_rejected_without_server_error(): void

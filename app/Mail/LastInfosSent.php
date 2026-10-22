@@ -27,7 +27,7 @@ class LastInfosSent extends Mailable
     public function __construct(Event $event, $additional_text)
     {
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -37,20 +37,20 @@ class LastInfosSent extends Mailable
      */
     public function build()
     {
-        $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
+        $pdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
         $email = $this->event['email'];
         $name = $this->event['firstname'].' '.$this->event['name'];
-        $outputFile = Helper::PrintParking($this->event);
+        $outputFile = Helper::printParking($this->event);
         $number = str_pad($this->event['id'], 5, '0', STR_PAD_LEFT);
         if (isset($this->event['foreign_key'])) {
             $number .= ' ('.$this->event['foreign_key'].')';
         }
 
-        return $this->markdown('emails.events.last_infos', ['event' => $this->event, 'additional_text' => $this->additional_text])
+        return $this->markdown('emails.events.last_infos', ['event' => $this->event, 'additional_text' => $this->additionalText])
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Die letzten Informationen zu deiner Buchung '.$number.' für das Ferienhaus Itelfingen')
-            ->attach($PdfPath, [
+            ->attach($pdfPath, [
                 'as' => 'Infos_vor_Buchung.pdf',
                 'mime' => 'application/pdf',
             ])

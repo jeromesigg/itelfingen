@@ -20,7 +20,7 @@ class SendEventInvoiceMail extends Mailable
 
     protected $invoice;
 
-    protected $additional_text;
+    protected $additionalText;
 
     /**
      * Create a new message instance.
@@ -31,7 +31,7 @@ class SendEventInvoiceMail extends Mailable
     {
         $this->event = $event;
         $this->invoice = $invoice;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -53,7 +53,7 @@ class SendEventInvoiceMail extends Mailable
 
         $invoice_pdf = app(BexioApiService::class)->get('kb_invoice/'.$event['bexio_invoice_id'].'/pdf');
 
-        return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link'], 'additional_text' => $this->additional_text])
+        return $this->markdown('emails.events.invoices', ['event' => $event, 'link' => $this->invoice['network_link'], 'additional_text' => $this->additionalText])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Deine Rechnung zur Buchung '.$number.' vom '.$start_date.' bis '.$end_date.' im Ferienhaus Itelfingen')

@@ -6,7 +6,7 @@
 
             <header>
                 <h3>Positionen</h3>
-                <a href="{{route('positions.create')}}" class="btn btn-primary btn-success btn-sm">
+                <a href="{{route('positions.create')}}" class="mt-2 inline-flex items-center justify-center rounded-lg bg-grannysmith px-5 py-2.5 text-sm font-medium text-white hover:opacity-90 focus:outline-hidden focus:ring-4 focus:ring-grannysmith/50">
                     <span>Importieren</span>
                 </a>
             </header>

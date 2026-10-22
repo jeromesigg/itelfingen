@@ -38,7 +38,7 @@ class FeedbackMail extends Mailable
     {
         $email = $this->event['email'];
         $name = $this->event['firstname'].' '.$this->event['name'];
-        $PdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
+        $pdfPath = storage_path('app/contracts/Infos_vor_Buchung.pdf');
         $number = str_pad($this->event['id'], 5, '0', STR_PAD_LEFT);
         if (isset($this->event['foreign_key'])) {
             $number .= ' ('.$this->event['foreign_key'].')';
@@ -56,7 +56,7 @@ class FeedbackMail extends Mailable
             ->to($email, $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject($heading.' – Infos zur Hausrückgabe (Buchung '.$number.')')
-            ->attach($PdfPath, [
+            ->attach($pdfPath, [
                 'as' => 'Infos_vor_Buchung.pdf',
                 'mime' => 'application/pdf',
             ]);

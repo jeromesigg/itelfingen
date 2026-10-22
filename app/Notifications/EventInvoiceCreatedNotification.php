@@ -16,7 +16,7 @@ class EventInvoiceCreatedNotification extends Notification
 
     public Event $event;
 
-    public $additional_text;
+    public $additionalText;
 
     /**
      * Create a new notification instance.
@@ -27,7 +27,7 @@ class EventInvoiceCreatedNotification extends Notification
     {
         //
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -49,7 +49,7 @@ class EventInvoiceCreatedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new SendEventConfirmation($this->event, $this->additional_text);
+        return new SendEventConfirmation($this->event, $this->additionalText);
     }
 
     /**

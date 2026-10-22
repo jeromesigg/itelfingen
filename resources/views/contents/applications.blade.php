@@ -73,7 +73,7 @@
                     </ul>
                 </div>
             @endif
-            <x-forms.form :action="route('application.store')" id='application_form'>
+            <x-forms.form :action="route('application.store')" id='application_form' data-city-search="{{ route('searchajaxcity') }}">
                 <x-honeypot />
                 <div class="grid md:grid-cols-3 gap-4">
                   <x-forms.container >
@@ -97,13 +97,13 @@
                     </div>
                     <div class="grid grid-cols-4 gap-4">
                         <x-forms.container>
-                            <x-forms.text label="PLZ*:" name="zipcode" required=true inputmode="numeric" class="autocomplete_txt"/>
+                            <x-forms.text label="PLZ*:" name="zipcode" required=true inputmode="numeric"/>
                         </x-forms.container>
                         <x-forms.container class="col-span-3">
-                            <x-forms.text label="Ortschaft*:" name="city" required=true class="autocomplete_txt"/>
+                            <x-forms.text label="Ortschaft*:" name="city" required=true/>
                         </x-forms.container>
                     </div>
-                    <x-forms.hidden name="city_id" class="autocomplete_txt"/>
+                    <x-forms.hidden name="city_id"/>
                 </div>
                 <div class="grid md:grid-cols-2 gap-4">
                     <x-forms.container>
@@ -145,53 +145,6 @@
 @push('scripts')
     <script type="module">
 
-    //autocomplete script
-    $(document).on('focus','.autocomplete_txt',function(){
-        type = $(this).attr('name');
-
-        if(type =='city'){
-             var autoType='name';
-        }
-        else if(type =='zipcode'){
-            var autoType='plz';
-        }
-        else if(type =='city_id'){
-            var autoType='id';
-        }
-
-        $(this).autocomplete({
-            minLength: 2,
-            highlight: true,
-            source: function( request, response ) {
-                $.ajax({
-                    url: "{{ route('searchajaxcity') }}",
-                    dataType: "json",
-                    data: {
-                        term : request.term,
-                        type : type,
-                    },
-                    success: function(data) {
-                        var array = $.map(data, function (item) {
-                                return {
-                                label: item['plz'] + ' ' + item['name'],
-                                value: item[autoType],
-                                data : item
-                            }
-                        });
-                        response(array)
-                    }
-                });
-            },
-            select: function( event, ui ) {
-                var data = ui.item.data;
-                $("[name='city']").val(data.name);
-                $("[name='zipcode']").val(data.plz);
-                $("[name='city_id']").val(data.id);
-            }
-        });
-
-
-    });
     document.getElementById('application_form')?.addEventListener('submit', function(e) {
         const btn = document.getElementById('submit-btn');
         btn.disabled = true;

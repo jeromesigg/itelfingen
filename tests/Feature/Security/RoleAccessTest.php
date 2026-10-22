@@ -142,7 +142,13 @@ class RoleAccessTest extends TestCase
         $this->assertTrue($s->team->fresh()->role_id === UserRole::Team);
     }
 
-    #[DataProvider('pages')]
+    /** @return array<string, array{0: string, 1: string}> */
+    public static function guestPages(): array
+    {
+        return array_map(fn (array $page) => [$page[0], $page[1]], self::pages());
+    }
+
+    #[DataProvider('guestPages')]
     public function test_guests_are_redirected_to_login(string $method, string $uri): void
     {
         $s = BookingScenario::create();

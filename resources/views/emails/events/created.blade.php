@@ -16,14 +16,15 @@ $extra['Voraussichtliches Total'] = 'CHF '.number_format((float) $event->total_a
 @endphp
 @include('emails.events.partials.facts', ['extra' => $extra])
 
+{{-- Zeilen hier nicht auf @endif enden lassen: Blade verschluckt den Umbruch danach, der folgende Absatz rutschte sonst in die Zeile --}}
 **Deine Kontaktdaten**<br>
 {{ $event->firstname }} {{ $event->name }}@if ($event->group_name), {{ $event->group_name }}@endif<br>
 {{ $event->street }} {{ $event->house_number }}, {{ $event->plz }} {{ $event->city }}<br>
-{{ $event->email }}@if ($event->telephone) · {{ $event->telephone }}@endif
+{{ $event->email }}{{ $event->telephone ? ' · '.$event->telephone : '' }}
 
 @if ($event->comment)
 **Deine Bemerkung**<br>
-{{ $event->comment }}
+{!! nl2br(e($event->comment)) !!}
 @endif
 
 **Wie geht es weiter?**<br>

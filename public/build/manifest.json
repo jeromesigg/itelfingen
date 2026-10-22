@@ -1,6 +1,21 @@
 {
+  "_pricing-BIsXh3Gn.js": {
+    "file": "assets/pricing-BIsXh3Gn.js",
+    "name": "pricing"
+  },
+  "_rolldown-runtime-XKyaHtl9.js": {
+    "file": "assets/rolldown-runtime-XKyaHtl9.js",
+    "name": "rolldown-runtime"
+  },
+  "_sweetalert2.all-ChJboSGG.js": {
+    "file": "assets/sweetalert2.all-ChJboSGG.js",
+    "name": "sweetalert2.all",
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js"
+    ]
+  },
   "resources/css/app.css": {
-    "file": "assets/app-CEGQxkes.css",
+    "file": "assets/app-B-o0VzeJ.css",
     "name": "app",
     "names": [
       "app.css"
@@ -38,11 +53,50 @@
     "file": "assets/login-Decb8tK8.webp",
     "src": "resources/images/login.webp"
   },
+  "resources/js/admin/event-form.js": {
+    "file": "assets/event-form-CyQb2AMk.js",
+    "name": "event-form",
+    "src": "resources/js/admin/event-form.js",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js",
+      "_pricing-BIsXh3Gn.js",
+      "_sweetalert2.all-ChJboSGG.js"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-BWZZ0aAD.js",
+    "file": "assets/app-UCYiKzMZ.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js",
+      "_pricing-BIsXh3Gn.js"
+    ],
+    "dynamicImports": [
+      "_sweetalert2.all-ChJboSGG.js"
+    ]
+  },
+  "resources/js/charts.js": {
+    "file": "assets/charts-BzUY4Orl.js",
+    "name": "charts",
+    "src": "resources/js/charts.js",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js"
+    ]
+  },
+  "resources/js/editor.js": {
+    "file": "assets/editor-BntjX2Bs.js",
+    "name": "editor",
+    "src": "resources/js/editor.js",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-XKyaHtl9.js"
+    ],
+    "css": [
+      "assets/editor-D6DPvIGY.css"
+    ]
   },
   "resources/js/fonts/PPMigra-Regular.eot": {
     "file": "assets/PPMigra-Regular-CMprnpcM.eot",

@@ -12,6 +12,7 @@ use App\Models\Person;
 use App\Models\Picture;
 use App\Models\PricelistPosition;
 use App\Services\BexioApiService;
+use App\Services\BookingDays;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -31,44 +32,16 @@ class HomeController extends Controller
         $homepage = Homepage::FindOrFail(1);
         $pictures = Picture::all();
         $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
-        $events = Event::whereIn('event_status_id', BookingState::notCancelled())->where('end_date', '>=', Carbon::now())->get();
-        $event_type = 'guest';
+        $events = Event::with('event_status')
+            ->whereIn('event_status_id', BookingState::notCancelled())
+            ->where('end_date', '>=', Carbon::now())
+            ->orderBy('start_date')
+            ->get();
+        $booked_days = (new BookingDays(sundayIsFullDay: true))->markAll($events)->toArray();
         $discount = filter_var(config('app.discount_enabled'), FILTER_VALIDATE_BOOLEAN);
         $application_enabled = config('app.application_enabled');
 
-        $events_json = [];
-        foreach ($events as $event) {
-            $start_date = new Carbon($event['start_date']);
-            $end_date = new Carbon($event['end_date']);
-            $start = [
-                'y' => $start_date->year,
-                'm' => $start_date->month - 1,
-                'd' => $start_date->day,
-                'h' => ! ($event['early_checkin'] || ($start_date->dayOfWeek === 0)),
-            ];
-            $end = [
-                'y' => $end_date->year,
-                'm' => $end_date->month - 1,
-                'd' => $end_date->day,
-                'h' => ! ($event['late_checkout'] || ($end_date->dayOfWeek === 0)),
-            ];
-            $events_json[] = [
-                'start' => $start,
-                'end' => $end,
-                'state' => $event->event_status['color'],
-                'id' => $event->id,
-            ];
-        }
-        $contact_attributes = [
-            'data-theme' => 'light',
-            'data-callback' => 'enable_ContactBtn',
-        ];
-        $event_attributes = [
-            'data-theme' => 'light',
-            'data-callback' => 'enable_EventBtn',
-        ];
-
-        return view('home', compact('homepage', 'pictures', 'events_json', 'event_type', 'event_attributes', 'contact_attributes', 'positions', 'discount', 'application_enabled'));
+        return view('home', compact('homepage', 'pictures', 'booked_days', 'positions', 'discount', 'application_enabled'));
     }
 
     public function impressum()

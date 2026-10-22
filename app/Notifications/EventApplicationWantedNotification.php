@@ -15,7 +15,7 @@ class EventApplicationWantedNotification extends Notification
 
     public Event $event;
 
-    public $additional_text;
+    public $additionalText;
 
     /**
      * Create a new notification instance.
@@ -26,7 +26,7 @@ class EventApplicationWantedNotification extends Notification
     {
         //
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -48,7 +48,7 @@ class EventApplicationWantedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return new ApplicationWanted($this->event, $this->additional_text);
+        return new ApplicationWanted($this->event, $this->additionalText);
     }
 
     /**

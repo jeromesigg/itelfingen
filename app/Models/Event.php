@@ -52,6 +52,26 @@ class Event extends Model
         return $this->hasMany(Position::class);
     }
 
+    /**
+     * Position "Frühbezug, Spätabgabe" an Early Check-In und Late Check-Out angleichen: Menge 1 je Häkchen.
+     * Ohne Häkchen bleibt eine vorhandene Position mit Menge 0 bestehen (die Offerte lässt sie weg).
+     */
+    public function syncCheckinCheckoutPosition(): void
+    {
+        $amount = (int) $this->early_checkin + (int) $this->late_checkout;
+        $pricelistPositionId = PricelistPosition::where('bexio_code', PricelistPosition::CHECKIN_CHECKOUT_CODE)->value('id');
+        if (! $pricelistPositionId) {
+            return;
+        }
+
+        $position = $this->positions()->where('pricelist_position_id', $pricelistPositionId)->first();
+        if ($position) {
+            $position->update(['amount' => $amount]);
+        } elseif ($amount > 0) {
+            $this->positions()->create(['pricelist_position_id' => $pricelistPositionId, 'amount' => $amount]);
+        }
+    }
+
     public function event_rooms()
     {
         return $this->hasMany(EventRoom::class);
@@ -82,10 +102,10 @@ class Event extends Model
 
     public function status()
     {
-        $offer = Helper::GetEventOfferStatus($this);
-        $invoice = Helper::GetEventInvoiceStatus($this);
-        $cleaning_mail = Helper::GetEventCleaningMailCheck($this);
-        $code = Helper::GetEventCodeCheck($this);
+        $offer = Helper::getEventOfferStatus($this);
+        $invoice = Helper::getEventInvoiceStatus($this);
+        $cleaning_mail = Helper::getEventCleaningMailCheck($this);
+        $code = Helper::getEventCodeCheck($this);
 
         return $offer.$invoice.$cleaning_mail.$code;
     }
