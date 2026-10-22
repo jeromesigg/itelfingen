@@ -92,7 +92,7 @@ class TestInfrastructureTest extends TestCase
         $this->assertSame(4, Role::count());
         $this->assertNotNull(Homepage::find(1));
         $this->assertTrue(User::find(1)->isAdmin());
-        $this->assertSame([20, 30, 40, 50, 210, 220, 300], PricelistPosition::pluck('bexio_code')->all());
+        $this->assertSame([20, 30, 40, 50, 210, 220, 250, 300], PricelistPosition::pluck('bexio_code')->all());
     }
 
     public function test_scenario_creates_users_with_expected_rights(): void

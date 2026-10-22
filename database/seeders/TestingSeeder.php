@@ -24,7 +24,8 @@ class TestingSeeder extends Seeder
             ['bexio_code' => 40, 'bexio_id' => 1040, 'name' => 'Kinder pro Nacht', 'price' => 10, 'show' => true],
             ['bexio_code' => 50, 'bexio_id' => 1050, 'name' => 'Tagesnutzung', 'price' => 150, 'show' => false],
             ['bexio_code' => 210, 'bexio_id' => 1210, 'name' => 'Parkplatz pro Tag', 'price' => 5, 'show' => false],
-            ['bexio_code' => 220, 'bexio_id' => 1220, 'name' => 'Endreinigung', 'price' => 150, 'show' => false],
+            ['bexio_code' => 220, 'bexio_id' => 1220, 'name' => 'Frühbezug, Spätabgabe', 'price' => 50, 'show' => false],
+            ['bexio_code' => 250, 'bexio_id' => 1250, 'name' => 'Ausstattung', 'price' => 5, 'show' => false],
             // Genossenschaftsschein, Rechnung für Bewerbungen (DailyTask)
             ['bexio_code' => 300, 'bexio_id' => 1300, 'name' => 'Genossenschaftsschein', 'price' => 500, 'show' => false],
         ];

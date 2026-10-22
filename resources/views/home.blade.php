@@ -13,7 +13,3 @@
     @include('includes.footer')
   </div>
 @endsection
-
-@push('scripts')
-  @include('contents.event_js')
-@endpush

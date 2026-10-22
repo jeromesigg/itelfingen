@@ -4,7 +4,7 @@
 
 > **Beim Hinzufügen eines Tests bitte diese Datei ergänzen**, siehe [Neuen Test schreiben](#neuen-test-schreiben).
 
-Stand 13.10.2026: **427 Testfälle in 39 Dateien** (67 Unit, 360 Feature), Laufzeit rund 12 Sekunden.
+Stand 22.10.2026: **550 PHPUnit-Testfälle** (70 Unit, 480 Feature, rund 15 Sekunden), **65 Vitest-Tests** (unter 1 Sekunde) und **17 Dusk-Tests** (rund 1 Minute, nur lokal mit Sail).
 Aktuelle Zahlen: `vendor/bin/phpunit --list-tests`
 
 ## Inhalt
@@ -28,9 +28,68 @@ vendor/bin/phpunit --filter test_contact_form             # einzelne Tests
 
 Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpunit`.
 
+### JavaScript (Vitest)
+
+```bash
+npm test                                                  # alle JS-Tests (vitest run)
+npm run test:watch                                        # bei jeder Änderung neu
+npx vitest run tests/js/DataTable.test.js                 # eine Datei
+```
+
+In `tests/js`, Konfiguration in `vitest.config.js` (ohne laravel-vite-plugin, DOM über happy-dom, Vue-Komponenten mit `@vue/test-utils`).
+
+| Datei | Prüft |
+|---|---|
+| `pricing.test.js` | Preisregel der Formulare (`resources/js/libs/pricing.js`) mit denselben Fällen wie `Unit/OfferAmountTest`, Rabatt ohne Frühbezug/Spätabgabe |
+| `booking-calendar.test.js` | Kalenderlogik: Nächte über die Zeitumstellung, Wochen ab Montag, Kürzen vor der nächsten Buchung, Halbtage der Auswahl, Kurzfrist-Rabatt |
+| `BookingWizard.test.js` | Buchungsassistent: Eingaben bleiben beim Neuzeichnen und Absenden erhalten, Total/Personen/Nächte, Wiederherstellen nach Validierungsfehler |
+| `event-form.test.js` | Admin-Formulare „Buchung erstellen/bearbeiten“ (`resources/js/admin/event-form.js`): Total wie die Offerte, Rabatt ohne Frühbezug/Spätabgabe, Nächte aus dem Datum, Kalender-Vorschau (auch nach Validierungsfehler), Import inkl. Kommentar, interne Buchung, Putzmail, Storno-Warnung, Türcode |
+| `DataTable.test.js` | Admin-Tabellen: Sortieren ohne neue Anfrage, Aktion ersetzt nur ihre Zeile, Fehler- und Leerzustand, Suche |
+| `DataTableStress.test.js` | 140 Sortierwechsel und 20 Seitenwechsel über 700 Zeilen: jeder Klick unter 500 ms, keine Vue-Warnungen. Hält den Hänger fest, den `useVueTable` mit `get data()`/`get state()` auslöste |
+| `FilterButtons.test.js` | aktiver Filter mit `aria-pressed` |
+
+### Browser (Laravel Dusk)
+
+```bash
+./vendor/bin/sail up -d                                   # startet auch den Selenium-Container
+./vendor/bin/sail npm run build                           # Dusk testet die gebauten Assets
+./vendor/bin/sail dusk                                    # alle Browser-Tests
+./vendor/bin/sail dusk tests/Browser/EventEditTest.php    # eine Datei
+```
+
+- **Ablauf:** Chrome läuft im Container `selenium` (`docker-compose.yml`) und ruft die App unter `http://laravel.test` auf. Dusk ersetzt während des Laufs die `.env` durch `.env.dusk.local` und stellt sie danach wieder her.
+- **Kein `npm run dev`:** Der Vite-Dev-Server muss gestoppt sein. Er bemerkt den Austausch der `.env`, startet neu und legt `public/hot` an; die Seiten laden dann CSS und JS von `localhost:5173`, das der Selenium-Container nicht erreicht. Die Tests sehen die Seite ohne CSS, Layout-Prüfungen werden wertlos.
+- **Datenbank:** SQLite-Datei `database/dusk.sqlite` (nicht im Repo), weil Testprozess und Webserver dieselbe Datenbank sehen müssen. `phpunit.dusk.xml` statt `phpunit.xml`, das SQLite im Arbeitsspeicher erzwingt. `DuskTestCase::beforeRefreshingDatabase()` bricht ab, bevor eine andere Datenbank geleert würde.
+- **Testdaten:** wie in den Feature-Tests (`TestingSeeder`, `BookingScenario`), pro Test frisch migriert (`DatabaseMigrations`).
+- **Cache:** `CACHE_DRIVER=array`, damit die Anfrage-Begrenzung (`throttle`) nicht über Tests und Läufe hinweg zählt; geprüft wird sie in `Security/PublicFormRateLimitTest`.
+- **Fehler:** Screenshots, Browser-Konsole und HTML des letzten Stands in `tests/Browser/screenshots`, `console` und `source`.
+- **Nicht in der CI:** Die Tests brauchen Chrome bzw. Selenium und laufen lokal mit Sail.
+
+| Datei | Prüft |
+|---|---|
+| `BookingWizardTest` | Buchung über Kalender und Formular absenden; Eingaben bleiben beim Ändern der Personen; nach Validierungsfehler offenes Formular mit Eingaben |
+| `AdminTablesTest` | „Bearbeitet“ und „Ablehnen“ (mit Bestätigung) ändern die Zeile ohne Neuladen; Sortieren nach Datum in beide Richtungen |
+| `EventEditTest` | Early Check-In macht den Anreisetag im Kalender ganz und erhöht das Total um die Pauschale |
+| `PublicFormsTest` | Kontaktformular absenden; Bewerbung, bei der die PLZ die Ortschaft füllt; Kundenbereich mit Buchungsnummer und PLZ, falsche PLZ |
+| `CustomerChecklistTest` | Checkliste im Kundenbereich: Abhaken speichert sofort, Zähler und Raum-Status folgen, bleibt nach dem Neuladen |
+| `AdminLayoutTest` | die fixe Navbar im Admin überdeckt weder Inhalt noch Seitenleiste, in Handy-, Tablet- und Desktop-Breite (auf dem Handy brach sie früher in zwei Zeilen um) |
+| `UniqueIdsTest` | jede `id` nur einmal pro Seite (auch im von Vue gerenderten DOM), auf 22 Seiten; sonst zeigen Labels auf das falsche Formular |
+| `VisualSnapshotTest` | nur auf Wunsch: ganzseitige Screenshots von 44 Seiten (öffentliche auch in Handybreite) für einen Vorher/Nachher-Vergleich |
+
+**Optische Änderungen prüfen** (z. B. CSS aufräumen): Testdaten mit festem Faker-Seed und eingefrorener Zeit, zwei Läufe ohne Änderung sind pixelgleich.
+
+```bash
+SNAPSHOT_SET=before php artisan dusk --filter=VisualSnapshotTest   # vor der Änderung
+# … ändern, npm run build …
+SNAPSHOT_SET=after php artisan dusk --filter=VisualSnapshotTest    # danach
+php tests/Browser/compare-snapshots.php tests/Browser/screenshots/before tests/Browser/screenshots/after tests/Browser/screenshots/diff
+```
+
+Abweichungen in Diagrammen (ApexCharts) von einzelnen Pixeln sind Kantenglättung, kein CSS-Effekt.
+
 - **Datenbank:** immer SQLite im Arbeitsspeicher, nie die Datenbank aus der `.env`. `tests/TestCase.php` bricht ab, falls die Config gecacht ist und auf MySQL zeigt.
 - **Externe Dienste:** `Http::preventStrayRequests()` in `TestCase`. Bexio, Glutz und Healthchecks werden nie wirklich aufgerufen; Tests, die sie brauchen, setzen `Http::fake()`. Der Google-Kalender läuft nicht über `Http`: `TestCase` ersetzt `GoogleCalendarService` durch `Tests\Support\FakeGoogleCalendar`. Google Sheets und Slack (DailyTask) per Facade-Mock (`Sheets::shouldReceive`, `Slack::shouldReceive`), Slack-Benachrichtigungen entfallen mangels Webhook.
-- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint` und `phpunit` (PHP 8.3), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
+- **CI:** `.github/workflows/tests.yml` mit den Jobs `pint`, `phpunit` (PHP 8.5) und `vitest` (Node 24), bei Push auf `develop` und bei jedem Pull Request. Braucht keine `.env`-Werte und keine Datenbank.
 - **Code-Stil:** Laravel Pint (`pint.json`, Preset `laravel`): `vendor/bin/pint --test` prüft, `vendor/bin/pint` korrigiert. Der Git-Hook `.githooks/pre-commit` formatiert gestagte PHP-Dateien beim Commit; `composer install` aktiviert ihn (`git config core.hooksPath .githooks`). Teilweise gestagte PHP-Dateien blockieren den Commit. VS Code formatiert beim Speichern (`.vscode/settings.json`, Erweiterung "Laravel Pint").
 - **git blame:** Der Formatierungs-Commit steht in `.git-blame-ignore-revs`. GitHub berücksichtigt das automatisch, lokal einmal `git config blame.ignoreRevsFile .git-blame-ignore-revs`.
 
@@ -45,7 +104,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | `phpunit.xml` | SQLite in-memory, feste Werte statt `.env` (auch `SPREADSHEET_ID`, `GOOGLE_CALENDAR_ID`), Mail/Cache/Session/Queue im Speicher, alle Werte mit `force="true"`, feste Test-Werte für `ADMIN_PASSWORD`, `API_TOKEN` |
 | `tests/UnitTestCase.php` | Basis für Unit-Tests, die Laravel brauchen (config, Validator), aber keine Datenbank; eine DB-Abfrage bricht den Test ab |
 | `tests/TestCase.php` | `RefreshDatabase` mit `TestingSeeder`, Schutz vor echter DB, `withoutVite()`, keine echten HTTP-Aufrufe, Google-Kalender gefakt, temporäres `storage/` mit Platzhalter-PDFs (die Vorlagen liegen nicht im Repo; Parkkarten landen so nie im echten storage) |
-| `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210 |
+| `database/seeders/TestingSeeder.php` | `BasisdatenSeeder` (Rollen, Status, Homepage 1, Admin mit ID 1) plus Preisliste mit den Codes 20, 30, 40, 50, 210, 220, 250, 300 |
 
 ### Testdaten: Szenario
 
@@ -96,6 +155,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Öffentlich | `ContactTest` | 5 | Kontaktformular |
 | Öffentlich | `ApplicationTest` | 5 | Bewerbung Genossenschaft |
 | Öffentlich | `PublicApiTest` | 9 | Ortssuche, API-Antworten (Kalender, Verfügbarkeit, Telefonnummer) |
+| Öffentlich | `CalendarExportTest` | 2 | Kalendereinträge (.ics): Abo-Kalender der API, Einladung in der Bestätigungsmail |
 | Login | `AuthTest` | 6 | Login; Registrierung, Passwort-Reset und -Bestätigung abgeschaltet |
 | Admin | `ChecklistAdminTest` | 3 | Räume und Checkpunkte bearbeiten |
 | Admin | `AdminApplicationTest` | 4 | Bewerbung anzeigen (Kontakt, Status, Verlauf), ablehnen, Escaping |
@@ -121,7 +181,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | Sicherheit | `Security/ApiTokenTest` | 14 | API-Token |
 | Sicherheit | `Security/CustomerChecklistTest` | 5 | Checkliste im Kundenbereich nur für die eigene Buchung |
 | Sicherheit | `Security/BexioOAuthTest` | 6 | Bexio verbinden (nur Admin, Wartungsseite) mit `state` |
-| Sicherheit | `Security/ImageUploadTest` | 9 | Bild-Uploads nach `public/images` |
+| Sicherheit | `Security/ImageUploadTest` | 12 | Bild-Uploads nach `public/images`, zugeschnittene Bilder als Data-URL |
 
 ### Grundlagen
 
@@ -193,6 +253,8 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 | `test_phone_number_lookup_does_not_treat_input_as_pattern` | `%` und `_` sind keine Platzhalter |
 | `test_phone_number_lookup_requires_enough_digits` | mindestens 6 Ziffern |
 
+**[`CalendarExportTest`](Feature/CalendarExportTest.php)**: Das Enddatum im Kalendereintrag ist laut iCalendar exklusiv, also der Tag nach der Abreise. Ab `spatie/icalendar-generator` 3.2 rechnet das Paket diesen Tag nicht mehr selbst dazu; vorher war der Eintrag in der Mail einen Tag zu lang.
+
 **[`AuthTest`](Feature/AuthTest.php)**: Login mit Benutzername, falsches Passwort, Eingeloggte werden von Login/Registrierung weggeleitet, Selbst-Registrierung wartet auf Freischaltung (ohne Rolle, inaktiv).
 
 **[`ChecklistAdminTest`](Feature/ChecklistAdminTest.php)**: Checkpunkt bearbeiten (Ansicht war eine Kopie der FAQ-Ansicht), Raum bearbeiten.
@@ -206,6 +268,10 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 ### Fachlogik
 
 **[`EventWorkflowTest`](Feature/EventWorkflowTest.php)**: Formular "Buchung bearbeiten" mit den echten Button-Werten. 1 speichert (nur Positionen dieser Buchung), 2 legt Kontakt und Offerte in Bexio an (Mengenregeln siehe unten), 3 versendet die Offerte, 4 erstellt die Rechnung (Buchung bestätigt, Google-Kalender, Checkliste, Newsletter), 5 versendet die Rechnung, 6 Info Genossenschaft. Ein Test liest alle Buttons aus der View in jedem Vertragsstatus und prüft, dass der Controller sie kennt.
+
+**[`AdminEventStoreTest`](Feature/AdminEventStoreTest.php)**: Formular "Buchung erstellen" im Admin: Buchung mit Positionen (Hausmiete, Personen, Parkplätze mit 0), Telefon für die Suche, externe Buchungs-Nr., interne Buchung ohne Nächte als Tagesbuchung mit Eintrag im Google-Kalender. Unvollständiges Formular und Ende vor Start werden abgewiesen, ohne halb angelegte Buchung (vorher Serverfehler nach dem Anlegen).
+
+**[`AdminContentTest`](Feature/AdminContentTest.php)**: Inhaltspflege (nur Admin) je Bereich anlegen, ändern, löschen: Räume, Bewertungen, FAQ-Kapitel, FAQ, Geschichte, Personen, Checkpoints; dazu Preisliste (in Buchungen verwendete Positionen werden nicht gelöscht), Albumbild, Startseiten-Texte. Löschen klappt auch, wenn die Bilddatei fehlt. Bilder landen in einem temporären `public/`.
 
 **[`DoorCodeTest`](Feature/DoorCodeTest.php)**: Besucher in Glutz anlegen bzw. wiederverwenden, Code setzen, Hauseingang vom Anreisetag 00:00 bis Abreisetag 23:59 freigeben; vergebener Code, ungültiger Code, Glutz nicht erreichbar (JSON-Fehler 502).
 
@@ -266,7 +332,7 @@ Mit Sail: `./vendor/bin/sail test` bzw. `./vendor/bin/sail php vendor/bin/phpuni
 
 **[`BexioOAuthTest`](Feature/Security/BexioOAuthTest.php)**: Bexio verbinden nur als Admin über `admin/bexio/connect` (Knopf und Verbindungsstatus auf der Wartungsseite); der Callback nimmt nur einen Code mit dem `state` der eigenen Weiterleitung an, einmalig, und leitet zurück zur Wartungsseite. Bexio ist mit `Http::fake()` ersetzt.
 
-**[`ImageUploadTest`](Feature/Security/ImageUploadTest.php)**: FAQ, Geschichte und Bilder speichern nur echte Bilder unter einem Namen des Servers (`App\Helper\ImageUpload`). Läuft in einem Temp-Verzeichnis statt `public/`.
+**[`ImageUploadTest`](Feature/Security/ImageUploadTest.php)**: FAQ, Geschichte und Bilder speichern nur echte Bilder unter einem Namen des Servers (`App\Helper\ImageUpload`). Zugeschnittene Bilder (FAQ-Kapitel, Vorschaubild) kommen als Data-URL aus dem Browser; `ImageUpload::saveDataUri()` liest nur Data-URLs, keine Dateipfade oder URLs. Läuft in einem Temp-Verzeichnis statt `public/`.
 
 ---
 
@@ -316,9 +382,12 @@ Bestätigt am 10.10.2026.
 | Hausmiete (20) | wie in der Buchung erfasst |
 | Personen/Nutzung (21-200) | erfasste Menge × Anzahl Nächte |
 | Parkplätze (210) | (erfasste Menge − 3 inbegriffene, mindestens 0) × Anzahl Nächte |
+| Frühbezug, Spätabgabe (220) | fix, je 1 für Early Check-In und Late Check-Out (setzt "Buchung updaten" aus den Checkboxen) |
 | übrige Zusatzkosten (> 200) | fix, wie erfasst |
 | Menge 0 | Position entfällt |
-| Rabatt | nur auf Positionen ab Code 100 |
+| Rabatt | nur auf Positionen ab Code 100, nicht auf Frühbezug/Spätabgabe (220, bestätigt am 19.10.2026) |
+
+Die Anzeige in den Formularen rechnet gleich (`resources/js/libs/pricing.js`).
 
 ---
 

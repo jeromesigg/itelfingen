@@ -31,7 +31,7 @@
                     </x-forms.form>
                     <x-forms.form :action="route('pictures.destroy', $picture)" method="DELETE">
                         <x-forms.container>
-                            <x-forms.button type="submit" class="btn btn-danger">
+                            <x-forms.button type="submit" class="btn" variant="danger">
                                 Albumbild löschen
                             </x-forms.button>
                         </x-forms.container>

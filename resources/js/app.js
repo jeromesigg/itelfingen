@@ -9,25 +9,15 @@ import.meta.glob([
     '../fonts/**',
   ]);
 
-import './bootstrap';
-import './admin/jquery-ui.min.js';
-import 'bootstrap';
-import 'laravel-datatables-vite';
-import './admin/jqBootstrapValidation.js';
 import 'flowbite';
-// import { DataTable } from "simple-datatables";
-import './libs/main.js';
-import './libs/custom.js';
+import { initCitySearch } from './libs/city-search.js';
+import { initThemeToggle } from './libs/theme-toggle.js';
 
-// Initialize Events Table when DOM is ready
-// import { initEventsTable } from './tables/EventsTable.js'
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   const tbody = document.getElementById('eventTableBody')
-//   if (tbody) {
-//     initEventsTable()
-//   }
-// })
+document.querySelectorAll('[data-city-search]').forEach(initCitySearch);
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+  initThemeToggle(themeToggle);
+}
 
 // ===== VUE SETUP =====
 import { createApp } from 'vue'
@@ -36,6 +26,8 @@ import NewsletterTable from './components/NewsletterTable.vue'
 import ApplicationTable from './components/ApplicationTable.vue'
 import ContactTable from './components/ContactTable.vue'
 import FAQTable from './components/FAQTable.vue'
+import BookingWizard from './components/BookingWizard.vue'
+import BookingCalendar from './components/BookingCalendar.vue'
 
 // Component Registry
 const components = {
@@ -44,13 +36,14 @@ const components = {
   'applications-table': ApplicationTable,
   'contacts-table': ContactTable,
   'faqs-table': FAQTable,
-  // Später: 'users-table': UsersTable, etc.
+  'booking-wizard': BookingWizard,
+  'booking-calendar': BookingCalendar,
 }
 
-// Auto-mount alle Vue Components
+// Auto-mount alle Vue Components, Props als JSON im Attribut data-props
 document.querySelectorAll('[data-vue-component]').forEach(el => {
   const componentName = el.dataset.vueComponent
   if (components[componentName]) {
-    createApp(components[componentName]).mount(el)
+    createApp(components[componentName], JSON.parse(el.dataset.props || '{}')).mount(el)
   }
 })

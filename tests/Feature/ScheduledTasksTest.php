@@ -67,7 +67,13 @@ class ScheduledTasksTest extends TestCase
         $this->assertSame($expression, $events->first()->expression);
     }
 
-    #[DataProvider('schedule')]
+    /** @return array<string, array{0: string}> */
+    public static function commands(): array
+    {
+        return array_map(fn (array $task) => [$task[0]], self::schedule());
+    }
+
+    #[DataProvider('commands')]
     public function test_task_runs_without_data(string $command): void
     {
         // Leere Datenbank (nur Stammdaten): kein Task darf abstürzen.

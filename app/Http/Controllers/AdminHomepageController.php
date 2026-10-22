@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Homepage;
 use App\Models\Photo;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -135,21 +136,26 @@ class AdminHomepageController extends Controller
         //
     }
 
-    public function CommentUpdate(Request $request, Homepage $homepage)
+    /**
+     * Bemerkungen auf der Buchungsübersicht (Verwalter). Nur dieses Feld, die übrigen Inhalte der Startseite ändert nur der Admin.
+     */
+    public function commentUpdate(Request $request, Homepage $homepage): RedirectResponse
     {
-        $input = request()->all();
-        $homepage->update($input);
-
-        return redirect()->back();
-        //
+        return $this->updateField($request, $homepage, 'event_comment');
     }
 
-    public function MailTextUpdate(Request $request, Homepage $homepage)
+    /**
+     * Zusätzlicher Text für die Mail "Letzte Infos" (Verwalter).
+     */
+    public function mailTextUpdate(Request $request, Homepage $homepage): RedirectResponse
     {
-        $input = request()->all();
-        $homepage->update($input);
+        return $this->updateField($request, $homepage, 'additional_mail_text');
+    }
+
+    private function updateField(Request $request, Homepage $homepage, string $field): RedirectResponse
+    {
+        $homepage->update($request->validate([$field => ['nullable', 'string', 'max:10000']]));
 
         return redirect()->back();
-        //
     }
 }

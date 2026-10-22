@@ -88,12 +88,10 @@ $contract = $event->contractState();
                     <h4 class="{{ $heading }}">Kontakt &amp; Zeitraum</h4>
                     <div class="grid grid-cols-2 md:grid-cols-12 gap-4">
                         <div class="md:col-span-2">
-                            <x-forms.text label="Start:" name="start_date" type="date" required=true
-                                onchange="Total_Change()" />
+                            <x-forms.text label="Start:" name="start_date" type="date" required=true />
                         </div>
                         <div class="md:col-span-2">
-                            <x-forms.text label="Ende:" name="end_date" type="date" required=true
-                                onchange="Total_Change()" />
+                            <x-forms.text label="Ende:" name="end_date" type="date" required=true />
                         </div>
                         <div class="md:col-span-3">
                             <x-forms.text label="Name:" name="name" required=true />
@@ -132,14 +130,14 @@ $contract = $event->contractState();
                     @foreach ($positions as $index => $position)
                     @if ($position->pricelist_position['bexio_code']
                     <50) <x-forms.hidden name="{{'positions['.$position['id'].']'}}"
-                        id="{{'position_'.$position['id']}}" onChange="Total_Change()" type="number"
+                        id="{{'position_'.$position['id']}}" type="number"
                         value="{{$position['amount']}}" />
                     @else
                     <div>
                         <x-forms.text
                             label="{{$position->pricelist_position['name'] . ' ('. $position->pricelist_position['price'] . ' CHF)'}}"
                             name="{{'positions['.$position['id'].']'}}" type="number"
-                            id="{{'position_'.$position['id']}}" onChange="Total_Change()"
+                            id="{{'position_'.$position['id']}}"
                             value="{{$position['amount']}}" />
                     </div>
                     @endif
@@ -149,11 +147,10 @@ $contract = $event->contractState();
                 <div
                     class="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                     <div>
-                        <x-forms.text label="Tage:" name="total_days" type="number" required=true
-                            onChange="Total_Change()" />
+                        <x-forms.text label="Tage:" name="total_days" type="number" required=true />
                     </div>
                     <div>
-                        <x-forms.text label="Rabatt [%]:" name="discount" type="number" onChange="Total_Change()" />
+                        <x-forms.text label="Rabatt [%]:" name="discount" type="number" />
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total</span>
@@ -164,12 +161,12 @@ $contract = $event->contractState();
                     <div class="flex items-center gap-2">
                         <x-forms.text type="checkbox" name="early_checkin" value="{{$event['early_checkin']}}" />
                         <label for="early_checkin" class="text-sm font-medium text-gray-900 dark:text-white">Early
-                            Check-In</label>
+                            Check-In ({{ $checkin_checkout_price }} CHF)</label>
                     </div>
                     <div class="flex items-center gap-2">
                         <x-forms.text type="checkbox" name="late_checkout" value="{{$event['late_checkout']}}" />
                         <label for="late_checkout" class="text-sm font-medium text-gray-900 dark:text-white">Late
-                            Check-Out</label>
+                            Check-Out ({{ $checkin_checkout_price }} CHF)</label>
                     </div>
                 </div>
             </div>
@@ -191,7 +188,7 @@ $contract = $event->contractState();
                         <div class="grow">
                             <x-forms.text label="Tür-Code:" name="code" type="number" />
                         </div>
-                        <button type="button" class="{{ $grannysmith }} shrink-0" onclick="CreateAPICode()">Code
+                        <button type="button" class="{{ $grannysmith }} shrink-0" data-action="create-code">Code
                             erstellen</button>
                     </div>
                     <div>
@@ -210,7 +207,7 @@ $contract = $event->contractState();
                 <h4 class="{{ $heading }}">Angebot &amp; Rechnung</h4>
                 <x-forms.text-area label="Zusatztext für Mail:" name="additional_text" rows=3 />
                 <button type="button" class="mt-2 text-sm text-orientalpink hover:underline"
-                    onclick="PrepareReminderMail()">Erinnerungstext einfügen</button>
+                    data-action="reminder-text">Erinnerungstext einfügen</button>
 
                 @if ($event['bexio_offer_id'] && $contract->isAtLeast(\App\Enums\ContractState::AngebotErstellt) ||
                 $event['bexio_invoice_id'] && $contract->isAtLeast(\App\Enums\ContractState::RechnungErstellt))
@@ -275,9 +272,9 @@ $contract = $event->contractState();
             <p class="text-sm text-gray-500 dark:text-gray-400">Die Putzfirma wurde bereits informiert.</p>
             @else
             <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">Die Putzfirma wurde noch nicht informiert.</p>
-            <button type="button" class="{{ $grannysmith }}" onclick="PrepareMail()">Mail an Putzfirma</button>
+            <button type="button" class="{{ $grannysmith }}" data-action="cleaning-mail">Mail an Putzfirma</button>
             @endif
-            <div id="cleaning_mail" class="mt-4" style="display: none">
+            <div id="cleaning_mail" class="mt-4" hidden>
                 <x-forms.form :action="route('events.sendCleaningMail', $event)" method="POST" :model="$event"
                     class="flex flex-col gap-4">
                     <x-forms.text label="Mail Adresse:" name="cleaning_mail_address" type="email" />
@@ -294,7 +291,7 @@ $contract = $event->contractState();
             <h4 class="{{ $heading }}">Externe Buchung importieren</h4>
             <x-forms.text-area label="Import Buchung:" name="import-text" rows=9
                 placeholder="Buchungsinformationen aus PDF 'Name' bis 'Anzahl Personen' hier einfügen..." />
-            <button type="button" class="{{ $grannysmith }} mt-4" onclick="importExtern()">Externe Buchung
+            <button type="button" class="{{ $grannysmith }} mt-4" data-action="import">Externe Buchung
                 importieren</button>
         </div>
         @endif
@@ -323,242 +320,25 @@ $contract = $event->contractState();
 </div>
 @endsection
 @push('scripts')
-<script type="module">
-    window.addEventListener("load", function() {
-            Total_Change();
-            $('.confirm-delete').on('click', function(e){
-                e.preventDefault(); //cancel default action
-
-                Swal.fire({
-                    title: 'Buchung löschen?',
-                    text: "Lösche Buchungen nur im Notfall. Zur Nachvollziehbarkeit der Buchungen, bitte den Status auf 'Storniert' setzen und nicht löschen.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ja',
-                    cancelButtonText: 'Abbrechen',
-                    confirmButtonColor: 'blue',
-                    cancelButtonColor: 'red',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById("DeleteForm").submit();
-                    }
-                });
-            });
-        });
-        $("#external").change(function() {
-            Total_Change();
-        });
-        function PrepareMail() {
-            document.getElementById("cleaning_mail").style.display = "block";
-
-            var start_date = new Date(document.getElementById('start_date').value).toLocaleDateString();
-            var end_date = new Date(document.getElementById('end_date').value).toLocaleDateString();
-            var total = 0, subtotal = 0, id = 0;
-            var positions = @json($positions);
-            positions.forEach(position => {
-                id = 'position_' + position['id'];
-                if(position.pricelist_position['bexio_code']>100 && position.pricelist_position['bexio_code']<200){
-                    subtotal =  parseInt(document.getElementById(id).value) || 0;
-                    total += subtotal;
-                }
-            });
-            var text = "Sehr geehrte Damen und Herren,\n" + "Wir haben eine neue Buchung für unser Ferienhaus vom " + start_date + " bis "
-            + end_date + " (" + document.getElementById("total_days").value + " " + (document.getElementById("total_days").value ==1 ? "Nacht" : "Nächte") + ") für "
-            + total + " Personen. Für einige nachfolgende Reinigung wären wir sehr dankbar.\n\n" + "Vielen Dank und freundliche Grüsse,\n" + "Verwaltung Ferienhaus Itelfingen";
-            $('#cleaning_mail_address').val(@json(config('mail.cleaning_mail')));
-            $('#cleaning_mail_text').val(text);
-        }
-
-        function PrepareReminderMail() {
-            var text = "Wir haben bisher noch keine Bestätigung für obenstehendes Angebot von Dir erhalten. Sollten wir innerhalb der nächsten zwei Wochen keine Bestätigung erhalten, müssen wir die Buchung leider wieder freigeben.";
-            $('#additional_text').val(text);
-        }
-
-        function CreateAPICode() {
-            const code = document.getElementById('code').value;
-            var event_id = @json($event['id']);
-            if(!code) {
-                alert('Bitte geben Sie einen Code ein.');
-                return;
-            }
-
-            Swal.fire({
-                title: 'Türcode erstellen?',
-                text: "Wirklich den Türcode \"" + code + "\" für diese Buchung erstellen?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Ja',
-                cancelButtonText: 'Abbrechen',
-                confirmButtonColor: 'blue',
-                cancelButtonColor: 'red',
-                showLoaderOnConfirm: true,
-                theme: 'auto',
-                preConfirm: async (login) => {
-                    try {
-                        const response = await fetch('{{ route("events.createAPICode") }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            },
-                            body: JSON.stringify({ event_id, code }),
-                        })
-                        const data = await response.json();
-                        if (!response.ok) {
-                            return Swal.showValidationMessage(`
-                                ${JSON.stringify(data)}
-                                `);
-                        }
-                        return data;
-                    } catch (error) {
-                        Swal.showValidationMessage(`
-                            Request failed: ${error}
-                        `);
-                    }
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
-                console.log(result);
-                if (result.isConfirmed) Swal.fire({
-                    title: `${result.value.success}`
-                });
-            });
-        }
-
-        function Total_Change() {
-            var start_date = new Date(document.getElementById('start_date').value);
-            var end_date = new Date(document.getElementById('end_date').value);
-            var days = (end_date - start_date)/(24*3600*1000);
-            var one_day = (days === 0);
-            if(days === 0){
-                days = 1;
-            }
-            var positions = @json($positions);
-            var total_amount = 0, id = 0, total_person = 0;
-            var discount = (100 - (parseInt(document.getElementById("discount").value) || 0)) / 100 ;
-            positions.forEach(position => {
-                id = 'position_' + position['id'];
-                var person = position.pricelist_position['bexio_code'] < 100 ? 0 : parseInt(document.getElementById(id).value);
-                person = person || 0;
-                var subtotal = 0
-                if(position.pricelist_position['bexio_code'] < 50){
-                    if(one_day){
-                        subtotal = position.pricelist_position['price'] / 2;
-                        person = 1;
-                    }
-                    else {
-                        subtotal = position.pricelist_position['price'];
-                    }
-                }
-                else if(position.pricelist_position['bexio_code'] < 100) {
-                    subtotal = position.pricelist_position['price'] * position['amount'];
-                }
-                else if(position.pricelist_position['bexio_code'] > 100) {
-                    subtotal = parseInt(document.getElementById(id).value) * position.pricelist_position['price'] * days * discount || 0;
-                }
-                if( position.pricelist_position['bexio_code']>200){
-                    subtotal =  Math.max(parseInt(document.getElementById(id).value) -3,0) * position.pricelist_position['price'] * Math.max(days,1) || 0;
-                    person = 0;
-                }
-                total_amount += subtotal;
-                total_person += person;
-            });
-            $("#total").text(total_amount);
-            $("#total_days").val(days);
-            $("#total_amount").val(total_amount);
-            $("#total_people").val(total_person);
-        }
-
-        $("#contract_status_id").change(function(e) {
-            if($(this).val() == {{ \App\Enums\ContractState::Storniert->value }}){
-                var event = @json($event);
-                if(event['cleaning_mail']){
-                    e.preventDefault(); //cancel default action
-
-                    Swal.fire({
-                        title: 'Buchung stornieren',
-                        text: "Die Buchung wurde bereits der Reinigungsfirma gemeldet. Bitte die Stornierung weiterleiten.",
-                        icon: 'warning',
-                    });
-                }
-            }
-        });
-
-        function importExtern() {
-            const text = document.getElementById('import-text').value;
-
-            fetch('{{ route("events.parse") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-                body: JSON.stringify({ text }),
-            })
-            .then(res => res.json())
-            .then(data => {
-                // Felder befüllen
-                document.getElementById('name').value        = data.name ?? '';
-                document.getElementById('firstname').value        = data.vorname ?? '';
-                document.getElementById('group_name').value        = data.gruppe ?? '';
-                document.getElementById('street').value        = data.strasse ?? 'Itelfingen';
-                document.getElementById('house_number').value        = data.hausnummer ?? '3';
-                document.getElementById('plz').value        = data.plz ?? '6344';
-                document.getElementById('city').value        = data.stadt ?? 'Meierskappel';
-                document.getElementById('email').value        = data.email ?? 'verwalter@itelfingen.ch';
-                document.getElementById('telephone').value        = data.telefon ?? (data.mobil ?? '');
-                document.getElementById('start_date').value = data.mietdauer_von ?? '';
-                document.getElementById('end_date').value = data.mietdauer_bis ?? '';
-                // Kommentar der Gruppe (nur Anfrage-Mail) in die Bemerkungen; anhängen statt überschreiben,
-                // damit ein zweiter Import (Buchungs-PDF) nichts verliert.
-                if (data.kommentar) {
-                    const comment = document.getElementById('comment');
-                    if (!comment.value.includes(data.kommentar)) {
-                        comment.value = comment.value ? comment.value + "\n\n" + data.kommentar : data.kommentar;
-                    }
-                }
-                Total_Change();
-                UpdateCalendar()
-            })
-            .catch(err => console.error('Fehler:', err));
-        }
-
-        window.PrepareMail = PrepareMail;
-        window.PrepareReminderMail = PrepareReminderMail;
-        window.Total_Change = Total_Change;
-        window.importExtern = importExtern;
-        window.CreateAPICode = CreateAPICode;
-
-        // Kalender nach Änderung von Datum oder Check-In/-Out neu laden (nur Anzeige, gespeichert wird erst mit "Buchung updaten")
-        let calendarRequest = null;
-        function UpdateCalendar() {
-            const start = document.getElementById('start_date').value;
-            const end = document.getElementById('end_date').value;
-            if (!start || !end || end < start) {
-                return;
-            }
-            const params = new URLSearchParams({
-                start_date: start,
-                end_date: end,
-                early_checkin: document.getElementById('early_checkin').checked ? 1 : 0,
-                late_checkout: document.getElementById('late_checkout').checked ? 1 : 0,
-            });
-            calendarRequest?.abort();
-            calendarRequest = new AbortController();
-            fetch('{{ route('events.calendar', $event) }}?' + params, {
-                headers: { 'Accept': 'application/json' },
-                signal: calendarRequest.signal,
-            })
-                .then(response => response.ok ? response.text() : null)
-                .then(html => {
-                    if (html) {
-                        document.getElementById('booking-calendar').innerHTML = html;
-                    }
-                })
-                .catch(() => {});
-        }
-        ['start_date', 'end_date', 'early_checkin', 'late_checkout'].forEach(id => {
-            document.getElementById(id).addEventListener('change', UpdateCalendar);
-        });
-</script>
+@php
+    $eventFormConfig = [
+        'positions' => $positions->map(fn ($position) => [
+            'input' => 'position_'.$position->id,
+            'bexio_code' => (int) $position->pricelist_position->bexio_code,
+            'price' => (float) $position->pricelist_position->price,
+        ])->values(),
+        // Ein Tag gilt wie bisher als eine Nacht
+        'minNights' => 1,
+        'checkinCheckoutPrice' => $checkin_checkout_price,
+        'calendarUrl' => route('events.calendar', $event),
+        'parseUrl' => route('events.parse'),
+        'createCodeUrl' => route('events.createAPICode'),
+        'eventId' => $event->id,
+        'cleaningMailAddress' => config('mail.cleaning_mail'),
+        'cleaningMailSent' => (bool) $event->cleaning_mail,
+        'cancelledContractState' => \App\Enums\ContractState::Storniert->value,
+    ];
+@endphp
+<script type="application/json" id="event-form-config">@json($eventFormConfig)</script>
+@vite('resources/js/admin/event-form.js')
 @endpush

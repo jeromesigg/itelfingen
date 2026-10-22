@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ArchiveState;
+use App\Helper\ImageUpload;
 use App\Models\ArchiveStatus;
 use App\Models\FaqChapter;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
 
 class AdminFaqChapterController extends Controller
 {
@@ -47,7 +47,7 @@ class AdminFaqChapterController extends Controller
         if (! empty($input['new_photo_id'])) {
             $name = time().'_faq_chapter.png';
             File::ensureDirectoryExists(public_path('images'));
-            Image::make($input['new_photo_id'])->save(public_path('images/'.$name));
+            ImageUpload::saveDataUri($input['new_photo_id'], public_path('images/'.$name), 'new_photo_id');
 
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;
@@ -96,7 +96,7 @@ class AdminFaqChapterController extends Controller
         if (! empty($input['new_photo_id'])) {
             $name = time().'_faq_chapter.png';
             File::ensureDirectoryExists(public_path('images'));
-            Image::make($input['new_photo_id'])->save(public_path('images/'.$name));
+            ImageUpload::saveDataUri($input['new_photo_id'], public_path('images/'.$name), 'new_photo_id');
 
             $photo = Photo::create(['file' => $name]);
             $input['photo_id'] = $photo->id;

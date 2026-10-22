@@ -65,8 +65,8 @@ Route::group(['middleware' => 'role:team'], function () {
 Route::group(['middleware' => 'role:verwalter'], function () use ($crudOnIndex) {
     Route::get('/admin/bookings/export-csv', ['as' => 'admin.exportcsv', 'uses' => 'AdminController@exportCSV']);
     // Bemerkung und Mail-Text auf der Buchungsseite (gespeichert in der Homepage)
-    Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@CommentUpdate')->name('admin.homepages.comment_update');
-    Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@MailTextUpdate')->name('admin.homepages.mail_text_update');
+    Route::patch('admin/homepages/{homepage}/comment_update', 'AdminHomepageController@commentUpdate')->name('admin.homepages.comment_update');
+    Route::patch('admin/homepages/{homepage}/mail_text_update', 'AdminHomepageController@mailTextUpdate')->name('admin.homepages.mail_text_update');
     Route::resource('admin/events', 'AdminEventController')->only(['create', 'store', 'edit', 'update', 'destroy'])->names('admin.events');
     Route::get('admin/events/calendar/{event?}', [AdminEventController::class, 'calendar'])->name('events.calendar');
     Route::post('admin/events/{event}/SendCleaningMail', 'AdminEventController@SendCleaningMail')->name('events.sendCleaningMail');

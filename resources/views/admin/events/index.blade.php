@@ -31,47 +31,18 @@
 
 
     <div class="container mx-auto px-4">
-        <input type="hidden" value="Ab Heute" id="date_btn_value">
-        <input type="hidden" value="Alle" id="status_btn_value">
         <div class="hk-reservation hk-reservation__step1 text-gray-600 dark:text-gray-300">
             <div class="hk-reservation__container container mx-auto px-4">
-                <div class="hk-calendar">
-                    <div class="hk-agenda">
-                        <div class="d-none d-sm-block">
-                            <button type="button" class="hk-agenda__prev text-orientalpink hover:underline cursor-pointer" onclick="Agenda.prev(3)">
-                                früheres Datum
-                            </button>
-                        </div>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            @for ($i = 0; $i <= 9; $i++)
-                                <div class="col-md-4 col-sm-6 {{($i>1)?'d-none d-sm-block':''}}">
-                                    <h4 id="agendaTitel{{$i}}" class="hk-agenda__title"> </h4>
-                                    <table class="hk-agenda__month">
-                                        <tbody id="agendaMonat{{$i}}"> </tbody>
-                                    </table>
-                                </div>
-                            @endfor
-                        </div>
-                        <div class="d-none d-sm-block">
-                            <button type="button" class="hk-agenda__next text-orientalpink hover:underline cursor-pointer" onclick="Agenda.next(3)">
-                                späteres Datum
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <div class="hk-calendar" data-vue-component="booking-calendar" data-props="{{ json_encode([
+                    'days' => (object) $booked_days,
+                    'mode' => 'admin',
+                    'months' => 9,
+                    'editUrl' => route('admin.events.edit', '__ID__'),
+                ]) }}"></div>
             </div>
         </div>
         <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
     </div>
-    <div id="tanStackTable" data-vue-component="events-table"></div>
+    <div id="tanStackTable" data-vue-component="events-table" data-props="{{ json_encode(['contractStatuses' => $contract_statuses->values()]) }}"></div>
 @endsection
-
-@push('scripts')
-  <!-- ======= Javascript Section ======= -->
-    @include('contents.event_js')
-    <script>
-        // Pass contract statuses to Vue
-        window.contractStatuses = @json($contract_statuses->toArray())
-    </script>
-@endpush

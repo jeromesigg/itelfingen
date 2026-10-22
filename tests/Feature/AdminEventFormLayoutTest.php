@@ -32,9 +32,7 @@ class AdminEventFormLayoutTest extends TestCase
             $this->assertStringContainsString('id="position_'.$position->id.'"', $html);
             $this->assertStringContainsString('name="positions['.$position->id.']"', $html);
         }
-        foreach (['Total_Change()', 'CreateAPICode()', 'PrepareReminderMail()', 'PrepareMail()', 'importExtern()'] as $handler) {
-            $this->assertStringContainsString($handler.'"', $html, "$handler fehlt");
-        }
+        $this->assertActionsAndConfig($html, ['create-code', 'reminder-text', 'cleaning-mail', 'import']);
         $this->assertStringContainsString('confirm-delete', $html);
         $this->assertStringContainsString(route('bookings.uuid', $event->uuid), $html);
         $this->assertStringContainsString(route('events.downloadParking', $event->uuid), $html);
@@ -63,11 +61,39 @@ class AdminEventFormLayoutTest extends TestCase
             'total_days', 'discount', 'total', 'user_id', 'code'] as $id) {
             $this->assertStringContainsString('id="'.$id.'"', $html, "id=\"$id\" fehlt");
         }
-        foreach (['createIntern()', 'createExtern()', 'Total_Change()'] as $handler) {
-            $this->assertStringContainsString($handler.'"', $html, "$handler fehlt");
-        }
+        $this->assertActionsAndConfig($html, ['intern', 'import']);
         $this->assertStringContainsString('action="'.route('admin.events.store').'"', $html);
         $this->assertDoesNotMatchRegularExpression(self::BOOTSTRAP, $this->content($html));
+    }
+
+    /**
+     * Konfiguration für resources/js/admin/event-form.js aus dem HTML der Seite.
+     *
+     * @return array{positions: list<array{input: string, bexio_code: int, price: float}>, calendarUrl: string, parseUrl: string}
+     */
+    public static function eventFormConfig(string $html): array
+    {
+        preg_match('#<script type="application/json" id="event-form-config">(.*?)</script>#s', $html, $match);
+
+        return json_decode($match[1] ?? 'null', true) ?? [];
+    }
+
+    /**
+     * Buttons mit data-action und Felder der Positionen, auf die das Skript zugreift.
+     *
+     * @param  list<string>  $actions
+     */
+    private function assertActionsAndConfig(string $html, array $actions): void
+    {
+        foreach ($actions as $action) {
+            $this->assertStringContainsString('data-action="'.$action.'"', $html, "Button $action fehlt");
+        }
+        $config = self::eventFormConfig($html);
+        $this->assertNotEmpty($config['positions'] ?? [], 'Konfiguration der Positionen fehlt');
+        foreach ($config['positions'] as $position) {
+            $this->assertStringContainsString('id="'.$position['input'].'"', $html, "Feld {$position['input']} fehlt");
+        }
+        $this->assertSame(route('events.parse'), $config['parseUrl']);
     }
 
     /** Nur den Inhaltsbereich der Seite prüfen, nicht das Admin-Layout. */
@@ -75,6 +101,6 @@ class AdminEventFormLayoutTest extends TestCase
     {
         $start = strpos($html, '<h3');
 
-        return substr($html, $start, strpos($html, '<script type="module">', $start) - $start);
+        return substr($html, $start, strpos($html, '<script type="application/json" id="event-form-config">', $start) - $start);
     }
 }

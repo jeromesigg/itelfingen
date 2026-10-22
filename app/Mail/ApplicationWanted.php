@@ -13,7 +13,7 @@ class ApplicationWanted extends Mailable
 
     protected $event;
 
-    public $additional_text;
+    public $additionalText;
 
     /**
      * Create a new message instance.
@@ -23,7 +23,7 @@ class ApplicationWanted extends Mailable
     public function __construct(Event $event, $additional_text)
     {
         $this->event = $event;
-        $this->additional_text = $additional_text;
+        $this->additionalText = $additional_text;
     }
 
     /**
@@ -36,7 +36,7 @@ class ApplicationWanted extends Mailable
         $event = $this->event;
         $name = $event['firstname'].' '.$event['name'];
 
-        return $this->markdown('emails.events.application', ['event' => $event, 'additional_text' => $this->additional_text])
+        return $this->markdown('emails.events.application', ['event' => $event, 'additional_text' => $this->additionalText])
             ->to($event['email'], $name)
             ->cc(config('mail.from.address'), config('mail.from.name'))
             ->subject('Dein Interesse an der Genossenschaft Ferienhaus Itelfingen');

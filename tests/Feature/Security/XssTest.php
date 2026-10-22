@@ -64,7 +64,7 @@ class XssTest extends TestCase
 
     public function test_contact_fields_are_plain_text_and_actions_safe(): void
     {
-        // Kontaktfelder kommen als Text (DataTable.vue rendert sie ohne v-html); nur "actions" ist HTML.
+        // Kontaktfelder kommen als Text (DataTable.vue rendert sie ohne v-html); Aktionen sind Daten, kein HTML.
         $s = BookingScenario::create();
         $s->contact->update(['name' => self::PAYLOAD, 'subject' => self::PAYLOAD, 'content' => self::PAYLOAD]);
 
@@ -74,7 +74,7 @@ class XssTest extends TestCase
             ->json('data.0');
 
         $this->assertSame(self::PAYLOAD, $row['name']);
-        $this->assertStringNotContainsString('<img', $row['actions']);
+        $this->assertSame([['label' => 'Bearbeitet', 'url' => route('contacts.done', $s->contact)]], $row['actions']);
     }
 
     public function test_application_name_is_escaped_in_applications_table(): void
@@ -88,7 +88,8 @@ class XssTest extends TestCase
             ->json('data.0');
 
         $this->assertStringNotContainsString('<img', $row['name']);
-        $this->assertStringNotContainsString('<img', $row['actions']);
+        // Der Name steht im Bestätigungstext; DataTable.vue setzt ihn als SweetAlert titleText (Text, nicht HTML)
+        $this->assertStringContainsString(self::PAYLOAD, $row['actions'][0]['confirm']);
     }
 
     public function test_newsletter_name_is_escaped(): void
@@ -110,8 +111,9 @@ class XssTest extends TestCase
     {
         return [
             'Buchungen' => ['App.vue', ['number', 'name', 'status']],
-            'Kontakte' => ['ContactTable.vue', ['actions']],
-            'Bewerbungen' => ['ApplicationTable.vue', ['name', 'actions']],
+            // Aktionen sind Daten ({ label, url, … }), DataTable.vue rendert sie als Buttons
+            'Kontakte' => ['ContactTable.vue', []],
+            'Bewerbungen' => ['ApplicationTable.vue', ['name']],
             'FAQ' => ['FAQTable.vue', ['image', 'name']],
             'Newsletter' => ['NewsletterTable.vue', ['name']],
         ];
@@ -131,7 +133,7 @@ class XssTest extends TestCase
         $source = file_get_contents(resource_path('js/components/DataTable.vue'));
 
         $this->assertSame(1, substr_count($source, 'v-html'));
-        $this->assertMatchesRegularExpression('/v-if="cell\.column\.columnDef\.meta\?\.html" v-html=/', $source);
+        $this->assertMatchesRegularExpression('/v-(else-)?if="cell\.column\.columnDef\.meta\?\.html" v-html=/', $source);
     }
 
     /**

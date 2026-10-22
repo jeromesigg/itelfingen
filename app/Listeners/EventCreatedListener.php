@@ -27,17 +27,17 @@ class EventCreatedListener
     public function handle(EventCreated $event)
     {
         //
-        $keys = array_keys($event->position_array);
+        $keys = array_keys($event->positionArray);
         $positions = [];
 
-        if ($event->one_day) {
+        if ($event->oneDay) {
             $positions[count($positions)] = ['bexio_code' => 20, 'amount' => 0.5];
             $positions[count($positions)] = ['bexio_code' => 50, 'amount' => 1];
         } else {
             $positions[count($positions)] = ['bexio_code' => 20, 'amount' => 1];
             foreach ($keys as $index => $key) {
                 if ($key != 20) {
-                    $positions[count($positions)] = ['bexio_code' => $key, 'amount' => $event->position_array[$key]];
+                    $positions[count($positions)] = ['bexio_code' => $key, 'amount' => $event->positionArray[$key]];
                 }
             }
         }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ArchiveState;
 use App\Models\ArchiveStatus;
+use App\Models\Position;
 use App\Models\PricelistPosition;
 use App\Services\BexioApiService;
 use Illuminate\Http\Request;
@@ -110,6 +111,11 @@ class AdminPricelistPositionController extends Controller
     {
         //
         $position = PricelistPosition::findOrFail($id);
+        // In Buchungen verwendete Positionen bleiben (Fremdschlüssel); stattdessen archivieren
+        if (Position::where('pricelist_position_id', $position->id)->exists()) {
+            return redirect()->route('positions.edit', $position)
+                ->withErrors(['position' => 'Diese Position kommt in Buchungen vor und kann nicht gelöscht werden. Bitte stattdessen archivieren.']);
+        }
 
         $position->delete();
 

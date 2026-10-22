@@ -15,7 +15,7 @@ class EventOfferCreate
 
     public Event $event;
 
-    public $additional_text;
+    public $additionalText;
 
     /**
      * Create a new event instance.

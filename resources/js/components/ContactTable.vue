@@ -7,15 +7,7 @@
       :searchable-columns="['name', 'email']"
       :page-size="10">
       <template #filters>
-        <!-- Status Filter Buttons -->
-        <div id="status_btn" class="grid grid-cols-1 md:grid-cols-7 gap-2 mt-2">
-          <div>
-            <button @click="statusFilter = 'Alle'" class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith active">Alle</button>
-          </div>
-          <div v-for="status in contactStatuses" :key="status">
-            <button @click="statusFilter = status" class="focus:outline-hidden text-white bg-grannysmith hover:bg-grannysmith hover:text-white focus:ring-4 focus:ring-grannysmith font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-grannysmith dark:hover:bg-grannysmith dark:focus:ring-grannysmith">{{ status }}</button>
-          </div>
-        </div>
+        <FilterButtons v-model="statusFilter" :options="['Alle', ...contactStatuses]" label="Status" />
       </template>
     </data-table>
   </div>
@@ -27,6 +19,7 @@
   const statusFilter = ref('Alle')
   import { createColumnHelper } from '@tanstack/vue-table'
   import DataTable from './DataTable.vue'
+  import FilterButtons from './FilterButtons.vue'
 
   const apiEndpoint = '/contacts/datatable'
 
@@ -69,7 +62,7 @@
       size: 80,
     }),
     columnHelper.accessor('actions', {
-      meta: { html: true },
+      meta: { actions: true },
       header: 'Aktionen',
       enableSorting: false,
       size: 60,

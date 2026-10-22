@@ -34,7 +34,7 @@
     </div>
     <div class="flex justify-end gap-3 border-t border-gray-200 px-6 py-4 dark:border-gray-700">
         <button type="button" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-gray-700" data-crop-close>Abbrechen</button>
-        <button type="button" class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-strong focus:outline-hidden focus:ring-4 focus:ring-primary-soft" data-crop-confirm>Zuschneiden</button>
+        <button type="button" class="rounded-lg bg-gladegreen px-4 py-2 text-sm font-medium text-white hover:opacity-90 focus:outline-hidden focus:ring-4 focus:ring-gladegreen/50" data-crop-confirm>Zuschneiden</button>
     </div>
 </dialog>
 

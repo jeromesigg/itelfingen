@@ -78,7 +78,7 @@ const applicationsColumns = [
     size: 60,
   }),
   columnHelper.accessor('actions', {
-    meta: { html: true },
+    meta: { actions: true },
     header: 'Aktionen',
     enableSorting: false,
     size: 60,

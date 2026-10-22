@@ -132,11 +132,11 @@ class EventWorkflowTest extends TestCase
     {
         $event = $this->s->event;
         $event->update(['total_days' => 2, 'discount' => 10]);
-        // 5 Parkplätze (3 inbegriffen) und eine Endreinigung (fix)
+        // 5 Parkplätze (3 inbegriffen), Ausstattung (fix) und Early Check-In (Pauschale ohne Rabatt)
         $event->positions()->whereRelation('pricelist_position', 'bexio_code', 210)->update(['amount' => 5]);
-        Position::create(['event_id' => $event->id, 'pricelist_position_id' => PricelistPosition::where('bexio_code', 220)->value('id'), 'amount' => 1]);
+        Position::create(['event_id' => $event->id, 'pricelist_position_id' => PricelistPosition::where('bexio_code', 250)->value('id'), 'amount' => 1]);
 
-        $this->submit($event, '2 Angebot erstellen');
+        $this->submit($event, '2 Angebot erstellen', ['early_checkin' => 1]);
 
         $event->refresh();
         $this->assertSame(77, $event->bexio_user_id);
@@ -150,16 +150,49 @@ class EventWorkflowTest extends TestCase
             }
             $positions = collect($r['positions'])->keyBy('article_id');
 
-            // Regeln siehe tests/README.md (Haus 1, Erwachsene 6, Kinder 4, Parkplätze 5, Endreinigung 1; 2 Nächte)
+            // Regeln siehe tests/README.md (Haus 1, Erwachsene 6, Kinder 4, Parkplätze 5, Ausstattung 1, Early Check-In; 2 Nächte)
             return $r['contact_id'] === 77
                 && $positions[1020]['amount'] == 1          // Hausmiete: Menge wie erfasst
                 && $positions[1030]['amount'] === 12        // Personen: Menge × Nächte (als Ganzzahl an Bexio)
                 && $positions[1040]['amount'] == 8
                 && $positions[1210]['amount'] == 4          // Parkplätze: (5 − 3 inbegriffen) × Nächte
-                && $positions[1220]['amount'] == 1          // übrige Zusatzkosten: fix
+                && $positions[1250]['amount'] == 1          // übrige Zusatzkosten: fix
+                && $positions[1220]['amount'] == 1          // Frühbezug/Spätabgabe: je Häkchen 1
                 && $positions[1030]['discount_in_percent'] == 0
-                && $positions[1220]['discount_in_percent'] == 10;
+                && $positions[1250]['discount_in_percent'] == 10
+                && $positions[1220]['discount_in_percent'] == 0;
         });
+    }
+
+    public function test_checkin_and_checkout_set_flat_fee_position(): void
+    {
+        $event = $this->s->event;
+        $fee = fn () => $event->positions()->whereRelation('pricelist_position', 'bexio_code', PricelistPosition::CHECKIN_CHECKOUT_CODE)->first();
+        $this->assertNull($fee());
+
+        $this->submit($event, '1 Buchung updaten', ['early_checkin' => 1, 'late_checkout' => 1]);
+        $this->assertSame(2, $fee()->amount);
+
+        $this->submit($event, '1 Buchung updaten', ['late_checkout' => 1]);
+        $this->assertSame(1, $fee()->amount);
+
+        // Ohne Häkchen bleibt die Position mit Menge 0, die Offerte lässt sie weg
+        $this->submit($event, '1 Buchung updaten');
+        $this->assertSame(0, $fee()->amount);
+    }
+
+    public function test_edit_page_shows_flat_fee_on_checkboxes_instead_of_position_field(): void
+    {
+        $event = $this->s->event;
+        $this->submit($event, '1 Buchung updaten', ['early_checkin' => 1]);
+        $fee = $event->positions()->whereRelation('pricelist_position', 'bexio_code', PricelistPosition::CHECKIN_CHECKOUT_CODE)->sole();
+
+        $html = $this->actingAs($this->s->user('verwalter'))->get("/admin/events/{$event->id}/edit")->assertOk()->getContent();
+
+        $this->assertStringContainsString('Early', $html);
+        $this->assertStringContainsString('Check-In (50 CHF)', $html);
+        $this->assertStringNotContainsString('id="position_'.$fee->id.'"', $html);
+        $this->assertEquals(50, AdminEventFormLayoutTest::eventFormConfig($html)['checkinCheckoutPrice']);
     }
 
     public function test_offer_omits_parking_within_included_spots(): void

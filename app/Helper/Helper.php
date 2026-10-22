@@ -19,7 +19,7 @@ class Helper
     /** Anreden im Buchungs-PDF */
     private const SALUTATIONS = ['Frau', 'Herr'];
 
-    public static function PrintParking(Event $event)
+    public static function printParking(Event $event)
     {
         $outputFile = Storage::disk('local')->path('files/Parkkarten/Parkkarte_'.str_pad($event['id'], 5, '0', STR_PAD_LEFT).'.pdf');
         // fill data
@@ -107,12 +107,12 @@ class Helper
         return $fpdi->Output($outputFile, 'F');
     }
 
-    public static function EventToGoogleCalendar(Event $event)
+    public static function eventToGoogleCalendar(Event $event)
     {
         app(GoogleCalendarService::class)->addBooking($event);
     }
 
-    public static function GetEventUserCheck(Event $event)
+    public static function getEventUserCheck(Event $event)
     {
         switch ($event->event_status_id) {
             case BookingState::Eigene:
@@ -130,7 +130,7 @@ class Helper
         return $user.'<br>';
     }
 
-    public static function GetEventCleaningMailCheck(Event $event)
+    public static function getEventCleaningMailCheck(Event $event)
     {
         $cleaning_mail = '';
         if ($event->event_status_id !== BookingState::Storniert) {
@@ -142,7 +142,7 @@ class Helper
         return $cleaning_mail;
     }
 
-    public static function GetEventCodeCheck(Event $event)
+    public static function getEventCodeCheck(Event $event)
     {
         $code = '';
         if ($event->event_status_id !== BookingState::Eigene && $event->event_status_id !== BookingState::Storniert) {
@@ -154,7 +154,7 @@ class Helper
         return $code;
     }
 
-    public static function GetEventOfferStatus(Event $event)
+    public static function getEventOfferStatus(Event $event)
     {
         $offer = '';
         if ($event->event_status_id !== BookingState::Eigene && $event->event_status_id !== BookingState::Storniert) {
@@ -180,7 +180,7 @@ class Helper
         return $offer;
     }
 
-    public static function GetEventInvoiceStatus(Event $event)
+    public static function getEventInvoiceStatus(Event $event)
     {
         $invoice = '';
         if ($event->event_status_id !== BookingState::Eigene && $event->event_status_id !== BookingState::Storniert) {
@@ -201,7 +201,7 @@ class Helper
         return $invoice;
     }
 
-    public static function GetChart($time_frame)
+    public static function getChart($time_frame)
     {
         if (DB::connection()->getDriverName() === 'sqlite') {
             // Nur für die Tests (SQLite kennt weder DATE_FORMAT noch Monatsnamen).
@@ -246,13 +246,13 @@ class Helper
         $chart[2] = $stays;
 
         if ($time_frame === 'heatmap') {
-            $chart = Helper::GetHeatmap();
+            $chart = Helper::getHeatmap();
         }
 
         return $chart;
     }
 
-    public static function GetHeatmap()
+    public static function getHeatmap()
     {
         $year = Carbon::now()->year - 1;
         $events = Event::where('event_status_id', '=', BookingState::Bestaetigt)->whereYear('start_date', '=', $year)->get();

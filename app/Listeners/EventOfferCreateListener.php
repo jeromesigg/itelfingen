@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Enums\ContractState;
 use App\Events\EventOfferCreate;
 use App\Models\Position;
+use App\Models\PricelistPosition;
 use App\Services\BexioApiService;
 use Carbon\Carbon;
 
@@ -28,6 +29,14 @@ class EventOfferCreateListener
         }
 
         return $amount;
+    }
+
+    /**
+     * Rabatt der Buchung gilt ab Code 100, nicht aber für die Pauschale Frühbezug/Spätabgabe.
+     */
+    public static function discountApplies(int $bexioCode): bool
+    {
+        return $bexioCode >= 100 && $bexioCode !== PricelistPosition::CHECKIN_CHECKOUT_CODE;
     }
 
     /**
@@ -65,7 +74,7 @@ class EventOfferCreateListener
                         'tax_id' => 16,
                         'article_id' => $position->pricelist_position['bexio_id'],
                         'unit_price' => $position->pricelist_position['price'],
-                        'discount_in_percent' => $position->pricelist_position['bexio_code'] < 100 ? 0 : $event['discount'],
+                        'discount_in_percent' => self::discountApplies($position->pricelist_position['bexio_code']) ? $event['discount'] : 0,
                     ];
                 }
             }

@@ -1,27 +1,4 @@
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
 
-.cards_item {
-  display: flex;
-  padding: 1rem;
-}
-
-@media (min-width: 40rem) {
-  .cards_item {
-    width: 50%;
-  }
-}
-
-@media (min-width: 56rem) {
-  .cards_item {
-    width: 50%;
-  }
-}
 
 .card {
   display: flex;
@@ -29,91 +6,6 @@
   overflow: hidden;
   background: transparent;
   border: 0px;
-}
-
-.card_content {
-  padding: 1rem;
-}
-
-.card_title {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.card_title-line{
-  border-bottom: 4px solid black;
-}
-
-.card_title-line_white{
-  border-bottom: 2px solid white;
-}
-
-@media (max-width: 992px) {
-  .card_title-line_white_mobile{
-    border-bottom: 2px solid white;
-  }
-}
-
-
-.card_subtitle {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.card_text {
-  line-height: 1.5;
-  margin-bottom: 0;
-}
-
-.card_list{
-  list-style-type: "- ";
-  padding-left: 0.5rem;
-  line-height: 1.75rem;
-  margin-top: 10px;
-}
-
-/*
- * Bootstrap Cookie Alert by Wruczek
- * https://github.com/Wruczek/Bootstrap-Cookie-Alert
- * Released under MIT license
- */
- .cookie-consent {
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  background: rgb(0, 0, 0);
-  color: rgb(255, 255, 255);
-  z-index: 999;
-  padding: 10px 5px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 28px;
-  font-family: "Titillium Web", sans-serif;
-  }
-
-.cookie-consent.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0%);
-  transition-delay: 1000ms;
-}
-
-.cookie-consent a {
-  text-decoration: underline
-}
-
-.cookie-consent__agree {
-  margin-left: 10px;
-  vertical-align: baseline;
 }
 
 .btn-frontpage {
@@ -135,76 +27,17 @@
   font-weight: 600;
 }
 
-.btn-dark {
-    color: white;
-    background-color: var(--ebonyclay);
-    border-color: var(--white);
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 1.5rem;
-    border-radius: 0;
-    border-width: 5px;
-}
-
-.btn-dark:hover {
-    color: white;
-    background-color: var(--ebonyclay);
-    border-color: var(--white);
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
-.btn-center {
-    color: white;
-    background-color: transparent;
-    border-color: white;
-    text-transform: uppercase;
-    font-weight: 600;
-    font-size: 1.5rem;
-    border-radius: 0;
-    border-width: 5px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-}
-
-.btn-center:hover {
-    color: white;
-    background-color: transparent;
-    border-color: white;
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
 a {
   color: var(--orientalpink);
   text-decoration: none;
   background-color: transparent;
 }
 
-.form-control {
-  border-radius: 0;
-}
-
-.section-features{
-  margin: 2rem;
-  padding: 1.5rem;
-  border-radius: 1rem;
-}
-
-.h-picture {
-  height: 14rem
-}
-
-
 @media (min-width: 768px) {
   .md\:h-picture {
       height: 50rem;
   }
 }
-
 
 body {
   font-family: "Titillium Web", sans-serif;
@@ -214,8 +47,3 @@ body {
   min-height: 80vh;
 }
 
-@media (min-width: 768px) {
-  .md\:h-192 {
-      height: 48rem !important;
-  }
-}

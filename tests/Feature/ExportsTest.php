@@ -34,6 +34,31 @@ class ExportsTest extends TestCase
         });
     }
 
+    public function test_csv_files_are_really_written(): void
+    {
+        // Ohne Excel::fake(): erzeugt die Dateien wirklich mit PhpSpreadsheet (Wechsel 1.x → 5.x mit Excel 4.0)
+        $s = BookingScenario::create();
+        $s->event->update(['name' => 'Müller-Grüninger']);
+
+        // Trennzeichen und BOM wie in config/excel.php (Semikolon für Excel in der Schweiz)
+        $read = function (string $route) use ($s): array {
+            $response = $this->actingAs($s->user('verwalter'))->get($route)->assertOk();
+            $csv = preg_replace('/^\xEF\xBB\xBF/', '', file_get_contents($response->baseResponse->getFile()->getPathname()));
+
+            return [$csv, array_map(fn ($line) => str_getcsv($line, config('excel.exports.csv.delimiter'), config('excel.exports.csv.enclosure'), '\\'), array_filter(explode("\n", trim($csv))))];
+        };
+
+        [$csv, $rows] = $read('/admin/bookings/export-csv');
+
+        $this->assertSame((new ExportBookings)->headings(), $rows[0]);
+        $this->assertCount(count($rows[0]), $rows[1]);
+        $this->assertStringContainsString('Müller-Grüninger', $csv);
+
+        foreach (['newsletter.exportBookings' => ExportNewsletterBookings::class, 'newsletter.exportMembers' => ExportNewsletterMembers::class] as $route => $export) {
+            $this->assertSame((new $export)->headings(), $read(route($route))[1][0]);
+        }
+    }
+
     public function test_newsletter_exports_split_bookings_and_members(): void
     {
         Excel::fake();

@@ -9,10 +9,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ExportNewsletterBookings implements FromCollection, WithHeadings
 {
-    /**
-     * @return Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
         return Newsletter::where('bookings', true)->get(['email', 'firstname', 'name', 'bookings', 'created_at', 'updated_at']);
     }
