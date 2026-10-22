@@ -1,9 +1,9 @@
 <main>
     @include('contents.about')
 
-    @include('contents.gallery')
-
     @include('contents.rooms')
+
+    @include('contents.gallery')
 
     @include('contents.locations')
 
