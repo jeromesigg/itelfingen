@@ -41,7 +41,7 @@
     </div>
 
     <!-- Table (ab Tablet) -->
-    <div class="hidden overflow-x-auto md:block">
+    <div v-if="isDesktop" class="overflow-x-auto">
       <table class="w-full text-left rtl:text-right text-body">
         <thead class="text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
           <tr>
@@ -111,8 +111,8 @@
       </table>
     </div>
 
-    <!-- Karten (Handy). Nach der Tabelle, damit auf dem Desktop zuerst die sichtbaren Buttons im DOM stehen -->
-    <div class="space-y-3 md:hidden" :aria-busy="isLoading" data-testid="cards">
+    <!-- Karten (Handy) -->
+    <div v-else class="space-y-3" :aria-busy="isLoading" data-testid="cards">
       <template v-if="isLoading && !tableData.length">
         <div v-for="n in 3" :key="'card-skeleton-' + n" class="space-y-2 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div class="h-3 w-1/3 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
@@ -273,7 +273,7 @@
 
 <script setup>
 
-import { ref, computed, onMounted, watch, useId } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, useId } from 'vue'
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -282,7 +282,7 @@ import {
   useVueTable,
 } from '@tanstack/vue-table'
 import DataTableActions from './DataTableActions.vue'
-import DataTableCell from './DataTableCell.vue'
+import DataTableCell from './DataTableCell.js'
 
 const pageSizes = [10, 25, 50, 100]
 
@@ -580,8 +580,21 @@ watch(sorting, () => {
   pagination.value.pageIndex = 0
 }, { deep: true })
 
+// Nur eine Darstellung zeichnen: Tabelle ab md (48rem wie Tailwind), sonst Karten.
+// Beide zugleich (eine per CSS versteckt) machten jedes Sortieren und Blättern rund 50 % langsamer.
+const desktopQuery = window.matchMedia('(min-width: 48rem)')
+const isDesktop = ref(desktopQuery.matches)
+function updateLayout(event) {
+  isDesktop.value = event.matches
+}
+
 // ===== LIFECYCLE =====
 onMounted(() => {
+  desktopQuery.addEventListener('change', updateLayout)
   loadData()
+})
+
+onBeforeUnmount(() => {
+  desktopQuery.removeEventListener('change', updateLayout)
 })
 </script>

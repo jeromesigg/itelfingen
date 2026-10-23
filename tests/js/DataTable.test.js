@@ -132,6 +132,19 @@ describe('DataTable auf dem Handy (Karten)', () => {
         rows[1],
     ];
     const cards = () => wrapper.findAll('[data-testid="cards"] article');
+
+    // Schmaler Bildschirm: DataTable zeichnet dann nur die Karten, keine Tabelle
+    beforeEach(() => {
+        vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+    });
+
+    it('zeichnet auf dem Handy keine Tabelle', async () => {
+        await mountTable({ mobile });
+
+        expect(wrapper.find('table').exists()).toBe(false);
+        expect(cards()).toHaveLength(3);
+    });
+
     const part = (card, name) => card.find(`[data-card="${name}"]`);
 
     it('zeigt pro Zeile eine Karte mit Datum, Titel, Badge und Prüfpunkten', async () => {
@@ -182,7 +195,7 @@ describe('DataTable auf dem Handy (Karten)', () => {
 
         await sortSelect.setValue('created_at:desc');
         expect(cards().map((card) => part(card, 'kicker').text())).toEqual(['01.02.2031', '11.12.2030', '05.11.2030']);
-        expect(header('Erstellt am').attributes('aria-sort')).toBe('descending');
+        expect(sortSelect.element.value).toBe('created_at:desc');
 
         await sortSelect.setValue('');
         expect(cards().map((card) => part(card, 'kicker').text())).toEqual(['11.12.2030', '01.02.2031', '05.11.2030']);
