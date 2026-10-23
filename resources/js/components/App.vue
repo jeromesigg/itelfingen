@@ -1,6 +1,7 @@
 <template>
   <data-table
     :columns="eventColumns"
+    :mobile="mobileCards"
     :api-endpoint="apiEndpoint"
     :filters="{ date: dateFilter, status: statusFilter }"
     :searchable-columns="['number', 'firstname', 'name', 'email', 'comment']"
@@ -29,6 +30,22 @@ const dateFilter = ref('Ab Heute')
 const statusFilter = ref('Alle')
 const apiEndpoint = '/events/datatable'
 const columnHelper = createColumnHelper()
+
+// Karten auf dem Handy (siehe DataTable.vue, Prop mobile)
+
+const mobileCards = {
+  kicker: 'start_date',
+  badge: 'state',
+  badgeClasses: {
+    'Neu': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+    'Bestätigt': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+  },
+  title: 'name',
+  lines: ['number'],
+  checks: 'checks',
+  details: ['email', 'total_amount', 'comment', 'comment_intern'],
+}
+
 
 const eventColumns = [
   columnHelper.accessor('start_date', {

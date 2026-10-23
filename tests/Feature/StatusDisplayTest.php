@@ -6,7 +6,10 @@ use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Helper\Helper;
 use App\Mail\MonthlyMail;
+use App\Models\ContractStatus;
 use App\Models\Event;
+use App\Models\EventStatus;
+use App\Models\User;
 use App\View\Components\Bookings\Entry;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\BookingScenario;
@@ -53,6 +56,40 @@ class StatusDisplayTest extends TestCase
         foreach ($missing as $text) {
             $this->assertStringNotContainsString($text, $status);
         }
+    }
+
+    /**
+     * [Buchungsstatus, Vertragsstatus, Offerte?, Rechnung?, Putzmail?, Code, erwartete Prüfpunkte]
+     */
+    public static function mobileChecks(): array
+    {
+        return [
+            'neu, nichts erledigt' => [5, 5, false, false, false, null, ['Angebot' => false, 'Rechnung' => false, 'Putzmail' => false, 'Code' => false]],
+            'bestätigt, alles erledigt' => [10, 20, true, true, true, '4711', ['Angebot' => true, 'Rechnung' => true, 'Putzmail' => true, 'Code' => true]],
+            'eigene Termine: nur Putzmail' => [20, 5, false, false, true, null, ['Putzmail' => true]],
+            'storniert: keine Prüfpunkte' => [50, 50, true, true, true, '4711', []],
+        ];
+    }
+
+    #[DataProvider('mobileChecks')]
+    public function test_booking_table_sends_checks_and_state_for_mobile_cards(int $booking, int $contract, bool $offer, bool $invoice, bool $cleaningMail, ?string $code, array $expected): void
+    {
+        $verwalter = User::factory()->verwalter()->create();
+        Event::factory()->create([
+            'event_status_id' => $booking,
+            'contract_status_id' => $contract,
+            'bexio_offer_id' => $offer ? 11 : null,
+            'bexio_invoice_id' => $invoice ? 22 : null,
+            'cleaning_mail' => $cleaningMail,
+            'code' => $code,
+        ]);
+
+        // Nach dem Vertragsstatus filtern: "Alle" blendet stornierte Verträge aus
+        $status = ContractStatus::find($contract)->name;
+        $row = $this->actingAs($verwalter)->getJson('/events/datatable?date=Alle&status='.urlencode($status))->assertOk()->json('data.0');
+
+        $this->assertSame($expected, array_column($row['checks'], 'done', 'label'));
+        $this->assertSame(EventStatus::find($booking)->name, $row['state']);
     }
 
     public static function userColumn(): array

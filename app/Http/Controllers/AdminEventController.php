@@ -68,7 +68,7 @@ class AdminEventController extends Controller
         // Filter aus der Tabelle; ohne Angabe: alle offenen Status, nur künftige Buchungen.
         $contract_status = ContractStatus::where('name', '=', $request->input('status'))->first();
         $date = $request->input('date') != 'Alle' ? Carbon::today() : null;
-        $events = Event::when($contract_status, function ($query, $contract_status) {
+        $events = Event::with('event_status')->when($contract_status, function ($query, $contract_status) {
             $query->where('contract_status_id', '=', $contract_status['id']);
         }, function ($query) {
             $query->whereIn('contract_status_id', ContractState::before(ContractState::Storniert));
@@ -102,6 +102,9 @@ class AdminEventController extends Controller
                 'comment' => $event['comment'] ?? '',
                 'comment_intern' => $event['comment_intern'] ?? '',
                 'status' => $event->status(),
+                // Für die Karten auf dem Handy (DataTable.vue, mobile.badge und mobile.checks)
+                'state' => $event->event_status?->name ?? '',
+                'checks' => $event->statusChecks(),
             ];
         });
 

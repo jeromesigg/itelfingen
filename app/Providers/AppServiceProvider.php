@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Contact;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +36,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+        // Zähler der offenen Anfragen im Menü unten des Admin-Bereichs (nur wer Anfragen sehen darf).
+        View::composer('includes.admin_bottomnav', function ($view) {
+            $view->with('openContactsCount', auth()->user()?->canManageBookings() ? Contact::where('done', false)->count() : 0);
+        });
         // Deutsche Monatsnamen in DATE_FORMAT (Auslastungs-Graphen). Erst beim Verbindungsaufbau setzen,
         // sonst bräuchte jeder App-Start eine Datenbank (composer install, Docker-Build, CI).
         Event::listen(function (ConnectionEstablished $event) {

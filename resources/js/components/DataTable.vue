@@ -1,12 +1,13 @@
 <template>
-  <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-lg border border-default-medium dark:border-gray-600">
+  <!-- Rahmen erst ab Tablet; auf dem Handy stehen die Karten direkt auf der Seite -->
+  <div class="relative md:bg-neutral-primary-soft md:shadow-xs md:rounded-lg md:border md:border-default-medium md:dark:border-gray-600">
         <!-- Filter Slots (optional) -->
-    <div v-if="$slots.filters" class="m-4">
+    <div v-if="$slots.filters" class="pt-4 md:m-4 md:pt-0">
       <slot name="filters"></slot>
     </div>
 
     <!-- Search Input -->
-    <div class="p-4">
+    <div class="py-4 md:p-4">
         <label :for="searchId" class="sr-only">Suchen</label>
         <div class="relative">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -22,9 +23,25 @@
         </div>
     </div>
 
+    <!-- Sortieren auf dem Handy: dort fehlen die Spaltenköpfe -->
+    <div v-if="sortableColumns.length" class="pb-4 md:hidden">
+      <label :for="sortId" class="sr-only">Sortieren</label>
+      <select
+        :id="sortId"
+        :value="sortValue"
+        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        @change="setSortValue($event.target.value)"
+      >
+        <option value="">Sortierung: Standard</option>
+        <template v-for="column in sortableColumns" :key="column.id">
+          <option :value="column.id + ':asc'">{{ column.columnDef.header }} ↑</option>
+          <option :value="column.id + ':desc'">{{ column.columnDef.header }} ↓</option>
+        </template>
+      </select>
+    </div>
 
-
-    <!-- Table -->
+    <!-- Table (ab Tablet) -->
+    <div class="hidden overflow-x-auto md:block">
       <table class="w-full text-left rtl:text-right text-body">
         <thead class="text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
           <tr>
@@ -80,25 +97,13 @@
               :style="{ 'max-width': cell.column.getSize() + 'px' }"
               class="px-4 py-2 border border-gray-300 dark:border-gray-600"
             >
-              <!-- Aktionen kommen als Daten ({ label, url, variant, confirm }) und laufen per fetch, ohne Neuladen -->
-              <div v-if="cell.column.columnDef.meta?.actions" class="flex flex-wrap gap-2">
-                <button
-                  v-for="action in cell.getValue() ?? []"
-                  :key="action.url"
-                  type="button"
-                  :disabled="busyAction === action.url"
-                  :class="[
-                    'rounded-lg px-3 py-1.5 text-sm font-medium text-white focus:outline-hidden focus:ring-4 disabled:cursor-wait disabled:opacity-60',
-                    action.variant === 'danger' ? 'bg-red-700 hover:bg-red-800 focus:ring-red-300' : 'bg-grannysmith hover:opacity-90 focus:ring-grannysmith/50',
-                  ]"
-                  @click="runAction(row.original, action)"
-                >
-                  {{ action.label }}
-                </button>
-              </div>
-              <!-- HTML nur für Spalten mit meta.html (vom Server escaped), sonst als Text: Werte aus öffentlichen Formularen -->
-              <span v-else-if="cell.column.columnDef.meta?.html" v-html="formatCellValue(cell.getValue())"></span>
-              <template v-else>{{ formatCellValue(cell.getValue()) }}</template>
+              <DataTableActions
+                v-if="cell.column.columnDef.meta?.actions"
+                :actions="cell.getValue() ?? []"
+                :busy-action="busyAction"
+                @run="runAction(row.original, $event)"
+              />
+              <DataTableCell v-else :cell="cell" />
             </td>
           </tr>
           </template>
@@ -106,7 +111,76 @@
       </table>
     </div>
 
-    <div aria-live="polite" class="pointer-events-none fixed bottom-5 end-5 z-60">
+    <!-- Karten (Handy). Nach der Tabelle, damit auf dem Desktop zuerst die sichtbaren Buttons im DOM stehen -->
+    <div class="space-y-3 md:hidden" :aria-busy="isLoading" data-testid="cards">
+      <template v-if="isLoading && !tableData.length">
+        <div v-for="n in 3" :key="'card-skeleton-' + n" class="space-y-2 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+          <div class="h-3 w-1/3 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+          <div class="h-4 w-2/3 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+        </div>
+      </template>
+      <p v-else-if="loadError" class="py-6 text-center">
+        Die Daten konnten nicht geladen werden.
+        <button type="button" class="ms-2 font-medium text-orientalpink hover:underline" @click="loadData">Erneut laden</button>
+      </p>
+      <p v-else-if="!table.getRowModel().rows.length" class="py-6 text-center text-gray-500 dark:text-gray-400">Keine Einträge gefunden.</p>
+      <template v-else>
+        <article
+          v-for="row in table.getRowModel().rows"
+          :key="'card-' + row.id"
+          class="rounded-lg border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-700 dark:bg-gray-800"
+        >
+          <div v-if="mobileLayout.kicker || mobileLayout.badge" class="flex items-start justify-between gap-2">
+            <span v-if="mobileLayout.kicker" class="text-xs font-medium text-gray-500 dark:text-gray-400" data-card="kicker">
+              <DataTableCell :cell="cellOf(row, mobileLayout.kicker)" />
+            </span>
+            <span v-if="mobileLayout.badge && row.original[mobileLayout.badge]" :class="['ms-auto shrink-0 rounded px-1.5 py-0.5 text-xs font-medium', badgeClass(row.original[mobileLayout.badge])]" data-card="badge">
+              {{ row.original[mobileLayout.badge] }}
+            </span>
+          </div>
+          <div class="mt-1 font-semibold text-gray-900 dark:text-white" data-card="title">
+            <DataTableCell :cell="cellOf(row, mobileLayout.title)" />
+          </div>
+          <template v-for="columnId in mobileLayout.lines" :key="columnId">
+            <div v-if="hasValue(row, columnId)" class="line-clamp-2 text-sm text-gray-600 dark:text-gray-300" data-card="line">
+              <DataTableCell :cell="cellOf(row, columnId)" />
+            </div>
+          </template>
+          <ul v-if="mobileLayout.checks && row.original[mobileLayout.checks]?.length" class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs" data-card="checks">
+            <li
+              v-for="check in row.original[mobileLayout.checks]"
+              :key="check.label"
+              :class="check.done ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'"
+            >
+              <span aria-hidden="true">{{ check.done ? '✓' : '✗' }}</span>
+              <span class="sr-only">{{ check.done ? 'erledigt:' : 'offen:' }}</span>
+              {{ check.label }}
+            </li>
+          </ul>
+          <details v-if="mobileLayout.details.some((columnId) => hasValue(row, columnId))" class="mt-2 text-sm">
+            <summary class="cursor-pointer font-medium text-orientalpink">Mehr</summary>
+            <dl class="mt-2 space-y-2">
+              <template v-for="columnId in mobileLayout.details" :key="columnId">
+                <div v-if="hasValue(row, columnId)">
+                  <dt class="text-xs text-gray-500 dark:text-gray-400">{{ table.getColumn(columnId)?.columnDef.header }}</dt>
+                  <dd class="break-words text-gray-900 dark:text-white"><DataTableCell :cell="cellOf(row, columnId)" /></dd>
+                </div>
+              </template>
+            </dl>
+          </details>
+          <DataTableActions
+            v-if="actionsColumnId && row.original[actionsColumnId]?.length"
+            class="mt-3"
+            block
+            :actions="row.original[actionsColumnId]"
+            :busy-action="busyAction"
+            @run="runAction(row.original, $event)"
+          />
+        </article>
+      </template>
+    </div>
+
+    <div aria-live="polite" class="pointer-events-none fixed bottom-20 end-5 z-60 md:bottom-5">
       <Transition enter-active-class="transition-opacity duration-200" enter-from-class="opacity-0" leave-active-class="transition-opacity duration-300" leave-to-class="opacity-0">
         <div
           v-if="toast"
@@ -120,8 +194,8 @@
       </Transition>
     </div>
 
-    <!-- Page Size Selector -->
-    <div class="mb-4 mt-4 flex items-center gap-2">
+    <!-- Page Size Selector (ab Tablet) -->
+    <div class="mb-4 mt-4 hidden items-center gap-2 px-4 md:flex">
       <label :for="pageSizeId" class="text-sm text-gray-600 dark:text-gray-400">Zeilen pro Seite:</label>
       <select
           :id="pageSizeId"
@@ -140,24 +214,25 @@
     </div>
     
 
-    <!-- Pagination Controls -->
-    <div class="mt-4 flex gap-2 items-center justify-center flex-wrap">
+    <!-- Pagination Controls: auf dem Handy nur Zurück, Seite x / y, Nächste -->
+    <div class="my-4 flex gap-2 items-center justify-center md:flex-wrap">
        <button 
         @click="goToPage(0)"
         :disabled="table.getState().pagination.pageIndex === 0"
-        class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        class="hidden md:block px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         « Erste
       </button>
       <button 
         @click="previousPage()"
         :disabled="!table.getCanPreviousPage()"
+        aria-label="Vorherige Seite"
         class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        ← Zurück
+        ← <span class="hidden md:inline">Zurück</span>
       </button>
       
-      <div id="pageNumbers" class="flex gap-1">
+      <div id="pageNumbers" class="hidden md:flex gap-1">
         <button 
           v-for="pageNum in visiblePages"
           :key="pageNum"
@@ -171,26 +246,29 @@
           {{ pageNum + 1 }}
         </button>
       </div>
+      <span class="px-2 text-sm text-gray-700 md:hidden dark:text-gray-300">Seite {{ pagination.pageIndex + 1 }} / {{ Math.max(table.getPageCount(), 1) }}</span>
       
       <button 
         @click="nextPage()"
         :disabled="!table.getCanNextPage()"
+        aria-label="Nächste Seite"
         class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Nächste →
+        <span class="hidden md:inline">Nächste</span> →
       </button>
       <button 
         @click="goToPage(table.getPageCount() - 1)"
         :disabled="table.getState().pagination.pageIndex === table.getPageCount() - 1"
-        class="px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        class="hidden md:block px-3 py-2 bg-gladegreen hover:bg-gladegreen text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Letzte »
       </button>
       
-      <span class="text-sm text-gray-600 dark:text-gray-400 ml-4">
+      <span class="hidden md:inline text-sm text-gray-600 dark:text-gray-400 ml-4">
         {{ paginationInfo }}
       </span>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -203,6 +281,8 @@ import {
   getSortedRowModel,
   useVueTable,
 } from '@tanstack/vue-table'
+import DataTableActions from './DataTableActions.vue'
+import DataTableCell from './DataTableCell.vue'
 
 const pageSizes = [10, 25, 50, 100]
 
@@ -213,6 +293,11 @@ const props = defineProps({
   filters: { type: Object, default: () => ({}), },
   searchableColumns: {type: Array, default: () => [], },
   pageSize: {type: Number, default: 10,},
+  // Karten auf dem Handy: Spalten-IDs für { kicker, title, lines, details } und Schlüssel der Zeile für
+  // { badge, checks } (Text bzw. [{ label, done }]). Nicht genannte Spalten fehlen auf der Karte.
+  // Ohne Angabe: erste Spalte als Titel, die nächsten zwei als Zeilen, der Rest unter "Mehr".
+  // badgeClasses: Farbe pro Badge-Text, z. B. { 'Neu': 'bg-orange-100 …' }; sonst grau.
+  mobile: { type: Object, default: null },
 })
 
 // ===== STATE =====
@@ -304,6 +389,24 @@ const table = useVueTable({
 })
 
 // ===== COMPUTED =====
+const actionsColumnId = computed(() => props.columns.find((column) => column.meta?.actions)?.accessorKey ?? null)
+
+const mobileLayout = computed(() => {
+  const ids = props.columns.filter((column) => !column.meta?.actions).map((column) => column.accessorKey)
+  if (!props.mobile) {
+    return { title: ids[0], lines: ids.slice(1, 3), details: ids.slice(3) }
+  }
+  return { lines: [], details: [], ...props.mobile, title: props.mobile.title ?? ids[0] }
+})
+
+const sortableColumns = computed(() => table.getAllLeafColumns().filter((column) => column.getCanSort()))
+
+// Wert des Sortier-Auswahlfelds: "spalte:asc", "spalte:desc" oder leer
+const sortValue = computed(() => {
+  const [sort] = sorting.value
+  return sort ? `${sort.id}:${sort.desc ? 'desc' : 'asc'}` : ''
+})
+
 const filteredRowCount = computed(() => filteredData.value.length)
 
 const visiblePages = computed(() => {
@@ -411,19 +514,6 @@ async function runAction(rowData, action) {
   }
 }
 
-function formatCellValue(value) {
-  // Handle composite objects like start_date
-  if (typeof value === 'object' && value !== null && value.display) {
-    return value.display
-  }
-  
-  if (typeof value === 'object' && value !== null) {
-    return JSON.stringify(value)
-  }
-  
-  return String(value || '')
-}
-
 // ===== WATCHERS =====
 // Navigation – table.X() direkt, kein manuelles State-Update
 function previousPage()      { table.previousPage() }
@@ -432,6 +522,7 @@ function goToPage(i)         { table.setPageIndex(i) }
 function handlePageSizeChange(e) { table.setPageSize(Number(e.target.value)) }
 const searchId = useId()
 const pageSizeId = useId()
+const sortId = useId()
 
 // Sortierrichtung für Screenreader
 function ariaSort(header) {
@@ -440,6 +531,24 @@ function ariaSort(header) {
   if (sorted === 'asc') return 'ascending'
   if (sorted === 'desc') return 'descending'
   return 'none'
+}
+
+function setSortValue(value) {
+  const [id, direction] = value.split(':')
+  sorting.value = id ? [{ id, desc: direction === 'desc' }] : []
+}
+
+function badgeClass(text) {
+  return props.mobile?.badgeClasses?.[text] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+}
+
+function cellOf(row, columnId) {
+  return row.getAllCells().find((cell) => cell.column.id === columnId)
+}
+
+function hasValue(row, columnId) {
+  const value = row.original[columnId]
+  return value !== null && value !== undefined && value !== '' && !(typeof value === 'object' && !value.display)
 }
 
 function toggleSort(header) {

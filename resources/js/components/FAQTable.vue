@@ -2,6 +2,7 @@
   <div>
     <data-table
       :columns="faqsColumns"
+    :mobile="mobileCards"
       :api-endpoint="apiEndpoint"
       :filters="{}"
       :searchable-columns="['name', 'description', 'chapter']"
@@ -17,6 +18,15 @@ import DataTable from './DataTable.vue'
 const apiEndpoint = '/faqs/datatable'
 
 const columnHelper = createColumnHelper()
+
+
+
+// Karten auf dem Handy (siehe DataTable.vue, Prop mobile)
+
+
+
+const mobileCards = { title: 'name', lines: ['chapter', 'description'], details: ['archive_status', 'image'] }
+
 
 
 

@@ -130,10 +130,14 @@ class XssTest extends TestCase
 
     public function test_data_table_uses_v_html_only_for_marked_columns(): void
     {
-        $source = file_get_contents(resource_path('js/components/DataTable.vue'));
+        // Tabelle und Handy-Karten rendern Zellen über DataTableCell.vue; nur dort darf v-html stehen.
+        $cell = file_get_contents(resource_path('js/components/DataTableCell.vue'));
 
-        $this->assertSame(1, substr_count($source, 'v-html'));
-        $this->assertMatchesRegularExpression('/v-(else-)?if="cell\.column\.columnDef\.meta\?\.html" v-html=/', $source);
+        $this->assertSame(1, substr_count($cell, 'v-html'));
+        $this->assertMatchesRegularExpression('/v-(else-)?if="cell\.column\.columnDef\.meta\?\.html" v-html=/', $cell);
+        foreach (['DataTable.vue', 'DataTableActions.vue'] as $component) {
+            $this->assertStringNotContainsString('v-html', file_get_contents(resource_path('js/components/'.$component)), $component);
+        }
     }
 
     /**
