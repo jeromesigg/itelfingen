@@ -68,7 +68,7 @@ class AdminEventController extends Controller
         // Filter aus der Tabelle; ohne Angabe: alle offenen Status, nur künftige Buchungen.
         $contract_status = ContractStatus::where('name', '=', $request->input('status'))->first();
         $date = $request->input('date') != 'Alle' ? Carbon::today() : null;
-        $events = Event::when($contract_status, function ($query, $contract_status) {
+        $events = Event::with('event_status')->when($contract_status, function ($query, $contract_status) {
             $query->where('contract_status_id', '=', $contract_status['id']);
         }, function ($query) {
             $query->whereIn('contract_status_id', ContractState::before(ContractState::Storniert));
@@ -81,7 +81,7 @@ class AdminEventController extends Controller
 
         // Werte aus dem öffentlichen Formular escapen: name, number und status werden als HTML gerendert
         // (siehe meta.html in App.vue), alle anderen Spalten als Text. Nur die Spalten der Tabelle,
-        // keine internen Felder wie Türcode oder Bexio-IDs.
+        // keine internen Felder wie Bexio-IDs oder UUID. Den Türcode sehen alle Rollen bewusst über status und checks.
         $canEdit = $request->user()->canManageBookings();
         $data = $events->map(function (Event $event) use ($canEdit) {
             $name = e($event['name']);
@@ -102,6 +102,9 @@ class AdminEventController extends Controller
                 'comment' => $event['comment'] ?? '',
                 'comment_intern' => $event['comment_intern'] ?? '',
                 'status' => $event->status(),
+                // Für die Karten auf dem Handy (DataTable.vue, mobile.badge und mobile.checks)
+                'state' => $event->event_status?->name ?? '',
+                'checks' => $event->statusChecks(),
             ];
         });
 
@@ -410,15 +413,15 @@ class AdminEventController extends Controller
         if (strlen($number) < 6) {
             return response()->json(['error' => 'No event found with this number'], 404);
         }
-        $event = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
-        //
-        if ($event->isEmpty()) {
+        $events = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
+        // Stammgäste haben mehrere Buchungen: zuerst die laufende oder nächste, sonst die zuletzt vergangene.
+        $event = $events->where('end_date', '>=', today()->toDateString())->sortBy('start_date')->first()
+            ?? $events->sortByDesc('start_date')->first();
+        if (! $event) {
             return response()->json([
                 'error' => 'No event found with this number',
             ], 404);
         } else {
-            $event = $event->first();
-
             return response()->json([
                 'number' => $event['telephone'],
                 'firstname' => $event['firstname'],

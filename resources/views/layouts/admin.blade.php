@@ -37,9 +37,10 @@
         @include('includes/admin_topnav')
        @include('includes/admin_sidenav')
 
-        <main class="p-4 md:ml-64 h-auto min-h-screen pt-20">
+        <main class="p-4 pb-24 md:pb-4 md:ml-64 h-auto min-h-screen pt-20">
           @yield('content')
         </main>
+        @include('includes/admin_bottomnav')
       </div>
       @stack('scripts')
     </body>

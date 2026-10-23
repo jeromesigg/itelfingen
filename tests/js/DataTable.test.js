@@ -34,8 +34,8 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-async function mountTable() {
-    wrapper = mount(DataTable, { props: { columns, apiEndpoint: '/contacts/datatable' } });
+async function mountTable(extraProps = {}) {
+    wrapper = mount(DataTable, { props: { columns, apiEndpoint: '/contacts/datatable', ...extraProps } });
     await flushPromises();
     return wrapper;
 }
@@ -122,5 +122,82 @@ describe('DataTable', () => {
         fetchMock.mockImplementationOnce(() => jsonResponse({}, false));
         await mountTable();
         expect(wrapper.text()).toContain('Die Daten konnten nicht geladen werden.');
+    });
+});
+
+describe('DataTable auf dem Handy (Karten)', () => {
+    const mobile = { kicker: 'created_at', badge: 'state', badgeClasses: { Neu: 'bg-orange-100' }, title: 'name', lines: [], checks: 'checks', details: ['done'] };
+    const cardRows = [
+        { ...rows[0], state: 'Neu', checks: [{ label: 'Angebot', done: true }, { label: 'Code', done: false }] },
+        rows[1],
+    ];
+    const cards = () => wrapper.findAll('[data-testid="cards"] article');
+
+    // Schmaler Bildschirm: DataTable zeichnet dann nur die Karten, keine Tabelle
+    beforeEach(() => {
+        vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+    });
+
+    it('zeichnet auf dem Handy keine Tabelle', async () => {
+        await mountTable({ mobile });
+
+        expect(wrapper.find('table').exists()).toBe(false);
+        expect(cards()).toHaveLength(3);
+    });
+
+    const part = (card, name) => card.find(`[data-card="${name}"]`);
+
+    it('zeigt pro Zeile eine Karte mit Datum, Titel, Badge und Prüfpunkten', async () => {
+        fetchMock.mockImplementationOnce(() => jsonResponse({ data: cardRows }));
+        await mountTable({ mobile });
+
+        expect(cards()).toHaveLength(2);
+        const [first, second] = cards();
+        expect(part(first, 'kicker').text()).toBe('11.12.2030');
+        expect(part(first, 'title').text()).toBe('Zora');
+        expect(part(first, 'badge').text()).toBe('Neu');
+        expect(part(first, 'badge').classes()).toContain('bg-orange-100');
+        expect(part(first, 'checks').findAll('li').map((li) => li.text())).toEqual(['✓erledigt: Angebot', '✗offen: Code']);
+        expect(first.find('details').text()).toContain('Bearbeitet');
+        // Ohne Badge und Prüfpunkte in den Daten bleiben die Teile weg
+        expect(part(second, 'badge').exists()).toBe(false);
+        expect(part(second, 'checks').exists()).toBe(false);
+    });
+
+    it('nimmt ohne Angabe die erste Spalte als Titel und die nächsten zwei als Zeilen', async () => {
+        await mountTable();
+
+        const [first] = cards();
+        expect(part(first, 'title').text()).toBe('11.12.2030');
+        expect(first.findAll('[data-card="line"]').map((line) => line.text())).toEqual(['Zora', 'Nein']);
+        expect(first.find('details').exists()).toBe(false);
+    });
+
+    it('führt die Aktion auf der Karte aus und ersetzt die Zeile', async () => {
+        await mountTable({ mobile });
+        fetchMock.mockImplementationOnce(() => jsonResponse({
+            message: 'Anfrage als bearbeitet markiert.',
+            row: { ...rows[0], done: 'Ja', actions: [] },
+        }));
+
+        await cards()[0].find('button').trigger('click');
+        await flushPromises();
+
+        expect(fetchMock.mock.calls.at(-1)[0]).toBe('/contacts/1/done');
+        expect(cards()[0].find('button').exists()).toBe(false);
+        expect(cards()[1].find('button').exists()).toBe(true);
+    });
+
+    it('sortiert über das Auswahlfeld', async () => {
+        await mountTable({ mobile });
+        // Das erste Auswahlfeld ist die Sortierung, das zweite die Anzahl Zeilen pro Seite
+        const sortSelect = wrapper.findAll('select')[0];
+
+        await sortSelect.setValue('created_at:desc');
+        expect(cards().map((card) => part(card, 'kicker').text())).toEqual(['01.02.2031', '11.12.2030', '05.11.2030']);
+        expect(sortSelect.element.value).toBe('created_at:desc');
+
+        await sortSelect.setValue('');
+        expect(cards().map((card) => part(card, 'kicker').text())).toEqual(['11.12.2030', '01.02.2031', '05.11.2030']);
     });
 });

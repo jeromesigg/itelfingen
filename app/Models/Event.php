@@ -100,6 +100,14 @@ class Event extends Model
         return str_pad($this->id, 5, '0', STR_PAD_LEFT);
     }
 
+    /**
+     * Vor- und Nachname, mit Gruppe falls vorhanden: "Hans Muster - Pfadi Uster".
+     */
+    public function displayName(): string
+    {
+        return implode(' - ', array_filter([trim($this->firstname.' '.$this->name), $this->group_name]));
+    }
+
     public function status()
     {
         $offer = Helper::getEventOfferStatus($this);
@@ -108,5 +116,31 @@ class Event extends Model
         $code = Helper::getEventCodeCheck($this);
 
         return $offer.$invoice.$cleaning_mail.$code;
+    }
+
+    /**
+     * Erledigte Schritte wie in status(), als Daten für die Karten der Buchungstabelle auf dem Handy.
+     * Eigene Termine haben nur das Putzmail, stornierte Buchungen gar nichts.
+     *
+     * @return list<array{label: string, done: bool}>
+     */
+    public function statusChecks(): array
+    {
+        $state = $this->bookingState();
+        if ($state === BookingState::Storniert) {
+            return [];
+        }
+
+        $cleaningMail = ['label' => 'Putzmail', 'done' => (bool) $this->cleaning_mail];
+        if ($state === BookingState::Eigene) {
+            return [$cleaningMail];
+        }
+
+        return [
+            ['label' => 'Angebot', 'done' => $this->bexio_offer_id !== null],
+            ['label' => 'Rechnung', 'done' => $this->bexio_invoice_id !== null],
+            $cleaningMail,
+            ['label' => $this->code !== null ? $this->code : 'Code', 'done' => $this->code !== null],
+        ];
     }
 }
