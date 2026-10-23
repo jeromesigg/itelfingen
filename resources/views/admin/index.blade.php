@@ -40,7 +40,7 @@ $visibleTasks = 5;
         @else
         <ul class="divide-y divide-gray-100 dark:divide-gray-700">
             @foreach ($tasks->take($visibleTasks) as $task)
-            <x-dashboard-task :task="$task" />
+            <li><x-dashboard-task :task="$task" /></li>
             @endforeach
         </ul>
         @if ($tasks->count() > $visibleTasks)
@@ -51,7 +51,7 @@ $visibleTasks = 5;
             </summary>
             <ul class="divide-y divide-gray-100 dark:divide-gray-700">
                 @foreach ($tasks->skip($visibleTasks) as $task)
-                <x-dashboard-task :task="$task" />
+                <li><x-dashboard-task :task="$task" /></li>
                 @endforeach
             </ul>
         </details>
