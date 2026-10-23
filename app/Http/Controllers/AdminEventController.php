@@ -413,15 +413,15 @@ class AdminEventController extends Controller
         if (strlen($number) < 6) {
             return response()->json(['error' => 'No event found with this number'], 404);
         }
-        $event = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
-        //
-        if ($event->isEmpty()) {
+        $events = Event::where('phonenumber_query', 'like', '%'.$number.'%')->get();
+        // Stammgäste haben mehrere Buchungen: zuerst die laufende oder nächste, sonst die zuletzt vergangene.
+        $event = $events->where('end_date', '>=', today()->toDateString())->sortBy('start_date')->first()
+            ?? $events->sortByDesc('start_date')->first();
+        if (! $event) {
             return response()->json([
                 'error' => 'No event found with this number',
             ], 404);
         } else {
-            $event = $event->first();
-
             return response()->json([
                 'number' => $event['telephone'],
                 'firstname' => $event['firstname'],

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\City;
 use App\Models\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
 
@@ -80,6 +81,32 @@ class PublicApiTest extends TestCase
                 ->assertOk()
                 ->assertJson(['name' => $s->event->name]);
         }
+    }
+
+    /** @return array<string, array{0: list<array{0: string, 1: string}>, 1: string}> */
+    public static function repeatGuestBookings(): array
+    {
+        return [
+            'laufende vor kommender und vergangener' => [[['2025-06-01', '2025-06-03'], ['2026-03-01', '2026-03-04'], ['2026-08-01', '2026-08-03']], '01.03.2026 - 04.03.2026'],
+            'nächste kommende vor späterer' => [[['2026-12-01', '2026-12-03'], ['2026-04-01', '2026-04-03'], ['2025-06-01', '2025-06-03']], '01.04.2026 - 03.04.2026'],
+            'ohne kommende die zuletzt vergangene' => [[['2024-06-01', '2024-06-03'], ['2025-09-01', '2025-09-03'], ['2025-01-01', '2025-01-03']], '01.09.2025 - 03.09.2025'],
+        ];
+    }
+
+    /**
+     * @param  list<array{0: string, 1: string}>  $bookings
+     */
+    #[DataProvider('repeatGuestBookings')]
+    public function test_phone_number_lookup_prefers_current_or_next_booking_of_repeat_guest(array $bookings, string $expectedDate): void
+    {
+        $this->travelTo('2026-03-02 10:00:00');
+        foreach ($bookings as [$start, $end]) {
+            Event::factory()->create(['telephone' => '079 123 45 67', 'phonenumber_query' => '0791234567', 'start_date' => $start, 'end_date' => $end]);
+        }
+
+        $response = $this->getJson('/api/phone_number/'.self::TOKEN.'/number/0791234567');
+
+        $response->assertOk()->assertJson(['date' => $expectedDate]);
     }
 
     public function test_phone_number_lookup_does_not_treat_input_as_pattern(): void
