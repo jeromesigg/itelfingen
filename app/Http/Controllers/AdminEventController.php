@@ -81,7 +81,7 @@ class AdminEventController extends Controller
 
         // Werte aus dem öffentlichen Formular escapen: name, number und status werden als HTML gerendert
         // (siehe meta.html in App.vue), alle anderen Spalten als Text. Nur die Spalten der Tabelle,
-        // keine internen Felder wie Türcode oder Bexio-IDs.
+        // keine internen Felder wie Bexio-IDs oder UUID. Den Türcode sehen alle Rollen bewusst über status und checks.
         $canEdit = $request->user()->canManageBookings();
         $data = $events->map(function (Event $event) use ($canEdit) {
             $name = e($event['name']);
