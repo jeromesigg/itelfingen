@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Notifications\AdminPushNotification;
-use Illuminate\Support\Facades\Notification;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Minishlink\WebPush\MessageSentReport;
+use NotificationChannels\WebPush\WebPushChannel;
 use Tests\TestCase;
 
 /**
@@ -65,16 +67,55 @@ class PushSubscriptionTest extends TestCase
         $this->assertDatabaseHas('push_subscriptions', ['subscribable_id' => $other->id]);
     }
 
-    public function test_test_message_goes_only_to_own_devices(): void
+    /**
+     * Antwort des Push-Dienstes für die Testmeldung; merkt sich, an welche Geräte gesendet wurde.
+     *
+     * @param  list<string>  $sentTo
+     */
+    private function pushServiceAnswers(MessageSentReport $report, array &$sentTo = []): void
     {
-        Notification::fake();
+        $this->mock(WebPushChannel::class)->shouldReceive('send')->andReturnUsing(function ($notifiable) use ($report, &$sentTo) {
+            $sentTo = $notifiable->routeNotificationFor('WebPush')->pluck('endpoint')->all();
+
+            return [$report];
+        });
+    }
+
+    public function test_test_message_goes_only_to_this_device(): void
+    {
+        $verwalter = User::factory()->verwalter()->create();
+        $verwalter->updatePushSubscription(self::ENDPOINT, 'key', 'token');
+        $verwalter->updatePushSubscription('https://fcm.googleapis.com/fcm/send/laptop', 'key', 'token');
+        $sentTo = [];
+        $this->pushServiceAnswers(new MessageSentReport(new Request('POST', self::ENDPOINT)), $sentTo);
+
+        $response = $this->actingAs($verwalter)->postJson('/admin/push-subscriptions/test', ['endpoint' => self::ENDPOINT]);
+
+        $response->assertOk()->assertJson(['message' => 'Vom Push-Dienst angenommen. Erscheint keine Meldung, sind Mitteilungen auf dem Gerät ausgeschaltet.']);
+        $this->assertSame([self::ENDPOINT], $sentTo);
+    }
+
+    public function test_test_message_shows_why_push_service_rejected_it(): void
+    {
+        $verwalter = User::factory()->verwalter()->create();
+        $verwalter->updatePushSubscription(self::ENDPOINT, 'key', 'token');
+        $this->pushServiceAnswers(new MessageSentReport(new Request('POST', self::ENDPOINT), new Response(403), false, 'VAPID credentials mismatch'));
+
+        $response = $this->actingAs($verwalter)->postJson('/admin/push-subscriptions/test', ['endpoint' => self::ENDPOINT]);
+
+        $response->assertStatus(502)->assertJson(['message' => 'Der Push-Dienst hat abgelehnt (403): VAPID credentials mismatch']);
+    }
+
+    public function test_test_message_for_device_unknown_to_server_asks_to_turn_push_on_again(): void
+    {
         $verwalter = User::factory()->verwalter()->create();
         $other = User::factory()->admin()->create();
+        $other->updatePushSubscription(self::ENDPOINT, 'key', 'token');
+        $this->mock(WebPushChannel::class)->shouldNotReceive('send');
 
-        $this->actingAs($verwalter)->postJson('/admin/push-subscriptions/test')->assertOk();
+        $response = $this->actingAs($verwalter)->postJson('/admin/push-subscriptions/test', ['endpoint' => self::ENDPOINT]);
 
-        Notification::assertSentTo($verwalter, AdminPushNotification::class, fn (AdminPushNotification $notification) => $notification->title === 'Testmeldung');
-        Notification::assertNotSentTo($other, AdminPushNotification::class);
+        $response->assertUnprocessable()->assertJson(['message' => 'Dieses Gerät ist auf dem Server nicht angemeldet. Bitte «Ausschalten» und wieder «Einschalten».']);
     }
 
     public function test_profile_explains_missing_server_keys_instead_of_offering_push(): void

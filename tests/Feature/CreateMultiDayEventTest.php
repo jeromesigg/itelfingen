@@ -307,8 +307,9 @@ class CreateMultiDayEventTest extends TestCase
     public function test_calendar_shows_booked_half_days_without_booking_ids(): void
     {
         BookingScenario::create();
-        // Mo bis Mi, ohne Early Check-In / Late Check-Out: Anreise am Nachmittag, Abreise am Vormittag
-        $monday = now()->addMonths(2)->next('Monday');
+        // Mo bis Mi, ohne Early Check-In / Late Check-Out: Anreise am Nachmittag, Abreise am Vormittag.
+        // Nach allen Szenario-Buchungen (Zufallsdatum), sonst sind die Halbtage womöglich schon belegt.
+        $monday = Carbon::parse(Event::max('end_date'))->next('Monday');
         Event::factory()->confirmed()->create([
             'start_date' => $monday->toDateString(), 'end_date' => $monday->copy()->addDays(2)->toDateString(),
             'early_checkin' => false, 'late_checkout' => false,
@@ -324,7 +325,8 @@ class CreateMultiDayEventTest extends TestCase
     public function test_calendar_treats_sunday_arrival_and_departure_as_whole_days(): void
     {
         BookingScenario::create();
-        $sunday = now()->addMonths(2)->next('Sunday');
+        // Nach allen Szenario-Buchungen (Zufallsdatum), sonst ist der Sonntag womöglich von einer neuen Buchung (P) belegt.
+        $sunday = Carbon::parse(Event::max('end_date'))->next('Sunday');
         Event::factory()->confirmed()->create([
             'start_date' => $sunday->toDateString(), 'end_date' => $sunday->copy()->addWeek()->toDateString(),
             'early_checkin' => false, 'late_checkout' => false,
