@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Auth;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
 
@@ -16,6 +17,20 @@ class AuthTest extends TestCase
             ->assertRedirect();
 
         $this->assertAuthenticated();
+    }
+
+    public function test_login_form_sends_remember_me_checkbox(): void
+    {
+        $this->get('/login')
+            ->assertOk()
+            ->assertSee('<input id="remember" name="remember"', false);
+    }
+
+    public function test_remember_me_sets_long_lived_login_cookie(): void
+    {
+        $response = $this->post('/login', ['username' => 'Administrator', 'password' => 'password', 'remember' => 'on']);
+
+        $response->assertCookie(Auth::guard()->getRecallerName());
     }
 
     public function test_wrong_password_is_rejected(): void
