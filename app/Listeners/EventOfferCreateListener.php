@@ -87,7 +87,7 @@ class EventOfferCreateListener
                 'api_reference' => $event['id'],
                 'positions' => $positions_array,
             ];
-            // Fehler von Bexio wirft BexioApiService selbst (RequestException bzw. BexioException).
+            // Fehler von Bexio wirft BexioApiService selbst (BexioException).
             $offer = app(BexioApiService::class)->post('kb_offer', $data);
             $event->update([
                 'bexio_offer_id' => $offer['id'],

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ContractState;
 use App\Models\Contact;
 use App\Models\Event;
 use App\Models\User;
@@ -35,6 +36,18 @@ class AdminDashboardTest extends TestCase
         $response->assertOk()
             ->assertSee('Eva Graf')
             ->assertDontSee('Eva Graf -');
+    }
+
+    public function test_next_stays_show_whether_invoice_was_sent(): void
+    {
+        $this->travelTo('2026-03-02 10:00:00');
+        Event::factory()->confirmed()->create(['firstname' => 'Offen', 'start_date' => '2026-02-20', 'end_date' => '2026-02-22']);
+        Event::factory()->confirmed()->create(['firstname' => 'Gestellt', 'start_date' => '2026-02-25', 'end_date' => '2026-02-27', 'contract_status_id' => ContractState::RechnungVersendet]);
+
+        $response = $this->actingAs(User::factory()->admin()->create())->get('/admin');
+
+        $response->assertOk()
+            ->assertSeeInOrder(['Offen', '✗ Rechnung offen', 'Gestellt', '✓ Rechnung gestellt']);
     }
 
     public function test_tasks_beyond_five_are_collapsed(): void

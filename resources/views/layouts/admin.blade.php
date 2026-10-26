@@ -52,6 +52,7 @@
           @yield('content')
         </main>
         @include('includes/admin_bottomnav')
+        @include('includes/admin_toast')
       </div>
       @stack('scripts')
     </body>

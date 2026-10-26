@@ -29,7 +29,7 @@ class EventInvoiceCreateListener
     {
         //
         $event = $eventInvoice->event;
-        // Fehler von Bexio wirft BexioApiService selbst (RequestException bzw. BexioException).
+        // Fehler von Bexio wirft BexioApiService selbst (BexioException).
         $invoice = app(BexioApiService::class)->postAction('kb_offer/'.$event['bexio_offer_id'].'/invoice');
         $event->update(['bexio_invoice_id' => $invoice['id']]);
 

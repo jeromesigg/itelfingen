@@ -40,7 +40,7 @@ $visibleTasks = 5;
         @else
         <ul class="divide-y divide-gray-100 dark:divide-gray-700">
             @foreach ($tasks->take($visibleTasks) as $task)
-            <x-dashboard-task :task="$task" />
+            <li><x-dashboard-task :task="$task" /></li>
             @endforeach
         </ul>
         @if ($tasks->count() > $visibleTasks)
@@ -51,7 +51,7 @@ $visibleTasks = 5;
             </summary>
             <ul class="divide-y divide-gray-100 dark:divide-gray-700">
                 @foreach ($tasks->skip($visibleTasks) as $task)
-                <x-dashboard-task :task="$task" />
+                <li><x-dashboard-task :task="$task" /></li>
                 @endforeach
             </ul>
         </details>
@@ -77,9 +77,11 @@ $visibleTasks = 5;
             [$badge, $badgeClass] = [$days === 1 ? 'Morgen' : "in $days T.", 'bg-blue-100 text-blue-800 dark:bg-blue-900
             dark:text-blue-300'];
             }
+            // Rechnung gestellt = nach dem Aufenthalt versendet (vorher nur erstellt, siehe Wochen-Mail)
+            $invoiceSent = $event->contractState()->isAtLeast(App\Enums\ContractState::RechnungVersendet);
             $checks = $event->bookingState() === App\Enums\BookingState::Bestaetigt
             ? ['Infos' => $event->last_info, 'Putzmail' => $event->cleaning_mail, $event->code !== null ? $event->code :
-            'Code' => $event->code !== null]
+            'Code' => $event->code !== null, $invoiceSent ? 'Rechnung gestellt' : 'Rechnung offen' => $invoiceSent]
             : [];
             @endphp
             <li class="flex items-center gap-3 px-4 py-3">
