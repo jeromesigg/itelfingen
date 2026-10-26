@@ -27,7 +27,7 @@ function browserSubscription(endpoint) {
 async function setup({ permission = 'default', subscribed = false, serverOk = true } = {}) {
     document.head.innerHTML = '<meta name="csrf-token" content="csrf-123">';
     document.body.innerHTML = `
-        <p data-push-status>Wird geprüft …</p>
+        <output data-push-status>Wird geprüft …</output>
         <button data-action="push-subscribe" hidden>Einschalten</button>
         <button data-action="push-unsubscribe" hidden>Ausschalten</button>
         <button data-action="push-test" hidden>Testmeldung senden</button>

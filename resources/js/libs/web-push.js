@@ -38,8 +38,8 @@ export function pushState({ supported, ios, standalone, permission, subscribed }
  * @returns {Uint8Array}
  */
 export function applicationServerKey(key) {
-    const base64 = (key + '='.repeat((4 - (key.length % 4)) % 4)).replace(/-/g, '+').replace(/_/g, '/');
-    return Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
+    const base64 = (key + '='.repeat((4 - (key.length % 4)) % 4)).replaceAll('-', '+').replaceAll('_', '/');
+    return Uint8Array.from(atob(base64), (character) => character.codePointAt(0));
 }
 
 /**

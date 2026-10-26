@@ -106,5 +106,5 @@ function initPushToggle(config) {
         }
     }));
 
-    render();
+    render().catch((error) => console.error('Push-Meldungen:', error));
 }

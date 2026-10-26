@@ -53,7 +53,7 @@
                     <h4 id="push-heading" class="text-xl font-bold dark:text-white">Push-Meldungen</h4>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Meldung auf diesem Gerät bei neuen Buchungsanfragen, Kontaktanfragen und Bewerbungen. Gilt nur für das Gerät, auf dem du es einschaltest.</p>
                     @if ($pushConfig['vapidPublicKey'])
-                        <p data-push-status role="status" class="mt-3 text-sm dark:text-white">Wird geprüft …</p>
+                        <output data-push-status class="mt-3 block text-sm dark:text-white">Wird geprüft …</output>
                         <div class="mt-3 flex flex-wrap gap-2">
                             <x-forms.button data-action="push-subscribe" hidden>Einschalten</x-forms.button>
                             <x-forms.button data-action="push-unsubscribe" variant="danger" hidden>Ausschalten</x-forms.button>
