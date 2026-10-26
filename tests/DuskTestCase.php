@@ -53,6 +53,8 @@ abstract class DuskTestCase extends BaseTestCase
             $this->shouldStartMaximized() ? '--start-maximized' : '--window-size=1920,1080',
             '--disable-search-engine-choice-screen',
             '--disable-smooth-scrolling',
+            // Service Worker laufen sonst nur über HTTPS (Admin-App, siehe AdminWebAppTest)
+            '--unsafely-treat-insecure-origin-as-secure='.config('app.url'),
         ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
             return $items->merge(['--disable-gpu', '--headless=new']);
         })->all());
