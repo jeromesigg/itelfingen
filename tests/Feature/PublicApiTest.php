@@ -83,6 +83,18 @@ class PublicApiTest extends TestCase
         }
     }
 
+    public function test_phone_number_lookup_links_to_booking_edit_page(): void
+    {
+        $event = Event::factory()->create(['phonenumber_query' => '0791234567']);
+
+        $response = $this->getJson('/api/phone_number/'.self::TOKEN.'/number/0791234567');
+
+        $response->assertOk()->assertJson([
+            'id' => $event->id,
+            'url' => 'http://localhost/admin/events/'.$event->id.'/edit',
+        ]);
+    }
+
     /** @return array<string, array{0: list<array{0: string, 1: string}>, 1: string}> */
     public static function repeatGuestBookings(): array
     {

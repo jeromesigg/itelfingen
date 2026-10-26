@@ -18,6 +18,7 @@ export default defineConfig({
                 'resources/js/editor.js',
                 'resources/js/charts.js',
                 'resources/js/admin/event-form.js',
+                'resources/js/admin/push-toggle.js',
             ],
             refresh: true
         }),

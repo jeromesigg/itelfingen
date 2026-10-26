@@ -87,6 +87,10 @@ Route::group(['middleware' => 'role:verwalter'], function () use ($crudOnIndex) 
     Route::get('/admin/newsletter/export-members', ['as' => 'newsletter.exportMembers', 'uses' => 'NewsletterController@exportMembers']);
     Route::get('/admin/newsletter/import', ['as' => 'newsletter.import', 'uses' => 'NewsletterController@import']);
     Route::resource('admin/newsletter', 'NewsletterController')->only(['index', 'edit', 'update', 'destroy']);
+    // Push-Meldungen auf dem eigenen Gerät (Schalter im Profil)
+    Route::post('admin/push-subscriptions', 'PushSubscriptionController@store')->name('admin.push-subscriptions.store');
+    Route::delete('admin/push-subscriptions', 'PushSubscriptionController@destroy')->name('admin.push-subscriptions.destroy');
+    Route::post('admin/push-subscriptions/test', 'PushSubscriptionController@test')->name('admin.push-subscriptions.test');
     Route::resource('admin/checkpoints', 'AdminCheckpointController')->only($crudOnIndex);
     Route::resource('admin/rooms', 'AdminRoomsController')->only($crudOnIndex);
 });

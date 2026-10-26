@@ -67,6 +67,15 @@ class ScheduledTasksTest extends TestCase
         $this->assertSame($expression, $events->first()->expression);
     }
 
+    public function test_queue_worker_runs_every_minute_without_overlapping(): void
+    {
+        $workers = collect(app(Schedule::class)->events())->filter(fn ($e) => str_contains((string) $e->command, 'queue:work --stop-when-empty'));
+
+        $this->assertCount(1, $workers);
+        $this->assertSame('* * * * *', $workers->first()->expression);
+        $this->assertTrue($workers->first()->withoutOverlapping);
+    }
+
     /** @return array<string, array{0: string}> */
     public static function commands(): array
     {

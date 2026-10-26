@@ -22,3 +22,9 @@ Schedule::command('task:monthly')
     ->monthlyOn(23, '02:00')
     ->onSuccess(fn () => HealthCheck::ping('job_monthly'))
     ->onFailure(fn () => HealthCheck::ping('job_monthly', fail: true));
+
+// Hintergrund-Aufträge (Push-Meldungen), aktiv erst mit QUEUE_CONNECTION=database; bei sync gibt es nichts abzuarbeiten.
+// Kein Dauerprozess nötig: der Cron startet schedule:run jede Minute, der Worker leert die Warteschlange und beendet sich.
+Schedule::command('queue:work --stop-when-empty --max-time=50 --tries=3')
+    ->everyMinute()
+    ->withoutOverlapping();

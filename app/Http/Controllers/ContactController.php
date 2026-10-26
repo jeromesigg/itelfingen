@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use App\Notifications\ContactCreatedNotification;
+use App\Services\AdminPush;
 use Illuminate\Http\Request;
 use Notification;
 use Validator;
@@ -11,7 +12,7 @@ use Validator;
 class ContactController extends Controller
 {
     //
-    public function store(Request $request)
+    public function store(Request $request, AdminPush $adminPush)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -32,6 +33,7 @@ class ContactController extends Controller
 
         $contact = Contact::create($request->only(['name', 'email', 'subject', 'content']));
         Notification::send($contact, new ContactCreatedNotification($contact));
+        $adminPush->contactCreated($contact);
 
         return redirect()->to(url()->previous().'#contact')->with('success_contact', 'Vielen Dank für die Nachricht. Wir werden uns so schnell wie möglich melden.');
     }
