@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminEventController;
+use App\Http\Controllers\WebManifestController;
 use App\Services\BexioAuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,8 @@ Route::get('applications', 'ApplicationController@index')->name('applications');
 Route::post('applications/store', ['as' => 'application.store', 'uses' => 'ApplicationController@store'])->middleware(['throttle:public-forms', ProtectAgainstSpam::class]);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('about_us', 'HomeController@about_us')->name('about_us');
+// Admin-Bereich als installierbare App (Service Worker liegt statisch unter public/admin-sw.js)
+Route::get('app.webmanifest', WebManifestController::class)->name('webmanifest');
 Route::middleware('throttle:booking-login')->group(function () {
     Route::get('/bookings/login', 'HomeController@bookings_login')->name('bookings.login');
     Route::post('/bookings/login', 'HomeController@bookings_check')->name('bookings.check');

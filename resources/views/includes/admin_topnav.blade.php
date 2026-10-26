@@ -1,4 +1,4 @@
-<nav class="bg-norway border-b border-norway px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
+<nav class="bg-norway border-b border-norway px-4 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
   <div class="flex justify-between items-center gap-2">
     <div class="flex justify-start items-center min-w-0">
       <button

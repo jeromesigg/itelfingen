@@ -3,12 +3,23 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="description" content="{{env('APP_NAME')}}">
         <meta name="author" content="Jérôme Sigg">
         <meta name="robots" content="noindex,nofollow">
-        <meta name="theme-color" content="#ffffff">
+        <meta name="theme-color" content="#A5BAA5" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        {{-- Installierbare App (Manifest, Icons) und Offline-Seite --}}
+        <link rel="manifest" href="{{ route('webmanifest') }}">
+        <link rel="apple-touch-icon" href="/img/pwa/apple-touch-icon.png">
+        <meta name="apple-mobile-web-app-title" content="Itelfingen">
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/admin-sw.js', { scope: '/admin' });
+            }
+        </script>
 
         <title>{{isset($title) ? $title . ' - ' : ''}}{{config('app.name')}}</title>
 
@@ -37,7 +48,7 @@
         @include('includes/admin_topnav')
        @include('includes/admin_sidenav')
 
-        <main class="p-4 pb-24 md:pb-4 md:ml-64 h-auto min-h-screen pt-20">
+        <main class="p-4 pr-[max(1rem,env(safe-area-inset-right))] pb-24 md:pb-4 md:ml-64 h-auto min-h-screen pt-20">
           @yield('content')
         </main>
         @include('includes/admin_bottomnav')

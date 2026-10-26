@@ -4,7 +4,7 @@
  aria-label="Sidenav"
  id="drawer-navigation"
 >
- <div class="overflow-y-auto py-5 px-3 h-full bg-norway dark:bg-gray-800">
+ <div class="overflow-y-auto py-5 px-3 pl-[max(0.75rem,env(safe-area-inset-left))] h-full bg-norway dark:bg-gray-800">
 
    <ul class="space-y-2">
       <li>

@@ -65,7 +65,8 @@ class StatusDisplayTest extends TestCase
     {
         return [
             'neu, nichts erledigt' => [5, 5, false, false, false, null, ['Angebot' => false, 'Rechnung' => false, 'Putzmail' => false, 'Code' => false]],
-            'bestätigt, alles erledigt' => [10, 20, true, true, true, '4711', ['Angebot' => true, 'Rechnung' => true, 'Putzmail' => true, 'Code' => true]],
+            // Mit Türcode steht der Code selbst auf der Karte statt "Code"
+            'bestätigt, alles erledigt' => [10, 20, true, true, true, '4711', ['Angebot' => true, 'Rechnung' => true, 'Putzmail' => true, '4711' => true]],
             'eigene Termine: nur Putzmail' => [20, 5, false, false, true, null, ['Putzmail' => true]],
             'storniert: keine Prüfpunkte' => [50, 50, true, true, true, '4711', []],
         ];

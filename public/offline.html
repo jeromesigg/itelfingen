@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Keine Verbindung</title>
+    <!-- Ohne Vite und CDN: die Seite muss auch offline vollständig angezeigt werden (siehe admin-sw.js) -->
+    <style>
+        :root {
+            color-scheme: light dark;
+            --background: #f9fafb;
+            --text: #111827;
+            --muted: #4b5563;
+            --button: #657F61;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #111827;
+                --text: #f9fafb;
+                --muted: #9ca3af;
+            }
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+            background: var(--background);
+            color: var(--text);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            text-align: center;
+        }
+        img {
+            width: 96px;
+            height: 96px;
+            border-radius: 1.5rem;
+        }
+        h1 {
+            margin: 1.5rem 0 0.5rem;
+            font-size: 1.5rem;
+        }
+        p {
+            margin: 0 0 1.5rem;
+            color: var(--muted);
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: 0;
+            border-radius: 0.5rem;
+            background: var(--button);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <img src="/img/pwa/icon-192.png" alt="">
+        <h1>Keine Verbindung</h1>
+        <p>Der Admin-Bereich braucht Internet. Sobald die Verbindung wieder da ist, neu laden.</p>
+        <button type="button" onclick="location.reload()">Erneut versuchen</button>
+    </main>
+</body>
+</html>
