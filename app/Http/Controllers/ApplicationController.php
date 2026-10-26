@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\Homepage;
 use App\Models\Salutation;
 use App\Notifications\ApplicationCreatedNotification;
+use App\Services\AdminPush;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Notification;
@@ -39,7 +40,7 @@ class ApplicationController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Request $request, AdminPush $adminPush)
     {
         //
         $request->validate([
@@ -67,6 +68,7 @@ class ApplicationController extends Controller
         $application = Application::create($input);
 
         Notification::send($application, new ApplicationCreatedNotification($application));
+        $adminPush->applicationCreated($application);
 
         return redirect()->to(url()->previous())->with('success', 'Vielen Dank für deine Bewerbung. Wir werden sie überprüfen und melden uns in zwei Wochen.');
     }

@@ -180,7 +180,7 @@ class BookingCalendarTest extends TestCase
         ]);
 
         $html = $this->actingAs($s->user('verwalter'))->get('/admin/events')->assertOk()->getContent();
-        preg_match('/data-vue-component="booking-calendar" data-props="([^"]*)"/', $html, $match);
+        preg_match('/data-vue-component="booking-calendar"\s+data-props="([^"]*)"/', $html, $match);
         $props = json_decode(html_entity_decode($match[1] ?? ''), true);
 
         $this->assertSame('admin', $props['mode']);

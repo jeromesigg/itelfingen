@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Application;
+use App\Models\User;
+use App\Notifications\AdminPushNotification;
 use App\Notifications\ApplicationCreatedNotification;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -53,6 +55,18 @@ class ApplicationTest extends TestCase
         $this->assertSame('Erika', $application->firstname);
         $this->assertSame(8000, $application->plz);
         Notification::assertSentTo($application, ApplicationCreatedNotification::class);
+    }
+
+    public function test_application_sends_push_to_managers(): void
+    {
+        $verwalter = User::factory()->verwalter()->create();
+        $verwalter->updatePushSubscription('https://push.example.com/1', 'key', 'token');
+
+        $this->from('/applications')->post('/applications/store', $this->applicationData());
+
+        Notification::assertSentTo($verwalter, AdminPushNotification::class, fn (AdminPushNotification $notification) => $notification->title === 'Neue Bewerbung'
+            && $notification->body === 'Erika Muster'
+            && $notification->url === route('applications.show', Application::sole()->id));
     }
 
     public function test_application_form_cannot_set_internal_fields(): void

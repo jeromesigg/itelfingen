@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Models\Event;
+use App\Models\User;
+use App\Notifications\AdminPushNotification;
 use App\Notifications\EventCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
@@ -47,6 +49,17 @@ class CreateMultiDayEventTest extends TestCase
             'discount' => 0,
             'positions' => [30 => 6, 40 => 4],
         ], $overrides);
+    }
+
+    public function test_booking_sends_push_to_managers(): void
+    {
+        $verwalter = User::factory()->verwalter()->create();
+        $verwalter->updatePushSubscription('https://push.example.com/1', 'key', 'token');
+
+        $this->from(route('home'))->post('/event/create', $this->bookingData());
+
+        Notification::assertSentTo($verwalter, AdminPushNotification::class, fn (AdminPushNotification $notification) => $notification->title === 'Neue Buchungsanfrage'
+            && $notification->url === route('admin.events.edit', Event::sole()->id));
     }
 
     public function test_multi_day_booking_creates_event_with_positions(): void
@@ -171,7 +184,7 @@ class CreateMultiDayEventTest extends TestCase
     private function bookingProps(?string $html = null): array
     {
         $html ??= $this->get('/')->getContent();
-        preg_match('/data-vue-component="booking-wizard" data-props="([^"]*)"/', $html, $match);
+        preg_match('/data-vue-component="booking-wizard"\s+data-props="([^"]*)"/', $html, $match);
         $this->assertNotEmpty($match, 'Buchungsassistent nicht gefunden');
 
         return json_decode(html_entity_decode($match[1]), true);

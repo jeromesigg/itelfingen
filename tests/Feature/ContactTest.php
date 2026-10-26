@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Contact;
+use App\Models\User;
+use App\Notifications\AdminPushNotification;
 use App\Notifications\ContactCreatedNotification;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -33,6 +35,23 @@ class ContactTest extends TestCase
         $this->assertSame('Max Muster', $contact->name);
         $this->assertFalse((bool) $contact->done);
         Notification::assertSentTo($contact, ContactCreatedNotification::class);
+    }
+
+    public function test_contact_form_sends_push_to_managers(): void
+    {
+        $verwalter = User::factory()->verwalter()->create();
+        $verwalter->updatePushSubscription('https://push.example.com/1', 'key', 'token');
+
+        $this->from(route('home'))->post('/contacts', [
+            'name' => 'Max Muster',
+            'email' => 'max@example.com',
+            'subject' => 'Anfrage',
+            'content' => 'Ist das Haus im Mai frei?',
+        ]);
+
+        Notification::assertSentTo($verwalter, AdminPushNotification::class, fn (AdminPushNotification $notification) => $notification->title === 'Neue Kontaktanfrage'
+            && $notification->body === 'Max Muster · Anfrage'
+            && $notification->url === route('admin.contacts.index'));
     }
 
     public function test_contact_form_cannot_set_internal_fields(): void

@@ -64,6 +64,12 @@
       "_sweetalert2.all-ChJboSGG.js"
     ]
   },
+  "resources/js/admin/push-toggle.js": {
+    "file": "assets/push-toggle-p5cqRy--.js",
+    "name": "push-toggle",
+    "src": "resources/js/admin/push-toggle.js",
+    "isEntry": true
+  },
   "resources/js/app.js": {
     "file": "assets/app-G7a1guko.js",
     "name": "app",

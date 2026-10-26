@@ -8,6 +8,7 @@ use App\Events\EventCreated;
 use App\Models\City;
 use App\Models\Event;
 use App\Notifications\EventCreatedNotification;
+use App\Services\AdminPush;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ use Validator;
 
 class EventController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request, AdminPush $adminPush)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -68,6 +69,7 @@ class EventController extends Controller
         $event = Event::create($input);
         EventCreated::dispatch($event, false, $input['positions'] ?? []);
         Notification::send($event, new EventCreatedNotification($event));
+        $adminPush->eventCreated($event);
 
         return redirect()->to(url()->previous().'#booking')->with('success_event', 'Vielen Dank für die Buchung. Wir werden uns so schnell wie möglich melden. Schau auch in deinem Spam-Ordner nach.');
     }

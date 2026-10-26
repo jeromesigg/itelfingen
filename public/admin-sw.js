@@ -39,3 +39,27 @@ self.addEventListener('fetch', (event) => {
         }
     })());
 });
+
+// Push-Meldung anzeigen (gesendet von App\Notifications\AdminPushNotification)
+self.addEventListener('push', (event) => {
+    const message = event.data ? event.data.json() : {};
+    const { title = 'Ferienhaus Itelfingen', ...options } = message;
+
+    event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// Tipp auf die Meldung: offenes Fenster der App wiederverwenden, sonst neu öffnen
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const url = new URL(event.notification.data?.url ?? '/admin', self.location.origin).href;
+
+    event.waitUntil((async () => {
+        // Nur Fenster unter /admin: navigate() geht nur bei Seiten, die dieser Service Worker steuert
+        const [appWindow] = await self.clients.matchAll({ type: 'window' });
+        if (appWindow) {
+            await appWindow.focus();
+            return appWindow.navigate(url);
+        }
+        return self.clients.openWindow(url);
+    })());
+});

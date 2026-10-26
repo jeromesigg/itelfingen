@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\BookingState;
 use App\Enums\ContractState;
 use App\Models\Event;
 use App\Models\User;
@@ -105,6 +106,21 @@ class BookingChecksTest extends TestCase
         $this->assertSame(['Angebot nachfassen'], $this->titlesFor($stale));
         $this->assertStringContainsString('versendet 20.12.2025', collect($this->tasks())->firstWhere('title', 'Angebot nachfassen')['subtitle']);
         $this->assertSame([], $this->titlesFor($recent));
+    }
+
+    public function test_own_booking_with_old_offer_is_not_followed_up(): void
+    {
+        $event = Event::factory()->create(['event_status_id' => BookingState::Eigene, 'contract_status_id' => ContractState::AngebotVersendet, 'cleaning_mail' => true]);
+        $this->offerSentAt($event, '2025-12-20');
+
+        $this->assertSame([], $this->titlesFor($event));
+    }
+
+    public function test_own_booking_without_cleaning_mail_asks_to_send_it(): void
+    {
+        $event = Event::factory()->create(['event_status_id' => BookingState::Eigene, 'start_date' => '2026-03-07', 'end_date' => '2026-03-08', 'cleaning_mail' => false]);
+
+        $this->assertSame(['Putzmail senden'], $this->titlesFor($event));
     }
 
     public function test_urgent_tasks_come_first(): void

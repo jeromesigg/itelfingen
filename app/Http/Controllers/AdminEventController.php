@@ -427,6 +427,9 @@ class AdminEventController extends Controller
                 'firstname' => $event['firstname'],
                 'name' => $event['name'],
                 'date' => Carbon::parse($event['start_date'])->format('d.m.Y').' - '.Carbon::parse($event['end_date'])->format('d.m.Y'),
+                // Für die Anruf-App: Tipp auf die Meldung öffnet die Buchung (in der installierten Admin-App)
+                'id' => $event->id,
+                'url' => route('admin.events.edit', $event->id),
             ]);
         }
     }

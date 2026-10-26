@@ -111,7 +111,7 @@ class AdminTableActionsTest extends TestCase
         $s = BookingScenario::create();
 
         $html = $this->actingAs($s->user('verwalter'))->get('/admin/events')->assertOk()->getContent();
-        preg_match('/data-vue-component="events-table" data-props="([^"]*)"/', $html, $match);
+        preg_match('/data-vue-component="events-table"\s+data-props="([^"]*)"/', $html, $match);
         $props = json_decode(html_entity_decode($match[1] ?? ''), true);
 
         $this->assertContains('Offen', $props['contractStatuses']);

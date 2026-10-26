@@ -45,7 +45,7 @@ class BookingChecks
     }
 
     /**
-     * Angebot vor mehr als zwei Monaten versendet und noch nicht angenommen.
+     * Angebot vor mehr als zwei Monaten versendet und noch nicht angenommen (ohne eigene Termine, die haben kein Angebot).
      *
      * @return Collection<int, Event>
      */
@@ -54,6 +54,7 @@ class BookingChecks
         return Event::with('notifications')
             ->where('start_date', '>', Carbon::today())
             ->where('contract_status_id', ContractState::AngebotVersendet)
+            ->whereIn('event_status_id', [BookingState::Neu, BookingState::Bestaetigt])
             ->orderBy('start_date')->get()
             ->filter(fn (Event $event) => $this->staleOfferSentAt($event) !== null)
             ->values();
@@ -72,13 +73,13 @@ class BookingChecks
     }
 
     /**
-     * Bestätigte Buchungen der nächsten vier Monate ohne Reinigungs-Mail.
+     * Bestätigte Buchungen und eigene Termine der nächsten vier Monate ohne Reinigungs-Mail.
      *
      * @return Collection<int, Event>
      */
     public function withoutCleaningMail(): Collection
     {
-        return $this->upcomingConfirmed()->where('cleaning_mail', false)->orderBy('start_date')->get();
+        return $this->upcoming([BookingState::Bestaetigt, BookingState::Eigene])->where('cleaning_mail', false)->orderBy('start_date')->get();
     }
 
     /**
@@ -88,7 +89,7 @@ class BookingChecks
      */
     public function withoutDoorCode(): Collection
     {
-        return $this->upcomingConfirmed()->whereNull('code')->orderBy('start_date')->get();
+        return $this->upcoming([BookingState::Bestaetigt])->whereNull('code')->orderBy('start_date')->get();
     }
 
     /**
@@ -176,13 +177,15 @@ class BookingChecks
     }
 
     /**
-     * Bestätigte Buchungen mit Anreise in den nächsten vier Monaten.
+     * Buchungen mit Anreise in den nächsten vier Monaten.
+     *
+     * @param  list<BookingState>  $states
      */
-    private function upcomingConfirmed(): Builder
+    private function upcoming(array $states): Builder
     {
         return Event::where('start_date', '<=', Carbon::today()->addMonths(4))
             ->where('start_date', '>', Carbon::today())
-            ->where('event_status_id', BookingState::Bestaetigt);
+            ->whereIn('event_status_id', $states);
     }
 
     /**
