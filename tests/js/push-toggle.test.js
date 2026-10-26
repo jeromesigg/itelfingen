@@ -24,7 +24,7 @@ function browserSubscription(endpoint) {
 }
 
 /** Profil-Abschnitt wie in admin/users/edit.blade.php aufbauen und das Modul frisch laden. */
-async function setup({ permission = 'default', subscribed = false, serverOk = true } = {}) {
+async function setup({ permission = 'default', subscribed = false, serverOk = true, serverMessage = null } = {}) {
     document.head.innerHTML = '<meta name="csrf-token" content="csrf-123">';
     document.body.innerHTML = `
         <output data-push-status>Wird geprüft …</output>
@@ -44,7 +44,7 @@ async function setup({ permission = 'default', subscribed = false, serverOk = tr
     vi.stubGlobal('PushManager', { supportedContentEncodings: ['aes128gcm', 'aesgcm'] });
     vi.stubGlobal('Notification', { permission, requestPermission: vi.fn(async () => 'granted') });
     Object.defineProperty(navigator, 'serviceWorker', { value: { ready: Promise.resolve({ pushManager }) }, configurable: true });
-    fetchMock = vi.fn(async () => ({ ok: serverOk, status: serverOk ? 200 : 500 }));
+    fetchMock = vi.fn(async () => ({ ok: serverOk, status: serverOk ? 200 : 502, json: async () => ({ message: serverMessage }) }));
     vi.stubGlobal('fetch', fetchMock);
 
     vi.resetModules();
@@ -112,5 +112,26 @@ describe('push-toggle', () => {
             body: JSON.stringify({ endpoint: 'https://push.example.com/alt' }),
         }));
         expect(status()).toBe('Auf diesem Gerät ausgeschaltet.');
+    });
+
+    it('sendet die Testmeldung an dieses Gerät und zeigt die Antwort des Servers', async () => {
+        await setup({ permission: 'granted', subscribed: true, serverMessage: 'Vom Push-Dienst angenommen.' });
+
+        await click('test');
+
+        expect(fetchMock).toHaveBeenCalledWith('/admin/push-subscriptions/test', expect.objectContaining({
+            method: 'POST',
+            body: JSON.stringify({ endpoint: 'https://push.example.com/alt' }),
+        }));
+        expect(status()).toBe('Vom Push-Dienst angenommen.');
+    });
+
+    it('zeigt den Grund, wenn der Push-Dienst die Testmeldung ablehnt', async () => {
+        await setup({ permission: 'granted', subscribed: true, serverOk: false, serverMessage: 'Der Push-Dienst hat abgelehnt (403): VAPID credentials mismatch' });
+
+        await click('test');
+
+        expect(status()).toBe('Der Push-Dienst hat abgelehnt (403): VAPID credentials mismatch');
+        expect(button('unsubscribe').hidden).toBe(false);
     });
 });

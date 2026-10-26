@@ -6,9 +6,16 @@ use App\Models\Event;
 use App\Models\User;
 use App\Notifications\AdminPushNotification;
 use App\Services\AdminPush;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Exceptions;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Minishlink\WebPush\MessageSentReport;
+use Mockery;
+use NotificationChannels\WebPush\Events\NotificationFailed;
 use NotificationChannels\WebPush\WebPushChannel;
+use NotificationChannels\WebPush\WebPushMessage;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -69,6 +76,21 @@ class AdminPushTest extends TestCase
 
         $this->artisan('queue:work --stop-when-empty --max-time=50 --tries=3')->assertSuccessful();
         $this->assertDatabaseCount('jobs', 0);
+    }
+
+    public function test_rejected_push_is_logged_with_reason(): void
+    {
+        Log::spy();
+        $verwalter = $this->withPush(User::factory()->verwalter()->create());
+        $subscription = $verwalter->pushSubscriptions()->first();
+        $report = new MessageSentReport(new Request('POST', $subscription->endpoint), new Response(403), false, 'VAPID credentials mismatch');
+
+        event(new NotificationFailed($report, $subscription, new WebPushMessage));
+
+        Log::shouldHaveReceived('warning')->with('Push-Meldung abgelehnt', Mockery::on(fn (array $context) => $context['user_id'] === $verwalter->id
+            && $context['push_service'] === 'push.example.com'
+            && $context['status'] === 403
+            && $context['reason'] === 'VAPID credentials mismatch'));
     }
 
     public function test_failing_push_is_reported_instead_of_thrown(): void

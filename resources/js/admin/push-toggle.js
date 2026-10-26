@@ -49,9 +49,11 @@ function initPushToggle(config) {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
             },
             body: JSON.stringify(body),
-        }).then((response) => {
+        }).then(async (response) => {
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                // Meldung des Servers (z. B. Antwort des Push-Dienstes) anzeigen, sonst nur den Status
+                const { message } = await response.json().catch(() => ({}));
+                throw new Error(message ?? `HTTP ${response.status}`);
             }
             return response;
         });
@@ -89,8 +91,13 @@ function initPushToggle(config) {
             return render();
         },
         async 'push-test'() {
-            await send('POST', config.testUrl);
-            status.textContent = 'Testmeldung gesendet. Sie sollte in wenigen Sekunden erscheinen.';
+            const subscription = await currentSubscription();
+            try {
+                const response = await send('POST', config.testUrl, { endpoint: subscription?.endpoint });
+                status.textContent = (await response.json()).message;
+            } catch (error) {
+                status.textContent = error.message;
+            }
         },
     };
 
@@ -100,7 +107,7 @@ function initPushToggle(config) {
             await actions[button.dataset.action]();
         } catch (error) {
             console.error('Push-Meldungen:', error);
-            await render('Das hat nicht geklappt. Bitte Seite neu laden und nochmals versuchen.');
+            await render(`Das hat nicht geklappt (${error.message}). Bitte Seite neu laden und nochmals versuchen.`);
         } finally {
             button.disabled = false;
         }

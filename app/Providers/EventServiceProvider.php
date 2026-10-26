@@ -16,9 +16,11 @@ use App\Listeners\EventInvoiceCreateListener;
 use App\Listeners\EventInvoiceSendListener;
 use App\Listeners\EventOfferCreateListener;
 use App\Listeners\EventOfferSendListener;
+use App\Listeners\LogFailedPushNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use NotificationChannels\WebPush\Events\NotificationFailed;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         EventOfferSend::class => [
             EventOfferSendListener::class,
+        ],
+        NotificationFailed::class => [
+            LogFailedPushNotification::class,
         ],
         EventInvoiceCreate::class => [
             EventInvoiceCreateListener::class,
