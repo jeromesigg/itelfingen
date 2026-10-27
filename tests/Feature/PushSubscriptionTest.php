@@ -6,6 +6,10 @@ use App\Models\User;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Minishlink\WebPush\MessageSentReport;
+use Minishlink\WebPush\Subscription;
+use Minishlink\WebPush\WebPush;
+use Mockery;
+use NotificationChannels\WebPush\ReportHandler;
 use NotificationChannels\WebPush\WebPushChannel;
 use Tests\TestCase;
 
@@ -68,17 +72,19 @@ class PushSubscriptionTest extends TestCase
     }
 
     /**
-     * Antwort des Push-Dienstes für die Testmeldung; merkt sich, an welche Geräte gesendet wurde.
+     * Antwort des Push-Dienstes für die Testmeldung. Nur der Versand ins Internet (WebPush) ist nachgebaut,
+     * der Kanal des Pakets läuft echt; merkt sich, an welche Geräte gesendet wurde.
      *
      * @param  list<string>  $sentTo
      */
     private function pushServiceAnswers(MessageSentReport $report, array &$sentTo = []): void
     {
-        $this->mock(WebPushChannel::class)->shouldReceive('send')->andReturnUsing(function ($notifiable) use ($report, &$sentTo) {
-            $sentTo = $notifiable->routeNotificationFor('WebPush')->pluck('endpoint')->all();
-
-            return [$report];
+        $webPush = Mockery::mock(WebPush::class);
+        $webPush->shouldReceive('queueNotification')->andReturnUsing(function (Subscription $subscription) use (&$sentTo) {
+            $sentTo[] = $subscription->getEndpoint();
         });
+        $webPush->shouldReceive('flush')->andReturnUsing(fn () => yield $report);
+        $this->app->instance(WebPushChannel::class, new WebPushChannel($webPush, app(ReportHandler::class)));
     }
 
     public function test_test_message_goes_only_to_this_device(): void

@@ -12,8 +12,11 @@ use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Minishlink\WebPush\MessageSentReport;
+use Minishlink\WebPush\Subscription;
+use Minishlink\WebPush\WebPush;
 use Mockery;
 use NotificationChannels\WebPush\Events\NotificationFailed;
+use NotificationChannels\WebPush\ReportHandler;
 use NotificationChannels\WebPush\WebPushChannel;
 use NotificationChannels\WebPush\WebPushMessage;
 use RuntimeException;
@@ -68,14 +71,21 @@ class AdminPushTest extends TestCase
     {
         config(['queue.default' => 'database']);
         $verwalter = $this->withPush(User::factory()->verwalter()->create());
-        $channel = $this->mock(WebPushChannel::class);
-        $channel->shouldReceive('send')->once()->withArgs(fn (User $user, AdminPushNotification $notification) => $user->is($verwalter) && $notification->title === 'Neue Buchungsanfrage');
+        // Nur der Versand ins Internet ist nachgebaut, der Kanal des Pakets läuft echt
+        $sent = [];
+        $webPush = Mockery::mock(WebPush::class);
+        $webPush->shouldReceive('queueNotification')->andReturnUsing(function (Subscription $subscription, string $payload) use (&$sent) {
+            $sent[$subscription->getEndpoint()] = json_decode($payload, true)['title'];
+        });
+        $webPush->shouldReceive('flush')->andReturnUsing(fn () => yield new MessageSentReport(new Request('POST', 'https://push.example.com/'.$verwalter->id)));
+        $this->app->instance(WebPushChannel::class, new WebPushChannel($webPush, app(ReportHandler::class)));
 
         app(AdminPush::class)->eventCreated(Event::factory()->create());
         $this->assertDatabaseCount('jobs', 1);
 
         $this->artisan('queue:work --stop-when-empty --max-time=50 --tries=3')->assertSuccessful();
         $this->assertDatabaseCount('jobs', 0);
+        $this->assertSame(['https://push.example.com/'.$verwalter->id => 'Neue Buchungsanfrage'], $sent);
     }
 
     public function test_rejected_push_is_logged_with_reason(): void
