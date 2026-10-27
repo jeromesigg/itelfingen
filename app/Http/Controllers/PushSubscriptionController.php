@@ -51,15 +51,16 @@ class PushSubscriptionController extends Controller
     public function test(Request $request): JsonResponse
     {
         $validated = $request->validate(['endpoint' => ['required', 'string']]);
-        $subscription = $request->user()->pushSubscriptions()->where('endpoint', $validated['endpoint'])->first();
-        if (! $subscription) {
+        // Eloquent-Collection: der Kanal des Pakets verlangt genau diesen Typ
+        $subscriptions = $request->user()->pushSubscriptions()->where('endpoint', $validated['endpoint'])->get();
+        if ($subscriptions->isEmpty()) {
             return response()->json(['message' => 'Dieses Gerät ist auf dem Server nicht angemeldet. Bitte «Ausschalten» und wieder «Einschalten».'], 422);
         }
 
         $notification = new AdminPushNotification('Testmeldung', 'Push-Meldungen funktionieren auf diesem Gerät.', url('/admin'));
         try {
             // Erst hier auflösen: ungültige VAPID-Schlüssel scheitern schon beim Erzeugen des Kanals
-            [$report] = app(WebPushChannel::class)->send((new AnonymousNotifiable)->route('WebPush', collect([$subscription])), $notification);
+            [$report] = app(WebPushChannel::class)->send((new AnonymousNotifiable)->route('WebPush', $subscriptions), $notification);
         } catch (Throwable $exception) {
             report($exception);
 
