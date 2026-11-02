@@ -131,6 +131,17 @@ class BookingChecksTest extends TestCase
         $this->assertSame(['Rechnung fehlt', 'Angebot versenden'], array_column($this->tasks(), 'title'));
     }
 
+    public function test_external_booking_appears_in_tasks_only_eight_days_after_creation(): void
+    {
+        $event = Event::factory()->create(['contract_status_id' => ContractState::AngebotErstellt, 'external' => true]);
+
+        $this->travel(BookingChecks::EXTERNAL_PROVISIONAL_DAYS - 1)->days();
+        $this->assertSame([], $this->titlesFor($event));
+
+        $this->travel(1)->days();
+        $this->assertSame(['Angebot versenden'], $this->titlesFor($event));
+    }
+
     private function offerSentAt(Event $event, string $date): void
     {
         $event->notifications()->create([

@@ -20,6 +20,9 @@ class BookingChecks
     /** Ab so vielen Tagen vor der Anreise wird ein fehlender Türcode oder ein fehlendes Putzmail dringend. */
     public const URGENT_DAYS = 14;
 
+    /** So viele Tage nach der Erfassung gilt eine externe Buchung noch als provisorisch und erscheint nicht in den Aufgaben. */
+    public const EXTERNAL_PROVISIONAL_DAYS = 8;
+
     /**
      * Noch kein Angebot erstellt (ohne eigene Termine).
      *
@@ -154,17 +157,18 @@ class BookingChecks
     public function dashboardTasks(): Collection
     {
         $startsSoon = fn (Event $event) => Carbon::parse($event->start_date)->lte(Carbon::today()->addDays(self::URGENT_DAYS));
+        $settled = fn (Collection $events) => $events->reject(fn (Event $event) => $this->isProvisional($event));
 
         return collect()
-            ->concat($this->unprocessed()->map(fn (Event $event) => $this->eventTask(
+            ->concat($settled($this->unprocessed())->map(fn (Event $event) => $this->eventTask(
                 $event, $event->bookingState() === BookingState::Neu ? 'Neue Buchung bearbeiten' : 'Angebot erstellen', $event->bookingState() === BookingState::Neu)))
-            ->concat($this->offersNotSent()->map(fn (Event $event) => $this->eventTask($event, 'Angebot versenden', false)))
-            ->concat($this->staleOffers()->map(fn (Event $event) => $this->eventTask(
+            ->concat($settled($this->offersNotSent())->map(fn (Event $event) => $this->eventTask($event, 'Angebot versenden', false)))
+            ->concat($settled($this->staleOffers())->map(fn (Event $event) => $this->eventTask(
                 $event, 'Angebot nachfassen', false, 'versendet '.$this->staleOfferSentAt($event)->format('d.m.Y'))))
-            ->concat($this->withoutDoorCode()->map(fn (Event $event) => $this->eventTask($event, 'Türcode fehlt', $startsSoon($event), $this->untilStart($event))))
-            ->concat($this->withoutCleaningMail()->map(fn (Event $event) => $this->eventTask($event, 'Putzmail senden', $startsSoon($event), $this->untilStart($event))))
-            ->concat($this->withoutInvoice()->map(fn (Event $event) => $this->eventTask($event, 'Rechnung fehlt', true)))
-            ->concat($this->withoutResponsibleUser()->map(fn (Event $event) => $this->eventTask($event, 'Person zuweisen', false)))
+            ->concat($settled($this->withoutDoorCode())->map(fn (Event $event) => $this->eventTask($event, 'Türcode fehlt', $startsSoon($event), $this->untilStart($event))))
+            ->concat($settled($this->withoutCleaningMail())->map(fn (Event $event) => $this->eventTask($event, 'Putzmail senden', $startsSoon($event), $this->untilStart($event))))
+            ->concat($settled($this->withoutInvoice())->map(fn (Event $event) => $this->eventTask($event, 'Rechnung fehlt', true)))
+            ->concat($settled($this->withoutResponsibleUser())->map(fn (Event $event) => $this->eventTask($event, 'Person zuweisen', false)))
             ->concat($this->openContacts()->map(fn (Contact $contact) => [
                 'title' => 'Anfrage beantworten',
                 'subtitle' => $contact->name.' · '.Carbon::parse($contact->created_at)->diffForHumans(),
@@ -174,6 +178,14 @@ class BookingChecks
             ]))
             ->sortBy([['urgent', 'desc'], fn (array $a, array $b) => $a['date'] <=> $b['date']])
             ->values();
+    }
+
+    /**
+     * Externe Buchung, die vor weniger als EXTERNAL_PROVISIONAL_DAYS Tagen erfasst wurde.
+     */
+    private function isProvisional(Event $event): bool
+    {
+        return $event->external && $event->created_at > Carbon::now()->subDays(self::EXTERNAL_PROVISIONAL_DAYS);
     }
 
     /**

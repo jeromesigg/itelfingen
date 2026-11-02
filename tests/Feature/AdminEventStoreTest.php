@@ -90,6 +90,22 @@ class AdminEventStoreTest extends TestCase
         $this->assertSame('2030-11-11', substr($event->end_date, 0, 10));
         $this->assertSame(1, (int) $event->total_days);
         $this->assertCount(1, app(GoogleCalendarService::class)->bookings);
+        $this->assertSame([20, 210], $this->bexioCodes($event));
+    }
+
+    public function test_day_rate_is_not_added_as_position(): void
+    {
+        $this->store(['positions' => [20 => 1, 30 => 6, 50 => 1]]);
+
+        $this->assertSame([20, 30, 210], $this->bexioCodes(Event::where('email', 'max@example.com')->sole()));
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function bexioCodes(Event $event): array
+    {
+        return $event->positions()->with('pricelist_position')->get()->pluck('pricelist_position.bexio_code')->sort()->values()->all();
     }
 
     public function test_guest_booking_is_not_added_to_calendar_yet(): void

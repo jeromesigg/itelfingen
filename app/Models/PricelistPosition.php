@@ -10,6 +10,12 @@ class PricelistPosition extends Model
     /** "Frühbezug, Spätabgabe": je eine Pauschale für Early Check-In und Late Check-Out, ohne Rabatt. */
     public const CHECKIN_CHECKOUT_CODE = 220;
 
+    /** Tagesaufenthalte (Tagespauschale, bexio_code 50–99) gibt es nicht mehr: weder im Formular noch als Position einer Buchung. */
+    public static function isDayStay(int $bexioCode): bool
+    {
+        return $bexioCode >= 50 && $bexioCode < 100;
+    }
+
     protected $fillable = [
         'name', 'bexio_id', 'bexio_code', 'price', 'archive_status_id', 'show',
     ];

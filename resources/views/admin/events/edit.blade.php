@@ -75,7 +75,7 @@ $contract = $event->contractState();
 
 <div class="grid grid-cols-1 xl:grid-cols-6 gap-6">
     <div class="xl:col-span-5 flex flex-col gap-6">
-        <x-forms.form :action="route('admin.events.update', $event)" method="PATCH" :model="$event"
+        <x-forms.form :action="route('admin.events.update', $event)" method="PATCH" :model="$event" id="EventForm"
             class="flex flex-col gap-6">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="{{ $card }}">
@@ -145,28 +145,28 @@ $contract = $event->contractState();
                     <x-forms.hidden name="total_people" />
                 </div>
                 <div
-                    class="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+                    class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
                     <div>
                         <x-forms.text label="Tage:" name="total_days" type="number" required=true />
                     </div>
                     <div>
                         <x-forms.text label="Rabatt [%]:" name="discount" type="number" />
                     </div>
-                    <div class="col-span-2 md:col-span-1">
+                    <div class="flex flex-col justify-end gap-2">
+                        <div class="flex items-center gap-2">
+                            <x-forms.text type="checkbox" name="early_checkin" value="{{$event['early_checkin']}}" />
+                            <label for="early_checkin" class="text-sm font-medium text-gray-900 dark:text-white">Early
+                                Check-In ({{ $checkin_checkout_price }} CHF)</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <x-forms.text type="checkbox" name="late_checkout" value="{{$event['late_checkout']}}" />
+                            <label for="late_checkout" class="text-sm font-medium text-gray-900 dark:text-white">Late
+                                Check-Out ({{ $checkin_checkout_price }} CHF)</label>
+                        </div>
+                    </div>
+                    <div>
                         <span class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total</span>
                         <p class="text-2xl font-bold text-gray-900 dark:text-white">CHF <span id="total"></span>.-</p>
-                    </div>
-                </div>
-                <div class="flex flex-wrap gap-6 mt-4">
-                    <div class="flex items-center gap-2">
-                        <x-forms.text type="checkbox" name="early_checkin" value="{{$event['early_checkin']}}" />
-                        <label for="early_checkin" class="text-sm font-medium text-gray-900 dark:text-white">Early
-                            Check-In ({{ $checkin_checkout_price }} CHF)</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <x-forms.text type="checkbox" name="late_checkout" value="{{$event['late_checkout']}}" />
-                        <label for="late_checkout" class="text-sm font-medium text-gray-900 dark:text-white">Late
-                            Check-Out ({{ $checkin_checkout_price }} CHF)</label>
                     </div>
                 </div>
             </div>
@@ -192,80 +192,72 @@ $contract = $event->contractState();
                             erstellen</button>
                     </div>
                     <div>
-                        <x-forms.text-area label="Bemerkungen:" name="comment" rows=5 />
+                        <x-forms.text-area label="Bemerkungen:" name="comment" rows=3 />
                     </div>
                     <div class="col-span-1 md:col-span-2">
-                        <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=5 />
+                        <x-forms.text-area label="Bemerkung (intern):" name="comment_intern" rows=3 />
                     </div>
                     <div class="col-span-1">
-                        <x-forms.text-area label="Aufmerksam geworden durch:" name="marketing_comment" rows=5 />
+                        <x-forms.text-area label="Aufmerksam geworden durch:" name="marketing_comment" rows=3 />
                     </div>
                 </div>
             </div>
-
-            <div class="{{ $card }}">
-                <h4 class="{{ $heading }}">Angebot &amp; Rechnung</h4>
-                <x-forms.text-area label="Zusatztext für Mail:" name="additional_text" rows=3 />
-                <button type="button" class="mt-2 text-sm text-orientalpink hover:underline"
-                    data-action="reminder-text">Erinnerungstext einfügen</button>
-
-                @if ($event['bexio_offer_id'] && $contract->isAtLeast(\App\Enums\ContractState::AngebotErstellt) ||
-                $event['bexio_invoice_id'] && $contract->isAtLeast(\App\Enums\ContractState::RechnungErstellt))
-                <div class="flex flex-wrap gap-4 mt-4 text-sm">
-                    @if ($event['bexio_offer_id'] && $contract->isAtLeast(\App\Enums\ContractState::AngebotErstellt))
-                    <a target="_blank" class="text-orientalpink hover:underline" href="{{ $offerUrl }}">Angebot in Bexio
-                        anzeigen</a>
-                    @endif
-                    @if ($event['bexio_invoice_id'] && $contract->isAtLeast(\App\Enums\ContractState::RechnungErstellt))
-                    <a target="_blank" class="text-orientalpink hover:underline" href="{{ $invoiceUrl }}">Rechnung in
-                        Bexio anzeigen</a>
-                    @endif
-                </div>
-                @endif
-
-                {{-- Die Werte der Buttons wertet AdminEventController::update aus (erstes Zeichen) --}}
-                <div class="flex flex-wrap gap-3 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button type="submit" class="{{ $gladegreen }}" name="submit" value="1 Buchung updaten">1 Buchung
-                        updaten</button>
-                    @switch($event['contract_status_id'])
-                    @case(\App\Enums\ContractState::Offen)
-                    <button type="submit" class="{{ $norway }}" name="submit" value="2 Angebot erstellen">2 Angebot
-                        erstellen</button>
-                    @break
-                    @case(\App\Enums\ContractState::AngebotErstellt)
-                    <button type="submit" class="{{ $ebonyclay }}" name="submit" value=" 3 Angebot versenden">3 Angebot
-                        versenden</button>
-                    @break
-                    @case(\App\Enums\ContractState::AngebotVersendet)
-                    <button type="submit" class="{{ $grannysmith }}" name="submit" value="3 Erinnerung versenden">3
-                        Erinnerung versenden</button>
-                    <button type="submit" class="{{ $ebonyclay }}" name="submit" value="4 Rechnung erstellen">4 Rechnung
-                        erstellen</button>
-                    @break
-                    @case(\App\Enums\ContractState::RechnungErstellt)
-                    <button type="submit" class="{{ $norway }}" name="submit" value="5 Rechnung versenden">5 Rechnung
-                        versenden</button>
-                    @break
-                    @case(\App\Enums\ContractState::RechnungVersendet)
-                    <button type="submit" class="{{ $ebonyclay }}" name="submit"
-                        value="6 Genossenschafts Info versenden">6 Genossenschafts Info versenden</button>
-                    @break
-                    @default
-                    @endswitch
-                </div>
-            </div>
-        </x-forms.form>
-
-        <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event" id="DeleteForm"
-            class="flex justify-end">
-            <button type="submit" name="submit-delete"
-                class="confirm-delete text-sm font-medium text-red-700 hover:underline dark:text-red-500">
-                Buchung löschen
-            </button>
         </x-forms.form>
     </div>
 
     <div class="flex flex-col gap-6">
+        <div class="{{ $card }}">
+            <h4 class="{{ $heading }}">Angebot &amp; Rechnung</h4>
+            <x-forms.text-area label="Zusatztext für Mail:" name="additional_text" rows=3 form="EventForm" />
+            <button type="button" class="mt-2 text-sm text-orientalpink hover:underline"
+                data-action="reminder-text">Erinnerungstext einfügen</button>
+
+            @if ($event['bexio_offer_id'] && $contract->isAtLeast(\App\Enums\ContractState::AngebotErstellt) ||
+            $event['bexio_invoice_id'] && $contract->isAtLeast(\App\Enums\ContractState::RechnungErstellt))
+            <div class="flex flex-wrap gap-4 mt-4 text-sm">
+                @if ($event['bexio_offer_id'] && $contract->isAtLeast(\App\Enums\ContractState::AngebotErstellt))
+                <a target="_blank" class="text-orientalpink hover:underline" href="{{ $offerUrl }}">Angebot in Bexio
+                    anzeigen</a>
+                @endif
+                @if ($event['bexio_invoice_id'] && $contract->isAtLeast(\App\Enums\ContractState::RechnungErstellt))
+                <a target="_blank" class="text-orientalpink hover:underline" href="{{ $invoiceUrl }}">Rechnung in
+                    Bexio anzeigen</a>
+                @endif
+            </div>
+            @endif
+
+            {{-- Ausserhalb des Formulars, daher form="EventForm". Die Werte der Buttons wertet AdminEventController::update aus (erstes Zeichen) --}}
+            <div class="flex flex-col gap-3 pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+                <button type="submit" form="EventForm" class="{{ $gladegreen }}" name="submit" value="1 Buchung updaten">1 Buchung
+                    updaten</button>
+                @switch($event['contract_status_id'])
+                @case(\App\Enums\ContractState::Offen)
+                <button type="submit" form="EventForm" class="{{ $norway }}" name="submit" value="2 Angebot erstellen">2 Angebot
+                    erstellen</button>
+                @break
+                @case(\App\Enums\ContractState::AngebotErstellt)
+                <button type="submit" form="EventForm" class="{{ $ebonyclay }}" name="submit" value=" 3 Angebot versenden">3 Angebot
+                    versenden</button>
+                @break
+                @case(\App\Enums\ContractState::AngebotVersendet)
+                <button type="submit" form="EventForm" class="{{ $grannysmith }}" name="submit" value="3 Erinnerung versenden">3
+                    Erinnerung versenden</button>
+                <button type="submit" form="EventForm" class="{{ $ebonyclay }}" name="submit" value="4 Rechnung erstellen">4 Rechnung
+                    erstellen</button>
+                @break
+                @case(\App\Enums\ContractState::RechnungErstellt)
+                <button type="submit" form="EventForm" class="{{ $norway }}" name="submit" value="5 Rechnung versenden">5 Rechnung
+                    versenden</button>
+                @break
+                @case(\App\Enums\ContractState::RechnungVersendet)
+                <button type="submit" form="EventForm" class="{{ $ebonyclay }}" name="submit"
+                    value="6 Genossenschafts Info versenden">6 Genossenschafts Info versenden</button>
+                @break
+                @default
+                @endswitch
+            </div>
+        </div>
+
         <div class="{{ $card }}">
             <h4 class="{{ $heading }}">Reinigung</h4>
             @if ($event->cleaning_mail)
@@ -316,6 +308,14 @@ $contract = $event->contractState();
             </ol>
             @endif
         </div>
+
+        <x-forms.form :action="route('admin.events.destroy', $event)" method="DELETE" :model="$event" id="DeleteForm"
+            class="flex justify-end">
+            <button type="submit" name="submit-delete"
+                class="confirm-delete text-sm font-medium text-red-700 hover:underline dark:text-red-500">
+                Buchung löschen
+            </button>
+        </x-forms.form>
     </div>
 </div>
 @endsection
