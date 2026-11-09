@@ -42,13 +42,14 @@ class EventWorkflowTest extends TestCase
     }
 
     /**
-     * Bexio-Antworten; $contacts ist das Ergebnis der Kontaktsuche. Pro Test einmal aufrufen
+     * Bexio-Antworten; $contacts ist das Ergebnis der Kontaktsuche, $offerStatus der Bexio-Status der Offerte (1 = Entwurf). Pro Test einmal aufrufen
      * (ein zweites Http::fake() hängt seine Regeln nur hinten an).
      */
-    private function fakeBexio(array $contacts = []): void
+    private function fakeBexio(array $contacts = [], int $offerStatus = 1): void
     {
         Http::fake([
             'api.bexio.com/2.0/contact/search' => Http::response($contacts),
+            'api.bexio.com/2.0/kb_offer/11' => Http::response(['id' => 11, 'kb_item_status_id' => $offerStatus]),
             'api.bexio.com/2.0/contact' => Http::response(['id' => 77]),
             'api.bexio.com/2.0/kb_offer' => Http::response(['id' => 11]),
             'api.bexio.com/2.0/kb_offer/11/invoice' => Http::response(['id' => 22]),
@@ -226,8 +227,21 @@ class EventWorkflowTest extends TestCase
         $this->submit($event->fresh(), ' 3 Angebot versenden', ['additional_text' => 'Bis bald']);
 
         $this->assertSame(ContractState::AngebotVersendet, $event->fresh()->contract_status_id);
-        // GET: die Benachrichtigung holt den Link der Offerte für die Mail
-        $this->assertSame(['POST kb_offer/11/issue', 'POST kb_offer/11/send', 'GET kb_offer/11'], $this->bexioRequests());
+        // Erstes GET: Status der Offerte; zweites GET: die Benachrichtigung holt den Link für die Mail
+        $this->assertSame(['GET kb_offer/11', 'POST kb_offer/11/issue', 'POST kb_offer/11/send', 'GET kb_offer/11'], $this->bexioRequests());
+        Notification::assertSentTo($event, EventOfferSendNotification::class);
+    }
+
+    public function test_reminder_sends_already_issued_offer_without_issuing_again(): void
+    {
+        $event = $this->s->event;
+        $event->update(['bexio_user_id' => 77, 'bexio_offer_id' => 11, 'contract_status_id' => ContractState::AngebotVersendet]);
+        $this->fakeBexio(offerStatus: 2);
+        $this->bexioFaked = true;
+
+        $this->submit($event->fresh(), '3 Erinnerung versenden');
+
+        $this->assertSame(['GET kb_offer/11', 'POST kb_offer/11/send', 'GET kb_offer/11'], $this->bexioRequests());
         Notification::assertSentTo($event, EventOfferSendNotification::class);
     }
 
