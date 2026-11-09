@@ -16,7 +16,7 @@ class TestingSeeder extends Seeder
     {
         $this->call(BasisdatenSeeder::class);
 
-        // EventCreatedListener erwartet die Codes 20 (Hausmiete), 50 (Tagesnutzung) und 210 (Parkplätze).
+        // EventCreatedListener erwartet die Codes 20 (Hausmiete) und 210 (Parkplätze); 50 (Tagesnutzung) wird nicht mehr angelegt.
         // Codes 21-200 werden pro Nacht verrechnet, > 200 sind Zusatzkosten (siehe EventOfferCreateListener).
         $positions = [
             ['bexio_code' => 20, 'bexio_id' => 1020, 'name' => 'Hausmiete pro Nacht', 'price' => 300, 'show' => false],

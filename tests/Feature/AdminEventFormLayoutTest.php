@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\PricelistPosition;
 use Tests\Support\BookingScenario;
 use Tests\TestCase;
 
@@ -32,6 +33,10 @@ class AdminEventFormLayoutTest extends TestCase
             $this->assertStringContainsString('id="position_'.$position->id.'"', $html);
             $this->assertStringContainsString('name="positions['.$position->id.']"', $html);
         }
+        // Angebot & Rechnung steht in der rechten Spalte, ausserhalb des Formulars
+        $this->assertStringContainsString('id="EventForm"', $html);
+        $this->assertMatchesRegularExpression('/<textarea name="additional_text" id="additional_text"[^>]*form="EventForm"/', $html);
+        $this->assertMatchesRegularExpression('/<button type="submit" form="EventForm"[^>]*value="1 Buchung updaten"/', $html);
         $this->assertActionsAndConfig($html, ['create-code', 'reminder-text', 'cleaning-mail', 'import']);
         $this->assertStringContainsString('confirm-delete', $html);
         $this->assertStringContainsString(route('bookings.uuid', $event->uuid), $html);
@@ -64,6 +69,21 @@ class AdminEventFormLayoutTest extends TestCase
         $this->assertActionsAndConfig($html, ['intern', 'import']);
         $this->assertStringContainsString('action="'.route('admin.events.store').'"', $html);
         $this->assertDoesNotMatchRegularExpression(self::BOOTSTRAP, $this->content($html));
+    }
+
+    public function test_forms_do_not_show_day_rate(): void
+    {
+        $s = BookingScenario::create();
+        $dayRate = PricelistPosition::where('bexio_code', 50)->sole();
+        $dayRate->update(['show' => true]);
+        $position = $s->event->positions()->create(['pricelist_position_id' => $dayRate->id, 'amount' => 1]);
+        $verwalter = $s->user('verwalter');
+
+        $this->actingAs($verwalter)->get('/admin/events/create')->assertOk()
+            ->assertDontSee($dayRate->name);
+        $this->actingAs($verwalter)->get("/admin/events/{$s->event->id}/edit")->assertOk()
+            ->assertDontSee($dayRate->name)
+            ->assertDontSee('id="position_'.$position->id.'"', false);
     }
 
     /**

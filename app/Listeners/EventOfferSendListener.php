@@ -8,6 +8,9 @@ use Carbon\Carbon;
 
 class EventOfferSendListener
 {
+    /** Bexio kb_item_status_id eines noch nicht ausgestellten Angebots */
+    private const OFFER_STATUS_DRAFT = 1;
+
     /**
      * Create the event listener.
      *
@@ -32,7 +35,11 @@ class EventOfferSendListener
         $start_date = Carbon::create($event['start_date'])->locale('de_CH')->format('d.m.Y');
         $title = 'Angebot vom '.$start_date.' bis '.$end_date;
 
-        app(BexioApiService::class)->post('kb_offer/'.$event['bexio_offer_id'].'/issue');
+        // Bei einer Erinnerung ist das Angebot bereits ausgestellt, ein zweites Ausstellen lehnt Bexio ab.
+        $offer = app(BexioApiService::class)->get('kb_offer/'.$event['bexio_offer_id']);
+        if (($offer['kb_item_status_id'] ?? null) === self::OFFER_STATUS_DRAFT) {
+            app(BexioApiService::class)->post('kb_offer/'.$event['bexio_offer_id'].'/issue');
+        }
         $data = [
             'recipient_email' => config('mail.invoice_mail'),
             'subject' => $title,

@@ -126,7 +126,9 @@ class AdminEventController extends Controller
         $homepages = Homepage::all();
         $event_statuses = EventStatus::pluck('name', 'id')->all();
         $users = User::where('role_id', UserRole::Verwalter)->pluck('username', 'id')->all();
-        $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get();
+        $positions = PricelistPosition::where([['show', true], ['archive_status_id', ArchiveState::Aktiv]])->orderby('bexio_code')->get()
+            ->reject(fn (PricelistPosition $position) => PricelistPosition::isDayStay($position->bexio_code))
+            ->values();
         $title = 'Buchung erstellen';
 
         return view('admin.events.create', compact('event_statuses', 'homepages', 'users', 'positions', 'title'));
@@ -237,8 +239,9 @@ class AdminEventController extends Controller
             ->orderBy(PricelistPosition::select('bexio_code')
                 ->whereColumn('pricelist_positions.id', 'positions.pricelist_position_id')
             )->get()
-            // Frühbezug/Spätabgabe folgt den Checkboxen Early Check-In / Late Check-Out
-            ->reject(fn (Position $position) => $position->pricelist_position?->bexio_code === PricelistPosition::CHECKIN_CHECKOUT_CODE)
+            // Frühbezug/Spätabgabe folgt den Checkboxen Early Check-In / Late Check-Out, Tagesaufenthalte gibt es nicht mehr
+            ->reject(fn (Position $position) => $position->pricelist_position?->bexio_code === PricelistPosition::CHECKIN_CHECKOUT_CODE
+                || PricelistPosition::isDayStay((int) $position->pricelist_position?->bexio_code))
             ->values();
         $checkin_checkout_price = (float) PricelistPosition::where('bexio_code', PricelistPosition::CHECKIN_CHECKOUT_CODE)->value('price');
 

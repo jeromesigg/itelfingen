@@ -32,11 +32,10 @@ class EventCreatedListener
 
         if ($event->oneDay) {
             $positions[count($positions)] = ['bexio_code' => 20, 'amount' => 0.5];
-            $positions[count($positions)] = ['bexio_code' => 50, 'amount' => 1];
         } else {
             $positions[count($positions)] = ['bexio_code' => 20, 'amount' => 1];
             foreach ($keys as $index => $key) {
-                if ($key != 20) {
+                if ($key != 20 && ! PricelistPosition::isDayStay((int) $key)) {
                     $positions[count($positions)] = ['bexio_code' => $key, 'amount' => $event->positionArray[$key]];
                 }
             }
