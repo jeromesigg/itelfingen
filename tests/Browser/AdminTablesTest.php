@@ -78,4 +78,35 @@ class AdminTablesTest extends DuskTestCase
                 ->assertSeeIn('#tableBody tr:first-child td:first-child', $last);
         });
     }
+
+    /**
+     * Lange E-Mail-Adressen und Datumsbereiche bleiben in ihrer Zelle, auch auf einem Laptop mit 1024 px.
+     */
+    public function test_booking_cells_do_not_overflow_into_neighbours(): void
+    {
+        $s = BookingScenario::create();
+        $s->event->update([
+            'start_date' => '2030-11-11',
+            'end_date' => '2030-11-13',
+            'email' => 'sehr.lange.adresse.fuer.die.buchung@pfadi-beispielabteilung.ch',
+        ]);
+
+        $this->browse(function (Browser $browser) use ($s) {
+            $browser->loginAs($s->user('verwalter'));
+
+            foreach ([1024, 1440] as $width) {
+                $browser->resize($width, 900)
+                    ->visit('/admin/events')
+                    ->waitFor('#tableBody tr td');
+
+                $overflowing = $browser->script(<<<'JS'
+                    return [...document.querySelectorAll('#tableBody td, thead th')]
+                        .filter((cell) => cell.scrollWidth > cell.clientWidth + 1)
+                        .map((cell) => cell.textContent.trim().slice(0, 40));
+                JS)[0];
+
+                $this->assertSame([], $overflowing, "Überlaufende Zellen bei {$width} px");
+            }
+        });
+    }
 }
