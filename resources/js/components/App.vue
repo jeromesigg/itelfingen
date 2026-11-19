@@ -49,31 +49,32 @@ const mobileCards = {
 
 const eventColumns = [
   columnHelper.accessor('start_date', {
+    meta: { minWidth: 120 },
     header: 'Datum',
     enableSorting: true,
-    size: 70,
+    size: 130,
   }),
   columnHelper.accessor('number', {
     meta: { html: true },
     header: 'Nr.',
     enableSorting: true,
-    size: 20,
+    size: 90,
   }),
   columnHelper.accessor('name', {
     meta: { html: true },
     header: 'Name',
     enableSorting: true,
-    size: 100,
+    size: 160,
   }),
   columnHelper.accessor('email', {
     header: 'E-Mail',
     enableSorting: true,
-    size: 75,
+    size: 220,
   }),
   columnHelper.accessor('total_amount', {
     header: 'Total',
     enableSorting: false,
-    size: 50,
+    size: 90,
   }),
   columnHelper.accessor('comment', {
     header: 'Bemerkung',
@@ -86,7 +87,7 @@ const eventColumns = [
     size: 200,
   }),
   columnHelper.accessor('status', {
-    meta: { html: true },
+    meta: { html: true, minWidth: 210 },
     header: 'Status',
     enableSorting: true,
     size: 200,

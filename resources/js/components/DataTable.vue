@@ -54,7 +54,7 @@
               @click="toggleSort(header)"
               @keydown.enter.prevent="toggleSort(header)"
               @keydown.space.prevent="toggleSort(header)"
-              :style="{ 'max-width': header.getSize() + 'px' }"
+              :style="headerStyle(header)"
               :class="header.column.getCanSort() ? 'cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600' : ''"
               class="px-4 py-3 font-medium select-none"
             >
@@ -95,7 +95,7 @@
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
               :style="{ 'max-width': cell.column.getSize() + 'px' }"
-              class="px-4 py-2 border border-gray-300 dark:border-gray-600"
+              class="px-4 py-2 border border-gray-300 dark:border-gray-600 break-words"
             >
               <DataTableActions
                 v-if="cell.column.columnDef.meta?.actions"
@@ -536,6 +536,15 @@ function ariaSort(header) {
 function setSortValue(value) {
   const [id, direction] = value.split(':')
   sorting.value = id ? [{ id, desc: direction === 'desc' }] : []
+}
+
+// Spaltenbreite: size als Höchstbreite, meta.minWidth (px) hält schmale Bildschirme davon ab, die Spalte zu quetschen
+function headerStyle(header) {
+  const minWidth = header.column.columnDef.meta?.minWidth
+  return {
+    'max-width': header.getSize() + 'px',
+    ...(minWidth ? { 'min-width': minWidth + 'px' } : {}),
+  }
 }
 
 function badgeClass(text) {
